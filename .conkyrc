@@ -1,0 +1,64 @@
+background no
+use_xft yes
+xftfont Ubuntu Mono:size=8
+xftalpha 1
+update_interval 1
+total_run_times 0
+own_window yes
+own_window_type desktop
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+minimum_size 175 5
+maximum_width 200
+draw_shades yes
+draw_outline no
+draw_borders no
+draw_graph_borders yes
+default_color ccc
+default_shade_color 000
+default_outline_color ccc
+alignment mr
+gap_x 5
+gap_y 0
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+override_utf8_locale no
+
+
+TEXT
+${color}CPU1 ${cpu cpu1}%${alignr}CPU2 ${cpu cpu2}%
+${cpugraph}
+
+MEM $alignc $mem / $memmax${alignr}$memperc%
+$membar
+swap $alignc $swap / $swapmax${alignr}$swapperc%
+${swapbar}
+
+/ $alignc ${fs_used /} / ${fs_size /}${alignr}${fs_free_perc /}%
+${fs_bar /}
+/home $alignc ${fs_used /home} / ${fs_size /home}${alignr}${fs_free_perc /home}%
+${fs_bar /home}
+/pr0n $alignc ${fs_used /pr0n} / ${fs_size /pr0n}${alignr}${fs_free_perc /pr0n}%
+${fs_bar /pr0n}
+
+NAME${alignr}MEM    CPU
+${top name 1}${alignr}${top mem 1} ${top cpu 1}
+${top name 2}${alignr}${top mem 2} ${top cpu 2}
+${top name 3}${alignr}${top mem 3} ${top cpu 3}
+${top name 4}${alignr}${top mem 4} ${top cpu 4}
+
+wlan0 $alignr${addr wlan0}
+signal $alignr${wireless_link_qual_perc wlan0}%
+rate$alignr${wireless_bitrate wlan0}
+Outbound${alignr}${upspeed wlan0}
+${upspeedgraph wlan0}
+Inbound${alignr}${downspeed wlan0}
+${downspeedgraph wlan0}$if_mpd_playing
+
+${scroll 28 5 $mpd_title}
+${color}by $mpd_artist
+from $mpd_album
+$mpd_elapsed$alignr$mpd_length
+$mpd_bar$endif

@@ -1,0 +1,32 @@
+hsetroot -solid "#2E3436" &
+xrdb -load /home/dan/.Xresources
+nitrogen --restore &
+(cb-compositor --start || compton -cC -fF -I 0.065 -O 0.065 -D 6 -m 0.8 -G -b ) &
+cb-hotcorners --daemon &
+(sleep 2s && pnmixer) &
+xfce4-volumed &
+xfce4-power-manager &
+thunar --daemon &
+xscreensaver -no-splash &
+(sleep 3s && clipit) &
+xset r rate 250 25 &
+(sleep 120s && cb-fortune) &
+xfce4-panel &
+conky -q &
+mpd &
+
+if egrep -iq 'touchpad' /proc/bus/input/devices; then
+    synclient VertEdgeScroll=1 &
+    synclient TapButton1=1 &
+fi
+
+
+(/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 && \
+/usr/bin/gnome-keyring-daemon --start --components=ssh && \
+/usr/bin/gnome-keyring-daemon --start --components=secrets && \
+/usr/bin/gnome-keyring-daemon --start --components=pkcs11 && \
+/usr/bin/gnome-keyring-daemon --start --components=gpg ) &
+
+# Autostart the Dropbox deamon
+(sleep 10s && ~/.dropbox-dist/dropboxd) &
+

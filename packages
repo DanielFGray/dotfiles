@@ -1,0 +1,62 @@
+coreutils
+moreutils
+tmux
+zsh-beta
+vim vim-scripts
+mplayer2
+mpd mpc ncmpcpp
+htop
+lynx
+weechat
+git
+ack-grep
+rtorrent
+build-essential
+rsync
+curl
+scrot optipng
+imagemagick
+
+luakit
+rxvt-unicode-256color
+vim-gtk
+xfburn
+openbox obconf
+awesome
+xfce4-utils xfce4-notifyd
+xfce4-panel xfce4-genmon-plugin xfce4-systemload-plugin xfce4-power-manager-plugins xfce4-datetime-plugin
+thunar thunar-volman thunar-archive-plugin
+xarchiver
+lxappearance
+clipit
+mirage qiv
+gpick
+nitrogen
+conky
+gmrun
+suckless-tools
+gnome-icon-theme-extras gnome-icon-theme-symbolic gnome-icon-theme-full
+virtualbox
+pavucontrol
+
+firmware-b43-lpphy-installer
+xserver-xorg-video-intel
+xserver-xorg-core
+xinit
+xutils
+openssh-server
+lm-sensors
+alsa-base alsa-utils alsa-tools pulseaudio
+locales
+tzdata
+sudo
+debconf
+dialog
+aptitude
+console-data
+apt-utils
+alsa-utils
+xdotool
+wmctrl
+'^liquorix-([^-]+-)?keyring.?'
+'^linux-([^-]+-)?liquorix.?'
