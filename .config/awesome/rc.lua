@@ -380,30 +380,6 @@ vicious.register(netdownwidget, vicious.widgets.net,
         end
     end, 3)
 
-mytasklist.buttons = awful.util.table.join(
-    awful.button({}, 1, function(c)
-        if not c:isvisible() then
-            awful.tag.viewonly(c:tags()[1])
-        end
-        client.focus = c
-        c:raise()
-    end),
-    awful.button({}, 3, function()
-        if instance then
-            instance:hide()
-            instance = nil
-        else
-            instance = awful.menu.clients({width=250})
-        end
-    end),
-    awful.button({}, 4, function()
-        awful.client.focus.byidx(1)
-        if client.focus then client.focus:raise() end
-    end),
-    awful.button({}, 5, function()
-        awful.client.focus.byidx(-1)
-        if client.focus then client.focus:raise() end
-    end))
 
 for s = 1, screen.count() do
     mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
@@ -429,7 +405,7 @@ for s = 1, screen.count() do
         {
             space,
             memwidget,memicon,
-            batwidget,baticon, --I wish my battery worked ):
+            batwidget,baticon,
             senswidget,sensicon,
             cpuwidget,cpuicon,
             spacer,
