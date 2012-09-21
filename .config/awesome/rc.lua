@@ -18,7 +18,7 @@ end
 
 do
     local in_error = false
-    awesome.add_signal('debug::error', function (err)
+    awesome.add_signal('debug::error', function(err)
         if in_error then return end
         in_error = true
         naughty.notify({
@@ -170,7 +170,7 @@ shifty.config.apps = {
         match = {''},
         honorsizehints = false,
         buttons = awful.util.table.join(
-            awful.button({}, 1, function (c) client.focus = c; c:raise() end),
+            awful.button({}, 1, function(c) client.focus = c; c:raise() end),
             awful.button({modkey}, 1, function(c)
                 client.focus = c
                 c:raise()
@@ -262,7 +262,7 @@ mytaglist.buttons = awful.util.table.join(
 
 mytasklist = {}
 mytasklist.buttons = awful.util.table.join(
-    awful.button({ }, 1, function (c)
+    awful.button({}, 1, function(c)
         if c == client.focus then
             c.minimized = true
         else
@@ -273,7 +273,7 @@ mytasklist.buttons = awful.util.table.join(
             c:raise()
         end
     end),
-    awful.button({ }, 3, function ()
+    awful.button({}, 3, function()
         if instance then
             instance:hide()
             instance = nil
@@ -281,11 +281,11 @@ mytasklist.buttons = awful.util.table.join(
             instance = awful.menu.clients({ width=250 })
         end
     end),
-    awful.button({ }, 4, function ()
+    awful.button({}, 4, function()
         awful.client.focus.byidx(1)
         if client.focus then client.focus:raise() end
     end),
-    awful.button({ }, 5, function ()
+    awful.button({}, 5, function()
         awful.client.focus.byidx(-1)
         if client.focus then client.focus:raise() end
     end)
@@ -300,7 +300,7 @@ mpdicon = widget({ type = 'imagebox', align = 'left' })
 mpdicon.image = image(awful.util.getdir('config') .. '/icons/music.png')
 mpdwidget = widget({ type = 'textbox' })
 vicious.register(mpdwidget, vicious.widgets.mpd,
-    function (widget, args)
+    function(widget, args)
         if args["{state}"] == ("Stop" or "N/A") then 
             mpdicon.visible = false
             return ''
@@ -311,17 +311,20 @@ vicious.register(mpdwidget, vicious.widgets.mpd,
     end, 5)
 mpdwidget:buttons(
     awful.util.table.join(
-        awful.button({}, 1, function () awful.util.spawn('mpc toggle', false) end),
-        awful.button({}, 3, function () awful.util.spawn(term_cmd .. 'ncmpcpp') end),
-        awful.button({}, 4, function () awful.util.spawn('mpc prev', false) end),
-        awful.button({}, 5, function () awful.util.spawn('mpc next', false) end)
+        awful.button({}, 1, function() awful.util.spawn('mpc toggle', false) end),
+        awful.button({}, 3, function() awful.util.spawn(term_cmd .. 'ncmpcpp') end),
+        awful.button({}, 4, function() awful.util.spawn('mpc prev', false) end),
+        awful.button({}, 5, function() awful.util.spawn('mpc next', false) end)
     )
 )
 
 cpuicon = widget({ type = 'imagebox', align = 'left' })
 cpuicon.image = image(awful.util.getdir('config') .. '/icons/cpu.png')
 cpuwidget = widget({ type = 'textbox' })
-vicious.register(cpuwidget, vicious.widgets.cpu, '$1% ', .5)
+vicious.register(cpuwidget, vicious.widgets.cpu,
+    function(widget, args)
+        return string.format('%02d', args[1]) .. '% '
+    end, .5)
 
 memicon = widget({ type = 'imagebox', align = 'left' })
 memicon.image = image(awful.util.getdir('config') .. '/icons/mem.png')
@@ -333,7 +336,7 @@ sensicon = widget({ type = 'imagebox', align = 'left' })
 sensicon.image = image(awful.util.getdir('config') .. '/icons/temp.png')
 senswidget = widget({ type = 'textbox' })
 vicious.register(senswidget, vicious.widgets.thermal,
-    function (widget, args)
+    function(widget, args)
         return args[1] .. '<span color="' .. theme.colors.base0 .. '">°C</span> '
     end, 15, "thermal_zone0")
 
@@ -346,13 +349,13 @@ wifiicon = widget({ type = 'imagebox', align = 'left' })
 wifiicon.image = image(awful.util.getdir('config') .. '/icons/wifi.png')
 wifiwidget = widget({ type = 'textbox' })
 vicious.register(wifiwidget, vicious.widgets.wifi,
-    function (widget, args)
+    function(widget, args)
         if args['{link}'] == 0 then
             wifiicon.visible = false
             return ''
         else
             wifiicon.visible = true
-            return string.format("%i%% ", args["{link}"]/70*100)
+            return string.format("%i%% ", args["{link}"] / 70 * 100)
         end
     end, 4, "wlan0")
 
@@ -360,7 +363,7 @@ netdownicon = widget({ type = 'imagebox', align = 'left' })
 netdownicon.image = image(awful.util.getdir('config') .. '/icons/down.png')
 netdownwidget = widget({ type = 'textbox' })
 vicious.register(netdownwidget, vicious.widgets.net, 
-    function (widget, args)
+    function(widget, args)
         if args["{wlan0 carrier}"] == 1 then
             netdownicon.visible = true
             return args["{wlan0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 rx_mb}"] .. 'M</span> '
@@ -369,7 +372,7 @@ vicious.register(netdownwidget, vicious.widgets.net,
             return args["{eth0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{eth0 rx_mb}"] .. 'M</span> '
         else
             netdownicon.visible = false
-            return '<span color="' .. theme.colors.red ..'">disconnected</span>'
+            return 'disconnected'
         end
     end, 3)
 
@@ -377,7 +380,7 @@ netupicon = widget({ type = 'imagebox', align = 'left' })
 netupicon.image = image(awful.util.getdir('config') .. '/icons/up.png')
 netupwidget = widget({ type = 'textbox' })
 vicious.register(netupwidget, vicious.widgets.net,
-    function (widget, args)
+    function(widget, args)
         if args["{wlan0 carrier}"] == 1 then
             netupicon.visible = true
             return args["{wlan0 up_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 tx_mb}"] .. 'M</span>'
@@ -393,10 +396,10 @@ for s = 1, screen.count() do
     mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
     mylayoutbox[s] = awful.widget.layoutbox(s)
     mylayoutbox[s]:buttons(awful.util.table.join(
-        awful.button({ }, 1, function () awful.layout.inc(layouts, 1) end),
-        awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
-        awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
-        awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
+        awful.button({}, 1, function() awful.layout.inc(layouts, 1) end),
+        awful.button({}, 3, function() awful.layout.inc(layouts, -1) end),
+        awful.button({}, 4, function() awful.layout.inc(layouts, 1) end),
+        awful.button({}, 5, function() awful.layout.inc(layouts, -1) end)))
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
 
     mytasklist[s] = awful.widget.tasklist(function(c)
@@ -404,8 +407,8 @@ for s = 1, screen.count() do
         end, mytasklist.buttons)
 
     mywibox[s] = {}
-    mywibox[s][1] = awful.wibox({ position = 'top',    screen = s, height = 16 })
-    mywibox[s][2] = awful.wibox({ position = 'bottom', screen = s, height = 16 })
+    mywibox[s][1] = awful.wibox({ position = 'top',    screen = s, height = 13 })
+    mywibox[s][2] = awful.wibox({ position = 'bottom', screen = s, height = 13 })
     mywibox[s][1].widgets = {
         mylayoutbox[s],
         mytaglist[s],
@@ -451,13 +454,13 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-    awful.key({ }, 'XF86AudioRaiseVolume', function () exec('amixer -q set Master 5%+') end),
-    awful.key({ }, 'XF86AudioLowerVolume', function () exec('amixer -q set Master 5%-') end),
-    awful.key({ }, 'XF86AudioMute',        function () exec('amixer -q set Master toggle') end),
-    awful.key({ }, 'XF86AudioPlay',        function () exec('mpc -q toggle', false) end),
-    awful.key({ }, 'XF86AudioStop',        function () exec('mpc -q stop', false) end),
-    awful.key({ }, 'XF86AudioNext',        function () exec('mpc -q next', false) end),
-    awful.key({ }, 'XF86AudioPrev',        function () exec('mpc -q prev', false) end),
+    awful.key({}, 'XF86AudioRaiseVolume', function() exec('amixer -q set Master 5%+') end),
+    awful.key({}, 'XF86AudioLowerVolume', function() exec('amixer -q set Master 5%-') end),
+    awful.key({}, 'XF86AudioMute',        function() exec('amixer -q set Master toggle') end),
+    awful.key({}, 'XF86AudioPlay',        function() exec('mpc -q toggle', false) end),
+    awful.key({}, 'XF86AudioStop',        function() exec('mpc -q stop', false) end),
+    awful.key({}, 'XF86AudioNext',        function() exec('mpc -q next', false) end),
+    awful.key({}, 'XF86AudioPrev',        function() exec('mpc -q prev', false) end),
     awful.key({modkey}, 'Left',            awful.tag.viewprev),
     awful.key({modkey}, 'Right',           awful.tag.viewnext),
     awful.key({modkey}, 'Escape',          awful.tag.history.restore),
@@ -513,8 +516,8 @@ globalkeys = awful.util.table.join(
                                                awful.util.eval, nil,
                                                awful.util.getdir('cache') .. '/history_eval')
                                            end),
-    awful.key({modkey, 'Mod1'}, 'l',       function () awful.util.spawn('xscreensaver-command --lock') end),
-    awful.key({modkey}, 'F1',              function ()
+    awful.key({modkey, 'Mod1'}, 'l',       function() awful.util.spawn('xscreensaver-command --lock') end),
+    awful.key({modkey}, 'F1',              function()
                                                local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "' .. beautiful.bg_normal .. '" -nf "' .. beautiful.fg_normal .. '" -sb "' .. beautiful.colors.blue .. '"')
                                                local command = assert(f_reader:read('*a'))
                                                f_reader:close()
