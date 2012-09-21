@@ -38,6 +38,7 @@ suckless-tools
 gnome-icon-theme-extras gnome-icon-theme-symbolic gnome-icon-theme-full
 virtualbox
 pavucontrol
+arandr
 
 firmware-b43-lpphy-installer
 xserver-xorg-video-intel
