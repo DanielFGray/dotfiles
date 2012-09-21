@@ -312,7 +312,7 @@ vicious.register(mpdwidget, vicious.widgets.mpd,
 mpdwidget:buttons(
     awful.util.table.join(
         awful.button({}, 1, function () awful.util.spawn('mpc toggle', false) end),
-        awful.button({}, 2, function () awful.util.spawn(term_cmd .. 'ncmpcpp') end),
+        awful.button({}, 3, function () awful.util.spawn(term_cmd .. 'ncmpcpp') end),
         awful.button({}, 4, function () awful.util.spawn('mpc prev', false) end),
         awful.button({}, 5, function () awful.util.spawn('mpc next', false) end)
     )
@@ -356,30 +356,38 @@ vicious.register(wifiwidget, vicious.widgets.wifi,
         end
     end, 4, "wlan0")
 
-netupicon = widget({ type = 'imagebox', align = 'left' })
-netupicon.image = image(awful.util.getdir('config') .. '/icons/up.png')
-netupwidget = widget({ type = 'textbox' })
-vicious.register(netupwidget, vicious.widgets.net,
-    function (widget, args)
-        if args["{wlan0 carrier}"] == 1 then
-            return args["{wlan0 up_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 tx_mb}"] .. 'M</span>'
-        elseif args["{eth0 carrier}"] == 1 then
-            return args["{eth0 up_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{eth0 tx_mb}"] .. 'M</span>'
-        end
-    end, 3)
-
 netdownicon = widget({ type = 'imagebox', align = 'left' })
 netdownicon.image = image(awful.util.getdir('config') .. '/icons/down.png')
 netdownwidget = widget({ type = 'textbox' })
 vicious.register(netdownwidget, vicious.widgets.net, 
     function (widget, args)
         if args["{wlan0 carrier}"] == 1 then
-            return args["{wlan0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 rx_mb}"] .. 'M</span>'
+            netdownicon.visible = true
+            return args["{wlan0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 rx_mb}"] .. 'M</span> '
         elseif args["{eth0 carrier}"] == 1 then
-            return args["{eth0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{eth0 rx_mb}"] .. 'M</span>'
+            netdownicon.visible = true
+            return args["{eth0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{eth0 rx_mb}"] .. 'M</span> '
+        else
+            netdownicon.visible = false
+            return '<span color="' .. theme.colors.red ..'">disconnected</span>'
         end
     end, 3)
 
+netupicon = widget({ type = 'imagebox', align = 'left' })
+netupicon.image = image(awful.util.getdir('config') .. '/icons/up.png')
+netupwidget = widget({ type = 'textbox' })
+vicious.register(netupwidget, vicious.widgets.net,
+    function (widget, args)
+        if args["{wlan0 carrier}"] == 1 then
+            netupicon.visible = true
+            return args["{wlan0 up_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 tx_mb}"] .. 'M</span>'
+        elseif args["{eth0 carrier}"] == 1 then
+            netupicon.visible = true
+            return args["{eth0 up_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{eth0 tx_mb}"] .. 'M</span>'
+        else
+            netupicon.visible = false
+        end
+    end, 3)
 
 for s = 1, screen.count() do
     mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
@@ -405,12 +413,11 @@ for s = 1, screen.count() do
         {
             space,
             memwidget,memicon,
-            batwidget,baticon,
+            --batwidget,baticon,
             senswidget,sensicon,
             cpuwidget,cpuicon,
             spacer,
             netupwidget,netupicon,
-            space,
             netdownwidget,netdownicon,
             wifiwidget,wifiicon,
             mpdwidget,mpdicon,
@@ -562,7 +569,7 @@ root.keys(globalkeys)
 client.add_signal('focus', function(c) if not awful.client.ismarked(c) then c.border_color = beautiful.border_focus end end)
 client.add_signal('unfocus', function(c) if not awful.client.ismarked(c) then c.border_color = beautiful.border_normal end end)
 
-exec     ('xrdb -merge /home/dan/.Xresources')
+exec     ('xrdb -load /home/dan/.Xresources')
 exec     ('synclient TapButton1=1')
 run_once ('urxvtd')
 run_once ('mpd')

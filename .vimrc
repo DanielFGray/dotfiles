@@ -12,15 +12,22 @@ set nowrap
 set showmatch
 set wildmenu
 set cursorline
+set autoindent
+set smartindent
+set tabstop=8
+set shiftwidth=8
+set expandtab
 set foldmethod=marker
 set ruler
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set showcmd
 set ofu=syntaxcomplete#Complete
+set mouse=a
+set nolazyredraw
 syntax on
 filetype plugin indent on
 
-colorscheme solarized
+colorscheme slate
 set background=dark
 set gfn=Ubuntu\ Mono\ 8
 set guioptions-=T
@@ -32,7 +39,7 @@ noremap <Right> <nop>
 
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
 ca w!! w !sudo tee >/dev/null "%"
-command CDC cd %:p:h
+"command CDC cd %:p:h
 
 hi Comment      ctermfg=12
 hi Constant     ctermfg=6
@@ -45,6 +52,7 @@ hi Underlined   ctermfg=7
 hi Ignore       ctermfg=9
 hi Error        ctermfg=11
 hi Todo         ctermfg=1
+
 hi link Number Constant
 hi! link StatusLine VertSplit
 hi! link StatusLineNC VertSplit
@@ -101,7 +109,7 @@ hi link javaScriptNumber Number
 
 " Objc
 hi link objcDirective Type
-hi objcMethodName ctermfg=darkyellow guifg=#eceb00
+hi objcMethodName ctermfg=darkyellow
 
 " CSS
 hi link cssBraces Normal
@@ -113,7 +121,7 @@ hi link cssColor Type
 hi link cssValueInteger Type
 hi link cssValueNumber Type
 hi link cssValueLength Type
-hi cssPseudoClassId guifg=#eceb00 ctermfg=darkyellow
+hi cssPseudoClassId ctermfg=darkyellow
 
 hi clear SpellBad
 hi SpellBad ctermfg=red term=underline cterm=underline
