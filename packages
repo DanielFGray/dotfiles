@@ -3,28 +3,31 @@ moreutils
 tmux
 zsh-beta
 vim vim-scripts
-mplayer2
-mpd mpc ncmpcpp
 htop
 lynx
 weechat
-git
 ack-grep
 rtorrent
 build-essential
+git
+checkinstall
+openssh-server
+lm-sensors
 rsync
 curl
-scrot optipng
+optipng
 imagemagick
+mplayer2
+mpd mpc ncmpcpp
 
 luakit
 rxvt-unicode-256color
 vim-gtk
 xfburn
-openbox obconf
+gnome-mplayer
+gmpc gmpc-plugins
+scrot
 awesome
-xfce4-utils xfce4-notifyd
-xfce4-panel xfce4-genmon-plugin xfce4-systemload-plugin xfce4-power-manager-plugins xfce4-datetime-plugin
 thunar thunar-volman thunar-archive-plugin
 xarchiver
 lxappearance
@@ -36,28 +39,6 @@ conky
 gmrun
 suckless-tools
 gnome-icon-theme-extras gnome-icon-theme-symbolic gnome-icon-theme-full
-virtualbox
 pavucontrol
 arandr
-
-firmware-b43-lpphy-installer
-xserver-xorg-video-intel
-xserver-xorg-core
-xinit
-xutils
-openssh-server
-lm-sensors
-alsa-base alsa-utils alsa-tools pulseaudio
-locales
-tzdata
-sudo
-debconf
-dialog
-aptitude
-console-data
-apt-utils
-alsa-utils
-xdotool
-wmctrl
-'^liquorix-([^-]+-)?keyring.?'
-'^linux-([^-]+-)?liquorix.?'
+xorg-xserver-core
