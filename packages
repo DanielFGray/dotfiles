@@ -1,20 +1,20 @@
 coreutils
 moreutils
+ack-grep
+rsync
+curl
 tmux
 zsh-beta
 vim vim-scripts
 htop
 lynx
 weechat
-ack-grep
 rtorrent
 build-essential
-git
 checkinstall
+git
 openssh-server
 lm-sensors
-rsync
-curl
 optipng
 imagemagick
 mplayer2
@@ -29,9 +29,10 @@ gmpc gmpc-plugins
 scrot
 awesome
 thunar thunar-volman thunar-archive-plugin
+xscreensaver
 xarchiver
 lxappearance
-clipit
+clipit xclip
 mirage qiv
 gpick
 nitrogen

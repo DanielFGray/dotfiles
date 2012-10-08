@@ -32,10 +32,11 @@ end
 -- }}}
 
 -- {{{ Variable definitions
-local exec = awful.util.spawn
-local terminal = 'urxvtc'
-local term_cmd = terminal .. ' -e '
-local editor = term_cmd .. 'vim -p'
+exec = awful.util.spawn
+terminal = 'urxvtc'
+term_cmd = terminal .. ' -e '
+editor = term_cmd .. 'vim -p '
+configdir = awful.util.getdir('config')
 
 function run_once(cmd)
     findme = cmd
@@ -47,7 +48,7 @@ function run_once(cmd)
  end
 
 modkey = 'Mod4'
-beautiful.init(awful.util.getdir('config') .. '/theme.lua')
+beautiful.init(configdir .. '/theme.lua')
 
 layouts = {
     awful.layout.suit.floating,
@@ -220,8 +221,9 @@ mnuCompositing = {
 
 mnuMain = awful.menu({ items = {
     { 'terminal',  terminal } ,
+    { 'tmux',      term_cmd .. 'tmux' } ,
     { 'editor',    editor },
-    { 'browser',   'firefox' },
+    { 'browser',   'x-www-browser' },
     { 'thunar',    'thunar' },
     { 'luakit',    'luakit' },
     { 'ncmpcpp',   term_cmd .. 'ncmpcpp' },
@@ -253,12 +255,12 @@ mypromptbox = { }
 mylayoutbox = { }
 mytaglist = { }
 mytaglist.buttons = awful.util.table.join(
-    awful.button({ }, 1,       awful.tag.viewonly),
+    awful.button({ }, 1,        awful.tag.viewonly),
     awful.button({ modkey }, 1, awful.client.movetotag),
-    awful.button({ }, 3,       function(tag) tag.selected = not tag.selected end),
+    awful.button({ }, 3,        function(tag) tag.selected = not tag.selected end),
     awful.button({ modkey }, 3, awful.client.toggletag),
-    awful.button({ }, 4,       awful.tag.viewnext),
-    awful.button({ }, 5,       awful.tag.viewprev)
+    awful.button({ }, 4,        awful.tag.viewnext),
+    awful.button({ }, 5,        awful.tag.viewprev)
 )
 
 mytasklist = { }
@@ -298,7 +300,7 @@ space        = widget({ type = 'textbox' })
 space.text   = ' '
 
 mpdicon = widget({ type = 'imagebox', align = 'left' })
-mpdicon.image = image(awful.util.getdir('config') .. '/icons/music.png')
+mpdicon.image = image(configdir .. '/icons/music.png')
 mpdwidget = widget({ type = 'textbox' })
 vicious.register(mpdwidget, vicious.widgets.mpd,
     function(widget, args)
@@ -324,7 +326,7 @@ mpdwidget:buttons(
 )
 
 cpuicon = widget({ type = 'imagebox', align = 'left' })
-cpuicon.image = image(awful.util.getdir('config') .. '/icons/cpu.png')
+cpuicon.image = image(configdir .. '/icons/cpu.png')
 cpuwidget = widget({ type = 'textbox' })
 vicious.register(cpuwidget, vicious.widgets.cpu,
     function(widget, args)
@@ -332,13 +334,13 @@ vicious.register(cpuwidget, vicious.widgets.cpu,
     end, .5)
 
 memicon = widget({ type = 'imagebox', align = 'left' })
-memicon.image = image(awful.util.getdir('config') .. '/icons/mem.png')
+memicon.image = image(configdir .. '/icons/mem.png')
 memwidget = widget({ type = 'textbox' })
 vicious.register(memwidget, vicious.widgets.mem,
     '$1% <span color="' .. theme.colors.base0 .. '">(</span>$2<span color="' .. theme.colors.base0 .. '">/$3)</span> ', 5)
 
 sensicon = widget({ type = 'imagebox', align = 'left' })
-sensicon.image = image(awful.util.getdir('config') .. '/icons/temp.png')
+sensicon.image = image(configdir .. '/icons/temp.png')
 senswidget = widget({ type = 'textbox' })
 vicious.register(senswidget, vicious.widgets.thermal,
     function(widget, args)
@@ -347,12 +349,12 @@ vicious.register(senswidget, vicious.widgets.thermal,
     end, 15, "thermal_zone0")
 
 baticon = widget({ type = 'imagebox' })
-baticon.image = image(awful.util.getdir('config') .. '/icons/bat.png')
+baticon.image = image(configdir .. '/icons/bat.png')
 batwidget = widget({ type = 'textbox' })
 vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 30, 'BAT1')
 
 wifiicon = widget({ type = 'imagebox', align = 'left' })
-wifiicon.image = image(awful.util.getdir('config') .. '/icons/wifi.png')
+wifiicon.image = image(configdir .. '/icons/wifi.png')
 wifiwidget = widget({ type = 'textbox' })
 vicious.register(wifiwidget, vicious.widgets.wifi,
     function(widget, args)
@@ -363,10 +365,10 @@ vicious.register(wifiwidget, vicious.widgets.wifi,
             wifiicon.visible = true
             return string.format("%i%% ", args["{link}"] / 70 * 100)
         end
-    end, 4, "wlan0")
+    end, 4, 'wlan0')
 
 netdownicon = widget({ type = 'imagebox', align = 'left' })
-netdownicon.image = image(awful.util.getdir('config') .. '/icons/down.png')
+netdownicon.image = image(configdir .. '/icons/down.png')
 netdownwidget = widget({ type = 'textbox' })
 vicious.register(netdownwidget, vicious.widgets.net, 
     function(widget, args)
@@ -383,7 +385,7 @@ vicious.register(netdownwidget, vicious.widgets.net,
     end, 3)
 
 netupicon = widget({ type = 'imagebox', align = 'left' })
-netupicon.image = image(awful.util.getdir('config') .. '/icons/up.png')
+netupicon.image = image(configdir .. '/icons/up.png')
 netupwidget = widget({ type = 'textbox' })
 vicious.register(netupwidget, vicious.widgets.net,
     function(widget, args)
@@ -505,7 +507,7 @@ globalkeys = awful.util.table.join(
                                                    client.focus:raise()
                                                end
                                            end),
-    awful.key({ modkey }, 'Return',        function() exec(term_cmd .. 'tmux') end),
+    awful.key({ modkey }, 'Return',        function() exec(terminal) end),
     awful.key({ modkey, 'Control' }, 'r',  awesome.restart),
     awful.key({ modkey, 'Shift' }, 'q',    awesome.quit),
     awful.key({ modkey }, 'l',             function() awful.tag.incmwfact(0.05) end),
@@ -522,28 +524,28 @@ globalkeys = awful.util.table.join(
                                                awful.util.eval, nil,
                                                awful.util.getdir('cache') .. '/history_eval')
                                            end),
-    awful.key({modkey, 'Mod1' }, 'l',      function() awful.util.spawn('xscreensaver-command --lock') end),
+    awful.key({ modkey, 'Mod1' }, 'l',     function() awful.util.spawn('xscreensaver-command --lock') end),
     awful.key({ modkey }, 'F1',            function()
                                                local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "' .. beautiful.bg_normal .. '" -nf "' .. beautiful.fg_normal .. '" -sb "' .. beautiful.colors.blue .. '"')
                                                local command = assert(f_reader:read('*a'))
                                                f_reader:close()
                                                awful.util.spawn(command)
                                            end),
-    awful.key({ modkey }, 'F2',            function() exec('xfrun4') end)
+    awful.key({ modkey }, 'F2',            function() exec('gmrun') end)
 )
 
 clientkeys = awful.util.table.join(
     awful.key({ modkey }, 'f',                 function(c) c.fullscreen = not c.fullscreen end),
-    awful.key({ modkey }, 'x',        function(c) c:kill() end),
+    awful.key({ modkey }, 'x',                 function(c) c:kill() end),
     awful.key({ modkey, 'Control' }, 'space',  awful.client.floating.toggle),
     awful.key({ modkey, 'Control' }, 'Return', function(c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey }, 'o',                 awful.client.movetoscreen),
     awful.key({ modkey, 'Shift' }, 'r',        function(c) c:redraw() end),
     awful.key({ modkey }, 't',                 awful.client.togglemarked),
     awful.key({ modkey }, 'm',                 function(c)
-                                                 c.maximized_horizontal = not c.maximized_horizontal
-                                                 c.maximized_vertical   = not c.maximized_vertical
-                                             end)
+                                                   c.maximized_horizontal = not c.maximized_horizontal
+                                                   c.maximized_vertical   = not c.maximized_vertical
+                                               end)
 )
 
 shifty.config.clientkeys = clientkeys
@@ -553,16 +555,16 @@ for i = 1, (shifty.config.maxtags or 9) do
     globalkeys = awful.util.table.join(globalkeys,
         awful.key({ modkey }, i, function()
             local t =  awful.tag.viewonly(shifty.getpos(i))
-            end),
+        end),
         awful.key({modkey, 'Control'}, i, function()
             local t = shifty.getpos(i)
             t.selected = not t.selected
-            end),
+        end),
         awful.key({modkey, 'Control', 'Shift'}, i, function()
             if client.focus then
                 awful.client.toggletag(shifty.getpos(i))
             end
-            end),
+        end),
         awful.key({modkey, 'Shift'}, i, function()
             if client.focus then
                 t = shifty.getpos(i)
