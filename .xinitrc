@@ -1,11 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env bash
 xrdb -merge /home/dan/.Xresources
+synclient TapButton1=1
 case "$1" in
-	'openbox') 
-		exec ck-launch-session openbox-session ;;
-	'awesome')
-		lxsession &
-		exec ck-launch-session $(which $1) ;;
-	*)
-		exec ck-launch-session $(which $1) ;;
+    *)
+        exec ck-launch-session dbus-launch $(which $1) ;;
 esac

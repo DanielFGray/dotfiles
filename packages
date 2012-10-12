@@ -1,15 +1,13 @@
 coreutils
+zsh-beta
+tmux
+vim vim-scripts
 moreutils
 ack-grep
-rsync
 curl
-tmux
-zsh-beta
-vim vim-scripts
 htop
 lynx
-weechat
-rtorrent
+rsync
 build-essential
 checkinstall
 git
@@ -17,6 +15,8 @@ openssh-server
 lm-sensors
 optipng
 imagemagick
+weechat
+rtorrent
 mplayer2
 mpd mpc ncmpcpp
 

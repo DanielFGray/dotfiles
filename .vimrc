@@ -1,8 +1,8 @@
 set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
+
+call pathogen#infect()
+let g:Powerline_symbols = 'compatible'
+set laststatus=2   " Always show the statusline
 
 set scrolloff=3
 set number
@@ -14,22 +14,29 @@ set wildmenu
 set cursorline
 set autoindent
 set smartindent
-set tabstop=8
-set shiftwidth=8
+set smarttab
+set tabstop=4
+set shiftwidth=4
 set expandtab
 set foldmethod=marker
 set ruler
-set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
+"set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set showcmd
 set ofu=syntaxcomplete#Complete
 set mouse=a
 set nolazyredraw
+set autoread
+set t_Co=256
+
 syntax on
 filetype plugin indent on
 
-colorscheme slate
+":colorscheme slate
 set background=dark
 set gfn=Ubuntu\ Mono\ 8
+set guioptions-=l
+set guioptions-=r
+set guioptions-=b
 set guioptions-=T
 
 noremap <Up> <nop>
@@ -82,46 +89,6 @@ hi link Tag Special
 hi link SpecialChar Special
 hi link SpecialComment Special
 hi link Debug Special
-
-" Ruby
-hi link rubyClass Keyword
-hi link rubyModule Keyword
-hi link rubyKeyword Keyword
-hi link rubyOperator Operator
-hi link rubyIdentifier Identifier
-hi link rubyInstanceVariable Identifier
-hi link rubyGlobalVariable Identifier
-hi link rubyClassVariable Identifier
-hi link rubyConstant Type
-
-" HTML/XML
-hi link xmlTag HTML
-hi link xmlTagName HTML
-hi link xmlEndTag HTML
-hi link htmlTag HTML
-hi link htmlTagName HTML
-hi link htmlSpecialTagName HTML
-hi link htmlEndTag HTML
-hi link HTML NonText
-
-" JavaScript
-hi link javaScriptNumber Number
-
-" Objc
-hi link objcDirective Type
-hi objcMethodName ctermfg=darkyellow
-
-" CSS
-hi link cssBraces Normal
-hi link cssTagName NonText
-hi link StorageClass Special
-hi link cssClassName Special
-hi link cssIdentifier Identifier
-hi link cssColor Type
-hi link cssValueInteger Type
-hi link cssValueNumber Type
-hi link cssValueLength Type
-hi cssPseudoClassId ctermfg=darkyellow
 
 hi clear SpellBad
 hi SpellBad ctermfg=red term=underline cterm=underline

@@ -1,27 +1,26 @@
-Xft.autohint: 0
-Xft.antialias: 1
-Xft.hinting: true
-Xft.hintstyle: hintslight
-Xft.dpi: 96
-Xft.rgba: rgb
-Xft.lcdfilter: lcddefault
+!Xft.autohint:  0
+!Xft.antialias: 1
+!Xft.hinting:   true
+!Xft.hintstyle: hintslight
+!Xft.dpi:       96
+!Xft.rgba:      rgb
+!Xft.lcdfilter: lcddefault
  
-*font: xft:Ubuntu\ Mono:size=8
-*boldFont: xft:Ubuntu\ Mono:bold:size=8 
-urxvt.scrollBar: false
-urxvt.imLocale: en_US.UTF-8
-urxvt.loginShell: true
-urxvt.saveLines: 512
-urxvt.geometry: 90x25
-urxvt.boldMode: false
-urxvt.inheritPixmap: false
-urxvt.xftAntialias: false
-urxvt.jumpScroll: true
-urxvt.tintColor: white
-URxvt*internalBorder: 2
-urxvt.cursorBlink: false
-urxvt.borderless: true
+URxvt.scrollBar:      false
+URxvt.imLocale:       en_US.UTF-8
+URxvt.loginShell:     true
+URxvt.saveLines:      512
+URxvt.geometry:       90x25
+URxvt.boldMode:       true
+URxvt.inheritPixmap:  false
+URxvt.xftAntialias:   true
+URxvt.jumpScroll:     false
+URxvt.tintColor:      white
+URxvt.internalBorder: 0
+URxvt.borderless:     true
 
+*font:       xft:Ubuntu\ Mono:size=7
+*boldFont:   xft:Ubuntu\ Mono:bold:size=7
 *background: #383838
 *foreground: #dedede
 !
@@ -39,7 +38,7 @@ urxvt.borderless: true
 *color11: #d9cf8f
 !blue 
 *color4:  #64a2d9
-*color12: #8f99d9
+*color12: #3d84cf
 !magenta
 *color5:  #9a64d9
 *color13: #b08fd9

@@ -6,17 +6,16 @@ plugins=(git zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 export EDITOR="vim"
+export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
 
 alias ls="ls --group-directories-first --color=auto -H"
 alias grep="grep --color=auto"
 alias ack="ack-grep --color"
-alias canhaz="sudo apt-get install"
 alias updupg="sudo apt-get update; sudo apt-get upgrade"
-alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -f -i \$f &'"
-alias compile="make -j3 && checkinstall && echo success! || echo failed"
+alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -f -i \$f && mv \$f /pr0n/pictures/screenshots'"
+alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
 alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-alias pacman="sudo pacman-color"
-alias ed="ed -p 'ed> '"
+alias historygrep="history|grep -v 'history'|grep "
 alias cp="cp -v"
 alias mv="mv -v"
 alias rm="rm -v"
@@ -31,21 +30,37 @@ alias -s mpg=mplayer
 alias -s mpeg=mplayer
 
 bindkey -v
-bindkey "^[[A" history-search-backward
-bindkey "^[[B" history-search-forward
+bindkey "^[[A"  history-search-backward
+bindkey "^[[B"  history-search-forward
 bindkey "^[[5~" up-line-or-history
-bindkey "^[[6~" down-line-or-history
+bindkey "^[[6~" down-line-or-history
 bindkey "^[[7~" beginning-of-line
 bindkey "^[[8~" end-of-line
 bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
-function cdl() {
-        cd $1
-	ls $2
+function canhaz {
+    #switch DETECT_OS
+    #debian
+    sudo apt-get install $@
+    #arch sudo pacman-color -S
 }
+
+function cdl() {
+    cd $1
+    ls $2
+}
+
+function aptbuild() {
+    sudo apt-get build-dep -b $@
+}
+
+function gvim() {
+    command gvim -p remote-tab-silent $@ || command gvim $@;
+}
+
 function newImage() {
-	convert -background white -fill black -size 400x400 -gravity Center caption:$1 $2
+	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2
 	optipng $2
 	qiv $2
 }
