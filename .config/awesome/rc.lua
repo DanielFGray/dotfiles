@@ -32,11 +32,14 @@ end
 -- }}}
 
 -- {{{ Variable definitions
+modkey = 'Mod4'
 exec = awful.util.spawn
 terminal = 'urxvtc '
 term_cmd = terminal .. '-e '
 editor = term_cmd .. 'vim -p '
 configdir = awful.util.getdir('config') .. '/'
+beautifultheme = 'theme.lua'
+beautiful.init(configdir .. beautifultheme)
 
 function run_once(cmd)
     findme = cmd
@@ -46,9 +49,6 @@ function run_once(cmd)
     end
     awful.util.spawn_with_shell('pgrep -u $USER -x ' .. findme .. ' > /dev/null || (' .. cmd .. ')')
  end
-
-modkey = 'Mod4'
-beautiful.init(configdir .. 'theme.lua')
 
 exec     ('xrdb -load /home/dan/.Xresources')
 exec     ('synclient TapButton1=1')
@@ -117,6 +117,15 @@ shifty.config.tags = {
 shifty.config.apps = {
     {
         match = {
+            'launchy',
+            'gmrun',
+            'xfrun4',
+        },
+        slave = true,
+        float = true,
+    },
+    {
+        match = {
             'Vimperator',
             'Firefox',
             'luakit',
@@ -159,14 +168,11 @@ shifty.config.apps = {
             'easytag',
         },
         tag = 'media',
-        nopopup = true,
     },
     {
         match = {
             'MPlayer',
             'Gnuplot',
-            'gmrun',
-            'xfrun4',
             'galculator',
         },
         float = true,
@@ -212,7 +218,7 @@ shifty.config.defaults = {
 
 -- {{{ Menu
 mnuAwesome = {
-    { 'edit configs', editor .. '.config/awesome/rc.lua .config/awesome/theme.lua' },
+    { 'edit configs', editor .. configdir .. 'rc.lua ' .. configdir .. beautifultheme },
     { 'restart',      awesome.restart },
     { 'quit',         awesome.quit }
 }
@@ -320,16 +326,16 @@ vicious.register(mpdwidget, vicious.widgets.mpd,
         else 
             mpdicon.visible = true
             if args["{state}"] == 'Pause' then
-                return '<span color="' .. theme.colors.base0 .. '">' .. args["{Artist}"] .. ' - ' .. args["{Title}"] .. '</span>' .. spacer.text
+                return ' <span color="' .. theme.colors.base0 .. '">' .. args["{Artist}"] .. ' - ' .. args["{Title}"] .. '</span>' .. spacer.text
             else
-                return args["{Artist}"] .. '<span color="' .. theme.colors.base0 .. '"> - </span>' .. args["{Title}"] .. spacer.text
+                return ' ' .. args["{Artist}"] .. '<span color="' .. theme.colors.base0 .. '"> - </span>' .. args["{Title}"] .. spacer.text
             end
         end
     end, 5)
 mpdwidget:buttons(
     awful.util.table.join(
-        awful.button({ }, 1, function() awful.util.spawn('mpc toggle', false) end),
-        awful.button({ }, 3, function() awful.util.spawn(term_cmd .. 'ncmpcpp') end),
+        awful.button({ }, 1, function() awful.util.spawn(term_cmd .. 'ncmpcpp') end),
+        awful.button({ }, 3, function() awful.util.spawn('mpc toggle', false) end),
         awful.button({ }, 4, function() awful.util.spawn('mpc prev', false) end),
         awful.button({ }, 5, function() awful.util.spawn('mpc next', false) end)
     )
@@ -355,7 +361,7 @@ senswidget = widget({ type = 'textbox' })
 vicious.register(senswidget, vicious.widgets.thermal,
     function(widget, args)
         local temp = args[1] * 1.8 + 32
-        if temp > 200 then
+        if temp > 190 then
             naughty.notify({ title = "Temperature Warning", text = "Is it me or is it hot in here?", fg = beautiful.fg_urgent, bg = beautiful.bg_urgent })
         end
         return temp  .. '<span color="' .. theme.colors.base0 .. '">°F</span> '
@@ -482,8 +488,8 @@ globalkeys = awful.util.table.join(
     awful.key({ }, 'XF86AudioStop',         function() exec('mpc -q stop', false) end),
     awful.key({ }, 'XF86AudioNext',         function() exec('mpc -q next', false) end),
     awful.key({ }, 'XF86AudioPrev',         function() exec('mpc -q prev', false) end),
-    awful.key({ modkey }, 'Left',           awful.tag.viewprev),
-    awful.key({ modkey }, 'Right',          awful.tag.viewnext),
+    awful.key({ modkey }, 'h',              awful.tag.viewprev),
+    awful.key({ modkey }, 'l',              awful.tag.viewnext),
     awful.key({ modkey }, 'Escape',         awful.tag.history.restore),
     awful.key({ modkey, 'Shift' }, 'd',     shifty.del),
     awful.key({ modkey, 'Shift' }, 'n',     shifty.send_prev),
@@ -497,9 +503,7 @@ globalkeys = awful.util.table.join(
                                             end),
     awful.key({ modkey }, 'a',              shifty.add),
     awful.key({ modkey }, 'r',              shifty.rename),
-    awful.key({ modkey, 'Shift'}, 'a',      function()
-                                                shifty.add({nopopup = true})
-                                            end),
+    awful.key({ modkey, 'Shift'}, 'a',      function() shifty.add({nopopup = true}) end),
     awful.key({ modkey }, 'j',              function()
                                                 awful.client.focus.byidx(1)
                                                 if client.focus then client.focus:raise() end
@@ -523,8 +527,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, 'Return',         function() exec(terminal) end),
     awful.key({ modkey, 'Control' }, 'r',   awesome.restart),
     awful.key({ modkey, 'Shift' }, 'q',     awesome.quit),
-    awful.key({ modkey }, 'l',              function() awful.tag.incmwfact(0.05) end),
-    awful.key({ modkey }, 'h',              function() awful.tag.incmwfact(-0.05) end),
+    awful.key({ modkey }, 'Left',           function() awful.tag.incmwfact(-0.05) end),
+    awful.key({ modkey }, 'Right',          function() awful.tag.incmwfact(0.05) end),
     awful.key({ modkey, 'Shift' }, 'h',     function() awful.tag.incnmaster(1) end),
     awful.key({ modkey, 'Shift' }, 'l',     function() awful.tag.incnmaster(-1) end),
     awful.key({ modkey, 'Control' }, 'h',   function() awful.tag.incncol(1) end),

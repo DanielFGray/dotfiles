@@ -11,11 +11,12 @@ export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
 alias ls="ls --group-directories-first --color=auto -H"
 alias grep="grep --color=auto"
 alias ack="ack-grep --color"
+alias du="cdu -Bi -d ch"
 alias updupg="sudo apt-get update; sudo apt-get upgrade"
 alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -f -i \$f && mv \$f /pr0n/pictures/screenshots'"
 alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
 alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-alias historygrep="history|grep -v 'history'|grep "
+alias historygrep="history|grep -v 'history' | grep "
 alias cp="cp -v"
 alias mv="mv -v"
 alias rm="rm -v"
@@ -40,23 +41,18 @@ bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
 function canhaz {
-    #switch DETECT_OS
-    #debian
-    sudo apt-get install $@
-    #arch sudo pacman-color -S
+    if [[ -f /etc/debian_version ]]; then
+        sudo apt-get install $@
+    #elif [[ arch ]]; then
+    #    sudo pacman-color -S
+    #elif [[ gentoo ]; then 
+    #    sudo emerge -a
+    fi
 }
 
 function cdl() {
     cd $1
     ls $2
-}
-
-function aptbuild() {
-    sudo apt-get build-dep -b $@
-}
-
-function gvim() {
-    command gvim -p remote-tab-silent $@ || command gvim $@;
 }
 
 function newImage() {

@@ -20,29 +20,63 @@ set shiftwidth=4
 set expandtab
 set foldmethod=marker
 set ruler
-"set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
+set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set showcmd
-set ofu=syntaxcomplete#Complete
 set mouse=a
 set nolazyredraw
+set relativenumber
 set autoread
 set t_Co=256
+set shortmess+=I
 
 syntax on
 filetype plugin indent on
 
-":colorscheme slate
-set background=dark
-set gfn=Ubuntu\ Mono\ 8
-set guioptions-=l
-set guioptions-=r
-set guioptions-=b
-set guioptions-=T
+set ofu=syntaxcomplete#Complete
+set tags+=/home/dan/.vim/gtk+.tags
 
-noremap <Up> <nop>
-noremap <Down> <nop>
-noremap <Left> <nop>
-noremap <Right> <nop>
+"modify search keys to center the result.
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap * *zz
+nnoremap # #zz
+nnoremap g* g*zz
+nnoremap g# g#zz
+
+if has("gui_running")
+    colorscheme solarized
+    set background=dark
+    set gfn=Ubuntu\ Mono\ 8
+    set guioptions-=l
+    set guioptions-=r
+    set guioptions-=b
+    set guioptions-=T
+    let g:Powerline_symbols = 'fancy'
+endif
+
+
+if exists("&undodir")
+    set undodir=~/.vim/undo//
+endif
+if exists("&backupdir")
+    set backupdir=~/.vim/backups//
+endif
+if exists("&directory")
+    set directory=~/.vim/swaps//
+endif
+set undofile
+set undolevels=1000 "maximum number of changes that can be undone
+set undoreload=10000
+
+" arrow keys are the devil
+inoremap <Up> <NOP>
+inoremap <Down> <NOP>
+inoremap <Left> <NOP>
+inoremap <Right> <NOP>
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
 
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
 ca w!! w !sudo tee >/dev/null "%"

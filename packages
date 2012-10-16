@@ -6,6 +6,7 @@ moreutils
 ack-grep
 curl
 htop
+nmon
 lynx
 rsync
 build-essential
