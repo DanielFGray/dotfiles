@@ -16,11 +16,11 @@ URxvt.inheritPixmap:  false
 URxvt.xftAntialias:   true
 URxvt.jumpScroll:     false
 URxvt.tintColor:      white
-URxvt.internalBorder: 0
+URxvt.internalBorder: 2
 URxvt.borderless:     true
 
-*font:       xft:Ubuntu\ Mono:size=7
-*boldFont:   xft:Ubuntu\ Mono:bold:size=7
+*font:       xft:Ubuntu\ Mono:pixelsize=10
+*boldFont:   xft:Ubuntu\ Mono:bold:pizelsize=10
 *background: #383838
 *foreground: #dedede
 !

@@ -16,7 +16,7 @@ alias updupg="sudo apt-get update; sudo apt-get upgrade"
 alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -f -i \$f && mv \$f /pr0n/pictures/screenshots'"
 alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
 alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-alias historygrep="history|grep -v 'history' | grep "
+alias historygrep="history | grep -v 'history' | grep "
 alias cp="cp -v"
 alias mv="mv -v"
 alias rm="rm -v"
@@ -34,7 +34,7 @@ bindkey -v
 bindkey "^[[A"  history-search-backward
 bindkey "^[[B"  history-search-forward
 bindkey "^[[5~" up-line-or-history
-bindkey "^[[6~" down-line-or-history
+bindkey "^[[6~" down-line-or-history
 bindkey "^[[7~" beginning-of-line
 bindkey "^[[8~" end-of-line
 bindkey "^[[1~" beginning-of-line

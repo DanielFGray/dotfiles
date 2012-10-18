@@ -84,7 +84,7 @@ seek_time = "1"
 #song_window_title_format
 # Song format for window title.
 
-#external_editor = "/usr/bin/vim"
+external_editor = "/usr/bin/vim"
 # Path to external editor used to edit lyrics.
 
 #browser_playlist_prefix = TEXT
@@ -182,7 +182,7 @@ autocenter_mode = "yes"
 centered_cursor = "yes"
 # If enabled, currently highlighted position in the list will be always centered.
 
-#progressbar_look = TEXT
+progressbar_look = "█▋░"
 # This variable defines the look of progressbar. Note that it has to be exactly two or three char‐
 # acters long.
 

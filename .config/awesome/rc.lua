@@ -38,8 +38,7 @@ terminal = 'urxvtc '
 term_cmd = terminal .. '-e '
 editor = term_cmd .. 'vim -p '
 configdir = awful.util.getdir('config') .. '/'
-beautifultheme = 'theme.lua'
-beautiful.init(configdir .. beautifultheme)
+beautiful.init(configdir .. 'theme.lua')
 
 function run_once(cmd)
     findme = cmd
@@ -435,8 +434,8 @@ for s = 1, screen.count() do
         end, mytasklist.buttons)
 
     mywibox[s] = { }
-    mywibox[s][1] = awful.wibox({ position = 'top',    screen = s, height = 13 })
-    mywibox[s][2] = awful.wibox({ position = 'bottom', screen = s, height = 13 })
+    mywibox[s][1] = awful.wibox({ position = 'top',    screen = s, height = 12 })
+    mywibox[s][2] = awful.wibox({ position = 'bottom', screen = s, height = 12 })
     mywibox[s][1].widgets = {
         mylayoutbox[s],
         mytaglist[s],
@@ -543,10 +542,11 @@ globalkeys = awful.util.table.join(
                                             end),
     awful.key({ modkey, 'Mod1' }, 'l',      function() awful.util.spawn('xscreensaver-command --lock') end),
     awful.key({ modkey }, 'F1',             function()
-                                                local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "' .. beautiful.bg_normal .. '" -nf "' .. beautiful.fg_normal .. '" -sb "' .. beautiful.colors.blue .. '"')
+                                                local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "' .. beautiful.bg_normal .. '" -nf "' .. beautiful.fg_normal .. '" -sb "' .. beautiful.colors.blue .. '" -sf "'.. beautiful.bg_normal ..'"')
                                                 local command = assert(f_reader:read('*a'))
                                                 f_reader:close()
                                                 awful.util.spawn(command)
+                                                --exec('/home/dan/build/spring/spring')
                                             end),
     awful.key({ modkey }, 'F2',             function() exec('gmrun') end)
 )

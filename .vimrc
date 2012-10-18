@@ -5,19 +5,13 @@ let g:Powerline_symbols = 'compatible'
 set laststatus=2   " Always show the statusline
 
 set scrolloff=3
-set number
 set hlsearch
 set backspace=indent,eol,start
 set nowrap
 set showmatch
 set wildmenu
 set cursorline
-set autoindent
-set smartindent
-set smarttab
-set tabstop=4
-set shiftwidth=4
-set expandtab
+set noet ci pi sts=0 sw=4 ts=4
 set foldmethod=marker
 set ruler
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
@@ -33,7 +27,7 @@ syntax on
 filetype plugin indent on
 
 set ofu=syntaxcomplete#Complete
-set tags+=/home/dan/.vim/gtk+.tags
+set tags+=~/.vim/gtk+.tags
 
 "modify search keys to center the result.
 nnoremap n nzz
@@ -54,6 +48,20 @@ if has("gui_running")
     let g:Powerline_symbols = 'fancy'
 endif
 
+function! SuperCleverTab()
+    if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
+      return "\<Tab>"
+    else
+       if &omnifunc != ''
+          return "\<C-X>\<C-O>"
+       elseif &dictionary != ''
+          return “\<C-K>”
+       else
+          return "\<C-N>"
+      endif
+    endif
+endfunction
+inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
 if exists("&undodir")
     set undodir=~/.vim/undo//
@@ -65,7 +73,7 @@ if exists("&directory")
     set directory=~/.vim/swaps//
 endif
 set undofile
-set undolevels=1000 "maximum number of changes that can be undone
+set undolevels=1000
 set undoreload=10000
 
 " arrow keys are the devil
@@ -80,7 +88,6 @@ noremap <Right> <NOP>
 
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
 ca w!! w !sudo tee >/dev/null "%"
-"command CDC cd %:p:h
 
 hi Comment      ctermfg=12
 hi Constant     ctermfg=6
