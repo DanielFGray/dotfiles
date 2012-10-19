@@ -47,6 +47,7 @@ if has("gui_running")
     set guioptions-=T
     let g:Powerline_symbols = 'fancy'
 endif
+set 
 
 function! SuperCleverTab()
     if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
@@ -77,14 +78,14 @@ set undolevels=1000
 set undoreload=10000
 
 " arrow keys are the devil
-inoremap <Up> <NOP>
-inoremap <Down> <NOP>
-inoremap <Left> <NOP>
-inoremap <Right> <NOP>
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
+" inoremap <Up> <NOP>
+" inoremap <Down> <NOP>
+" inoremap <Left> <NOP>
+" inoremap <Right> <NOP>
+" noremap <Up> <NOP>
+" noremap <Down> <NOP>
+" noremap <Left> <NOP>
+" noremap <Right> <NOP>
 
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
 ca w!! w !sudo tee >/dev/null "%"
