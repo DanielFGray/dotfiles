@@ -26,7 +26,3 @@ fi
 /usr/bin/gnome-keyring-daemon --start --components=secrets && \
 /usr/bin/gnome-keyring-daemon --start --components=pkcs11 && \
 /usr/bin/gnome-keyring-daemon --start --components=gpg ) &
-
-# Autostart the Dropbox deamon
-(sleep 10s && ~/.dropbox-dist/dropboxd) &
-
