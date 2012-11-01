@@ -75,10 +75,8 @@ layouts = {
     awful.layout.suit.magnifier
 }
 
--- Define if we want to use titlebar on all applications.
 use_titlebar = true
 
--- Shifty configured tags.
 shifty.config.tags = {
     w1 = {
         layout    = awful.layout.suit.floating,
@@ -112,8 +110,6 @@ shifty.config.tags = {
     },
 }
 
--- SHIFTY: application matching rules
--- order here matters, early rules will be applied first
 shifty.config.apps = {
     {
         match = {
@@ -198,14 +194,6 @@ shifty.config.apps = {
     },
 }
 
--- SHIFTY: default tag creation rules
--- parameter description
---  * floatBars : if floating clients should always have a titlebar
---  * guess_name : should shifty try and guess tag names when creating
---                 new (unconfigured) tags?
---  * guess_position: as above, but for position parameter
---  * run : function to exec when shifty creates a new tag
---  * all other parameters (e.g. layout, mwfact) follow awesome's tag API
 shifty.config.defaults = {
     layout = awful.layout.suit.floating,
     ncol = 1,
@@ -224,8 +212,8 @@ mnuAwesome = {
 }
 
 mnuPower = {
-    { 'suspend',   'dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend' },
-    { 'hibernate', 'dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Hibernate' },
+    { 'suspend',   'dbus-send --system --print-reply --dest="org.freedesktop.UPower"     /org/freedesktop/UPower org.freedesktop.UPower.Suspend' },
+    { 'hibernate', 'dbus-send --system --print-reply --dest="org.freedesktop.UPower"     /org/freedesktop/UPower org.freedesktop.UPower.Hibernate' },
     { 'reboot',    'dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart' },
     { 'halt',      'dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop' }
 }
@@ -320,15 +308,15 @@ mpdicon.image = image(configdir .. 'icons/music.png')
 mpdwidget = widget({ type = 'textbox' })
 vicious.register(mpdwidget, vicious.widgets.mpd,
     function(widget, args)
-        if args["{state}"] == ('Stop' or 'N/A') then 
+        if args['{state}'] == ('Stop' or 'N/A') then 
             mpdicon.visible = false
             return ''
         else 
             mpdicon.visible = true
-            if args["{state}"] == 'Pause' then
-                return ' <span color="' .. theme.colors.base0 .. '">' .. args["{Artist}"] .. ' - ' .. args["{Title}"] .. '</span>' .. spacer.text
+            if args['{state}'] == 'Pause' then
+                return ' <span color="' .. theme.colors.base0 .. '">' .. args['{Artist}'] .. ' - ' .. args['{Title}'] .. '</span>' .. spacer.text
             else
-                return ' ' .. args["{Artist}"] .. '<span color="' .. theme.colors.base0 .. '"> - </span>' .. args["{Title}"] .. spacer.text
+                return ' ' .. args['{Artist}'] .. '<span color="' .. theme.colors.base0 .. '"> - </span>' .. args['{Title}'] .. spacer.text
             end
         end
     end, 5)
@@ -355,22 +343,27 @@ memwidget = widget({ type = 'textbox' })
 vicious.register(memwidget, vicious.widgets.mem,
     '$1% <span color="' .. theme.colors.base0 .. '">(</span>$2<span color="' .. theme.colors.base0 .. '">/$3)</span> ', 5)
 
+baticon = widget({ type = 'imagebox' })
+baticon.image = image(configdir .. 'icons/bat.png')
+batwidget = widget({ type = 'textbox' })
+vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 30, 'BAT1')
+
 sensicon = widget({ type = 'imagebox', align = 'left' })
 sensicon.image = image(configdir .. 'icons/temp.png')
 senswidget = widget({ type = 'textbox' })
 vicious.register(senswidget, vicious.widgets.thermal,
     function(widget, args)
-        local temp = args[1] * 1.8 + 32
+        local temp = math.floor(((args[1] * 1.8 + 32) * 10^1) + 0.5) / (10^1) 
         if temp > 190 then
-            naughty.notify({ title = "Temperature Warning", text = "Is it me or is it hot in here?", fg = beautiful.fg_urgent, bg = beautiful.bg_urgent })
+            naughty.notify({
+               title = 'Temperature Warning',
+               text = 'Is it me or is it hot in here?',
+               fg = beautiful.fg_urgent,
+               bg = beautiful.bg_urgent
+            })
         end
         return temp  .. '<span color="' .. theme.colors.base0 .. '">°F</span> '
-    end, 15, "thermal_zone0")
-
-baticon = widget({ type = 'imagebox' })
-baticon.image = image(configdir .. 'icons/bat.png')
-batwidget = widget({ type = 'textbox' })
-vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 30, 'BAT1')
+    end, 15, 'thermal_zone0')
 
 wifiicon = widget({ type = 'imagebox', align = 'left' })
 wifiicon.image = image(configdir .. 'icons/wifi.png')
@@ -382,7 +375,7 @@ vicious.register(wifiwidget, vicious.widgets.wifi,
             return ''
         else
             wifiicon.visible = true
-            return string.format("%i%% ", args["{link}"] / 70 * 100)
+            return string.format('%i%% ', args['{link}'] / 70 * 100)
         end
     end, 4, 'wlan0')
 
@@ -391,21 +384,17 @@ netdownicon.image = image(configdir .. 'icons/down.png')
 netdownwidget = widget({ type = 'textbox' })
 vicious.register(netdownwidget, vicious.widgets.net, 
     function(widget, args)
-    	local dn_kb = ''
-    	local rx_mb = ''
-        if args["{wlan0 carrier}"] == 1 then
-            netdownicon.visible = true
-            dn_kb = args["{wlan0 down_kb}"]
-            rx_mb = args["{wlan0 rx_mb}"]
-        elseif args["{eth0 carrier}"] == 1 then
-            netdownicon.visible = true
-            dn_kb = args["{eth0 down_kb}"]
-            rx_mb = args["{eth0 rx_mb}"]
+        local interface = ''
+        if args['{wlan0 carrier}'] == 1 then
+            interface = 'wlan0'
+        elseif args['{eth0 carrier}'] == 1 then
+            interface = 'eth0'
         else
             netdownicon.visible = false
             return 'disconnected'
         end
-        return dn_kb .. 'k<span color="' .. theme.colors.base0 .. '">/' .. rx_mb .. 'M</span> '
+        netdownicon.visible = true
+        return args['{' .. interface .. ' down_kb}'] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args['{' .. interface .. ' rx_mb}'] .. 'M</span> '
     end, 3)
 
 netupicon = widget({ type = 'imagebox', align = 'left' })
@@ -413,21 +402,17 @@ netupicon.image = image(configdir .. 'icons/up.png')
 netupwidget = widget({ type = 'textbox' })
 vicious.register(netupwidget, vicious.widgets.net,
     function(widget, args)
-    	local up_kb = ''
-    	local tx_mb = ''
-        if args["{wlan0 carrier}"] == 1 then
-            netupicon.visible = true
-            up_kb = args["{wlan0 up_kb}"]
-            tx_mb = args["{wlan0 tx_mb}"]
-        elseif args["{eth0 carrier}"] == 1 then
-            netupicon.visible = true
-            up_kb = args["{eth0 up_kb}"]
-            tx_mb = args["{eth0 tx_mb}"]
+        local interface = ''
+        if args['{wlan0 carrier}'] == 1 then
+            interface = 'wlan0'
+        elseif args['{eth0 carrier}'] == 1 then
+            interface = 'eth0'
         else
-            netupicon.visible = false
-            return ''
+            netdownicon.visible = false
+            return 'disconnected'
         end
-        return up_kb .. 'k<span color="' .. theme.colors.base0 .. '">/' .. tx_mb .. 'M</span>'
+        netdownicon.visible = true
+        return args['{' .. interface .. ' up_kb}'] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args['{' .. interface .. ' tx_mb}'] .. 'M</span> '
     end, 3)
 
 for s = 1, screen.count() do
