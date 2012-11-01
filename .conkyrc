@@ -15,9 +15,9 @@ draw_shades yes
 draw_outline no
 draw_borders no
 draw_graph_borders yes
-default_color ccc
-default_shade_color 000
-default_outline_color ccc
+default_color 111
+default_shade_color 666
+default_outline_color aaa
 alignment mr
 gap_x 5
 gap_y 0

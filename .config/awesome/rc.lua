@@ -38,7 +38,8 @@ terminal = 'urxvtc '
 term_cmd = terminal .. '-e '
 editor = term_cmd .. 'vim -p '
 configdir = awful.util.getdir('config') .. '/'
-beautiful.init(configdir .. 'theme.lua')
+beautifultheme = 'theme.lua'
+beautiful.init(configdir .. beautifultheme)
 
 function run_once(cmd)
     findme = cmd
@@ -230,8 +231,8 @@ mnuPower = {
 }
 
 mnuCompositing = {
-    { 'stop',  'killall compton' },
-    { 'start', 'compton -cC -fF -I 0.065 -O 0.065 -D 6 -m 0.8 -G -b' },
+    { 'stop',  'pkill compton' },
+    { 'start', 'compton -fF -I 0.065 -O 0.065 -D 6 -m 0.8 -G -b -i 0.9' },
 }
 
 mnuMain = awful.menu({ items = {
@@ -390,16 +391,21 @@ netdownicon.image = image(configdir .. 'icons/down.png')
 netdownwidget = widget({ type = 'textbox' })
 vicious.register(netdownwidget, vicious.widgets.net, 
     function(widget, args)
+    	local dn_kb = ''
+    	local rx_mb = ''
         if args["{wlan0 carrier}"] == 1 then
             netdownicon.visible = true
-            return args["{wlan0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 rx_mb}"] .. 'M</span> '
+            dn_kb = args["{wlan0 down_kb}"]
+            rx_mb = args["{wlan0 rx_mb}"]
         elseif args["{eth0 carrier}"] == 1 then
             netdownicon.visible = true
-            return args["{eth0 down_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{eth0 rx_mb}"] .. 'M</span> '
+            dn_kb = args["{eth0 down_kb}"]
+            rx_mb = args["{eth0 rx_mb}"]
         else
             netdownicon.visible = false
             return 'disconnected'
         end
+        return dn_kb .. 'k<span color="' .. theme.colors.base0 .. '">/' .. rx_mb .. 'M</span> '
     end, 3)
 
 netupicon = widget({ type = 'imagebox', align = 'left' })
@@ -407,15 +413,21 @@ netupicon.image = image(configdir .. 'icons/up.png')
 netupwidget = widget({ type = 'textbox' })
 vicious.register(netupwidget, vicious.widgets.net,
     function(widget, args)
+    	local up_kb = ''
+    	local tx_mb = ''
         if args["{wlan0 carrier}"] == 1 then
             netupicon.visible = true
-            return args["{wlan0 up_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{wlan0 tx_mb}"] .. 'M</span>'
+            up_kb = args["{wlan0 up_kb}"]
+            tx_mb = args["{wlan0 tx_mb}"]
         elseif args["{eth0 carrier}"] == 1 then
             netupicon.visible = true
-            return args["{eth0 up_kb}"] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. args["{eth0 tx_mb}"] .. 'M</span>'
+            up_kb = args["{eth0 up_kb}"]
+            tx_mb = args["{eth0 tx_mb}"]
         else
             netupicon.visible = false
+            return ''
         end
+        return up_kb .. 'k<span color="' .. theme.colors.base0 .. '">/' .. tx_mb .. 'M</span>'
     end, 3)
 
 for s = 1, screen.count() do

@@ -1,4 +1,4 @@
-ZSH=/home/dan/.oh-my-zsh
+ZSH="/home/dan/.oh-my-zsh"
 ZSH_THEME="clean"
 COMPLETION_WAITING_DOTS="true"
 #DISABLE_LS_COLORS="true"
@@ -16,7 +16,7 @@ alias updupg="sudo apt-get update; sudo apt-get upgrade"
 alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -f -i \$f && mv \$f /pr0n/pictures/screenshots'"
 alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
 alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-alias historygrep="history | grep -v 'history' | grep "
+alias historygrep="history | grep -v 'history' | grep"
 alias cp="cp -v"
 alias mv="mv -v"
 alias rm="rm -v"
@@ -46,7 +46,7 @@ function canhaz {
     #elif [[ arch ]]; then
     #    sudo pacman-color -S
     #elif [[ gentoo ]; then 
-    #    sudo emerge -a
+    #    sudo emerge -av
     fi
 }
 
@@ -75,7 +75,7 @@ function tarpipe() {
 }
 
 function apt-search() {
-	apt-cache search $*|sort|less
+	apt-cache search $* | sort | less
 }
 
 function extract () {
