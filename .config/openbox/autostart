@@ -1,5 +1,6 @@
 hsetroot -solid "#2E3436" &
 xrdb -load /home/dan/.Xresources
+urxvtd &
 nitrogen --restore &
 (cb-compositor --start || compton -cC -fF -I 0.065 -O 0.065 -D 6 -m 0.8 -G -b ) &
 cb-hotcorners --daemon &

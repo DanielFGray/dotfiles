@@ -12,10 +12,12 @@ alias ls="ls --group-directories-first --color=auto -H"
 alias grep="grep --color=auto"
 alias ack="ack-grep --color"
 alias du="cdu -Bi -d ch"
-alias updupg="sudo apt-get update; sudo apt-get upgrade"
 alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -f -i \$f && mv \$f /pr0n/pictures/screenshots'"
 alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
+alias updupg="sudo apt-get update; sudo apt-get upgrade"
 alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
+alias apt-get="sudo apt-get"
+alias yum="sudo yum"
 alias historygrep="history | grep -v 'history' | grep"
 alias cp="cp -v"
 alias mv="mv -v"
@@ -43,6 +45,8 @@ bindkey "^[[4~" end-of-line
 function canhaz {
     if [[ -f /etc/debian_version ]]; then
         sudo apt-get install $@
+    elif [[ -f /etc/redhat-release ]]; then
+	    sudo yum install $@
     #elif [[ arch ]]; then
     #    sudo pacman-color -S
     #elif [[ gentoo ]; then 

@@ -12,7 +12,7 @@
 		<item label="Terminal">
 			<action name="Execute">
 				<execute>
-					terminator
+					urxvtc
 				</execute>
 			</action>
 		</item>
@@ -69,13 +69,13 @@
 			</item>
 			<item label="Task Manager (htop)">
 				<action name="Execute">
-					<execute>terminator --command=&quot;htop&quot;</execute>
+					<execute>urxvtc -e htop</execute>
 				</action>
 			</item>
 			<item label="Terminator Terminal">
 				<action name="Execute">
 					<execute>
-						terminator
+						urxvtc
 					</execute>
 				</action>
 			</item>
@@ -269,7 +269,7 @@
 				<item label="man page">
 					<action name="Execute">
 						<execute>
-							terminator --command="man conky"
+							urxvtc -e man conky
 						</execute>
 					</action>
 				</item>
@@ -293,7 +293,7 @@
 				<item label="man page">
 					<action name="Execute">
 						<execute>
-							terminator --command="man dmenu"
+							urxvtc -e man dmenu
 						</execute>
 					</action>
 				</item>
@@ -310,7 +310,7 @@
 				<item label="man page">
 					<action name="Execute">
 						<execute>
-							terminator --command="man gmrun"
+							urxvtc -e man gmrun
 						</execute>
 					</action>
 				</item>
@@ -376,11 +376,11 @@
 					</action>
 				</item>
 			</menu>
-			<menu id="terminatorconfig" label="Terminator">
+			<menu id="urxvtcconfig" label="Terminator">
 				<item label="Edit config file">
 					<action name="Execute">
 						<execute>
-							gvim ~/.config/terminator/config
+							gvim ~/.config/urxvtc/config
 						</execute>
 					</action>
 				</item>
@@ -388,7 +388,7 @@
 				<item label="man page">
 					<action name="Execute">
 						<execute>
-							terminator --command="man terminator_config"
+							urxvtc -e man urxvtc_config
 						</execute>
 					</action>
 				</item>
@@ -412,7 +412,7 @@
 				<item label="man page">
 					<action name="Execute">
 						<execute>
-							terminator --command="man tint2"
+							urxvtc -e man tint2
 						</execute>
 					</action>
 				</item>
@@ -436,7 +436,7 @@
 			    <item label="man xrandr">
 				    <action name="Execute">
 					    <execute>
-						    terminator --command="man xrandr"
+						    urxvtc -e man xrandr
 					    </execute>
 				    </action>
 			    </item>
@@ -444,7 +444,7 @@
 			<item label="Edit Default Applications">
 				<action name="Execute">
 					<execute>
-						terminator --command="sudo update-alternatives --all"
+						urxvtc -e sudo update-alternatives --all
 					</execute>
 				</action>
 			</item>

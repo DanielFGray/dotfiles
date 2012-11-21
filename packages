@@ -42,5 +42,6 @@ gmrun
 suckless-tools
 gnome-icon-theme-extras gnome-icon-theme-symbolic gnome-icon-theme-full
 pavucontrol
+volti
 arandr
 xorg-xserver-core

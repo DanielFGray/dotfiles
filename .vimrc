@@ -1,17 +1,19 @@
 set nocompatible
 
 call pathogen#infect()
-let g:Powerline_symbols = 'compatible'
+"let g:Powerline_symbols = 'compatible'
 set laststatus=2   " Always show the statusline
 
-set scrolloff=3
+set scrolloff=50
 set hlsearch
 set backspace=indent,eol,start
 set nowrap
 set showmatch
 set wildmenu
 set cursorline
-"set noet ci pi sts=0 sw=4 ts=4
+set autoindent
+set smartindent
+set smarttab
 set foldmethod=marker
 set ruler
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
@@ -19,7 +21,7 @@ set showcmd
 set mouse=a
 set nolazyredraw
 set relativenumber
-"set autoread
+set autoread
 set t_Co=256
 set shortmess+=I
 
@@ -27,14 +29,14 @@ syntax on
 filetype plugin indent on
 
 set ofu=syntaxcomplete#Complete
-"set tags+=~/.vim/gtk+.tags
+set tags+=~/.vim/gtk+.tags
 
-nnoremap n nzz
-nnoremap N Nzz
-nnoremap * *zz
-nnoremap # #zz
-nnoremap g* g*zz
-nnoremap g# g#zz
+"nnoremap n nzz
+"nnoremap N Nzz
+"nnoremap * *zz
+"nnoremap # #zz
+"nnoremap g* g*zz
+"nnoremap g# g#zz
 
 colorscheme wombat
 set background=dark
