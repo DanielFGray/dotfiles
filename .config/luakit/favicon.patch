@@ -1,0 +1,21 @@
++++ window.lua    2010-08-25 04:50:21.000000000 -0400
+@@ -120,6 +120,7 @@
+         w:update_uri(view)
+         w:update_progress(view)
+         w:update_tab_labels(idx)
++        w:update_win_icon(view)
+     end)
+
+     w.win:add_signal("destroy", function ()
+@@ -625,6 +626,11 @@
+         }) do wi.font = v end
+     end,
+
++    update_win_icon = function (w, view)
++        if icons[view] then
++            w.win.icon = icons[view]
++        end
++    end
+ }
+
+ -- Ordered list of class index functions. Other classes (E.g. webview) are able

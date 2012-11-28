@@ -29,7 +29,7 @@ gnome-mplayer
 gmpc gmpc-plugins
 scrot
 awesome
-thunar thunar-volman thunar-archive-plugin
+dolphin
 xscreensaver
 xarchiver
 lxappearance
@@ -41,7 +41,10 @@ conky
 gmrun
 suckless-tools
 gnome-icon-theme-extras gnome-icon-theme-symbolic gnome-icon-theme-full
+gtk2-engines-murrine gtk3-engines-unico
 pavucontrol
 volti
+gksu
+gparted
 arandr
 xorg-xserver-core
