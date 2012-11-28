@@ -17,7 +17,7 @@ URxvt.xftAntialias:   true
 URxvt.jumpScroll:     false
 URxvt.tintColor:      white
 URxvt.internalBorder: 2
-URxvt.borderless:     true
+*borderless:     true
 
 *font:       xft:Ubuntu\ Mono:pixelsize=10
 *boldFont:   xft:Ubuntu\ Mono:bold:pizelsize=10
