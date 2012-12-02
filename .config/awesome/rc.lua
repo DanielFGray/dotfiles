@@ -5,7 +5,7 @@ require('beautiful')
 require('naughty')
 require('vicious')
 require('shifty')
---require('debian.menu')
+require('debian.menu')
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -38,12 +38,12 @@ exec              = awful.util.spawn
 terminal          = 'urxvtc '
 term_cmd          = terminal..'-e '
 editor            = term_cmd..'vim -p '
-browser           = 'firefox'
+browser           = 'luakit'
 filemanager       = 'dolphin'
 mpdclient         = term_cmd..'ncmpcpp'
 wirelessinterface = 'wlan0'
 wiredinterface    = 'eth0'
-beautifultheme    = 'theme.lua'
+beautifultheme    = configdir..'themes/dfg/'
 
 function run_once(cmd)
     local findme = cmd
@@ -65,7 +65,7 @@ run_once ('clipit')
 run_once ('nm-applet')
 run_once ('volti')
 
-beautiful.init(configdir..beautifultheme)
+beautiful.init(beautifultheme..'theme.lua')
 
 layouts = {
     awful.layout.suit.floating,
@@ -127,6 +127,7 @@ shifty.config.apps = {
             'Firefox',
             'luakit',
             'Nightly',
+	    'uzbl',
         },
         tag = 'web',
     },
@@ -207,7 +208,7 @@ shifty.config.defaults = {
 
 -- {{{ Menu
 mnuAwesome = {
-    { 'edit configs', editor..configdir..'rc.lua '..configdir..beautifultheme },
+    { 'edit configs', editor..configdir..'rc.lua '..beautifultheme..'theme.lua' },
     { 'restart',      awesome.restart },
     { 'quit',         awesome.quit }
 }
@@ -238,7 +239,7 @@ mnuMain = awful.menu({ items = {
     { 'gimp',         'gimp' },
     { 'composite',    mnuCompositing },
     { '', '' },
---    { 'Debian',       debian.menu.Debian_menu.Debian },
+    { 'Debian',       debian.menu.Debian_menu.Debian },
     { 'awesome',      mnuAwesome },
     { 'power',        mnuPower  }
 }})
@@ -304,7 +305,7 @@ spacer       = widget({ type = 'textbox'  })
 spacer.text  = ' <span color="'..theme.colors.blue..'">|</span> '
 
 mpdicon = widget({ type = 'imagebox', align = 'left' })
-mpdicon.image = image(configdir..'icons/music.png')
+mpdicon.image = image(beautifultheme..'icons/music.png')
 mpdwidget = widget({ type = 'textbox' })
 vicious.register(mpdwidget, vicious.widgets.mpd, function(widget, args)
     if args['{state}'] == ('Stop' or 'N/A') then 
@@ -328,23 +329,23 @@ mpdwidget:buttons( awful.util.table.join(
 ))
 
 cpuicon = widget({ type = 'imagebox', align = 'left' })
-cpuicon.image = image(configdir..'icons/cpu.png')
+cpuicon.image = image(beautifultheme..'icons/cpu.png')
 cpuwidget = widget({ type = 'textbox' })
 vicious.register(cpuwidget, vicious.widgets.cpu, function(widget, args) return string.format('%02d', args[1])..'% ' end, .5)
 
 memicon = widget({ type = 'imagebox', align = 'left' })
-memicon.image = image(configdir..'icons/mem.png')
+memicon.image = image(beautifultheme..'icons/mem.png')
 memwidget = widget({ type = 'textbox' })
 vicious.register(memwidget, vicious.widgets.mem,
     '$1% <span color="'..theme.colors.base0..'">(</span>$2<span color="'..theme.colors.base0..'">/$3)</span> ', 5)
 
 baticon = widget({ type = 'imagebox' })
-baticon.image = image(configdir..'icons/bat.png')
+baticon.image = image(beautifultheme..'icons/bat.png')
 batwidget = widget({ type = 'textbox' })
 vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 30, 'BAT1')
 
 sensicon = widget({ type = 'imagebox', align = 'left' })
-sensicon.image = image(configdir..'icons/temp.png')
+sensicon.image = image(beautifultheme..'icons/temp.png')
 senswidget = widget({ type = 'textbox' })
 vicious.register(senswidget, vicious.widgets.thermal, function(widget, args)
     local temp = tonumber(string.format("%.0f", args[1] * 1.8 + 32))
@@ -361,7 +362,7 @@ vicious.register(senswidget, vicious.widgets.thermal, function(widget, args)
 end, 15, 'thermal_zone0')
 
 wifiicon = widget({ type = 'imagebox', align = 'left' })
-wifiicon.image = image(configdir..'icons/wifi.png')
+wifiicon.image = image(beautifultheme..'icons/wifi.png')
 wifiwidget = widget({ type = 'textbox' })
 vicious.register(wifiwidget, vicious.widgets.wifi, function(widget, args)
     if args['{link}'] == 0 then
@@ -374,7 +375,7 @@ vicious.register(wifiwidget, vicious.widgets.wifi, function(widget, args)
 end, 4, wirelessinterface)
 
 netdownicon = widget({ type = 'imagebox', align = 'left' })
-netdownicon.image = image(configdir..'icons/down.png')
+netdownicon.image = image(beautifultheme..'icons/down.png')
 netdownwidget = widget({ type = 'textbox' })
 vicious.register(netdownwidget, vicious.widgets.net, function(widget, args)
     local interface = ''
@@ -391,7 +392,7 @@ vicious.register(netdownwidget, vicious.widgets.net, function(widget, args)
 end, 3)
 
 netupicon = widget({ type = 'imagebox', align = 'left' })
-netupicon.image = image(configdir..'icons/up.png')
+netupicon.image = image(beautifultheme..'icons/up.png')
 netupwidget = widget({ type = 'textbox' })
 vicious.register(netupwidget, vicious.widgets.net, function(widget, args)
     local interface = ''
