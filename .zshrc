@@ -7,23 +7,27 @@ source $ZSH/oh-my-zsh.sh
 
 export EDITOR="vim"
 export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 
-alias ls="ls --group-directories-first --color=auto -H"
-alias grep="grep --color=auto"
-alias ack="ack-grep --color"
+alias sudo="sudo "
+alias ls="ls --group-directories-first --color=auto -H "
+alias grep="grep --color=auto "
+alias ack="ack-grep --color "
 alias du="cdu -Bi -d ch"
-alias historygrep="history | grep -v 'history' | grep"
-alias lampp="sudo /opt/lampp/lampp"
-alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -f -i \$f && mv \$f /pr0n/pictures/screenshots'"
+alias historygrep="history | grep -v 'history' | grep "
+alias lampp="sudo /opt/lampp/lampp "
+alias dirktop="scrot -d 1 -e 'optipng \$f; qiv -fi \$f && mv \$f /pr0n/pictures/screenshots'"
 alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
 alias updupg="sudo apt-get update; sudo apt-get upgrade"
 alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
 alias apt-get="sudo apt-get "
 alias yum="sudo yum "
+alias pacman="sudo pacman "
 alias cp="cp -v"
 alias mv="mv -v"
 alias rm="rm -v"
 alias ln="ln -v"
+alias -s pdf=apvlv
 alias -s png=qiv
 alias -s jpg=qiv
 alias -s gif=qiv
@@ -44,20 +48,20 @@ bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
 function canhaz {
-    if [[ -f /etc/debian_version ]]; then
-        sudo apt-get install $@
-    elif [[ -f /etc/redhat-release ]]; then
-	sudo yum install $@
-    #elif [[ arch ]]; then
-    #    sudo pacman-color -S
-    #elif [[ gentoo ]; then 
-    #    sudo emerge -av
-    fi
+	if [[ -f /etc/debian_version ]]; then
+		sudo apt-get install $@
+	elif [[ -f /etc/redhat-release ]]; then
+		sudo yum install $@
+	elif [[ -f /etc/arch-release ]]; then
+		sudo pacman-color -S $@
+	elif [[ -f /etc/gentoo-release ]]; then
+		sudo emerge -av $@
+	fi
 }
 
 function cdl() {
-    cd $1
-    ls $2
+	cd $1
+	ls $2
 }
 
 function newImage() {

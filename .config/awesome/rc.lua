@@ -5,7 +5,7 @@ require('beautiful')
 require('naughty')
 require('vicious')
 require('shifty')
-require('debian.menu')
+--require('debian.menu')
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -239,7 +239,7 @@ mnuMain = awful.menu({ items = {
     { 'gimp',         'gimp' },
     { 'composite',    mnuCompositing },
     { '', '' },
-    { 'Debian',       debian.menu.Debian_menu.Debian },
+--    { 'Debian',       debian.menu.Debian_menu.Debian },
     { 'awesome',      mnuAwesome },
     { 'power',        mnuPower  }
 }})
@@ -348,7 +348,7 @@ sensicon = widget({ type = 'imagebox', align = 'left' })
 sensicon.image = image(beautifultheme..'icons/temp.png')
 senswidget = widget({ type = 'textbox' })
 vicious.register(senswidget, vicious.widgets.thermal, function(widget, args)
-    local temp = tonumber(string.format("%.0f", args[1] * 1.8 + 32))
+    local temp = tonumber(string.format('%.0f', args[1] * 1.8 + 32))
     if temp > 190 then
         naughty.notify({
            title = 'Temperature Warning',
@@ -516,13 +516,14 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, 'Control' }, 'Down',    function() awful.tag.incncol(-1) end),
     awful.key({ modkey }, 'space',              function() awful.layout.inc(layouts, 1) end),
     awful.key({ modkey, 'Shift' }, 'space',     function() awful.layout.inc(layouts, -1) end),
-    --awful.key({ modkey }, 'F1',                 function()
+    awful.key({ modkey }, 'F1',                 function()
                                                     --local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'"')
-                                                    --local command = assert(f_reader:read('*a'))
-                                                    --f_reader:close()
-                                                    --awful.util.spawn(command)
-                                                    --exec('/home/dan/build/spring/spring')
-                                                --end),
+                                                    local f_reader = io.popen( 'dmenu_run -hist '..os.getenv('HOME')..'/.dmenu.history -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'" -fn "Ubuntu Mono-8"')
+                                                    local command = assert(f_reader:read('*a'))
+                                                    f_reader:close()
+                                                    awful.util.spawn(command)
+                                                    --exec('spring')
+                                                end),
     awful.key({ modkey }, 'F2',                 function() exec('gmrun') end),
     awful.key({ modkey }, 'F3',			function()
     						    awful.prompt.run({ prompt = ' Web: ' },
