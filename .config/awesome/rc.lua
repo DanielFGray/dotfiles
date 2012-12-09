@@ -3,8 +3,8 @@ require('awful.autofocus')
 require('awful.rules')
 require('beautiful')
 require('naughty')
-require('vicious')
-require('shifty')
+require('vicious') -- $ git clone http://git.sysphere.org/vicious ~/.config/awesome/vicious
+require('shifty') -- $ git clone http://bioe007@github.com/bioe007/awesome-shifty.git ~/.config/awesome/shifty
 --require('debian.menu')
 
 -- {{{ Error handling
