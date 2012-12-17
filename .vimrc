@@ -9,6 +9,9 @@ set hlsearch
 set backspace=indent,eol,start
 set nowrap
 set showmatch
+set splitright splitbelow
+set equalalways
+set hidden
 set wildmenu
 set cursorline
 set autoindent
@@ -31,13 +34,6 @@ filetype plugin indent on
 set ofu=syntaxcomplete#Complete
 set tags+=~/.vim/gtk+.tags
 
-"nnoremap n nzz
-"nnoremap N Nzz
-"nnoremap * *zz
-"nnoremap # #zz
-"nnoremap g* g*zz
-"nnoremap g# g#zz
-
 colorscheme wombat
 set background=dark
 if has("gui_running")
@@ -51,16 +47,12 @@ endif
 set 
 
 function! SuperCleverTab()
-    if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
-      return "\<Tab>"
+    if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$' return "\<Tab>"
     else
-       if &omnifunc != ''
-          return "\<C-X>\<C-O>"
-       elseif &dictionary != ''
-          return “\<C-K>”
-       else
-          return "\<C-N>"
-      endif
+       if &omnifunc != '' return "\<C-X>\<C-O>"
+       elseif &dictionary != '' return “\<C-K>”
+       else return "\<C-N>"
+       endif
     endif
 endfunction
 inoremap <Tab> <C-R>=SuperCleverTab()<cr>
@@ -87,6 +79,12 @@ set undoreload=10000
 " noremap <Down> <NOP>
 " noremap <Left> <NOP>
 " noremap <Right> <NOP>
+" nnoremap n nzz
+" nnoremap N Nzz
+" nnoremap * *zz
+" nnoremap # #zz
+" nnoremap g* g*zz
+" nnoremap g# g#zz
 
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
 ca w!! w !sudo tee >/dev/null "%"

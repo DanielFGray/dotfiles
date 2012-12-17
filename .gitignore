@@ -1,6 +1,3 @@
 *.swp
 *~
-.config/awesome/icons/*
-.config/awesome/vicious/*
-.config/awesome/others/*
-
+.git

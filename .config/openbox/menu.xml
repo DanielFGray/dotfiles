@@ -401,10 +401,10 @@
 						</execute>
 					</action>
 				</item>
-                <item label="Restart tint2">
+				<item label="tint2conf">
 					<action name="Execute">
 						<execute>
-							tint2restart
+							tint2conf
 						</execute>
 					</action>
 				</item>

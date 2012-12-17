@@ -3,8 +3,8 @@ require('awful.autofocus')
 require('awful.rules')
 require('beautiful')
 require('naughty')
-require('vicious') -- $ git clone http://git.sysphere.org/vicious ~/.config/awesome/vicious
-require('shifty') -- $ git clone http://bioe007@github.com/bioe007/awesome-shifty.git ~/.config/awesome/shifty
+require('vicious')
+require('shifty')
 --require('debian.menu')
 
 -- {{{ Error handling
@@ -34,6 +34,7 @@ end
 -- {{{ Variable definitions
 modkey            = 'Mod4'
 configdir         = awful.util.getdir('config')..'/'
+homedir           = os.getenv('HOME')
 exec              = awful.util.spawn
 terminal          = 'urxvtc '
 term_cmd          = terminal..'-e '
@@ -54,11 +55,12 @@ function run_once(cmd)
     awful.util.spawn_with_shell('pgrep -u $USER -x '..findme..' > /dev/null || ('..cmd..')')
  end
 
-exec     ('xrdb -load '..os.getenv('HOME')..'.Xresources')
+exec     ('xrdb -load '..homedir..'/.Xresources')
 exec     ('synclient TapButton1=1')
 run_once ('urxvtd')
+run_once (homedir..'/bin/compton')
 run_once ('mpd')
-run_once ('thunar --daemon')
+--run_once ('thunar --daemon')
 run_once ('xscreensaver -no-splash')
 --run_once ('xfce4-power-manager')
 run_once ('clipit')
@@ -118,7 +120,7 @@ shifty.config.apps = {
             'gmrun',
             'xfrun4',
         },
-        slave = true,
+	--slave = true,
         float = true,
     },
     {
@@ -222,7 +224,7 @@ mnuPower = {
 
 mnuCompositing = {
     { 'stop',  'pkill compton' },
-    { 'start', 'compton -fF -I 0.065 -O 0.065 -D 6 -m 0.9 -G -b -i 0.9' },
+    { 'start', homedir..'/bin/compton' },
 }
 
 mnuMain = awful.menu({ items = {
@@ -254,7 +256,7 @@ mylauncher = awful.widget.launcher({
 datewidget = widget({ type = 'textbox' })
 vicious.register(datewidget, vicious.widgets.date, ' %a %b %d %Y  %l:%M:%S ', 1)
 datewidget:buttons(awful.util.table.join(
-  awful.button({ }, 1, function () exec(term_cmd..'cal') end)
+  awful.button({ }, 1, function () exec('gsimplecal') end)
 ))
 
 mysystray = widget({ type = 'systray', align = 'left' })
@@ -465,13 +467,6 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-    awful.key({ }, 'XF86AudioRaiseVolume',      function() exec('amixer -q set Master 5%+') end),
-    awful.key({ }, 'XF86AudioLowerVolume',      function() exec('amixer -q set Master 5%-') end),
-    awful.key({ }, 'XF86AudioMute',             function() exec('amixer -q set Master toggle') end),
-    awful.key({ }, 'XF86AudioPlay',             function() exec('mpc -q toggle', false) end),
-    awful.key({ }, 'XF86AudioStop',             function() exec('mpc -q stop', false) end),
-    awful.key({ }, 'XF86AudioNext',             function() exec('mpc -q next', false) end),
-    awful.key({ }, 'XF86AudioPrev',             function() exec('mpc -q prev', false) end),
     awful.key({ modkey }, 'h',                  awful.tag.viewprev),
     awful.key({ modkey }, 'l',                  awful.tag.viewnext),
     awful.key({ modkey }, 'Escape',             awful.tag.history.restore),
@@ -496,7 +491,7 @@ globalkeys = awful.util.table.join(
                                                     awful.client.focus.byidx(-1)
                                                     if client.focus then client.focus:raise() end
                                                 end),
-    awful.key({ modkey }, 'w',                  function() mnuMain:show(true) end),
+    awful.key({ modkey }, 'w',                  function() mnuMain:toggle() end),
     awful.key({ modkey }, 'Up',                 function() awful.client.swap.byidx(-1) end),
     awful.key({ modkey }, 'Down',               function() awful.client.swap.byidx(1) end),
     --awful.key({ modkey, 'Shift' }, 'j',         function() awful.screen.focus(1) end),
@@ -516,12 +511,16 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, 'Control' }, 'Down',    function() awful.tag.incncol(-1) end),
     awful.key({ modkey }, 'space',              function() awful.layout.inc(layouts, 1) end),
     awful.key({ modkey, 'Shift' }, 'space',     function() awful.layout.inc(layouts, -1) end),
+    awful.key({ }, 'XF86AudioRaiseVolume',      function() exec('amixer -q set Master 5%+') end),
+    awful.key({ }, 'XF86AudioLowerVolume',      function() exec('amixer -q set Master 5%-') end),
+    awful.key({ }, 'XF86AudioMute',             function() exec('amixer -q set Master toggle') end),
+    awful.key({ }, 'XF86AudioPlay',             function() exec('mpc -q toggle', false) end),
+    awful.key({ }, 'XF86AudioStop',             function() exec('mpc -q stop', false) end),
+    awful.key({ }, 'XF86AudioNext',             function() exec('mpc -q next', false) end),
+    awful.key({ }, 'XF86AudioPrev',             function() exec('mpc -q prev', false) end),
     awful.key({ modkey }, 'F1',                 function()
                                                     --local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'"')
-                                                    local f_reader = io.popen( 'dmenu_run -hist '..os.getenv('HOME')..'/.dmenu.history -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'" -fn "Ubuntu Mono-8"')
-                                                    local command = assert(f_reader:read('*a'))
-                                                    f_reader:close()
-                                                    awful.util.spawn(command)
+                                                    awful.util.spawn_with_shell('dmenu_run -b -hist "'..homedir..'/.dmenu.history" -fn "UbuntuMono-8:normal"')
                                                     --exec('spring')
                                                 end),
     awful.key({ modkey }, 'F2',                 function() exec('gmrun') end),
@@ -546,6 +545,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, 'Mod1' }, 'h',          function() exec(term_cmd..'htop') end),
     awful.key({ modkey, 'Mod1' }, 'l',          function() exec('xscreensaver-command --lock') end),
     awful.key({ modkey, 'Mod1' }, 'm',          function() exec(mpdclient) end),
+    awful.key({ modkey, 'Mod1' }, 'v',          function() exec('pavucontrol') end),
     awful.key({ modkey, 'Mod1' }, 'w',          function() exec(browser) end)
 )
 
