@@ -13,6 +13,7 @@ if [[ -f /etc/debian_version ]]; then
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
 	alias apt-get="sudo apt-get "
 	alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
+	function pkgsearch() { apt-cache search $* | sort | less }
 elif [[ -f /etc/redhat-release ]]; then
 	alias canhaz="sudo yum install "
 	alias yum="sudo yum "
@@ -21,6 +22,7 @@ elif [[ -f /etc/arch-release ]]; then
 	alias canhaz="sudo pacman -S "
 	alias pacman="sudo pacman "
 	alias updupg="sudo pacman -Syu "
+	function pkgsearch() { unbuffer yaourt -Ss $* | less }
 elif [[ -f /etc/gentoo-release ]]; then
 	alias canhaz="sudo emerge -av "
 fi
@@ -85,10 +87,6 @@ function changeroot() {
 
 function tarpipe() {
 	tar czf - $2 | ssh $1 'tar xzvf - $3'
-}
-
-function apt-search() {
-	apt-cache search $* | sort | less
 }
 
 function extract () {

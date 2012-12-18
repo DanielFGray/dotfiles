@@ -5,7 +5,8 @@ require('beautiful')
 require('naughty')
 require('vicious')
 require('shifty')
---require('debian.menu')
+local freedesktop_utils = require("freedesktop.utils")
+local freedesktop_menu = require("freedesktop.menu")
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -38,7 +39,7 @@ homedir           = os.getenv('HOME')
 exec              = awful.util.spawn
 terminal          = 'urxvtc '
 term_cmd          = terminal..'-e '
-editor            = term_cmd..'vim -p '
+editor            = 'gvim '
 browser           = 'luakit'
 filemanager       = 'dolphin'
 mpdclient         = term_cmd..'ncmpcpp'
@@ -224,8 +225,11 @@ mnuPower = {
 
 mnuCompositing = {
     { 'stop',  'pkill compton' },
-    { 'start', homedir..'/bin/compton' },
+    { 'start', 'compton' },
 }
+
+mnuApps = {}
+for _, item in ipairs(freedesktop_menu.new()) do table.insert(mnuApps, item) end
 
 mnuMain = awful.menu({ items = {
     { 'terminal',     terminal } ,
@@ -240,11 +244,11 @@ mnuMain = awful.menu({ items = {
     { 'rtorrent',     term_cmd..'rtorrent' },
     { 'gimp',         'gimp' },
     { 'composite',    mnuCompositing },
-    { '', '' },
---    { 'Debian',       debian.menu.Debian_menu.Debian },
+    { 'apps',         mnuApps},   
     { 'awesome',      mnuAwesome },
     { 'power',        mnuPower  }
 }})
+
 
 mylauncher = awful.widget.launcher({
     image = image(beautiful.awesome_icon),
@@ -275,36 +279,18 @@ mytaglist.buttons = awful.util.table.join(
 )
 
 mytasklist = { }
-mytasklist.buttons = awful.util.table.join(
-    awful.button({ }, 1, function(c)
-        if c == client.focus then
-            c.minimized = true
-        else
-            if not c:isvisible() then awful.tag.viewonly(c:tags()[1]) end
-            client.focus = c
-            c:raise()
-        end
-    end),
-    awful.button({ }, 3, function()
-        if instance then
-            instance:hide()
-            instance = nil
-        else
-            instance = awful.menu.clients({ width=250 })
-        end
-    end),
-    awful.button({ }, 4, function()
-        awful.client.focus.byidx(1)
-        if client.focus then client.focus:raise() end
-    end),
-    awful.button({ }, 5, function()
-        awful.client.focus.byidx(-1)
-        if client.focus then client.focus:raise() end
-    end)
-)
+mytasklist.buttons = awful.util.table.join( awful.button({ }, 1, function(c)
+    if c == client.focus then
+        c.minimized = true
+    else
+        if not c:isvisible() then awful.tag.viewonly(c:tags()[1]) end
+        client.focus = c
+        c:raise()
+    end
+end))
 
 spacer       = widget({ type = 'textbox'  })
-spacer.text  = ' <span color="'..theme.colors.blue..'">|</span> '
+spacer.text  = ' <span color="'..theme.bg_focus..'">|</span> '
 
 mpdicon = widget({ type = 'imagebox', align = 'left' })
 mpdicon.image = image(beautifultheme..'icons/music.png')
@@ -491,18 +477,15 @@ globalkeys = awful.util.table.join(
                                                     awful.client.focus.byidx(-1)
                                                     if client.focus then client.focus:raise() end
                                                 end),
-    awful.key({ modkey }, 'w',                  function() mnuMain:toggle() end),
+    awful.key({ modkey }, 'w',                  function() mnuMain:toggle({keygrabber = true}) end),
     awful.key({ modkey }, 'Up',                 function() awful.client.swap.byidx(-1) end),
     awful.key({ modkey }, 'Down',               function() awful.client.swap.byidx(1) end),
     --awful.key({ modkey, 'Shift' }, 'j',         function() awful.screen.focus(1) end),
     --awful.key({ modkey, 'Shift' }, 'k',         function() awful.screen.focus(-1) end),
     awful.key({ modkey }, 'u',                  awful.client.urgent.jumpto),
-    awful.key({ modkey }, 'Tab',                function()
-                                                    awful.client.focus.history.previous()
-                                                    if client.focus then client.focus:raise() end
-                                                end),
     awful.key({ modkey, 'Control' }, 'r',       awesome.restart),
     awful.key({ modkey, 'Shift' }, 'q',         awesome.quit),
+    awful.key({ modkey }, 'Tab',                function() clientmenu = awful.menu.clients({ width=250},{keygrabber = true }) end),
     awful.key({ modkey }, 'Left',               function() awful.tag.incmwfact(-0.05) end),
     awful.key({ modkey }, 'Right',              function() awful.tag.incmwfact(0.05) end),
     awful.key({ modkey, 'Control' }, 'Left',    function() awful.tag.incnmaster(1) end),
