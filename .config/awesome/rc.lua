@@ -41,7 +41,7 @@ terminal          = 'urxvtc '
 term_cmd          = terminal..'-e '
 editor            = 'gvim '
 browser           = 'luakit'
-filemanager       = 'dolphin'
+filemanager       = 'thunar'
 mpdclient         = term_cmd..'ncmpcpp'
 wirelessinterface = 'wlan0'
 wiredinterface    = 'eth0'
@@ -61,7 +61,7 @@ exec     ('synclient TapButton1=1')
 run_once ('urxvtd')
 run_once (homedir..'/bin/compton')
 run_once ('mpd')
---run_once ('thunar --daemon')
+run_once ('thunar --daemon')
 run_once ('xscreensaver -no-splash')
 --run_once ('xfce4-power-manager')
 run_once ('clipit')
@@ -260,7 +260,7 @@ mylauncher = awful.widget.launcher({
 datewidget = widget({ type = 'textbox' })
 vicious.register(datewidget, vicious.widgets.date, ' %a %b %d %Y  %l:%M:%S ', 1)
 datewidget:buttons(awful.util.table.join(
-  awful.button({ }, 1, function () exec('gsimplecal') end)
+    awful.button({ }, 1, function () exec('gsimplecal') end)
 ))
 
 mysystray = widget({ type = 'systray', align = 'left' })
@@ -279,7 +279,7 @@ mytaglist.buttons = awful.util.table.join(
 )
 
 mytasklist = { }
-mytasklist.buttons = awful.util.table.join( awful.button({ }, 1, function(c)
+mytasklist.buttons = awful.util.table.join(awful.button({ }, 1, function(c)
     if c == client.focus then
         c.minimized = true
     else
@@ -319,7 +319,8 @@ mpdwidget:buttons( awful.util.table.join(
 cpuicon = widget({ type = 'imagebox', align = 'left' })
 cpuicon.image = image(beautifultheme..'icons/cpu.png')
 cpuwidget = widget({ type = 'textbox' })
-vicious.register(cpuwidget, vicious.widgets.cpu, function(widget, args) return string.format('%02d', args[1])..'% ' end, .5)
+vicious.register(cpuwidget, vicious.widgets.cpu, function(widget, args)
+    return string.format('%02d', args[1])..'% ' end, .5)
 
 memicon = widget({ type = 'imagebox', align = 'left' })
 memicon.image = image(beautifultheme..'icons/mem.png')
@@ -405,7 +406,7 @@ for s = 1, screen.count() do
         awful.button({ }, 4, function() awful.layout.inc(layouts, 1) end),
         awful.button({ }, 5, function() awful.layout.inc(layouts, -1) end)))
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
-    mytasklist[s] = awful.widget.tasklist( function(c)
+    mytasklist[s] = awful.widget.tasklist(function(c)
         return awful.widget.tasklist.label.currenttags(c, s)
     end, mytasklist.buttons)
     mywibox[s] = { }
@@ -459,13 +460,13 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, 'Shift' }, 'd',         shifty.del),
     awful.key({ modkey, 'Control' }, 'h',       shifty.send_prev),
     awful.key({ modkey, 'Control' }, 'l',       shifty.send_next),
-    awful.key({ modkey, 'Control' }, 'n',       function()
-                                                    local t = awful.tag.selected()
-                                                    local s = awful.util.cycle(screen.count(), t.screen + 1)
-                                                    awful.tag.history.restore()
-                                                    t = shifty.tagtoscr(s, t)
-                                                    awful.tag.viewonly(t)
-                                                end),
+    --awful.key({ modkey, 'Control' }, 'n',       function()
+    --                                                local t = awful.tag.selected()
+    --                                                local s = awful.util.cycle(screen.count(), t.screen + 1)
+    --                                                awful.tag.history.restore()
+    --                                                t = shifty.tagtoscr(s, t)
+    --                                                awful.tag.viewonly(t)
+    --                                            end),
     awful.key({ modkey }, 'a',                  shifty.add),
     awful.key({ modkey }, 'r',                  shifty.rename),
     awful.key({ modkey, 'Shift'}, 'a',          function() shifty.add({nopopup = true}) end),
@@ -478,14 +479,14 @@ globalkeys = awful.util.table.join(
                                                     if client.focus then client.focus:raise() end
                                                 end),
     awful.key({ modkey }, 'w',                  function() mnuMain:toggle({keygrabber = true}) end),
-    awful.key({ modkey }, 'Up',                 function() awful.client.swap.byidx(-1) end),
-    awful.key({ modkey }, 'Down',               function() awful.client.swap.byidx(1) end),
     --awful.key({ modkey, 'Shift' }, 'j',         function() awful.screen.focus(1) end),
     --awful.key({ modkey, 'Shift' }, 'k',         function() awful.screen.focus(-1) end),
     awful.key({ modkey }, 'u',                  awful.client.urgent.jumpto),
     awful.key({ modkey, 'Control' }, 'r',       awesome.restart),
     awful.key({ modkey, 'Shift' }, 'q',         awesome.quit),
-    awful.key({ modkey }, 'Tab',                function() clientmenu = awful.menu.clients({ width=250},{keygrabber = true }) end),
+    awful.key({ modkey }, 'Tab',                function() awful.menu.clients(nil, {keygrabber = true }) end),
+    awful.key({ modkey }, 'Up',                 function() awful.client.swap.byidx(-1) end),
+    awful.key({ modkey }, 'Down',               function() awful.client.swap.byidx(1) end),
     awful.key({ modkey }, 'Left',               function() awful.tag.incmwfact(-0.05) end),
     awful.key({ modkey }, 'Right',              function() awful.tag.incmwfact(0.05) end),
     awful.key({ modkey, 'Control' }, 'Left',    function() awful.tag.incnmaster(1) end),
@@ -504,7 +505,6 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, 'F1',                 function()
                                                     --local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'"')
                                                     awful.util.spawn_with_shell('dmenu_run -b -hist "'..homedir..'/.dmenu.history" -fn "UbuntuMono-8:normal"')
-                                                    --exec('spring')
                                                 end),
     awful.key({ modkey }, 'F2',                 function() exec('gmrun') end),
     awful.key({ modkey }, 'F3',			function()
@@ -579,15 +579,15 @@ root.keys(globalkeys)
 client.add_signal('focus', function(c)
     if not awful.client.ismarked(c) then
         c.border_color = beautiful.border_focus
+        c.opacity = 1
     end 
-    c.opacity = 1
 end)
 
 client.add_signal('unfocus', function(c)
     if not awful.client.ismarked(c) then
         c.border_color = beautiful.border_normal
+        c.opacity = 0.9
     end 
-    c.opacity = 0.9
 end)
 
 client.add_signal('manage', function (c, startup)
