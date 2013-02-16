@@ -5,6 +5,8 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
+export EDITOR="vim"
+
 ## OS specific commands
 if [[ -f /etc/debian_version ]]; then
 	export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
@@ -14,15 +16,15 @@ if [[ -f /etc/debian_version ]]; then
 	alias apt-get="sudo apt-get "
 	alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
 	function pkgsearch() { apt-cache search $* | sort | less }
-elif [[ -f /etc/redhat-release ]]; then
-	alias canhaz="sudo yum install "
-	alias yum="sudo yum "
 elif [[ -f /etc/arch-release ]]; then
 	export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	alias canhaz="sudo pacman -S "
 	alias pacman="sudo pacman "
 	alias updupg="sudo pacman -Syu "
 	function pkgsearch() { unbuffer yaourt -Ss $* | less }
+elif [[ -f /etc/redhat-release ]]; then
+	alias canhaz="sudo yum install "
+	alias yum="sudo yum "
 elif [[ -f /etc/gentoo-release ]]; then
 	alias canhaz="sudo emerge -av "
 fi
@@ -30,22 +32,18 @@ fi
 ## environment specific commands
 if [[ -d /opt/lampp ]]; then
 	alias lampp="sudo /opt/lampp/lampp "
-else
-	alias lampp="echo 'lampp not installed'"
 fi
 
-export EDITOR="vim"
-
-alias cp="cp -v"
-alias mv="mv -v"
-alias rm="rm -v"
-alias ln="ln -v"
+alias cp="cp -v "
+alias mv="mv -v "
+alias rm="rm -v "
+alias ln="ln -v "
 alias sudo="sudo "
-alias ls="ls --group-directories-first --color=auto -H "
-alias grep="grep --color=auto "
-alias historygrep="history | grep -v 'history' | grep "
+alias ftp="lftp "
+alias ls="ls --group-directories-first --color=auto -h "
+alias grep="grep --color=auto -E "
+alias historygrep="history | grep -v 'history' | grep -E "
 
-alias -s pdf=apvlv
 alias -s png=qiv
 alias -s jpg=qiv
 alias -s gif=qiv
@@ -53,7 +51,7 @@ alias -s mp3=mplayer
 alias -s avi=mplayer
 alias -s wmv=mplayer
 alias -s mpg=mplayer
-alias -s mpeg=mplayer
+alias -s pdf=apvlv
 
 bindkey -v
 bindkey "^[[A"  history-search-backward
@@ -68,6 +66,10 @@ bindkey "^[[4~" end-of-line
 function cdl() {
 	cd $1
 	ls $2
+}
+
+function wget() {
+	echo 'use curl'
 }
 
 function newImage() {
@@ -89,25 +91,31 @@ function tarpipe() {
 	tar czf - $2 | ssh $1 'tar xzvf - $3'
 }
 
-function extract () {
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2)   tar xvjf $1        ;;
-            *.tar.gz)    tar xvzf $1     ;;
-            *.bz2)       bunzip2 $1       ;;
-            *.rar)       unrar x $1     ;;
-            *.gz)        gunzip $1     ;;
-            *.tar)       tar xvf $1        ;;
-            *.tbz2)      tar xvjf $1      ;;
-            *.tgz)       tar xvzf $1       ;;
-            *.zip)       unzip $1     ;;
-            *.Z)         uncompress $1  ;;
-            *.7z)        7z x $1    ;;
-            *)           echo "'$1' cannot be extracted via >extract<" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
-    fi
+function extract() {
+	if [ -f $1 ] ; then
+		case $1 in
+			*.tar.bz2)   tar xvjf $1 ;;
+			*.tar.gz)    tar xvzf $1 ;;
+			*.bz2)       bunzip2 $1 ;;
+			*.rar)       unrar x $1 ;;
+			*.gz)        gunzip $1 ;;
+			*.tar)       tar xvf $1	;;
+			*.tbz2)      tar xvjf $1 ;;
+			*.tgz)       tar xvzf $1 ;;
+			*.zip)       unzip $1 ;;
+			*.Z)         uncompress $1;;
+			*.7z)        7z x $1 ;;
+			*)           echo "'$1' cannot be extracted via >extract<" ;;
+		esac
+	else
+		echo "'$1' is not a valid file"
+	fi
+}
+
+function byzanz() {
+	date=`date +%F`
+	byzanz-record $* /pr0n/pictures/screenshots/$date.gif
+	mirage -f /pr0n/pictures/screenshots/$date.gif
 }
 
 function simpleHTTP() {

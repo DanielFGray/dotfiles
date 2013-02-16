@@ -2,8 +2,10 @@ coreutils
 zsh-beta
 tmux
 vim vim-scripts
+mutt
 moreutils
 ack-grep
+lftp
 curl
 htop
 nmon
@@ -27,19 +29,19 @@ vim-gtk
 xfburn
 gnome-mplayer
 gmpc gmpc-plugins
+apvlv
 scrot
 awesome
-dolphin
 xscreensaver
 xarchiver
 lxappearance
 clipit xclip
+gsimplecal
 mirage qiv
 gpick
 nitrogen
 conky
 gmrun
-suckless-tools
 gnome-icon-theme-extras gnome-icon-theme-symbolic gnome-icon-theme-full
 gtk2-engines-murrine gtk3-engines-unico
 pavucontrol
