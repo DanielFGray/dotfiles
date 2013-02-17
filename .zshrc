@@ -5,6 +5,7 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
+#export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
 
 ## OS specific commands
@@ -38,6 +39,7 @@ alias cp="cp -v "
 alias mv="mv -v "
 alias rm="rm -v "
 alias ln="ln -v "
+alias du="/home/dan/bin/cdu -is -d h "
 alias sudo="sudo "
 alias ftp="lftp "
 alias ls="ls --group-directories-first --color=auto -h "

@@ -11,6 +11,7 @@ htop
 nmon
 lynx
 rsync
+ranger
 build-essential
 checkinstall
 git
@@ -23,15 +24,15 @@ rtorrent
 mplayer2
 mpd mpc ncmpcpp
 
-luakit
+awesome
 rxvt-unicode-256color
+luakit
 vim-gtk
 xfburn
 gnome-mplayer
 gmpc gmpc-plugins
 apvlv
 scrot
-awesome
 xscreensaver
 xarchiver
 lxappearance
