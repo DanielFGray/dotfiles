@@ -96,7 +96,7 @@ shifty.config.tags = {
 		slave     = false,
 		spawn     = browser,
 	},
-	sys = {
+	term = {
 		layout    = awful.layout.suit.tile.bottom,
 		position  = 2,
 		exclusive = false,
@@ -189,7 +189,9 @@ shifty.config.apps = {
 	{
 		match = {
 			terminal,
+			'urxvt',
 		},
+		tag = 'term',
 		slave = true,
 	},
 	{
