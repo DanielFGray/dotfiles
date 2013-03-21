@@ -1,6 +1,7 @@
 awful =             require('awful')
 awful_autofocus =   require('awful.autofocus')
 awful_rules =       require('awful.rules')
+awful_remote =      require('awful.remote')
 beautiful =         require('beautiful')
 naughty =           require('naughty')
 vicious =           require('vicious')
@@ -41,9 +42,10 @@ sexec =             awful.util.spawn_with_shell
 terminal =          'urxvtc '
 term_cmd =          terminal..'-e '
 editor =            term_cmd..'vim '
-browser =           'luakit'
-filemanager =       'nautilus'
-mpdclient =         term_cmd..'ncmpcpp'
+browser =           'luakit '
+filemanager =       'nautilus '
+mpdclient =         'sonata '
+--mpdclient =         term_cmd..'ncmpcpp'
 wirelessinterface = 'wlan0'
 wiredinterface =    'eth0'
 beautifultheme =    configdir..'themes/dfg/'
@@ -97,23 +99,23 @@ shifty.config.tags = {
 		spawn     = browser,
 	},
 	term = {
-		layout    = awful.layout.suit.tile.bottom,
+		layout    = awful.layout.suit.tile.top,
 		position  = 2,
-		exclusive = false,
-		mwfact    = 0.85,
+		exclusive = true,
+		mwfact    = 0.75,
 --		init      = true,
-		spawn     = term_cmd..'sh '..homedir..'tmuxsession.sh ; '..term_cmd..'sh '..homedir..'tmuxsession2.sh',
+		spawn     = term_cmd..'sh '..homedir..'tmuxsession.sh ;'..term_cmd..'sh '..homedir..'tmuxsession2.sh',
 --		slave	  = true
 	},
 	books = {
 		layout    = awful.layout.suit.tile,
 --		position  = 3,
-		spawn     = filemanager..' /pr0n/books',
+		spawn     = filemanager..'/pr0n/books',
 		exclusive = false,
 	},
 	audio = {
 		layout    = awful.layout.suit.tile,
-		position  = 4,
+--		position  = 4,
 		spawn     = mpdclient..' && pavucontrol',
 		exclusive = false,
 	},
@@ -127,9 +129,10 @@ shifty.config.apps = {
 	{
 		match = {
 			'gmrun',
+			'gsimplecal',
 			'xfrun4',
 		},
---		slave = true,
+		slave = true,
 		float = true,
 	},
 	{
@@ -189,6 +192,7 @@ shifty.config.apps = {
 	{
 		match = {
 			terminal,
+			'xterm',
 			'urxvt',
 		},
 		tag = 'term',
@@ -228,7 +232,7 @@ mnuAwesome = {
 
 mnuCompositing = {
 	{ 'stop',  'pkill compton' },
-	{ 'start', 'compton' },
+	{ 'start', 'pkill compton && compton' },
 }
 
 mnuApps = {}
@@ -312,9 +316,9 @@ vicious.register(mpdwidget, vicious.widgets.mpd, function(widget, args)
 end, 5)
 mpdwidget:buttons( awful.util.table.join(
 	awful.button({ }, 1, function() exec(mpdclient) end),
-	awful.button({ }, 3, function() exec('mpc toggle', false) end),
-	awful.button({ }, 4, function() exec('mpc prev', false) end),
-	awful.button({ }, 5, function() exec('mpc next', false) end)
+	awful.button({ }, 3, function() sexec('mpc toggle', false) end),
+	awful.button({ }, 4, function() sexec('mpc prev', false) end),
+	awful.button({ }, 5, function() sexec('mpc next', false) end)
 ))
 
 cpuicon = widget({ type = 'imagebox', align = 'left' })
@@ -512,7 +516,7 @@ globalkeys = awful.util.table.join(
 	                                                	awful.prompt.run({ prompt = ' Web: ' },
 	                                                	mypromptbox[mouse.screen].widget,
 	                                                	function(command)
-	                                                		exec('firefox "http://yubnub.org/parser/parse?command='..command..'"')
+	                                                		exec(browser..'"http://yubnub.org/parser/parse?command='..command..'"')
 	                                                		awful.tag.viewonly(tags[scount][3])
 	                                                	end, nil,
 	                                                	awful.util.getdir('cache')..'/yubnub_eval')

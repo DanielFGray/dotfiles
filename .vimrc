@@ -1,7 +1,7 @@
 set nocompatible
 
 call pathogen#infect()
-let g:Powerline_symbols = 'compatible'
+let g:Powerline_symbols = 'fancy'
 set laststatus=2   " Always show the statusline
 
 set scrolloff=50
@@ -9,10 +9,10 @@ set hlsearch
 set backspace=indent,eol,start
 set nowrap
 set showmatch
-set splitright splitbelow
 set equalalways
 set hidden
 set wildmenu
+set cursorcolumn
 set cursorline
 set autoindent
 set smartindent
@@ -33,18 +33,18 @@ syntax on
 filetype plugin indent on
 
 set ofu=syntaxcomplete#Complete
-set tags+=~/.vim/gtk+.tags
+"set tags+=~/.vim/gtk+.tags
 
-colorscheme wombat
+colorscheme smyck
 set background=dark
 if has("gui_running")
-    set gfn=Ubuntu\ Mono\ 8
+    set gfn=Ubuntu\ Mono\ for\ Powerline\ 8
     set guioptions-=l
     set guioptions-=r
     set guioptions-=b
     set guioptions-=T
     set guioptions-=m
-    let g:Powerline_symbols = 'fancy'
+    "let g:Powerline_symbols = 'fancy'
 endif
 set 
 
@@ -62,6 +62,9 @@ function! SuperCleverTab()
     endif
 endfunction
 inoremap <Tab> <C-R>=SuperCleverTab()<cr>
+
+nnoremap <A-a> <C-a>
+nnoremap <A-x> <C-x>
 
 if exists("&undodir")
     set undodir=~/.vim/undo//

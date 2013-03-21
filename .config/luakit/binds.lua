@@ -141,31 +141,30 @@ add_binds("normal", {
             return false
         end),
 
-    key({}, "v", function (w) 
+    key({"Control"}, "v", function (w) 
         local view = w.view
         local uri = view.hovered_uri or view.uri
         if uri then
-            luakit.spawn(string.format("urxvtc -e cclive -f best --filename-format '%%t.%%s' "
-                .. "--output-dir %q --exec='mplayer \"%%f\"' %q", os.getenv("HOME"), uri))
+            luakit.spawn(string.format("urxvtc -e cclive -f best --filename-format '%%t.%%s' --output-dir %q --exec='mplayer \"%%f\"' %q", os.getenv("HOME"), uri))
         end 
     end),
 
-    key({"Control"},  "e", function (w)
-        local s = w.view:eval_js("document.activeElement.value")
-        local n = "/tmp/" .. os.time()
-        local f = io.open(n, "w")
-        f:write(s)
-        f:flush()
-        f:close()
-        luakit.spawn_sync("urxvt -e vi -c \"set spell\" \"" .. n .. "\"")
-        f = io.open(n, "r")
-        s = f:read("*all")
-        f:close()
-        s = s:gsub("^%s*(.-)%s*$", "%1")
-        s = string.format("%q", s):sub(2, -2)
-        s = s:gsub("\\\n", "\\n")
-        w.view:eval_js("document.activeElement.value = '" .. s .. "'")
-    end),
+    --key({},  "e", function (w)
+    --    local s = w.view:eval_js("document.activeElement.value")
+    --    local n = "/tmp/" .. os.time()
+    --    local f = io.open(n, "w")
+    --    f:write(s)
+    --    f:flush()
+    --    f:close()
+    --    luakit.spawn_sync('urxvtc -e vim -c "set spell" "' .. n .. '"')
+    --    f = io.open(n, "r")
+    --    s = f:read("*all")
+    --    f:close()
+    --    s = s:gsub("^%s*(.-)%s*$", "%1")
+    --    s = string.format("%q", s):sub(2, -2)
+    --    s = s:gsub("\\\n", "\\n")
+    --    w.view:eval_js("document.activeElement.value = '" .. s .. "'")
+    --end),
 
     key({}, "i", "Enter `insert` mode.",
         function (w) w:set_mode("insert")  end),

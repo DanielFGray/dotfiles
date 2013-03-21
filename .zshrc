@@ -11,17 +11,19 @@ export EDITOR="vim"
 ## OS specific commands
 if [[ -f /etc/debian_version ]]; then
 	export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+	alias apt-get="sudo apt-get "
 	alias canhaz="sudo apt-get install "
 	alias updupg="sudo apt-get update; sudo apt-get upgrade"
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-	alias apt-get="sudo apt-get "
 	alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
+	function pkgrm() { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch() { apt-cache search $* | sort | less }
 elif [[ -f /etc/arch-release ]]; then
 	export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
-	alias canhaz="sudo pacman -S "
 	alias pacman="sudo pacman "
+	alias canhaz="sudo pacman -S "
 	alias updupg="sudo pacman -Syu "
+	alias pkgrm="sudo pacman -Rsu "
 	function pkgsearch() { unbuffer yaourt -Ss $* | less }
 elif [[ -f /etc/redhat-release ]]; then
 	alias canhaz="sudo yum install "
@@ -30,15 +32,12 @@ elif [[ -f /etc/gentoo-release ]]; then
 	alias canhaz="sudo emerge -av "
 fi
 
-## environment specific commands
-if [[ -d /opt/lampp ]]; then
-	alias lampp="sudo /opt/lampp/lampp "
-fi
-
+alias xi="xinit awesome"
 alias cp="cp -v "
 alias mv="mv -v "
 alias rm="rm -v "
 alias ln="ln -v "
+alias rename="rename -v "
 alias du="/home/dan/bin/cdu -is -d h "
 alias sudo="sudo "
 alias ftp="lftp "
@@ -65,14 +64,12 @@ bindkey "^[[8~" end-of-line
 bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
-function cdl() {
-	cd $1
-	ls $2
-}
+function cdl() { cd $1 ; ls $2 }
 
-function wget() {
-	echo 'use curl'
-}
+function wget() { echo 'use curl' }
+
+function tarpipe() { tar czf - $2 | ssh $1 "tar xzvf - $3" }
+function rtarpipe() { ssh $1 "tar czf - $2" | tar xzvf - }
 
 function newImage() {
 	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2
@@ -87,10 +84,6 @@ function changeroot() {
 	sudo mount -o bind /dev $1/dev
 	sudo mount -t devpts pts $1/dev/pts/
 	sudo chroot $1/ /bin/bash
-}
-
-function tarpipe() {
-	tar czf - $2 | ssh $1 'tar xzvf - $3'
 }
 
 function extract() {

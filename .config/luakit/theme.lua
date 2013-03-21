@@ -5,7 +5,7 @@
 local theme = {}
 
 theme.colors = {}
-theme.colors.base3   = "#303030"
+theme.colors.base3   = "#292929"
 theme.colors.base2   = "#383838"
 theme.colors.base1   = "#586e75"
 theme.colors.base0   = "#657b83"
@@ -18,15 +18,14 @@ theme.colors.orange  = "#cb4b16"
 theme.colors.red     = "#dc322f"
 theme.colors.magenta = "#d33682"
 theme.colors.violet  = "#6c71c4"
-theme.colors.blue    = "#3d84cf"
+theme.colors.blue    = '#0390c4'
 theme.colors.cyan    = "#2aa198"
 theme.colors.green   = "#859900"
 
 -- Default settings
 theme.font = "Ubuntu Mono 8"
--- theme.font = "Terminus normal 8"
 theme.fg   = theme.colors.base03
-theme.bg   = theme.colors.base2
+theme.bg   = theme.colors.base3
 
 -- Genaral colours
 theme.success_fg = "#0f0"
@@ -44,7 +43,7 @@ theme.notif_bg = "#FFF"
 
 -- Menu colours
 theme.menu_fg                   = theme.colors.base03
-theme.menu_bg                   = theme.colors.base2
+theme.menu_bg                   = theme.colors.base3
 theme.menu_selected_fg          = theme.colors.base3
 theme.menu_selected_bg          = theme.colors.blue
 theme.menu_title_bg             = theme.colors.blue
