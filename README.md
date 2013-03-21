@@ -1,3 +1,3 @@
 personal repo of config files
 
-DISCLAIMER: WOMM<sup>TM</sup>
+DISCLAIMER: Works on My Machine<sup>TM</sup>
