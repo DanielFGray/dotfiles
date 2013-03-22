@@ -149,23 +149,6 @@ add_binds("normal", {
         end 
     end),
 
-    --key({},  "e", function (w)
-    --    local s = w.view:eval_js("document.activeElement.value")
-    --    local n = "/tmp/" .. os.time()
-    --    local f = io.open(n, "w")
-    --    f:write(s)
-    --    f:flush()
-    --    f:close()
-    --    luakit.spawn_sync('urxvtc -e vim -c "set spell" "' .. n .. '"')
-    --    f = io.open(n, "r")
-    --    s = f:read("*all")
-    --    f:close()
-    --    s = s:gsub("^%s*(.-)%s*$", "%1")
-    --    s = string.format("%q", s):sub(2, -2)
-    --    s = s:gsub("\\\n", "\\n")
-    --    w.view:eval_js("document.activeElement.value = '" .. s .. "'")
-    --end),
-
     key({}, "i", "Enter `insert` mode.",
         function (w) w:set_mode("insert")  end),
 

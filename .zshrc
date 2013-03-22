@@ -77,6 +77,12 @@ function newImage() {
 	qiv $2
 }
 
+function importss() {
+	import $1
+	convert -trim $1 $1
+	optipng $1
+}
+
 function changeroot() {
 	sudo cp -L /etc/resolv.conf $1/etc/resolv.conf
 	sudo mount -t proc proc $1/proc

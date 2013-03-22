@@ -49,6 +49,21 @@ end
 -- External Editor, blocking
 add_binds("insert", {
      key({"Mod1"}, "e", function (w)
+--        local s = w.view:eval_js("document.activeElement.value")
+--        local n = "/tmp/" .. os.time()
+--        local f = io.open(n, "w")
+--        f:write(s)
+--        f:flush()
+--        f:close()
+--        luakit.spawn_sync('urxvtc -e vim -c "set spell" "' .. n .. '"')
+--        f = io.open(n, "r")
+--        s = f:read("*all")
+--        f:close()
+--        s = s:gsub("^%s*(.-)%s*$", "%1")
+--        s = string.format("%q", s):sub(2, -2)
+--        s = s:gsub("\\\n", "\\n")
+--        w.view:eval_js("document.activeElement.value = '" .. s .. "'")
+
         local editor = "urxvt -e vi -c 'set spell'" 
         local dir = "/home/dan/tmp/" 
         local time = os.time()
@@ -105,5 +120,5 @@ add_binds("normal", {
 		function (w)       w:browse_hist_dmenu() end),
     key({"Control"}, "space", "Clear search highlighting.",
 	    function (w) w:clear_search() end),
-    key({"Mod1"}, "e", function (w) external_edit(w) end),
+    --key({"Mod1"}, "e", function (w) external_edit(w) end),
 })
