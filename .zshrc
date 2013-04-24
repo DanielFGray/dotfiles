@@ -1,16 +1,14 @@
-ZSH="/home/dan/.oh-my-zsh"
-ZSH_THEME="clean"
-COMPLETION_WAITING_DOTS="true"
-#DISABLE_LS_COLORS="true"
-plugins=(git zsh-syntax-highlighting)
-source $ZSH/oh-my-zsh.sh
-
+if [[ -d /pr0n/dev/android/adt-bundle-linux-x86_64-20130219 ]]; then
+	export PATH="/pr0n/dev/android/adt-bundle-linux-x86_64-20130219/sdk/platform-tools:/pr0n/dev/android/adt-bundle-linux-x86_64-20130219/sdk/tools/:${PATH}"
+fi
 #export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
 
 ## OS specific commands
 if [[ -f /etc/debian_version ]]; then
-	export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+	if [[ -d /usr/local/share/perl/5.14.2/auto/share/dist/Cope ]]; then
+		export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+	fi
 	alias apt-get="sudo apt-get "
 	alias canhaz="sudo apt-get install "
 	alias updupg="sudo apt-get update; sudo apt-get upgrade"
@@ -19,7 +17,9 @@ if [[ -f /etc/debian_version ]]; then
 	function pkgrm() { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch() { apt-cache search $* | sort | less }
 elif [[ -f /etc/arch-release ]]; then
-	export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+	if [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
+		export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+	fi
 	alias pacman="sudo pacman "
 	alias canhaz="sudo pacman -S "
 	alias updupg="sudo pacman -Syu "
@@ -32,18 +32,24 @@ elif [[ -f /etc/gentoo-release ]]; then
 	alias canhaz="sudo emerge -av "
 fi
 
-alias xi="xinit awesome"
+##if [[ -f /usr/bin/ack-grep && ! -f /usr/bin/ack ]]; then
+##	alias ack="ack-grep"
+##fi
+if [[ -f $HOME/bin/du-color ]]; then
+	alias du="/home/dan/bin/du-color -is -d h "
+fi
+
 alias cp="cp -v "
 alias mv="mv -v "
 alias rm="rm -v "
 alias ln="ln -v "
 alias rename="rename -v "
-alias du="/home/dan/bin/cdu -is -d h "
 alias sudo="sudo "
 alias ftp="lftp "
 alias ls="ls --group-directories-first --color=auto -h "
 alias grep="grep --color=auto -E "
-alias historygrep="history | grep -v 'history' | grep -E "
+alias historygrep="history | grep -vE '^\d* historygrep' | grep -E "
+alias phone?="lsusb | grep 'Galaxy' && adb devices"
 
 alias -s png=qiv
 alias -s jpg=qiv
@@ -64,26 +70,26 @@ bindkey "^[[8~" end-of-line
 bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
-function cdl() { cd $1 ; ls $2 }
+function cdl { cd $1 && ls $2 }
 
-function wget() { echo 'use curl' }
+function wget { man curl }
 
-function tarpipe() { tar czf - $2 | ssh $1 "tar xzvf - $3" }
-function rtarpipe() { ssh $1 "tar czf - $2" | tar xzvf - }
+function tarpipe { tar czf - $2 | ssh $1 "tar xzvf - $3" }
+function rtarpipe { ssh $1 "tar czf - $2" | tar xzvf - }
 
-function newImage() {
+function newImage {
 	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2
 	optipng $2
 	qiv $2
 }
 
-function importss() {
+function importss {
 	import $1
 	convert -trim $1 $1
 	optipng $1
 }
 
-function changeroot() {
+function changeroot {
 	sudo cp -L /etc/resolv.conf $1/etc/resolv.conf
 	sudo mount -t proc proc $1/proc
 	sudo mount -t sysfs sys $1/sys
@@ -92,33 +98,29 @@ function changeroot() {
 	sudo chroot $1/ /bin/bash
 }
 
-function extract() {
-	if [ -f $1 ] ; then
-		case $1 in
-			*.tar.bz2)   tar xvjf $1 ;;
-			*.tar.gz)    tar xvzf $1 ;;
-			*.bz2)       bunzip2 $1 ;;
-			*.rar)       unrar x $1 ;;
-			*.gz)        gunzip $1 ;;
-			*.tar)       tar xvf $1	;;
-			*.tbz2)      tar xvjf $1 ;;
-			*.tgz)       tar xvzf $1 ;;
-			*.zip)       unzip $1 ;;
-			*.Z)         uncompress $1;;
-			*.7z)        7z x $1 ;;
-			*)           echo "'$1' cannot be extracted via >extract<" ;;
-		esac
-	else
-		echo "'$1' is not a valid file"
-	fi
+function extract {
+	case $1 in
+		*.tar.bz2)   tar xvjf $1 ;;
+		*.tar.gz)    tar xvzf $1 ;;
+		*.bz2)       bunzip2 $1 ;;
+		*.rar)       unrar x $1 ;;
+		*.gz)        gunzip $1 ;;
+		*.tar)       tar xvf $1	;;
+		*.tbz2)      tar xvjf $1 ;;
+		*.tgz)       tar xvzf $1 ;;
+		*.zip)       unzip $1 ;;
+		*.Z)         uncompress $1;;
+		*.7z)        7z x $1 ;;
+		*)           echo "'$1' cannot be extracted via >extract<" ;;
+	esac
 }
 
-function byzanz() {
+function byzanz {
 	date=`date +%F`
 	byzanz-record $* /pr0n/pictures/screenshots/$date.gif
 	mirage -f /pr0n/pictures/screenshots/$date.gif
 }
 
-function simpleHTTP() {
+function simpleHTTP {
 	python -c "import SimpleHTTPServer, SocketServer, BaseHTTPServer; SimpleHTTPServer.test(SimpleHTTPServer.SimpleHTTPRequestHandler, type('Server', (BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn, object), {}))" 9090
 }

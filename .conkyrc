@@ -1,6 +1,6 @@
 background no
 use_xft yes
-xftfont Ubuntu Mono:size=8
+xftfont Monaco:size=8
 xftalpha 1
 update_interval 1
 total_run_times 0

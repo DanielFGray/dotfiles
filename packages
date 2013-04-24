@@ -1,36 +1,35 @@
 coreutils
 zsh-beta
-tmux
-vim vim-scripts
-mutt
 moreutils
-ack-grep
-lftp
 curl
-htop
-nmon
-lynx
+lm-sensors
 rsync
-ranger
+mplayer2
 build-essential
 checkinstall
 git
 openssh-server
-lm-sensors
 optipng
 imagemagick
+
+lftp
+mutt
+vim
+tmux
+ncdu
+htop
+ranger
+lynx
+nmon
 weechat
 rtorrent
-mplayer2
-mpd mpc ncmpcpp
+ncmpcpp mpc mpd
 
 awesome
 rxvt-unicode-256color
 luakit
 vim-gtk
-xfburn
 gnome-mplayer
-gmpc gmpc-plugins
 apvlv
 scrot
 xscreensaver
@@ -38,16 +37,15 @@ xarchiver
 lxappearance
 clipit xclip
 gsimplecal
-mirage qiv
-gpick
+qiv
 nitrogen
 conky
 gmrun
-gnome-icon-theme-extras gnome-icon-theme-symbolic gnome-icon-theme-full
+gnome-icon-theme-extras gnome-icon-theme-symbolic 
 gtk2-engines-murrine gtk3-engines-unico
 pavucontrol
 volti
 gksu
 gparted
 arandr
-xorg-xserver-core
+xserver-xorg-core
