@@ -2,6 +2,7 @@ set nocompatible
 
 call pathogen#infect()
 let g:Powerline_symbols = 'compatible'
+set laststatus=2   " Always show the statusline
 
 set scrolloff=50
 set hlsearch
@@ -9,19 +10,19 @@ set backspace=indent,eol,start
 set nowrap
 set showmatch
 set equalalways
-set list
-set fillchars+=vert:│
-set listchars=tab:\|\ ,eol:★,trail:◥,extends:>,precedes:<,nbsp:.
-set hidden
 set wildmenu
 set cursorcolumn cursorline
-set autoindent copyindent
+set autoindent smartindent
 set smartindent smarttab
 set tabstop=4 softtabstop=4 shiftwidth=4
 set foldmethod=marker
-set laststatus=2
 set ruler
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
+set hidden
+set list
+set fillchars+=vert:│
+set listchars=tab:\|\ ,eol:★,trail:◥,extends:>,precedes:<,nbsp:.
+set colorcolumn=80
 set showcmd
 set mouse=a
 set nolazyredraw
@@ -29,7 +30,6 @@ set relativenumber
 set autoread
 set t_Co=256
 set shortmess+=I
-set colorcolumn=80
 
 syntax on
 filetype plugin indent on
@@ -40,8 +40,7 @@ set ofu=syntaxcomplete#Complete
 colorscheme smyck
 set background=dark
 if has("gui_running")
-	set gfn=Monaco\ 7
-	"set gfn=Monaco\ for\ Powerline\ 8
+	set gfn=Ubuntu\ Mono\ for\ Powerline\ 8
 	set guioptions-=l
 	set guioptions-=r
 	set guioptions-=b
@@ -49,19 +48,6 @@ if has("gui_running")
 	set guioptions-=m
 	"let g:Powerline_symbols = 'fancy'
 endif
-
-" let g:expand_region_text_objects = {
-" 	'iw'  :0,
-" 	'iW'  :1,
-" 	'i"'  :0,
-" 	'i''' :0,
-" 	'i]'  :1, " Support nesting of square brackets
-" 	'ib'  :1, " Support nesting of parentheses
-" 	'iB'  :1, " Support nesting of braces
-" 	'il'  :0, " Not included in Vim by default. See https://github.com/kana/vim-textobj-line
-" 	'ip'  :0,
-" 	'ie'  :0  " Not included in Vim by default. See https://github.com/kana/vim-textobj-entire
-" }
 
 function! RangerChooser()
 	silent !ranger --choosefile=/tmp/chosenfile `[ -z '%' ] && echo -n . || dirname %`
@@ -73,41 +59,45 @@ function! RangerChooser()
 endfunction
 map ,r :call RangerChooser()<CR>
 
-function! SuperCleverTab()
-	if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
-		return "\<Tab>"
-	else
-		if &omnifunc != ''
-			return "\<C-X>\<C-O>"
-		elseif &dictionary != ''
-			return “\<C-K>”
-		else
-			return "\<C-N>"
-		endif
-	endif
-endfunction
-inoremap <Tab> <C-R>=SuperCleverTab()<cr>
+"function! SuperCleverTab()
+"	if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
+"		return "\<Tab>"
+"	else
+"		if &omnifunc != ''
+"			return "\<C-X>\<C-O>"
+"		elseif &dictionary != ''
+"			return “\<C-K>”
+"		else
+"			return "\<C-N>"
+"		endif
+"	endif
+"endfunction
+"inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
-nnoremap <C-a> <A-a>
-nnoremap <C-x> <A-x>
+nnoremap <A-a> <C-a>
+nnoremap <A-x> <C-x>
 
-inoremap <Up> <Esc><Up><Right>
-inoremap <Down> <Esc><Down><Right>
-inoremap <Left> <Esc><Left><Right>
-inoremap <Right> <Esc><Right><Right>
+nnoremap <F5> :GundoToggle<CR>
 
-autocmd! bufwritepost ~/.vimrc source ~/.vimrc
-
-ca w!! w !sudo tee >/dev/null "%"
+noremap <leader>o <Esc>:CommandT<CR>
+noremap <leader>O <Esc>:CommandTFlush<CR>
+noremap <leader>m <Esc>:CommandTBuffer<CR>
 
 if exists("&undodir")
 	set undodir=~/.vim/undo//
 endif
+if exists("&backupdir")
+	set backupdir=~/.vim/backups//
+endif
+if exists("&directory")
+	set directory=~/.vim/swaps//
+endif
 set undofile
 set undolevels=1000
 set undoreload=10000
-set nobackup
-set noswapfile
+
+autocmd! bufwritepost ~/.vimrc source ~/.vimrc
+ca w!! w !sudo tee >/dev/null "%"
 
 hi Comment      ctermfg=12
 hi Constant     ctermfg=6
