@@ -49,6 +49,26 @@ if has("gui_running")
 	"let g:Powerline_symbols = 'fancy'
 endif
 
+<<<<<<< HEAD
+=======
+let g:tmuxify_pane_split = '-v'
+let g:tmuxify_pane_size = '10'
+"let g:tmuxify_run = { 'sh': 'zsh %', 'go': 'go build %' }
+
+" let g:expand_region_text_objects = {
+" 	'iw'  :0,
+" 	'iW'  :1,
+" 	'i"'  :0,
+" 	'i''' :0,
+" 	'i]'  :1, " Support nesting of square brackets
+" 	'ib'  :1, " Support nesting of parentheses
+" 	'iB'  :1, " Support nesting of braces
+" 	'il'  :0, " Not included in Vim by default. See https://github.com/kana/vim-textobj-line
+" 	'ip'  :0,
+" 	'ie'  :0  " Not included in Vim by default. See https://github.com/kana/vim-textobj-entire
+" }
+
+>>>>>>> devel
 function! RangerChooser()
 	silent !ranger --choosefile=/tmp/chosenfile `[ -z '%' ] && echo -n . || dirname %`
 	if filereadable('/tmp/chosenfile')

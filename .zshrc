@@ -70,6 +70,7 @@ function wget { echo 'use curl' }
 
 function tarpipe { tar czf - $2 | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | tar xzvf - }
+function soupget { ssh danielfgray@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
 
 function pgrep {"unbuffer ps aux | grep $1 | grep -v grep"}
 
@@ -83,6 +84,7 @@ function importss {
 	import $1
 	convert -trim $1 $1
 	optipng $1
+	qiv $1
 }
 
 function changeroot {
