@@ -50,6 +50,10 @@ if has("gui_running")
 	"let g:Powerline_symbols = 'fancy'
 endif
 
+let g:tmuxify_pane_split = '-v'
+let g:tmuxify_pane_size = '10'
+"let g:tmuxify_run = { 'sh': 'zsh %', 'go': 'go build %' }
+
 " let g:expand_region_text_objects = {
 " 	'iw'  :0,
 " 	'iW'  :1,

@@ -76,6 +76,7 @@ function wget { man curl }
 
 function tarpipe { tar czf - $2 | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | tar xzvf - }
+function soupget { ssh danielfgray@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
 
 function newImage {
 	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2
@@ -87,6 +88,7 @@ function importss {
 	import $1
 	convert -trim $1 $1
 	optipng $1
+	qiv $1
 }
 
 function changeroot {
