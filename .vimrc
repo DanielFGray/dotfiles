@@ -42,7 +42,7 @@ set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set hidden
 set list
 set fillchars+=vert:â”‚
-set listchars=tab:\|\ ,eol:â˜…,trail:+,extends:>,precedes:<,nbsp:.
+set listchars=tab:\|\ ,eol:★,trail:◥,extends:>,precedes:<,nbsp:.
 set showcmd
 set mouse=a
 set nolazyredraw
