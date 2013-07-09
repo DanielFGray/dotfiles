@@ -12,7 +12,7 @@ export EDITOR="vim"
 if [[ -f /etc/debian_version ]]; then
 	if [[ -d /usr/local/share/perl/5.14.2/auto/share/dist/Cope ]]; then
 		export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
-	endif
+	fi
 	alias apt-get="sudo apt-get "
 	alias canhaz="sudo apt-get install "
 	alias updupg="sudo apt-get update; sudo apt-get upgrade"
@@ -23,7 +23,7 @@ if [[ -f /etc/debian_version ]]; then
 elif [[ -f /etc/arch-release ]]; then
 	if [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
 		export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
-	endif
+	fi
 	alias pacman="sudo pacman "
 	alias canhaz="sudo pacman -S "
 	alias updupg="sudo pacman -Syu "
