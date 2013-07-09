@@ -10,7 +10,9 @@ export EDITOR="vim"
 
 ## OS specific commands
 if [[ -f /etc/debian_version ]]; then
-	export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+	if [[ -d /usr/local/share/perl/5.14.2/auto/share/dist/Cope ]]; then
+		export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+	endif
 	alias apt-get="sudo apt-get "
 	alias canhaz="sudo apt-get install "
 	alias updupg="sudo apt-get update; sudo apt-get upgrade"
@@ -19,7 +21,9 @@ if [[ -f /etc/debian_version ]]; then
 	function pkgrm() { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch() { apt-cache search $* | sort | less }
 elif [[ -f /etc/arch-release ]]; then
-	export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+	if [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
+		export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+	endif
 	alias pacman="sudo pacman "
 	alias canhaz="sudo pacman -S "
 	alias updupg="sudo pacman -Syu "
@@ -40,7 +44,7 @@ alias ln="ln -v "
 alias rename="rename -v "
 alias grep="grep --color=auto -E "
 alias ls="ls --group-directories-first --color=auto -h "
-alias du="/home/dan/bin/cdu -is -d h "
+alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
 alias ftp="lftp "
 alias sudo="sudo "
@@ -66,13 +70,13 @@ bindkey "^[[4~" end-of-line
 
 function cdl { cd $1 ; ls $2 }
 
-function wget { echo 'use curl' }
+function wget { man curl }
 
 function tarpipe { tar czf - $2 | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | tar xzvf - }
-function soupget { ssh danielfgray@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
+function soupget { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
 
-function pgrep {"unbuffer ps aux | grep $1 | grep -v grep"}
+function pgrep { unbuffer ps aux | grep $1 | grep -v grep }
 
 function newImage {
 	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2
@@ -115,6 +119,23 @@ function extract {
 	else
 		echo "'$1' is not a valid file"
 	fi
+}
+
+function curltar {
+	case $1 in
+		*.tar.bz2)   curl -kL $1 | tar xvjf   -  ;;
+		*.tar.gz)    curl -kL $1 | tar xvzf   -  ;;
+		*.bz2)       curl -kL $1 | bunzip2    -  ;;
+		*.rar)       curl -kL $1 | unrar x    -  ;;
+		*.gz)        curl -kL $1 | gunzip     -  ;;
+		*.tar)       curl -kL $1 | tar xvf    -  ;;
+		*.tbz2)      curl -kL $1 | tar xvjf   -  ;;
+		*.tgz)       curl -kL $1 | tar xvzf   -  ;;
+		*.zip)       curl -kL $1 | unzip      -  ;;
+		*.Z)         curl -kL $1 | uncompress -  ;;
+		*.7z)        curl -kL $1 | 7z x       -  ;;
+		*)           curl -kLO $1
+	esac
 }
 
 function byzanz {
