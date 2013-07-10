@@ -44,6 +44,7 @@ alias ln="ln -v "
 alias rename="rename -v "
 alias grep="grep --color=auto -E "
 alias ls="ls --group-directories-first --color=auto -h "
+alias l="ls -lA"
 alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
 alias ftp="lftp "
@@ -140,8 +141,8 @@ function curltar {
 
 function byzanz {
 	date=`date +%F`
-	byzanz-record $* /pr0n/pictures/screenshots/$date.gif
-	mirage -f /pr0n/pictures/screenshots/$date.gif
+	byzanz-record $* ~/pictures/screenshots/$date.gif
+	mirage -f ~/pictures/screenshots/$date.gif
 }
 
 function simpleHTTP {
