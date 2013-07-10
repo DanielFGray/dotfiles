@@ -1,8 +1,8 @@
 ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="clean"
+ZSH_THEME="flazz"
 COMPLETION_WAITING_DOTS="true"
 #DISABLE_LS_COLORS="true"
-plugins=(git zsh-syntax-highlighting)
+plugins=(git zsh-syntax-highlighting vi-mode)
 source $ZSH/oh-my-zsh.sh
 
 #export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
