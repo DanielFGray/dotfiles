@@ -65,6 +65,34 @@ let g:tmuxify_run = { 'sh': 'zsh %', 'go': 'go build %' }
 let g:user_zen_expandabbr_key = '<c-e>'
 let g:use_zen_complete_tag = 1
 
+let g:unite_data_directory='~/.vim/cache/unite'
+let g:unite_prompt='» '
+let g:unite_source_history_yank_enable = 1
+call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+"" nnoremap <leader>t :<C-u>Unite -buffer-name=files   -start-insert file_rec/async:!<cr>
+"" nnoremap <leader>f :<C-u>Unite -buffer-name=files   -start-insert file<cr>
+"" nnoremap <leader>r :<C-u>Unite -buffer-name=mru     -start-insert file_mru<cr>
+"" nnoremap <leader>o :<C-u>Unite -buffer-name=outline -start-insert outline<cr>
+nnoremap <leader>y :<C-u>Unite -buffer-name=yank    history/yank<cr>
+nnoremap <leader>e :<C-u>Unite -buffer-name=buffer  buffer<cr>
+
+if executable('ack')
+	set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
+	set grepformat=%f:%l:%c:%m
+	let g:unite_source_grep_command='ack'
+	let g:unite_source_grep_default_opts='--no-heading --no-color -a'
+	let g:unite_source_grep_recursive_opt=''
+endif
+if executable('ag')
+	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
+	set grepformat=%f:%l:%c:%m
+	let g:unite_source_grep_command='ag'
+	let g:unite_source_grep_default_opts='--nocolor --nogroup --hidden'
+	let g:unite_source_grep_recursive_opt=''
+endif
+
 function! RangerChooser()
 	silent !ranger --choosefile=/tmp/chosenfile `[ -z '%' ] && echo -n . || dirname %`
 	if filereadable('/tmp/chosenfile')
