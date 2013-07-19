@@ -13,7 +13,7 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'mhinz/vim-tmuxify'
 if version >= 703
-	Bundle 'Lokaltog/vim-powerline'
+	NeoBundle 'Lokaltog/vim-powerline'
 endif
 
 syntax on
