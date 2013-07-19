@@ -1,23 +1,24 @@
 set nocompatible
-filetype off
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set runtimepath+=~/.vim/bundle/neobundle.vim/
+call neobundle#rc(expand('~/.vim/bundle/'))
 
-Bundle 'gmarik/vundle'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-abolish'
-Bundle 'mhinz/vim-startify'
-Bundle 'Shougo/unite.vim'
-Bundle 'mattn/zencoding-vim'
-Bundle 'mhinz/vim-tmuxify'
+NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/vimproc'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-abolish'
+NeoBundle 'mhinz/vim-startify'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'mhinz/vim-tmuxify'
 if version >= 703
 	Bundle 'Lokaltog/vim-powerline'
 endif
 
 syntax on
 filetype plugin indent on
+NeoBundleCheck
 
 if version >= 703
 	set colorcolumn=80
@@ -51,7 +52,7 @@ set t_Co=256
 set shortmess+=I
 
 set ofu=syntaxcomplete#Complete
-"set tags+=~/.vim/gtk+.tags
+"" set tags+=~/.vim/gtk+.tags
 
 colorscheme smyck
 set background=dark
