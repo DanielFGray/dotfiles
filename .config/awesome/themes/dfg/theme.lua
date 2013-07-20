@@ -1,7 +1,7 @@
 theme                = {}
-theme.font           = 'Ubuntu Mono 8'
-theme.taglist_font   = 'Ubuntu Mono Bold 8'
-theme.tasklist_font  = 'Ubuntu Mono Bold 8'
+theme.font           = 'Monaco 7'
+theme.taglist_font   = 'Monaco Bold 7'
+theme.tasklist_font  = 'Monaco Bold 7'
 theme.colors         = {}
 --theme.colors.base3   = '#383838e6'
 theme.colors.base3   = '#383838'

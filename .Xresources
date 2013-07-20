@@ -19,8 +19,8 @@ URxvt.tintColor:      white
 URxvt.internalBorder: 2
 *borderless:     true
 
-*font:       xft:Ubuntu\ Mono:pixelsize=10
-*boldFont:   xft:Ubuntu\ Mono:bold:pizelsize=10
+*font:       xft:Monaco:pixelsize=9
+*boldFont:   xft:Monaco:bold:pizelsize=9
 *background: #383838
 *foreground: #dedede
 !

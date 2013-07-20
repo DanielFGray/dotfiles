@@ -139,6 +139,7 @@ shifty.config.apps = {
 		match = {
 			'Vimperator',
 			'Firefox',
+			'Iceweasel',
 			'luakit',
 			'Nightly',
 			'uzbl',
