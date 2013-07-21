@@ -104,21 +104,29 @@ function! RangerChooser()
 endfunction
 map ,r :call RangerChooser()<CR>
 
+if has("gui_running")
+    set background=dark
+    set gfn=Monaco\ 7
+    set guioptions-=l
+    set guioptions-=r
+    set guioptions-=b
+    set guioptions-=T
+endif
 
 if version >= 703
 	if exists("&undodir")
 		set undodir=~/.vim/undo//
 	endif
-	if exists("&backupdir")
-		set backupdir=~/.vim/backups//
-	endif
-	if exists("&directory")
-		set directory=~/.vim/swaps//
-	endif
 	set undofile
-	set undolevels=1000
 	set undoreload=10000
 endif
+if exists("&backupdir")
+	set backupdir=~/.vim/backups//
+endif
+if exists("&directory")
+	set directory=~/.vim/swaps//
+endif
+set undolevels=1000
 
 nnoremap <A-a> <C-a>
 nnoremap <A-x> <C-x:
@@ -138,7 +146,7 @@ hi Underlined   ctermfg=7
 hi Ignore       ctermfg=9
 hi Error        ctermfg=11
 hi Todo         ctermfg=1
-"hi ColorColumn  ctermbg=8
+hi ColorColumn  ctermbg=8
 
 hi link Number Constant
 hi! link StatusLine VertSplit
