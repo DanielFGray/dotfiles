@@ -1,0 +1,11 @@
+#!/bin/bash
+
+tmux new-session -d -s 'main'
+
+tmux neww -t main:2 'ncmpcpp'
+tmux neww -t main:3 'mutt'
+tmux neww -t main:4 'bash /home/dan/local/bin/sysfiles'
+tmux renamew -t main:4 'dotfiles'
+tmux killw -t main:1
+tmux neww -t main 'htop'
+tmux attach -t main

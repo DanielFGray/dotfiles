@@ -5,27 +5,30 @@
 !Xft.dpi:       96
 !Xft.rgba:      rgb
 !Xft.lcdfilter: lcddefault
- 
-URxvt.scrollBar:      false
-URxvt.imLocale:       en_US.UTF-8
-URxvt.loginShell:     true
-URxvt.saveLines:      512
-URxvt.geometry:       90x25
-URxvt.boldMode:       true
-URxvt.inheritPixmap:  false
-URxvt.xftAntialias:   true
-URxvt.jumpScroll:     false
-URxvt.tintColor:      white
-URxvt.internalBorder: 2
-*borderless:     true
 
-*font:       xft:Monaco:pixelsize=9
-*boldFont:   xft:Monaco:bold:pizelsize=9
-*background: #383838
+URxvt*scrollBar:      false
+URxvt*imLocale:       en_US.UTF-8
+URxvt*loginShell:     true
+URxvt*saveLines:      512
+URxvt*geometry:       90x25
+URxvt*boldMode:       true
+URxvt*inheritPixmap:  false
+URxvt*xftAntialias:   true
+URxvt*jumpScroll:     false
+URxvt*tintColor:      white
+URxvt*internalBorder: 2
+URxvt*borderless:     true
+URxvt*font:           xft:Monaco:regular:size=7
+URxvt*imFont:         xft:Monaco:regular:size=7
+URxvt*boldFont:       xft:Monaco:bold:size=7
+URxvt*italicFont:     xft:Monaco:italic:size=7
+URxvt*boldItalicFont: xft:Monaco:bold:italic:size=7
+
+*background: #292929
 *foreground: #dedede
-!
+
 !black
-*color0:  #333333
+*color0:  #363636
 *color8:  #828282
 !red
 *color1:  #d96468
@@ -36,8 +39,8 @@ URxvt.internalBorder: 2
 !yellow
 *color3:  #d9c964
 *color11: #d9cf8f
-!blue 
-*color4:  #64a2d9
+!blue
+*color4:  #0390c4
 *color12: #3d84cf
 !magenta
 *color5:  #9a64d9

@@ -1,6 +1,6 @@
 export PATH="$HOME/local/bin:/bin:$PATH"
-ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="clean"
+ZSH="/home/dan/.oh-my-zsh"
+ZSH_THEME="flazz"
 COMPLETION_WAITING_DOTS="true"
 #DISABLE_LS_COLORS="true"
 plugins=(git zsh-syntax-highlighting vi-mode)
@@ -42,14 +42,15 @@ alias cp="cp -v "
 alias mv="mv -v "
 alias rm="rm -v "
 alias ln="ln -v "
+alias curl="curl -v"
+alias chown="chown -v"
+alias chmod="chmod -v"
 alias rename="rename -v "
 alias grep="grep --color=auto -E "
 alias ls="ls --group-directories-first --color=auto -h "
 alias l="ls -lA"
 alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
-alias ftp="lftp "
-alias sudo="sudo "
 
 alias -s png=qiv
 alias -s jpg=qiv
@@ -149,3 +150,5 @@ function byzanz {
 function simpleHTTP {
 	python -c "import SimpleHTTPServer, SocketServer, BaseHTTPServer; SimpleHTTPServer.test(SimpleHTTPServer.SimpleHTTPRequestHandler, type('Server', (BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn, object), {}))" 9090
 }
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

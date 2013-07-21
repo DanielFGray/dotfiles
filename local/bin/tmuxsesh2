@@ -1,0 +1,5 @@
+#!/bin/bash
+
+tmux new-session -d -s 'sub'
+tmux neww -t sub 'mosh dan@ssh.soupwhale.com'
+tmux attach -t sub

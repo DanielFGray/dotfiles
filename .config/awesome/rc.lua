@@ -43,7 +43,7 @@ terminal =          'urxvtcd '
 term_cmd =          terminal..'-e '
 editor =            term_cmd..'vim '
 browser =           'luakit '
-filemanager =       term_cmd..'ranger '
+filemanager =       'thunar '
 mpdclient =         'sonata '
 --mpdclient =         term_cmd..'ncmpcpp'
 wirelessinterface = 'wlan0'
@@ -104,7 +104,7 @@ shifty.config.tags = {
 		exclusive = true,
 		mwfact    = 0.75,
 --		init      = true,
-		spawn     = term_cmd..'sh '..homedir..'bin/tmuxsession2 ;'..term_cmd..'sh '..homedir..'bin/tmuxsession',
+		spawn     = term_cmd..'bash /home/dan/local/bin/tmuxsesh1;'..term_cmd..'bash /home/dan/local/bin/tmuxsesh2',
 --		slave     = true
 	},
 	books = {
@@ -423,13 +423,13 @@ for s = 1, screen.count() do
 		mypromptbox[s], {
 			cpuwidget, cpuicon,
 			memwidget, memicon,
---			batwidget, baticon,
+			--batwidget, baticon,
 			senswidget, sensicon,
 			spacer,
 			netupwidget, netupicon,
 			netdownwidget, netdownicon,
 			wifiwidget, wifiicon,
-			mpdwidget, mpdicon,
+			--mpdwidget, mpdicon,
 			layout = awful.widget.layout.horizontal.rightleft
 		},
 		layout = awful.widget.layout.horizontal.leftright
