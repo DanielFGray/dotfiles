@@ -42,7 +42,7 @@ sexec =             awful.util.spawn_with_shell
 terminal =          'urxvtcd '
 term_cmd =          terminal..'-e '
 editor =            term_cmd..'vim '
-browser =           'luakit '
+browser =           'firefox '
 filemanager =       'thunar '
 mpdclient =         'sonata '
 --mpdclient =         term_cmd..'ncmpcpp'
@@ -132,19 +132,25 @@ shifty.config.apps = {
 			'gsimplecal',
 			'xfrun4',
 		},
-		slave = true,
+		slave = false,
+		intrusive = true,
+		honorsizehints = true,
+		skip_taskbar = true,
 		float = true,
+		ontop = true
 	},
 	{
 		match = {
 			'Vimperator',
 			'Firefox',
 			'Iceweasel',
+			'chromium',
 			'luakit',
 			'Nightly',
 			'uzbl',
 		},
 		tag = 'web',
+		skip_taskbar = false,
 	},
 	{
 		match = {
@@ -508,8 +514,8 @@ globalkeys = awful.util.table.join(
 	awful.key({ }, 'XF86AudioNext',                 function() sexec('mpc -q next', false) end),
 	awful.key({ }, 'XF86AudioPrev',                 function() sexec('mpc -q prev', false) end),
 	awful.key({ modkey }, 'F1',                     function()
-	                                                	local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'"')
---	                                                	sexec('dmenu_run -b -hist "'..homedir..'.dmenu.history" -fn "UbuntuMono-8:normal"')
+--	                                                	local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'"')
+	                                                	sexec('dmenu_run -b -fn "Monaco-8:normal"')
 	                                                end),
 	awful.key({ modkey }, 'F2',                     function() exec('gmrun') end),
 	awful.key({ modkey }, 'F3',                     function()

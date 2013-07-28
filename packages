@@ -9,6 +9,7 @@ build-essential
 checkinstall
 git
 openssh-server
+mosh
 optipng
 imagemagick
 

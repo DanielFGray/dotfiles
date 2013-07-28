@@ -6,23 +6,29 @@
 !Xft.rgba:      rgb
 !Xft.lcdfilter: lcddefault
 
-URxvt*scrollBar:      false
-URxvt*imLocale:       en_US.UTF-8
-URxvt*loginShell:     true
-URxvt*saveLines:      512
-URxvt*geometry:       90x25
-URxvt*boldMode:       true
-URxvt*inheritPixmap:  false
-URxvt*xftAntialias:   true
-URxvt*jumpScroll:     false
-URxvt*tintColor:      white
-URxvt*internalBorder: 2
-URxvt*borderless:     true
-URxvt*font:           xft:Monaco:regular:size=7
-URxvt*imFont:         xft:Monaco:regular:size=7
-URxvt*boldFont:       xft:Monaco:bold:size=7
-URxvt*italicFont:     xft:Monaco:italic:size=7
-URxvt*boldItalicFont: xft:Monaco:bold:italic:size=7
+Xcursor.theme: Black-DMZ-AA
+Xcursor.size:  22
+
+URxvt*scrollBar:        false
+URxvt*imLocale:         en_US.UTF-8
+URxvt*loginShell:       true
+URxvt*saveLines:        512
+URxvt*geometry:         90x25
+URxvt*boldMode:         true
+URxvt*inheritPixmap:    false
+URxvt*xftAntialias:     true
+URxvt*jumpScroll:       false
+URxvt*tintColor:        white
+URxvt*internalBorder:   2
+URxvt*borderless:       true
+URxvt*font:             xft:Monaco:regular:size=7
+URxvt*imFont:           xft:Monaco:regular:size=7
+URxvt*boldFont:         xft:Monaco:bold:size=7
+URxvt*italicFont:       xft:Monaco:italic:size=7
+URxvt*boldItalicFont:   xft:Monaco:bold:italic:size=7
+URxvt.perl-ext-common:  default,matcher
+URxvt.url-launcher:     /usr/bin/firefox
+URxvt.matcher.button:   1
 
 *background: #292929
 *foreground: #dedede

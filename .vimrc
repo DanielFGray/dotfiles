@@ -12,6 +12,7 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'mhinz/vim-tmuxify'
+NeoBundle 'Lokaltog/vim-easymotion'
 if version >= 703
 	NeoBundle 'Lokaltog/vim-powerline'
 endif
@@ -147,6 +148,9 @@ hi Ignore       ctermfg=9
 hi Error        ctermfg=11
 hi Todo         ctermfg=1
 hi ColorColumn  ctermbg=8
+
+hi link EasyMotionTarget ErrorMsg
+hi link EasyMotionShade  Comment
 
 hi link Number Constant
 hi! link StatusLine VertSplit
