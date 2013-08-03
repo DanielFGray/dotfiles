@@ -1,10 +1,13 @@
-export PATH="$HOME/local/bin:/bin:$PATH"
 ZSH="/home/dan/.oh-my-zsh"
 ZSH_THEME="flazz"
 COMPLETION_WAITING_DOTS="true"
 #DISABLE_LS_COLORS="true"
 plugins=(git zsh-syntax-highlighting vi-mode)
 source $ZSH/oh-my-zsh.sh
+
+#[[ -d "$HOME/local/bin" ]] && export PATH="$HOME/local/bin:$PATH"
+#[[ -d "$HOME/bin" ]] && export PATH="$HOME/bin:$PATH"
+#[[ -d "$HOME/.rvm/bin" ]] && export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 #export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
@@ -22,8 +25,8 @@ if [[ -f /etc/debian_version ]]; then
 	function pkgrm() { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch() { apt-cache search $* | sort | less }
 elif [[ -f /etc/arch-release ]]; then
-	if [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
-		export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+	if [[ -d /usr/share/perl5/site_perl/auto/share/dist/Cope ]]; then
+		export PATH="/usr/share/perl5/site_perl/auto/share/dist/Cope:$PATH"
 	fi
 	alias pacman="sudo pacman "
 	alias canhaz="sudo pacman -S "
@@ -47,7 +50,7 @@ alias chown="chown -v "
 alias chmod="chmod -v "
 alias rename="rename -v "
 alias grep="grep --color=auto -E "
-alias ls="ls --group-directories-first --color=auto -h "
+alias ls="ls -h --color --group-directories-first "
 alias l="ls -lA "
 alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
@@ -77,7 +80,9 @@ function wget { man curl }
 
 function tarpipe { tar czf - $2 | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | tar xzvf - }
+
 function soupget { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
+function soupplay { mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' | grep -i $1 | sort | sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|; s| |%20|g') }
 
 function pgrep { unbuffer ps aux | grep $1 | grep -v grep }
 
@@ -150,5 +155,3 @@ function byzanz {
 function simpleHTTP {
 	python -c "import SimpleHTTPServer, SocketServer, BaseHTTPServer; SimpleHTTPServer.test(SimpleHTTPServer.SimpleHTTPRequestHandler, type('Server', (BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn, object), {}))" 9090
 }
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
