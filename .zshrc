@@ -82,7 +82,10 @@ function tarpipe { tar czf - $2 | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | tar xzvf - }
 
 function soupget { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
-function soupplay { mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' | grep -i $1 | sort | sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|; s| |%20|g') }
+function soupplay {
+	mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' | \
+	grep -i "$@" | sort | sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|')
+}
 
 function pgrep { unbuffer ps aux | grep $1 | grep -v grep }
 
