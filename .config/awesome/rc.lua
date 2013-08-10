@@ -43,7 +43,7 @@ terminal =          'urxvtcd '
 term_cmd =          terminal..'-e '
 editor =            term_cmd..'vim '
 browser =           'firefox '
-filemanager =       'thunar '
+filemanager =       'dolphin '
 mpdclient =         'sonata '
 --mpdclient =         term_cmd..'ncmpcpp'
 wirelessinterface = 'wlan0'
@@ -61,16 +61,23 @@ function run_once(cmd)
 	sexec('pgrep -u $USER -x '..findme..' > /dev/null || ('..cmd..')')
  end
 
-exec     ('xrdb -load '..homedir..'.Xresources')
+sexec    ('xrdb -load '..homedir..'.Xresources')
+sexec    ('synclient TapButton1=1')
+sexec    ('synclient VertTwoFingerScroll=1')
+sexec    ('synclient HorizTwoFingerScroll=1')
+sexec    ('synclient EmulateTwoFingerMinW=20')
+sexec    ('synclient EmulateTwoFingerMinZ=48')
 run_once ('urxvtd -q -f')
-run_once (homedir..'bin/compton')
-run_once ('mpd')
+run_once ('compton --config ~/.compton.conf')
+--run_once ('cb-compositor --start')
+--run_once ('mpd')
 --run_once ('thunar --daemon')
-run_once ('xscreensaver -no-splash')
+--run_once ('xscreensaver -no-splash')
 --run_once ('xfce4-power-manager')
 run_once ('clipit')
 run_once ('nm-applet')
-run_once ('volumeicon')
+run_once ('volti')
+run_once (homedir..'.dropbox-dist/dropboxd')
 
 layouts = {
 	awful.layout.suit.floating,
@@ -131,6 +138,7 @@ shifty.config.apps = {
 			'gmrun',
 			'gsimplecal',
 			'xfrun4',
+			'krunner',
 		},
 		slave = false,
 		intrusive = true,

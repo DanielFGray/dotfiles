@@ -1,10 +1,10 @@
 theme                = {}
-theme.font           = 'Monaco 7'
-theme.taglist_font   = 'Monaco Bold 7'
-theme.tasklist_font  = 'Monaco Bold 7'
+theme.font           = 'Tewi 11'
+theme.taglist_font   = 'Tewi Bold 11'
+theme.tasklist_font  = 'Tewi Bold 11'
 theme.colors         = {}
---theme.colors.base3   = '#383838e6'
-theme.colors.base3   = '#292929'
+theme.colors.base3   = '#292929e6'
+--theme.colors.base3   = '#292929'
 theme.colors.base2   = '#363636'
 theme.colors.base1   = '#586e75'
 theme.colors.base0   = '#657b83'

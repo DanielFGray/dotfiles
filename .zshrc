@@ -149,7 +149,7 @@ function curltar {
 function byzanz {
 	date=`date +%F`
 	byzanz-record $* ~/pictures/screenshots/$date.gif
-	mirage -f ~/pictures/screenshots/$date.gif
+	gwenview -f ~/pictures/screenshots/$date.gif
 }
 
 function simpleHTTP {
