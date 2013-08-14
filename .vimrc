@@ -5,17 +5,16 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
+NeoBundle 'Shougo/unite.vim'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'mhinz/vim-startify'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'mhinz/vim-tmuxify'
+NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'Lokaltog/vim-easymotion'
-if version >= 703
-	NeoBundle 'Lokaltog/vim-powerline'
-endif
+NeoBundle 'bling/vim-bufferline'
+NeoBundle 'bling/vim-airline'
 
 syntax on
 filetype plugin indent on
@@ -51,6 +50,8 @@ set nolazyredraw
 set autoread
 set t_Co=256
 set shortmess+=I
+set ttimeoutlen=50
+set showtabline=0
 
 set ofu=syntaxcomplete#Complete
 "" set tags+=~/.vim/gtk+.tags
@@ -58,7 +59,13 @@ set ofu=syntaxcomplete#Complete
 colorscheme smyck
 set background=dark
 
-let g:Powerline_symbols = 'compatible'
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline_enable_bufferline = '1'
+let g:airline_enable_branch = '1'
+let g:airline_theme = 'powerlineish'
+let g:airline_detect_whitespace = 0
+let g:bufferline_echo = 0
 
 let g:tmuxify_pane_split = '-v'
 let g:tmuxify_pane_size = '10'
