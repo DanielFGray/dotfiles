@@ -1,7 +1,8 @@
 theme                = {}
-theme.font           = 'Tewi 11'
-theme.taglist_font   = 'Tewi Bold 11'
-theme.tasklist_font  = 'Tewi Bold 11'
+theme.font           = 'Tewi 8'
+-- theme.font           = 'DejaVu Sans Mono Book 8'
+-- theme.taglist_font   = 'DejaVu Sans Mono Bold 8'
+-- theme.tasklist_font  = 'DejaVu Sans Mono Bold 8'
 theme.colors         = {}
 theme.colors.base3   = '#292929e6'
 --theme.colors.base3   = '#292929'

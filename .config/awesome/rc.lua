@@ -43,7 +43,7 @@ terminal =          'urxvtcd '
 term_cmd =          terminal..'-e '
 editor =            term_cmd..'vim '
 browser =           'firefox '
-filemanager =       'dolphin '
+filemanager =       'x-file-manager '
 mpdclient =         'sonata '
 --mpdclient =         term_cmd..'ncmpcpp'
 wirelessinterface = 'wlan0'
@@ -350,7 +350,7 @@ vicious.register(memwidget, vicious.widgets.mem,
 baticon = widget({ type = 'imagebox' })
 baticon.image = image(beautifultheme..'icons/bat.png')
 batwidget = widget({ type = 'textbox' })
-vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 30, 'BAT1')
+vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 30, 'BAT0')
 
 sensicon = widget({ type = 'imagebox', align = 'left' })
 sensicon.image = image(beautifultheme..'icons/temp.png')
@@ -397,7 +397,7 @@ vicious.register(netdownwidget, vicious.widgets.net, function(widget, args)
 	end
 	netdownicon.visible = true
 	return args['{'..i..' down_kb}']..'k<span color="'..theme.colors.base0..'">/'..args['{'..i..' rx_mb}']..'M</span> '
-end, 0.5)
+end, 1)
 
 netupicon = widget({ type = 'imagebox', align = 'left' })
 netupicon.image = image(beautifultheme..'icons/up.png')
@@ -414,7 +414,7 @@ vicious.register(netupwidget, vicious.widgets.net, function(widget, args)
 	end
 	netdownicon.visible = true
 	return args['{'..i..' up_kb}']..'k<span color="'..theme.colors.base0..'">/'..args['{'..i..' tx_mb}']..'M</span>'
-end, 0.5)
+end, 1)
 
 for s = 1, screen.count() do
 	mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
@@ -437,13 +437,13 @@ for s = 1, screen.count() do
 		mypromptbox[s], {
 			cpuwidget, cpuicon,
 			memwidget, memicon,
-			--batwidget, baticon,
+			batwidget, baticon,
 			senswidget, sensicon,
 			spacer,
 			netupwidget, netupicon,
 			netdownwidget, netdownicon,
 			wifiwidget, wifiicon,
-			--mpdwidget, mpdicon,
+			mpdwidget, mpdicon,
 			layout = awful.widget.layout.horizontal.rightleft
 		},
 		layout = awful.widget.layout.horizontal.leftright
@@ -461,14 +461,6 @@ end
 
 shifty.taglist = mytaglist
 shifty.init()
--- }}}
-
--- {{{ Mouse bindings
-root.buttons(awful.util.table.join(
-	awful.button({ }, 3, function() mnuMain:toggle() end),
-	awful.button({ }, 4, awful.tag.viewnext),
-	awful.button({ }, 5, awful.tag.viewprev)
-))
 -- }}}
 
 -- {{{ Key bindings
@@ -569,13 +561,13 @@ clientkeys = awful.util.table.join(
 for i = 1, (shifty.config.maxtags or 9) do
 	globalkeys = awful.util.table.join(globalkeys,
 		awful.key({ modkey }, i, function()
-			local t =  awful.tag.viewonly(shifty.getpos(i))
+			local t = awful.tag.viewonly(shifty.getpos(i))
 		end),
 		awful.key({modkey, 'Control'}, i, function()
 			local t = shifty.getpos(i)
 			t.selected = not t.selected
 		end),
-		awful.key({modkey, 'Control',	'Shift'}, i, function()
+		awful.key({modkey, 'Control', 'Shift'}, i, function()
 			if client.focus then
 				awful.client.toggletag(shifty.getpos(i))
 			end

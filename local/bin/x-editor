@@ -1,0 +1,3 @@
+#!/bin/sh
+# vim –servername VIMSERVER &
+exec x-terminal-emulator -e "vim $*"
