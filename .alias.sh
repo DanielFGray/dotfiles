@@ -1,3 +1,30 @@
+if [[ -f /etc/debian_version ]]; then
+	if [[ -d /usr/local/share/perl/5.14.2/auto/share/dist/Cope ]]; then
+		export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+	fi
+	alias apt-get="sudo apt-get "
+	alias canhaz="sudo apt-get install "
+	alias updupg="sudo apt-get update; sudo apt-get upgrade"
+	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
+	alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
+	function pkgrm { sudo apt-get purge $* && sudo apt-get autoremove }
+	function pkgsearch { apt-cache search $* | sort | less }
+elif [[ -f /etc/arch-release ]]; then
+	if [[ -d /usr/share/perl5/site_perl/auto/share/dist/Cope ]]; then
+		export PATH="/usr/share/perl5/site_perl/auto/share/dist/Cope:$PATH"
+	fi
+	alias pacman="sudo pacman "
+	alias canhaz="sudo pacman -S "
+	alias updupg="sudo pacman -Syu "
+	alias pkgrm="sudo pacman -Rsu "
+	function pkgsearch { unbuffer yaourt -Ss $* | less }
+elif [[ -f /etc/redhat-release ]]; then
+	alias canhaz="sudo yum install "
+	alias yum="sudo yum "
+elif [[ -f /etc/gentoo-release ]]; then
+	alias canhaz="sudo emerge -av "
+fi
+
 alias xi="xinit awesome"
 alias cp="cp -v "
 alias mv="mv -v "
@@ -92,7 +119,7 @@ function curltar {
 function byzanz {
 	date=`date +%F`
 	byzanz-record $* ~/pictures/screenshots/$date.gif
-	gwenview -f ~/pictures/screenshots/$date.gif
+	qiv -f ~/pictures/screenshots/$date.gif
 }
 
 function simpleHTTP {
