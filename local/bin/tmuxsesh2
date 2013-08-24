@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 tmux new-session -d -s 'sub'
-tmux neww -t sub 'ssh dan@ssh.soupwhale.com'
-tmux neww -t sub 'ssh dan@ssh.bagelbox.org'
+tmux neww -t sub:2 'ssh dan@ssh.soupwhale.com'
+tmux neww -t sub:3 'ssh dan@ssh.bagelbox.org'
+tmux renamew -t sub:2 'soupwhale'
+tmux renamew -t sub:3 'bagelbox'
 tmux attach -t sub

@@ -1,6 +1,4 @@
-coreutils
-zsh-beta
-moreutils
+zsh
 curl
 lm-sensors
 rsync
@@ -12,17 +10,15 @@ openssh-server
 mosh
 optipng
 imagemagick
+pv
+fortunes-off
 
 lftp
 mutt
 vim
 tmux
-ncdu
 htop
 ranger
-lynx
-nmon
-weechat
 rtorrent
 ncmpcpp mpc mpd
 
@@ -45,8 +41,6 @@ gmrun
 gnome-icon-theme-extras gnome-icon-theme-symbolic 
 gtk2-engines-murrine gtk3-engines-unico
 pavucontrol
-volti
 gksu
 gparted
 arandr
-xserver-xorg-core

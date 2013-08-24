@@ -1,8 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
 tmux new-session -d -s 'main'
-
-tmux neww -t main:2 'bash /home/dan/local/bin/sysfiles'
+tmux neww -t main:2 'sysfiles'
 tmux neww -t main:3 'mutt'
 tmux renamew -t main:2 'dotfiles'
 tmux killw -t main:1

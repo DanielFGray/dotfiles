@@ -1,135 +1,13 @@
 sw_volume: 0
 audio_device_state:1:MPD PulseAudio Output
 audio_device_state:1:my_fifo
-state: pause
-current: 54
-time: 254
-random: 1
-repeat: 1
+state: stop
+random: 0
+repeat: 0
 single: 0
 consume: 0
 crossfade: 0
 mixrampdb: 0.000000
 mixrampdelay: nan
 playlist_begin
-0:Arkaik/(2010) Reflections Within Dissonance/01-The Transcendent Spectral Path.mp3
-1:Arkaik/(2010) Reflections Within Dissonance/02-Reflections Within Dissonance.mp3
-2:Arkaik/(2010) Reflections Within Dissonance/03-Paradigm.mp3
-3:Arkaik/(2010) Reflections Within Dissonance/04-Obscured Luminostiy.mp3
-4:Arkaik/(2010) Reflections Within Dissonance/05-Womb of Perception.mp3
-5:Arkaik/(2010) Reflections Within Dissonance/06-The Divine Manifestation.mp3
-6:Arkaik/(2010) Reflections Within Dissonance/07-Malignant Ignorance.mp3
-7:Arkaik/(2010) Reflections Within Dissonance/08-Elemental Synthesis.mp3
-8:Arkaik/(2010) Reflections Within Dissonance/09-Elegy For the Disillusioned.mp3
-9:Arkaik/(2010) Reflections Within Dissonance/10-Face of Regression.mp3
-10:Augury/(2009) Fragmentary Evidence/01 - Aetheral.mp3
-11:Augury/(2009) Fragmentary Evidence/02 - Aimian Cattle.mp3
-12:Augury/(2009) Fragmentary Evidence/03 - Orphans of Living.mp3
-13:Augury/(2009) Fragmentary Evidence/04 - Jupiter to Ignite.mp3
-14:Augury/(2009) Fragmentary Evidence/05 - Sovereigns Unknown.mp3
-15:Augury/(2009) Fragmentary Evidence/06 - Skyless.mp3
-16:Augury/(2009) Fragmentary Evidence/07 - Faith Puppeteers.mp3
-17:Augury/(2009) Fragmentary Evidence/08 - Brimstone Landscapes.mp3
-18:Augury/(2009) Fragmentary Evidence/09 - Eversee the Rebirth.mp3
-19:Aversions Crown/(2011) Servitude/ 01. No Salvation.mp3
-20:Aversions Crown/(2011) Servitude/ 02. Excoriate.mp3
-21:Aversions Crown/(2011) Servitude/ 03. Imperfect Design.mp3
-22:Aversions Crown/(2011) Servitude/ 04. Hive Mind.mp3
-23:Aversions Crown/(2011) Servitude/ 05. Repurposed - Reprogrammed.mp3
-24:Aversions Crown/(2011) Servitude/ 06. Solace.mp3
-25:Aversions Crown/(2011) Servitude/ 07. Partisan Deconstruction.mp3
-26:Aversions Crown/(2011) Servitude/ 08. We're Not Safe.mp3
-27:Aversions Crown/(2011) Servitude/ 09. Defiler.mp3
-28:Aversions Crown/(2011) Servitude/ 10. Praetorian.mp3
-29:Aversions Crown/(2011) Servitude/ 11. Advocator of mans Genocide.mp3
-30:Beyond Creation/(2011) The Aura/01- No Request for the Corrupted.mp3
-31:Beyond Creation/(2011) The Aura/02- Coexistence.mp3
-32:Beyond Creation/(2011) The Aura/03- Chromatic Horizon.mp3
-33:Beyond Creation/(2011) The Aura/04- Omnipresent.mp3
-34:Beyond Creation/(2011) The Aura/05- Injustice Revealed.mp3
-35:Beyond Creation/(2011) The Aura/06- Le Detenteur.mp3
-36:Beyond Creation/(2011) The Aura/07- The Aura.mp3
-37:Beyond Creation/(2011) The Aura/08- Social Disability.mp3
-38:Beyond Creation/(2011) The Aura/09- Elevation Path.mp3
-39:Beyond Creation/(2011) The Aura/10- The Deported.mp3
-40:Fallujah/(2011) The Harvest Wombs/01. Alpha Incipient.mp3
-41:Fallujah/(2011) The Harvest Wombs/02. Ritual of Godflesh.mp3
-42:Fallujah/(2011) The Harvest Wombs/03. Become One.mp3
-43:Fallujah/(2011) The Harvest Wombs/04. Cerebral Hybridization.mp3
-44:Fallujah/(2011) The Harvest Wombs/05. Prison of the Mind.mp3
-45:Fallujah/(2011) The Harvest Wombs/06. The Flame Surreal.mp3
-46:Fallujah/(2011) The Harvest Wombs/07. Enslaved Eternal Phenomenon.mp3
-47:Fallujah/(2011) The Harvest Wombs/08. Hallucination.mp3
-48:Fallujah/(2011) The Harvest Wombs/09. The Harvest Wombs.mp3
-49:Fallujah/(2011) The Harvest Wombs/10. Assemblage of Wolves.mp3
-50:Fleshgod Apocalypse/(2011) Agony/01 - Temptation.mp3
-51:Fleshgod Apocalypse/(2011) Agony/02 - The Hypocrisy.mp3
-52:Fleshgod Apocalypse/(2011) Agony/03 - The Imposition.mp3
-53:Fleshgod Apocalypse/(2011) Agony/04 - The Deceit.mp3
-54:Fleshgod Apocalypse/(2011) Agony/05 - The Violation.mp3
-55:Fleshgod Apocalypse/(2011) Agony/06 - The Egoism.mp3
-56:Fleshgod Apocalypse/(2011) Agony/07 - The Betrayal.mp3
-57:Fleshgod Apocalypse/(2011) Agony/08 - The Forsaking.mp3
-58:Fleshgod Apocalypse/(2011) Agony/09 - The Oppression.mp3
-59:Fleshgod Apocalypse/(2011) Agony/10 - Agony.mp3
-60:Fleshwrought/2010 - Dementia-Dyslexia/01 - Mental Illness.mp3
-61:Fleshwrought/2010 - Dementia-Dyslexia/02 - Inner Thoughts.mp3
-62:Fleshwrought/2010 - Dementia-Dyslexia/03 - Programming The Herds.mp3
-63:Fleshwrought/2010 - Dementia-Dyslexia/04 - Weeping Hallucinations.mp3
-64:Fleshwrought/2010 - Dementia-Dyslexia/05 - Conceptual Flesh.mp3
-65:Fleshwrought/2010 - Dementia-Dyslexia/06 - State Of Desolation.mp3
-66:Fleshwrought/2010 - Dementia-Dyslexia/07 - Dyslexic Interlude.mp3
-67:Fleshwrought/2010 - Dementia-Dyslexia/08 - Self-Destructive Loathing.mp3
-68:Fleshwrought/2010 - Dementia-Dyslexia/09 - Relevant Intoxication.mp3
-69:Fleshwrought/2010 - Dementia-Dyslexia/10 - Final Nausea.mp3
-70:Meshuggah/(2012) Koloss/01 - I Am Colossus.mp3
-71:Meshuggah/(2012) Koloss/02 - The Demon's Name Is Surveillance.mp3
-72:Meshuggah/(2012) Koloss/03 - Do Not Look Down.mp3
-73:Meshuggah/(2012) Koloss/04 - Behind The Sun.mp3
-74:Meshuggah/(2012) Koloss/05 - The Hurt That Finds You First.mp3
-75:Meshuggah/(2012) Koloss/06 - Marrow.mp3
-76:Meshuggah/(2012) Koloss/07 - Break Those Bones Whose Sinews Gave It Motion.mp3
-77:Meshuggah/(2012) Koloss/08 - Swarm.mp3
-78:Meshuggah/(2012) Koloss/09 - Demiurge.mp3
-79:Meshuggah/(2012) Koloss/10 - The Last Vigil.mp3
-80:Necrophagist/(2004) Epitaph/01 Stabwound.mp3
-81:Necrophagist/(2004) Epitaph/02 The Stillborn One.mp3
-82:Necrophagist/(2004) Epitaph/03 Ignominious And Pale.mp3
-83:Necrophagist/(2004) Epitaph/04 Diminished To Be.mp3
-84:Necrophagist/(2004) Epitaph/05 Epitaph.mp3
-85:Necrophagist/(2004) Epitaph/06 Only Ash Remains.mp3
-86:Necrophagist/(2004) Epitaph/07 Seven.mp3
-87:Necrophagist/(2004) Epitaph/08 Symbiotic In Theory.mp3
-88:Origin/2002 - Informis Infinitas Inhumanitas/01 Larvae Of The Lie.mp3
-89:Origin/2002 - Informis Infinitas Inhumanitas/02 Inhuman.mp3
-90:Origin/2002 - Informis Infinitas Inhumanitas/03 Awaken The Suffering.mp3
-91:Origin/2002 - Informis Infinitas Inhumanitas/04 Perversion Of Hate.mp3
-92:Origin/2002 - Informis Infinitas Inhumanitas/05 Portal.mp3
-93:Origin/2002 - Informis Infinitas Inhumanitas/06 Meat For The Beast.mp3
-94:Origin/2002 - Informis Infinitas Inhumanitas/07 Mental Torment.mp3
-95:Origin/2002 - Informis Infinitas Inhumanitas/08 Insurrection.mp3
-96:Origin/2002 - Informis Infinitas Inhumanitas/09 Implosion Of Eternity.mp3
-97:Psycroptic/(2006) Symbols Of Failure/01 Alpha Breed.mp3
-98:Psycroptic/(2006) Symbols Of Failure/02 Missionaries Of A Future To Come.mp3
-99:Psycroptic/(2006) Symbols Of Failure/03 Merchants Of Deceit.mp3
-100:Psycroptic/(2006) Symbols Of Failure/04 Minionsthe Fallen.mp3
-101:Psycroptic/(2006) Symbols Of Failure/05 Repairing The Dimensional Cluster.mp3
-102:Psycroptic/(2006) Symbols Of Failure/06 Epoch Of The Gods.mp3
-103:Psycroptic/(2006) Symbols Of Failure/07 Our Evolutionary Architecture.mp3
-104:Psycroptic/(2006) Symbols Of Failure/08 An Experiment In Transience.mp3
-105:Psycroptic/(2006) Symbols Of Failure/09 Cleansing A Misguided Path.mp3
-106:The Faceless/(2012) Autotheism/01-the_faceless-autotheist_movement_i_create.mp3
-107:The Faceless/(2012) Autotheism/02-the_faceless-autotheist_movement_ii_emancipate.mp3
-108:The Faceless/(2012) Autotheism/03-the_faceless-autotheist_movement_iii_deconsecrate.mp3
-109:The Faceless/(2012) Autotheism/04-the_faceless-accelerated_evolution.mp3
-110:The Faceless/(2012) Autotheism/05-the_faceless-the_eidolon_reality.mp3
-111:The Faceless/(2012) Autotheism/06-the_faceless-ten_billion_years.mp3
-112:The Faceless/(2012) Autotheism/07-the_faceless-hail_science.mp3
-113:The Faceless/(2012) Autotheism/08-the_faceless-hymn_of_sanity.mp3
-114:The Faceless/(2012) Autotheism/09-the_faceless-in_solitude.mp3
-115:Viraemia/(2009) EP/01-Disseminated Intravascular Coagulation.mp3
-116:Viraemia/(2009) EP/02-Necrotizing Fasciitis.mp3
-117:Viraemia/(2009) EP/03-Cancrum Oris.mp3
-118:Viraemia/(2009) EP/04-Pit of Pestilence.mp3
-119:Viraemia/(2009) EP/05 - The Prodromal Phase.mp3
 playlist_end

@@ -69,11 +69,10 @@ sexec    ('synclient EmulateTwoFingerMinW=20')
 sexec    ('synclient EmulateTwoFingerMinZ=48')
 run_once ('urxvtd -q -f')
 run_once ('compton --config ~/.compton.conf')
---run_once ('cb-compositor --start')
---run_once ('mpd')
+run_once ('mpd')
 --run_once ('thunar --daemon')
---run_once ('xscreensaver -no-splash')
---run_once ('xfce4-power-manager')
+run_once ('xscreensaver -no-splash')
+run_once ('xfce4-power-manager')
 run_once ('clipit')
 run_once ('nm-applet')
 run_once ('volti')
@@ -111,7 +110,7 @@ shifty.config.tags = {
 		exclusive = true,
 		mwfact    = 0.75,
 --		init      = true,
-		spawn     = term_cmd..'bash /home/dan/local/bin/tmuxsesh1;'..term_cmd..'bash /home/dan/local/bin/tmuxsesh2',
+		spawn     = term_cmd..'bash /home/dan/.local/bin/tmuxsesh1;'..term_cmd..'bash /home/dan/.local/bin/tmuxsesh2',
 --		slave     = true
 	},
 	books = {
@@ -257,10 +256,9 @@ mnuMain = awful.menu({ items = {
 	{ 'terminal',           terminal } ,
 	{ 'tmux',               term_cmd..'tmux' } ,
 	{ 'editor',             editor },
-	{ 'browser',            browser },
 	{ 'file manager',       filemanager },
 	{ 'mpd client',         mpclient },
-	{ 'luakit',             'luakit' },
+	{ 'browser',            'x-www-browser' },
 	{ 'htop',               term_cmd..'htop' },
 	{ 'weechat',            term_cmd..'weechat-curses' },
 	{ 'rtorrent',           term_cmd..'rtorrent' },
@@ -412,7 +410,7 @@ vicious.register(netupwidget, vicious.widgets.net, function(widget, args)
 		netupicon.visible = false
 		return ''
 	end
-	netdownicon.visible = true
+	netupicon.visible = true
 	return args['{'..i..' up_kb}']..'k<span color="'..theme.colors.base0..'">/'..args['{'..i..' tx_mb}']..'M</span>'
 end, 1)
 
@@ -537,7 +535,7 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, 'Mod1' }, 'e',              function() exec(editor) end),
 	awful.key({ modkey, 'Mod1' }, 'f',              function() exec(filemanager) end),
 	awful.key({ modkey, 'Mod1' }, 'h',              function() exec(term_cmd..'htop') end),
-	awful.key({ modkey, 'Mod1' }, 'l',              function() exec('xscreensaver-command --lock'); exec('xset dpms force off') end),
+	awful.key({ modkey, 'Mod1' }, 'l',              function() exec('screenlock') end),
 	awful.key({ modkey, 'Mod1' }, 'm',              function() exec(mpdclient) end),
 	awful.key({ modkey, 'Mod1' }, 'v',              function() exec('pavucontrol') end),
 	awful.key({ modkey, 'Mod1' }, 'w',              function() exec(browser) end),
@@ -604,19 +602,17 @@ end)
 client.add_signal('manage', function (c, startup)
 --	if awful.client.floating.get(c)
 --	or awful.layout.get(c.screen) == awful.layout.suit.floating then
---		if   c.titlebar then awful.titlebar.remove(c)
+--		if c.titlebar then awful.titlebar.remove(c)
 --		else awful.titlebar.add(c, {modkey = modkey, height = '12', position = 'bottom'}) end
 --	end
 	c:add_signal('mouse::enter', function (c)
-		if  awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-		and awful.client.focus.filter(c) then
+		if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier and awful.client.focus.filter(c) then
 			client.focus = c
 		end
 	end)
 	if not startup then
 		awful.client.setslave(c)
-		if  not c.size_hints.program_position
-		and not c.size_hints.user_position then
+		if not c.size_hints.program_position and not c.size_hints.user_position then
 			awful.placement.no_overlap(c)
 			awful.placement.no_offscreen(c)
 		end
