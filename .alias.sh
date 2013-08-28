@@ -69,6 +69,10 @@ function importss {
 	qiv $1
 }
 
+function burnusb {
+	pv $1 | sudo dd of=$2 bs=4M conv=sync
+}
+
 function changeroot {
 	sudo cp -L /etc/resolv.conf $1/etc/resolv.conf
 	sudo mount -t proc proc $1/proc

@@ -35,22 +35,22 @@ end
 
 -- {{{ Variable definitions
 modkey =            'Mod4'
-configdir =         awful.util.getdir('config')..'/'
-homedir =           os.getenv('HOME')..'/'
+configdir =         awful.util.getdir('config') .. '/'
+homedir =           os.getenv('HOME') .. '/'
 exec =              awful.util.spawn
 sexec =             awful.util.spawn_with_shell
 terminal =          'urxvtcd '
-term_cmd =          terminal..'-e '
-editor =            term_cmd..'vim '
+term_cmd =          terminal .. '-e '
+editor =            term_cmd .. 'vim '
 browser =           'firefox '
 filemanager =       'x-file-manager '
 mpdclient =         'sonata '
---mpdclient =         term_cmd..'ncmpcpp'
+--mpdclient =         term_cmd .. 'ncmpcpp'
 wirelessinterface = 'wlan0'
 wiredinterface =    'eth0'
-beautifultheme =    configdir..'themes/dfg/'
+beautifultheme =    configdir .. 'themes/dfg/'
 
-beautiful.init(beautifultheme..'theme.lua')
+beautiful.init(beautifultheme .. 'theme.lua')
 
 function run_once(cmd)
 	local findme = cmd
@@ -58,15 +58,9 @@ function run_once(cmd)
 	if firstspace then
 		findme = cmd:sub(0, firstspace - 1)
 	end
-	sexec('pgrep -u $USER -x '..findme..' > /dev/null || ('..cmd..')')
+	sexec('pgrep -x ' .. findme .. ' > /dev/null || (' .. cmd .. ')')
  end
 
-sexec    ('xrdb -load '..homedir..'.Xresources')
-sexec    ('synclient TapButton1=1')
-sexec    ('synclient VertTwoFingerScroll=1')
-sexec    ('synclient HorizTwoFingerScroll=1')
-sexec    ('synclient EmulateTwoFingerMinW=20')
-sexec    ('synclient EmulateTwoFingerMinZ=48')
 run_once ('urxvtd -q -f')
 run_once ('compton --config ~/.compton.conf')
 run_once ('mpd')
@@ -75,9 +69,46 @@ run_once ('xscreensaver -no-splash')
 run_once ('xfce4-power-manager')
 run_once ('clipit')
 run_once ('nm-applet')
-run_once ('volti')
-run_once (homedir..'.dropbox-dist/dropboxd')
+run_once ('pnmixer')
+run_once (homedir .. '.dropbox-dist/dropboxd')
+-- }}}
 
+-- {{{ Menu
+mnuAwesome = {
+	{ 'edit configs', editor .. configdir .. 'rc.lua ' .. beautifultheme .. 'theme.lua' },
+	{ 'restart', awesome.restart },
+	{ 'quit', awesome.quit }
+}
+
+mnuCompositing = {
+	{ 'stop',  'pkill compton' },
+	{ 'start', 'pkill compton && compton' },
+}
+
+mnuApps = {}
+for _, item in ipairs(freedesktop_menu.new()) do table.insert(mnuApps, item) end
+
+mnuMain = awful.menu({ items = {
+	{ 'terminal',           terminal } ,
+	{ 'tmux',               term_cmd .. 'tmux' } ,
+	{ 'firefox',            'firefox' },
+	{ 'luakit',             'luakit' },
+	{ 'editor',             editor },
+	{ 'file manager',       filemanager },
+	{ 'mpd client',         mpclient },
+	{ 'htop',               term_cmd .. 'htop' },
+	{ 'apps',               mnuApps },
+	{ 'composite',          mnuCompositing },
+	{ 'awesome',            mnuAwesome },
+}})
+
+mylauncher = awful.widget.launcher({
+	image = image(beautiful.awesome_icon),
+	menu = mnuMain
+})
+-- }}}
+
+-- {{{ Shify
 layouts = {
 	awful.layout.suit.floating,
 	awful.layout.suit.tile,
@@ -100,7 +131,6 @@ shifty.config.tags = {
 		layout    = awful.layout.suit.max,
 		exclusive = true,
 		position  = 1,
---		init      = true,
 		slave     = false,
 		spawn     = browser,
 	},
@@ -109,26 +139,18 @@ shifty.config.tags = {
 		position  = 2,
 		exclusive = true,
 		mwfact    = 0.75,
---		init      = true,
-		spawn     = term_cmd..'bash /home/dan/.local/bin/tmuxsesh1;'..term_cmd..'bash /home/dan/.local/bin/tmuxsesh2',
---		slave     = true
+		spawn     = term_cmd .. 'bash /home/dan/.local/bin/tmuxsesh1;' .. term_cmd .. 'bash /home/dan/.local/bin/tmuxsesh2',
 	},
 	books = {
 		layout    = awful.layout.suit.tile,
---		position  = 3,
-		spawn     = filemanager..'/pr0n/books',
+		spawn     = filemanager .. '/pr0n/books',
 		exclusive = false,
 	},
 	audio = {
 		layout    = awful.layout.suit.tile,
---		position  = 4,
-		spawn     = mpdclient..' && pavucontrol',
+		spawn     = mpdclient .. ' && pavucontrol',
 		exclusive = false,
 	},
---	office = {
---		layout   = awful.layout.suit.tile,
---		position = 9,
---	},
 }
 
 shifty.config.apps = {
@@ -138,6 +160,8 @@ shifty.config.apps = {
 			'gsimplecal',
 			'xfrun4',
 			'krunner',
+			'pnmixer',
+			'.*notify.*'
 		},
 		slave = false,
 		intrusive = true,
@@ -157,7 +181,6 @@ shifty.config.apps = {
 			'uzbl',
 		},
 		tag = 'web',
-		skip_taskbar = false,
 	},
 	{
 		match = {
@@ -166,14 +189,6 @@ shifty.config.apps = {
 			'mutt',
 		},
 		tag = 'mail',
-	},
-	{
-		match = {
-			'pcmanfm',
-			'thunar',
-			'nautilus',
-		},
-		slave = true
 	},
 	{
 		match = {
@@ -206,8 +221,9 @@ shifty.config.apps = {
 	{
 		match = {
 			terminal,
-			'xterm',
-			'urxvt',
+			'.*term.*',
+			'urxvt.*',
+			'konsole',
 		},
 		tag = 'term',
 		slave = true,
@@ -237,51 +253,17 @@ shifty.config.defaults = {
 }
 -- }}}
 
--- {{{ Menu
-mnuAwesome = {
-	{ 'edit configs', editor..configdir..'rc.lua '..beautifultheme..'theme.lua' },
-	{ 'restart', awesome.restart },
-	{ 'quit', awesome.quit }
-}
-
-mnuCompositing = {
-	{ 'stop',  'pkill compton' },
-	{ 'start', 'pkill compton && compton' },
-}
-
-mnuApps = {}
-for _, item in ipairs(freedesktop_menu.new()) do table.insert(mnuApps, item) end
-
-mnuMain = awful.menu({ items = {
-	{ 'terminal',           terminal } ,
-	{ 'tmux',               term_cmd..'tmux' } ,
-	{ 'editor',             editor },
-	{ 'file manager',       filemanager },
-	{ 'mpd client',         mpclient },
-	{ 'browser',            'x-www-browser' },
-	{ 'htop',               term_cmd..'htop' },
-	{ 'weechat',            term_cmd..'weechat-curses' },
-	{ 'rtorrent',           term_cmd..'rtorrent' },
-	{ 'gimp',               'gimp' },
-	{ 'apps',               mnuApps },
-	{ 'composite',          mnuCompositing },
-	{ 'awesome',            mnuAwesome },
-}})
-
-mylauncher = awful.widget.launcher({
-	image = image(beautiful.awesome_icon),
-	menu = mnuMain
-})
--- }}}
-
 --  {{{ Wibox
+
+--widget:add_signal('mouse::enter', function() return '' end)
+
 datewidget = widget({ type = 'textbox' })
 vicious.register(datewidget, vicious.widgets.date, ' %a %b %d %Y  %l:%M:%S ', 1)
 datewidget:buttons(awful.util.table.join(
 	awful.button({ }, 1, function () exec('gsimplecal') end)
 ))
 
-mysystray = widget({ type = 'systray', align = 'left' })
+mysystray = widget({ type = 'systray', align = 'center' })
 
 mywibox = { }
 mypromptbox = { }
@@ -307,11 +289,13 @@ mytasklist.buttons = awful.util.table.join(awful.button({ }, 1, function(c)
 	end
 end))
 
-spacer = widget({ type = 'textbox'  })
-spacer.text = ' <span color="'..theme.bg_focus..'">|</span> '
+space = widget({ type = 'textbox' })
+space.text = ' '
+spacer = widget({ type = 'textbox' })
+spacer.text = ' <span color="' .. theme.bg_focus .. '">|</span> '
 
-mpdicon = widget({ type = 'imagebox', align = 'left' })
-mpdicon.image = image(beautifultheme..'icons/music.png')
+mpdicon = widget({ type = 'imagebox' })
+mpdicon.image = image(beautifultheme .. 'icons/music.png')
 mpdwidget = widget({ type = 'textbox' })
 vicious.register(mpdwidget, vicious.widgets.mpd, function(widget, args)
 	if args['{state}'] == ('Stop' or 'N/A') then
@@ -320,9 +304,9 @@ vicious.register(mpdwidget, vicious.widgets.mpd, function(widget, args)
 	else
 		mpdicon.visible = true
 		if args['{state}'] == 'Pause' then
-			return ' <span color="'..theme.colors.base0..'">'..args['{Artist}']..' - '..args['{Title}']..'</span>'..spacer.text
+			return ' <span color="' .. theme.colors.base0 .. '">' .. args['{Artist}'] .. ' - ' .. args['{Title}'] .. '</span>' .. spacer.text
 		else
-			return ' '..args['{Artist}']..'<span color="'..theme.colors.base0..'"> - </span>'..args['{Title}']..spacer.text
+			return ' ' .. args['{Artist}'] .. '<span color="' .. theme.colors.base0 .. '"> - </span>' .. args['{Title}'] .. spacer.text
 		end
 	end
 end, 5)
@@ -333,25 +317,25 @@ mpdwidget:buttons( awful.util.table.join(
 	awful.button({ }, 5, function() sexec('mpc next', false) end)
 ))
 
-cpuicon = widget({ type = 'imagebox', align = 'left' })
-cpuicon.image = image(beautifultheme..'icons/cpu.png')
+cpuicon = widget({ type = 'imagebox' })
+cpuicon.image = image(beautifultheme .. 'icons/cpu.png')
 cpuwidget = widget({ type = 'textbox' })
 vicious.register(cpuwidget, vicious.widgets.cpu, function(widget, args)
-	return string.format('%02d', args[1])..'% ' end, .5)
+	return string.format('%02d', args[1]) .. '% ' end, .5)
 
-memicon = widget({ type = 'imagebox', align = 'left' })
-memicon.image = image(beautifultheme..'icons/mem.png')
+memicon = widget({ type = 'imagebox' })
+memicon.image = image(beautifultheme .. 'icons/mem.png')
 memwidget = widget({ type = 'textbox' })
 vicious.register(memwidget, vicious.widgets.mem,
-	'$1% <span color="'..theme.colors.base0..'">(</span>$2<span color="'..theme.colors.base0..'">/$3)</span> ', 5)
+	'$1% <span color="' .. theme.colors.base0 .. '">(</span>$2<span color="' .. theme.colors.base0 .. '">/$3MB)</span> ', 2.4)
 
 baticon = widget({ type = 'imagebox' })
-baticon.image = image(beautifultheme..'icons/bat.png')
+baticon.image = image(beautifultheme .. 'icons/bat.png')
 batwidget = widget({ type = 'textbox' })
-vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 30, 'BAT0')
+vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 29.5, 'BAT0')
 
-sensicon = widget({ type = 'imagebox', align = 'left' })
-sensicon.image = image(beautifultheme..'icons/temp.png')
+sensicon = widget({ type = 'imagebox' })
+sensicon.image = image(beautifultheme .. 'icons/temp.png')
 senswidget = widget({ type = 'textbox' })
 vicious.register(senswidget, vicious.widgets.thermal, function(widget, args)
 	local temp = tonumber(string.format('%.0f', args[1] * 1.8 + 32))
@@ -362,13 +346,13 @@ vicious.register(senswidget, vicious.widgets.thermal, function(widget, args)
 		   fg = beautiful.fg_urgent,
 		   bg = beautiful.bg_urgent
 		})
-		temp = '<span color="'..theme.colors.red..'">'..temp..'</span>'
+		temp = '<span color="' .. theme.colors.red .. '">' .. temp .. '</span>'
 	end
-	return temp ..'<span color="'..theme.colors.base0..'">°F</span> '
-end, 15, 'thermal_zone0')
+	return temp  .. '<span color="' .. theme.colors.base0 .. '">°F</span> '
+end, 14, 'thermal_zone0')
 
-wifiicon = widget({ type = 'imagebox', align = 'left' })
-wifiicon.image = image(beautifultheme..'icons/wifi.png')
+wifiicon = widget({ type = 'imagebox' })
+wifiicon.image = image(beautifultheme .. 'icons/wifi.png')
 wifiwidget = widget({ type = 'textbox' })
 vicious.register(wifiwidget, vicious.widgets.wifi, function(widget, args)
 	if args['{link}'] == 0 then
@@ -378,41 +362,49 @@ vicious.register(wifiwidget, vicious.widgets.wifi, function(widget, args)
 		wifiicon.visible = true
 		return string.format('%i%% ', args['{link}'] / 70 * 100)
 	end
-end, 4, wirelessinterface)
+end, 4.5, wirelessinterface)
 
-netdownicon = widget({ type = 'imagebox', align = 'left' })
-netdownicon.image = image(beautifultheme..'icons/down.png')
+netdownicon = widget({ type = 'imagebox' })
+netdownicon.image = image(beautifultheme .. 'icons/down.png')
 netdownwidget = widget({ type = 'textbox' })
 vicious.register(netdownwidget, vicious.widgets.net, function(widget, args)
 	local i = ''
-	if args['{'..wirelessinterface..' carrier}'] == 1 then
+	if args['{' .. wirelessinterface .. ' carrier}'] == 1 then
 		i = wirelessinterface
-	elseif args['{'..wiredinterface..' carrier}'] == 1 then
+	elseif args['{' .. wiredinterface .. ' carrier}'] == 1 then
 		i = wiredinterface
 	else
 		netdownicon.visible = false
 		return 'disconnected'
 	end
 	netdownicon.visible = true
-	return args['{'..i..' down_kb}']..'k<span color="'..theme.colors.base0..'">/'..args['{'..i..' rx_mb}']..'M</span> '
-end, 1)
+	return args['{' .. i .. ' down_kb}'] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. string.format('%.0f', args['{' .. i .. ' rx_mb}']) .. 'M</span> '
+end, 1.5)
 
-netupicon = widget({ type = 'imagebox', align = 'left' })
-netupicon.image = image(beautifultheme..'icons/up.png')
+netupicon = widget({ type = 'imagebox' })
+netupicon.image = image(beautifultheme .. 'icons/up.png')
 netupwidget = widget({ type = 'textbox' })
 vicious.register(netupwidget, vicious.widgets.net, function(widget, args)
 	local i = ''
-	if args['{'..wirelessinterface..' carrier}'] == 1 then
+	if args['{' .. wirelessinterface .. ' carrier}'] == 1 then
 		i = wirelessinterface
-	elseif args['{'..wiredinterface..' carrier}'] == 1 then
+	elseif args['{' .. wiredinterface .. ' carrier}'] == 1 then
 		i = wiredinterface
 	else
 		netupicon.visible = false
 		return ''
 	end
 	netupicon.visible = true
-	return args['{'..i..' up_kb}']..'k<span color="'..theme.colors.base0..'">/'..args['{'..i..' tx_mb}']..'M</span>'
-end, 1)
+	return args['{' .. i .. ' up_kb}'] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. string.format('%.0f', args['{' .. i .. ' tx_mb}']) .. 'M</span>'
+end, 1.5)
+
+-- mailicon = widget({ type = 'imagebox' })
+-- mailicon.image = image(beautifultheme .. 'icons/mail.png')
+-- mailwidget = widget({ type = 'textbox' })
+-- vicious.register(mailwidget, vicious.widgets.mboxc, function(widget, args)
+-- 	mailicon.visible = false
+-- 	return ''
+-- end, 55.5)
 
 for s = 1, screen.count() do
 	mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
@@ -441,6 +433,7 @@ for s = 1, screen.count() do
 			netupwidget, netupicon,
 			netdownwidget, netdownicon,
 			wifiwidget, wifiicon,
+			-- mailwidget, mailicon, space,
 			mpdwidget, mpdicon,
 			layout = awful.widget.layout.horizontal.rightleft
 		},
@@ -512,34 +505,34 @@ globalkeys = awful.util.table.join(
 	awful.key({ }, 'XF86AudioNext',                 function() sexec('mpc -q next', false) end),
 	awful.key({ }, 'XF86AudioPrev',                 function() sexec('mpc -q prev', false) end),
 	awful.key({ modkey }, 'F1',                     function()
---	                                                	local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "'..beautiful.bg_normal..'" -nf "'..beautiful.fg_normal..'" -sb "'..beautiful.colors.blue..'" -sf "'.. beautiful.bg_normal ..'"')
-	                                                	sexec('dmenu_run -b -fn "Monaco-8:normal"')
+	                                                	--local f_reader = io.popen( 'dmenu_path | dmenu -b -nb "' .. beautiful.bg_normal .. '" -nf "' .. beautiful.fg_normal .. '" -sb "' .. beautiful.colors.blue .. '" -sf "' ..  beautiful.bg_normal  .. '"')
+	                                                	sexec('dmenu_run -b -nb "' .. beautiful.bg_normal .. '" -nf "' .. beautiful.fg_normal .. '" -sb "' .. beautiful.colors.blue .. '" -sf "' ..  beautiful.bg_normal  .. '"')
 	                                                end),
 	awful.key({ modkey }, 'F2',                     function() exec('gmrun') end),
+	--awful.key({ modkey, 'Mod1' }, 'F2',             function() exec('spring') end)
 	awful.key({ modkey }, 'F3',                     function()
 	                                                	awful.prompt.run({ prompt = ' Web: ' },
 	                                                	mypromptbox[mouse.screen].widget,
 	                                                	function(command)
-	                                                		exec(browser..'"http://yubnub.org/parser/parse?command='..command..'"')
+	                                                		exec(browser .. '"http://yubnub.org/parser/parse?command=' .. command .. '"')
 	                                                		awful.tag.viewonly(tags[scount][3])
 	                                                	end, nil,
-	                                                	awful.util.getdir('cache')..'/yubnub_eval')
+	                                                	awful.util.getdir('cache') .. '/yubnub_eval')
 	                                                end),
 	awful.key({ modkey }, 'F4',                     function()
 	                                                	awful.prompt.run({prompt = ' Run Lua code: '},
 	                                                	mypromptbox[mouse.screen].widget,
 	                                                	awful.util.eval, nil,
-	                                                	awful.util.getdir('cache')..'/history_eval')
+	                                                	awful.util.getdir('cache') .. '/history_eval')
 	                                                end),
 	awful.key({ modkey }, 'Return',                 function() exec(terminal) end),
 	awful.key({ modkey, 'Mod1' }, 'e',              function() exec(editor) end),
 	awful.key({ modkey, 'Mod1' }, 'f',              function() exec(filemanager) end),
-	awful.key({ modkey, 'Mod1' }, 'h',              function() exec(term_cmd..'htop') end),
+	awful.key({ modkey, 'Mod1' }, 'h',              function() exec(term_cmd .. 'htop') end),
 	awful.key({ modkey, 'Mod1' }, 'l',              function() exec('screenlock') end),
 	awful.key({ modkey, 'Mod1' }, 'm',              function() exec(mpdclient) end),
 	awful.key({ modkey, 'Mod1' }, 'v',              function() exec('pavucontrol') end),
-	awful.key({ modkey, 'Mod1' }, 'w',              function() exec(browser) end),
-	awful.key({ modkey, 'Mod1' }, 'F2',             function() exec('spring') end)
+	awful.key({ modkey, 'Mod1' }, 'w',              function() exec(browser) end)
 )
 
 clientkeys = awful.util.table.join(

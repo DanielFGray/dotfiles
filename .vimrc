@@ -58,6 +58,7 @@ set ofu=syntaxcomplete#Complete
 
 colorscheme smyck
 set background=dark
+set guifont=tewi
 
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
