@@ -10,8 +10,8 @@ if [[ -f /etc/debian_version ]]; then
 	function pkgrm { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch { apt-cache search $* | sort | less }
 elif [[ -f /etc/arch-release ]]; then
-	if [[ -d /usr/share/perl5/site_perl/auto/share/dist/Cope ]]; then
-		export PATH="/usr/share/perl5/site_perl/auto/share/dist/Cope:$PATH"
+	if [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
+		export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	fi
 	alias pacman="sudo pacman "
 	alias canhaz="sudo pacman -S "
