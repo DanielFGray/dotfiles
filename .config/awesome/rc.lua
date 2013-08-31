@@ -66,6 +66,7 @@ run_once ('compton --config ~/.compton.conf')
 run_once ('mpd')
 --run_once ('thunar --daemon')
 run_once ('xscreensaver -no-splash')
+run_once ('sonata --hidden')
 run_once ('xfce4-power-manager')
 run_once ('clipit')
 run_once ('nm-applet')
@@ -332,7 +333,21 @@ vicious.register(memwidget, vicious.widgets.mem,
 baticon = widget({ type = 'imagebox' })
 baticon.image = image(beautifultheme .. 'icons/bat.png')
 batwidget = widget({ type = 'textbox' })
-vicious.register(batwidget, vicious.widgets.bat, '$1$2% ', 29.5, 'BAT0')
+vicious.register(batwidget, vicious.widgets.bat, function(widget, args)
+	local percent = args[2] .. '% '
+	if args[1] == '-' and args[2] < 20 then
+		percent = '<span color="' .. theme.colors.red .. '">' .. args[2] .. '% </span>'
+	end
+	if args[1] == '-' and args[2] < 15 then
+		naughty.notify({
+			preset = naughty.config.presets.critical,
+			title = 'Low power',
+			text = "I'm dying! Plug me in!",
+		})
+	end
+
+	return args[1] .. percent
+end, 16.5, 'BAT0')
 
 sensicon = widget({ type = 'imagebox' })
 sensicon.image = image(beautifultheme .. 'icons/temp.png')
@@ -341,10 +356,9 @@ vicious.register(senswidget, vicious.widgets.thermal, function(widget, args)
 	local temp = tonumber(string.format('%.0f', args[1] * 1.8 + 32))
 	if temp > 190 then
 		naughty.notify({
-		   title = 'Temperature Warning',
-		   text = 'Is it me or is it hot in here?',
-		   fg = beautiful.fg_urgent,
-		   bg = beautiful.bg_urgent
+			preset = naughty.config.presets.critical,
+			title = 'Temperature Warning',
+			text = 'Is it me or is it hot in here?',
 		})
 		temp = '<span color="' .. theme.colors.red .. '">' .. temp .. '</span>'
 	end
@@ -530,6 +544,7 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, 'Mod1' }, 'f',              function() exec(filemanager) end),
 	awful.key({ modkey, 'Mod1' }, 'h',              function() exec(term_cmd .. 'htop') end),
 	awful.key({ modkey, 'Mod1' }, 'l',              function() exec('screenlock') end),
+	awful.key({ modkey, 'Mod1', 'Shift' }, 'l',     function() exec('screenlock --suspend') end),
 	awful.key({ modkey, 'Mod1' }, 'm',              function() exec(mpdclient) end),
 	awful.key({ modkey, 'Mod1' }, 'v',              function() exec('pavucontrol') end),
 	awful.key({ modkey, 'Mod1' }, 'w',              function() exec(browser) end)

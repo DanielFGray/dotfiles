@@ -15,5 +15,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 	unset f
 fi
 
-# exec $1 &> $HOME/.xsession.log
-exec awesome
+if [[ -f /etc/arch-release ]]; then
+	exec awesome -c $HOME/.config/awesome/35.lua
+elif [[ -f /etc/debian_version ]]; then
+	exec ck-launch-session dbus-launch awesome
+fi
