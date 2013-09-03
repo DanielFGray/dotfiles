@@ -13,7 +13,7 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'mhinz/vim-tmuxify'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'bling/vim-bufferline'
+"" NeoBundle 'bling/vim-bufferline'
 NeoBundle 'bling/vim-airline'
 
 syntax on
@@ -51,22 +51,24 @@ set autoread
 set t_Co=256
 set shortmess+=I
 set ttimeoutlen=50
-set showtabline=0
+""set showtabline=0
 
 set ofu=syntaxcomplete#Complete
 "" set tags+=~/.vim/gtk+.tags
 
-colorscheme smyck
+"" colorscheme smyck
 set background=dark
 set guifont=tewi
 
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline_enable_bufferline = '1'
+"" let g:airline_left_sep = ''
+"" let g:airline_right_sep = ''
+"" let g:airline_enable_bufferline = '1'
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'powerlineish'
+let g:airline_theme = 'dark'
 let g:airline_detect_whitespace = 0
-let g:bufferline_echo = 0
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+"" let g:bufferline_echo = 0
 
 let g:tmuxify_pane_split = '-v'
 let g:tmuxify_pane_size = '10'
@@ -88,18 +90,17 @@ call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <leader>y :<C-u>Unite -buffer-name=yank    history/yank<cr>
 nnoremap <leader>e :<C-u>Unite -buffer-name=buffer  buffer<cr>
 
-if executable('ack')
-	set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
-	set grepformat=%f:%l:%c:%m
-	let g:unite_source_grep_command='ack'
-	let g:unite_source_grep_default_opts='--no-heading --no-color -a'
-	let g:unite_source_grep_recursive_opt=''
-endif
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
 	set grepformat=%f:%l:%c:%m
 	let g:unite_source_grep_command='ag'
 	let g:unite_source_grep_default_opts='--nocolor --nogroup --hidden'
+	let g:unite_source_grep_recursive_opt=''
+elseif executable('ack')
+	set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
+	set grepformat=%f:%l:%c:%m
+	let g:unite_source_grep_command='ack'
+	let g:unite_source_grep_default_opts='--no-heading --no-color -a'
 	let g:unite_source_grep_recursive_opt=''
 endif
 

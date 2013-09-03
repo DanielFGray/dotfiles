@@ -11,7 +11,7 @@ if [[ -f /etc/debian_version ]]; then
 	function pkgsearch { apt-cache search $* | sort | less }
 elif [[ -f /etc/arch-release ]]; then
 	if [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
-		export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+		export PATH="/usr/share/perl5/_perl/auto/share/dist/Cope:$PATH"
 	fi
 	alias pacman="sudo pacman "
 	alias canhaz="sudo pacman -S "
@@ -57,20 +57,20 @@ function soupplay {
 function pgrep { unbuffer ps aux | grep $1 | grep -v grep }
 
 function newImage {
-	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2
-	optipng $2
+	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2 &&
+	optipng $2 &&
 	qiv $2
 }
 
 function importss {
-	import $1
-	convert -trim $1 $1
-	optipng $1
+	import $1 &&
+	convert -trim $1 $1 &&
+	optipng $1 &&
 	qiv $1
 }
 
 function burnusb {
-	pv $1 | sudo dd of=$2 bs=4M conv=sync
+	sudo dd if=$1 of=$2 bs=4M conv=sync
 }
 
 function changeroot {
@@ -121,8 +121,8 @@ function curltar {
 }
 
 function byzanz {
-	date=`date +%F`
-	byzanz-record $* ~/pictures/screenshots/$date.gif
+	date=`date +%F` &&
+	byzanz-record $* ~/pictures/screenshots/$date.gif &&
 	qiv -f ~/pictures/screenshots/$date.gif
 }
 

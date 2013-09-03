@@ -9,6 +9,7 @@ source $ZSH/oh-my-zsh.sh
 
 #export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
+export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 
 alias -s png=qiv
 alias -s jpg=qiv
