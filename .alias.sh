@@ -1,7 +1,5 @@
 if [[ -f /etc/debian_version ]]; then
-	if [[ -d /usr/local/share/perl/5.14.2/auto/share/dist/Cope ]]; then
-		export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
-	fi
+	[[ -d /usr/local/share/perl/5.14.2/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
 	alias apt-get="sudo apt-get "
 	alias canhaz="sudo apt-get install "
 	alias updupg="sudo apt-get update; sudo apt-get upgrade"
@@ -10,9 +8,7 @@ if [[ -f /etc/debian_version ]]; then
 	function pkgrm { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch { apt-cache search $* | sort | less }
 elif [[ -f /etc/arch-release ]]; then
-	if [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
-		export PATH="/usr/share/perl5/_perl/auto/share/dist/Cope:$PATH"
-	fi
+	[[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	alias pacman="sudo pacman "
 	alias canhaz="sudo pacman -S "
 	alias updupg="sudo pacman -Syu "
@@ -34,7 +30,7 @@ alias curl="curl -v "
 alias chown="chown -v "
 alias chmod="chmod -v "
 alias rename="rename -v "
-alias grep="grep --color=auto -E "
+#alias grep="grep --color=auto -E "
 alias ls="ls -Fh --color --group-directories-first "
 alias l="ls -lgo"
 alias la="l -A"
@@ -44,6 +40,7 @@ alias historygrep="history | grep -v 'history' | grep -E "
 function cdl { cd $1 ; ls $2 }
 
 function wget { man curl }
+function grep { ack --help | less }
 
 function tarpipe { tar czf - $2 | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | tar xzvf - }
@@ -121,9 +118,9 @@ function curltar {
 }
 
 function byzanz {
-	date=`date +%F` &&
-	byzanz-record $* ~/pictures/screenshots/$date.gif &&
-	qiv -f ~/pictures/screenshots/$date.gif
+	local date=`date '+%F-%s'`
+	byzanz-record $* ~/pictures/screenshots/${date}.gif &&
+	mirage ~/pictures/screenshots/${date}.gif
 }
 
 function simpleHTTP {

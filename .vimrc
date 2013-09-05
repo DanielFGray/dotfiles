@@ -56,7 +56,7 @@ set ttimeoutlen=50
 set ofu=syntaxcomplete#Complete
 "" set tags+=~/.vim/gtk+.tags
 
-"" colorscheme smyck
+colorscheme smyck
 set background=dark
 set guifont=tewi
 
@@ -64,10 +64,11 @@ set guifont=tewi
 "" let g:airline_right_sep = ''
 "" let g:airline_enable_bufferline = '1'
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'dark'
+let g:airline_theme = 'dan'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
 "" let g:bufferline_echo = 0
 
 let g:tmuxify_pane_split = '-v'
@@ -156,7 +157,9 @@ hi Underlined   ctermfg=7
 hi Ignore       ctermfg=9
 hi Error        ctermfg=11
 hi Todo         ctermfg=1
-hi ColorColumn  ctermbg=8
+hi ColorColumn  ctermbg=0
+hi CursorLine   ctermbg=0
+hi CursorColumn ctermbg=0
 
 hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment

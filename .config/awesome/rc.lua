@@ -125,7 +125,7 @@ layouts = {
 	awful.layout.suit.magnifier
 }
 
-use_titlebar = true
+-- use_titlebar = true
 
 shifty.config.tags = {
 	web = {
@@ -293,7 +293,7 @@ end))
 space = widget({ type = 'textbox' })
 space.text = ' '
 spacer = widget({ type = 'textbox' })
-spacer.text = ' <span color="' .. theme.bg_focus .. '">|</span> '
+spacer.text = ' <span color="' .. theme.bg_focus .. '">⮃</span> '
 
 mpdicon = widget({ type = 'imagebox' })
 mpdicon.image = image(beautifultheme .. 'icons/music.png')
@@ -334,7 +334,7 @@ baticon = widget({ type = 'imagebox' })
 baticon.image = image(beautifultheme .. 'icons/bat.png')
 batwidget = widget({ type = 'textbox' })
 vicious.register(batwidget, vicious.widgets.bat, function(widget, args)
-	local percent = args[2] .. '% '
+	local percent = args[2] .. '%'
 	if args[1] == '-' and args[2] < 20 then
 		percent = '<span color="' .. theme.colors.red .. '">' .. args[2] .. '% </span>'
 	end
@@ -441,6 +441,7 @@ for s = 1, screen.count() do
 		mypromptbox[s], {
 			cpuwidget, cpuicon,
 			memwidget, memicon,
+			spacer,
 			batwidget, baticon,
 			senswidget, sensicon,
 			spacer,
@@ -449,6 +450,7 @@ for s = 1, screen.count() do
 			wifiwidget, wifiicon,
 			-- mailwidget, mailicon, space,
 			mpdwidget, mpdicon,
+			spacer,
 			layout = awful.widget.layout.horizontal.rightleft
 		},
 		layout = awful.widget.layout.horizontal.leftright
