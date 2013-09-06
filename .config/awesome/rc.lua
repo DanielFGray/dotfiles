@@ -497,8 +497,10 @@ globalkeys = awful.util.table.join(
 	                                                	if client.focus then client.focus:raise() end
 	                                                end),
 	awful.key({ modkey }, 'w',                      function() mnuMain:toggle({keygrabber = true}) end),
---	awful.key({ modkey, 'Shift' }, 'j',             function() awful.screen.focus(1) end),
---	awful.key({ modkey, 'Shift' }, 'k',             function() awful.screen.focus(-1) end),
+	awful.key({ modkey, 'Shift' }, 'h',             function() shifty.tagtoscr(awful.util.cycle(screen.count(), mouse.screen +1)) end),
+	awful.key({ modkey, 'Shift' }, 'l',             function() shifty.tagtoscr(awful.util.cycle(screen.count(), mouse.screen -1)) end),
+	awful.key({ modkey, 'Shift' }, 'Left',          function() awful.screen.focus_relative(1) end),
+	awful.key({ modkey, 'Shift' }, 'Right',         function() awful.screen.focus_relative(-1) end),
 	awful.key({ modkey }, 'u',                      awful.client.urgent.jumpto),
 	awful.key({ modkey, 'Control' }, 'r',           awesome.restart),
 	awful.key({ modkey, 'Shift' }, 'q',             awesome.quit),
