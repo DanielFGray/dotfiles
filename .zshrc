@@ -1,15 +1,16 @@
 ZSH="/home/dan/.oh-my-zsh"
-ZSH_THEME="flazz"
+ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
 #DISABLE_LS_COLORS="true"
 plugins=(git zsh-syntax-highlighting vi-mode)
 source $ZSH/oh-my-zsh.sh
 
-[[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
+# if [[ -d "$HOME/.local/bin" ]]; then; export PATH="$HOME/.local/bin:$PATH"
+# elif [[ -d "$HOME/.local/bin" ]]; then; export PATH="$HOME/.local/bin:$PATH"
+# fi
 
 #export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
-export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 
 alias -s png=qiv
 alias -s jpg=qiv
@@ -31,4 +32,3 @@ bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
 source /home/dan/dotfiles/.alias.sh
-fortune -as

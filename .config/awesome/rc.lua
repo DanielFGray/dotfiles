@@ -67,7 +67,6 @@ run_once ('mpd')
 run_once ('thunar --daemon')
 run_once ('xscreensaver -no-splash')
 run_once ('sonata --hidden')
-run_once ('xfce4-power-manager')
 run_once ('clipit')
 run_once ('nm-applet')
 run_once ('pnmixer')
@@ -128,19 +127,19 @@ layouts = {
 -- use_titlebar = true
 
 shifty.config.tags = {
+	term = {
+		layout    = awful.layout.suit.tile.top,
+		position  = 1,
+		exclusive = true,
+		mwfact    = 0.75,
+		spawn     = term_cmd .. 'tmux'
+	},
 	web = {
 		layout    = awful.layout.suit.max,
 		exclusive = true,
-		position  = 1,
+		position  = 2,
 		slave     = false,
 		spawn     = browser,
-	},
-	term = {
-		layout    = awful.layout.suit.tile.top,
-		position  = 2,
-		exclusive = true,
-		mwfact    = 0.75,
-		spawn     = term_cmd .. 'bash /home/dan/.local/bin/tmuxsesh1;' .. term_cmd .. 'bash /home/dan/.local/bin/tmuxsesh2',
 	},
 	books = {
 		layout    = awful.layout.suit.tile,
@@ -543,7 +542,7 @@ globalkeys = awful.util.table.join(
 	                                                	awful.util.eval, nil,
 	                                                	awful.util.getdir('cache') .. '/history_eval')
 	                                                end),
-	awful.key({ modkey }, 'Return',                 function() exec(terminal) end),
+	awful.key({ modkey }, 'Return',                 function() exec(term_cmd .. 'tmux') end),
 	awful.key({ modkey, 'Mod1' }, 'e',              function() exec(editor) end),
 	awful.key({ modkey, 'Mod1' }, 'f',              function() exec(filemanager) end),
 	awful.key({ modkey, 'Mod1' }, 'h',              function() exec(term_cmd .. 'htop') end),

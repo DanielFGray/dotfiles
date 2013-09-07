@@ -1,8 +1,0 @@
-#!/bin/sh
-
-tmux new-session -d -s 'sub'
-tmux neww -t sub:2 'mosh dan@ssh.soupwhale.com'
-tmux neww -t sub:3 'mosh dan@ssh.bagelbox.org'
-tmux renamew -t sub:2 'soupwhale'
-tmux renamew -t sub:3 'bagelbox'
-tmux attach -t sub
