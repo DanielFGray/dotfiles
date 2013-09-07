@@ -1,3 +1,4 @@
 #!/bin/sh
 
+sleep 1
 scrot -e 'optipng $f; qiv -f $f'

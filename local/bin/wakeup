@@ -1,0 +1,7 @@
+#!/bin/sh
+
+mpc clear
+pkill aplay
+amixer sset Master 60\%
+mpc load brutal
+mpc play
