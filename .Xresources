@@ -26,7 +26,8 @@ URxvt.url-launcher:     /usr/bin/firefox
 URxvt.matcher.button:   1
 
 !*font:             xft:DejaVu Sans Mono:pixelsize=10
-*font:             -lucy-tewi-medium-r-normal--11-90-75-75-p-58-iso10646-1
+*font:              -lucy-tewi-medium-r-normal--11-90-75-75-p-58-iso10646-1
+*boldFont:          -lucy-tewi-medium-r-normal--11-90-75-75-p-58-iso10646-1
 !*font:             xft:Tewi:regular:size=11
 !*imFont:           xft:Tewi:regular:size=11
 !*boldFont:         xft:Tewi:bold:size=11

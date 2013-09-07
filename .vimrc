@@ -13,7 +13,6 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'mhinz/vim-tmuxify'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'Lokaltog/vim-easymotion'
-"" NeoBundle 'bling/vim-bufferline'
 NeoBundle 'bling/vim-airline'
 
 syntax on
@@ -60,16 +59,12 @@ colorscheme smyck
 set background=dark
 set guifont=tewi
 
-"" let g:airline_left_sep = ''
-"" let g:airline_right_sep = ''
-"" let g:airline_enable_bufferline = '1'
 let g:airline_enable_branch = '1'
 let g:airline_theme = 'dan'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
-"" let g:bufferline_echo = 0
 
 let g:tmuxify_pane_split = '-v'
 let g:tmuxify_pane_size = '10'

@@ -1,2 +1,0 @@
-#!/bin/bash
-vim -c 'cd ~/dotfiles' -p ~/dotfiles/.{zshrc,alias.sh,vimrc,tmux.conf,config/awesome/rc.lua,config/awesome/themes/dfg/theme.lua,Xresources}
