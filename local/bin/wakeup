@@ -1,7 +1,8 @@
 #!/bin/sh
 
-mpc clear
 pkill aplay
+mpc clear
+mpc random on
 amixer sset Master 60\%
-mpc load brutal
+mpc load prog
 mpc play

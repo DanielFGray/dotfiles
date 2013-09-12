@@ -1,7 +1,7 @@
 [[ -x $(which fortune) ]] && fortune -as
 
 if [[ -f /etc/debian_version ]]; then
-	[[ -d /usr/local/share/perl/5.14.2/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/5.14.2/auto/share/dist/Cope:$PATH"
+	[[ -d /usr/local/share/perl/5.18.1/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/5.18.1/auto/share/dist/Cope:$PATH"
 	alias apt-get="sudo apt-get "
 	alias canhaz="apt-get install "
 	alias updupg="apt-get update; apt-get upgrade"
@@ -45,6 +45,8 @@ function wget { man curl }
 function tarpipe { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | pv | tar xzvf - }
 
+function moshsoup { mosh dan@soupwhale.com }
+function moshbagel { mosh dan@bagelbox.org }
 function soupget { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
 function soupplay {
 	mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' |

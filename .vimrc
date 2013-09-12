@@ -112,7 +112,7 @@ map ,r :call RangerChooser()<CR>
 
 if has("gui_running")
     set background=dark
-    set gfn=Monaco\ 7
+    set gfn=Tewi\ 11
     set guioptions-=l
     set guioptions-=r
     set guioptions-=b
