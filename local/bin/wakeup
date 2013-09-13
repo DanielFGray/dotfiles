@@ -3,6 +3,6 @@
 pkill aplay
 mpc clear
 mpc random on
-amixer sset Master 60\%
-mpc load prog
+amixer sset Master 65\%
+mpc load brutal
 mpc play
