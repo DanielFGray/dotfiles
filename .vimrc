@@ -14,6 +14,7 @@ NeoBundle 'mhinz/vim-tmuxify'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'sjl/gundo.vim'
 
 syntax on
 filetype plugin indent on
@@ -56,7 +57,11 @@ set background=dark
 set ofu=syntaxcomplete#Complete
 "" set tags+=~/.vim/gtk+.tags
 
+nnoremap <F5> :GundoToggle<CR>
+let g:gundo_right = 1
+
 let g:airline_enable_branch = '1'
+let g:airline_theme = 'dark'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -106,16 +111,12 @@ endfunction
 map ,r :call RangerChooser()<CR>
 
 if has("gui_running")
-	colorscheme solarized
-	let g:airline_theme = 'solarized'
 	set background=dark
 	set gfn=Tewi\ 11
 	set guioptions-=l
 	set guioptions-=r
 	set guioptions-=b
 	set guioptions-=T
-else
-	let g:airline_theme = 'dark'
 endif
 if version >= 703
 	if exists("&undodir")
@@ -132,10 +133,8 @@ if exists("&directory")
 endif
 set undolevels=1000
 
-nnoremap <A-a> <C-a>
-nnoremap <A-x> <C-x:
-
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
+autocmd! bufwritepost ~/dotfiles/.vimrc source ~/.vimrc
 ca w!! w !sudo tee >/dev/null "%"
 
 " {{{ placebos
