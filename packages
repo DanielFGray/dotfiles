@@ -6,6 +6,7 @@ mplayer2
 build-essential
 checkinstall
 git
+ctags
 openssh-server
 mosh
 optipng
