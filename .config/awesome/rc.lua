@@ -1,7 +1,7 @@
 awful =             require('awful')
-awful_autofocus =   require('awful.autofocus')
-awful_rules =       require('awful.rules')
-awful_remote =      require('awful.remote')
+awful.autofocus =   require('awful.autofocus')
+awful.rules =       require('awful.rules')
+awful.remote =      require('awful.remote')
 beautiful =         require('beautiful')
 naughty =           require('naughty')
 vicious =           require('vicious')
@@ -91,7 +91,6 @@ for _, item in ipairs(freedesktop_menu.new()) do table.insert(mnuApps, item) end
 mnuMain = awful.menu({ items = {
 	{ 'terminal',           terminal } ,
 	{ 'tmux',               term_cmd .. 'tmux' } ,
-	{ 'firefox',            'firefox' },
 	{ 'luakit',             'luakit' },
 	{ 'editor',             editor },
 	{ 'file manager',       filemanager },
@@ -168,6 +167,7 @@ shifty.config.apps = {
 		honorsizehints = true,
 		skip_taskbar = true,
 		float = true,
+		sticky = true,
 		ontop = true
 	},
 	{
@@ -200,7 +200,6 @@ shifty.config.apps = {
 	},
 	{
 		match = {
-			'Mplayer.*',
 			'Mirage',
 			'qiv',
 			'gimp',
@@ -212,7 +211,7 @@ shifty.config.apps = {
 	},
 	{
 		match = {
-			'MPlayer',
+			'MPlayer.*',
 			'Gnuplot',
 			'galculator',
 		},
