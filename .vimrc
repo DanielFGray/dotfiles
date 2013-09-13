@@ -15,6 +15,8 @@ NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'sjl/gundo.vim'
+NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'scrooloose/syntastic'
 
 syntax on
 filetype plugin indent on
@@ -51,12 +53,13 @@ set nolazyredraw
 set autoread
 set t_Co=256
 set shortmess+=I
-set ttimeoutlen=50
-""set showtabline=0
+set ttimeoutlen=25
 set background=dark
 set ofu=syntaxcomplete#Complete
-"" set tags+=~/.vim/gtk+.tags
 
+set tags+=~/.vim/tags/gtk+.tags
+
+nnoremap <F6> :set paste!<CR>
 nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 
@@ -69,7 +72,6 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 let g:tmuxify_pane_split = '-v'
 let g:tmuxify_pane_size = '10'
-let g:tmuxify_run = { 'sh': 'zsh %', 'go': 'go build %' }
 
 let g:user_zen_expandabbr_key = '<c-e>'
 let g:use_zen_complete_tag = 1
