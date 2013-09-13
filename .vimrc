@@ -4,7 +4,7 @@ set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#rc(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc'
+NeoBundle 'Shougo/vimproc', { 'build' : { 'unix' : 'make -f make_unix.mak' },}
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
@@ -32,6 +32,7 @@ set backspace=indent,eol,start
 set nowrap
 set showmatch
 set equalalways
+set splitright
 set wildmenu
 set autoindent smartindent
 set smartindent smarttab
@@ -51,16 +52,11 @@ set t_Co=256
 set shortmess+=I
 set ttimeoutlen=50
 ""set showtabline=0
-
+set background=dark
 set ofu=syntaxcomplete#Complete
 "" set tags+=~/.vim/gtk+.tags
 
-colorscheme smyck
-set background=dark
-set guifont=tewi
-
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'dan'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -76,16 +72,15 @@ let g:use_zen_complete_tag = 1
 let g:unite_data_directory='~/.vim/cache/unite'
 let g:unite_prompt='» '
 let g:unite_source_history_yank_enable = 1
+let g:unite_winheight = 10
+let g:unite_split_rule = 'botright'
+let g:unite_enable_start_insert = 1
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-
-"" nnoremap <leader>t :<C-u>Unite -buffer-name=files   -start-insert file_rec/async:!<cr>
-"" nnoremap <leader>f :<C-u>Unite -buffer-name=files   -start-insert file<cr>
-"" nnoremap <leader>r :<C-u>Unite -buffer-name=mru     -start-insert file_mru<cr>
-"" nnoremap <leader>o :<C-u>Unite -buffer-name=outline -start-insert outline<cr>
 nnoremap <leader>y :<C-u>Unite -buffer-name=yank    history/yank<cr>
-nnoremap <leader>e :<C-u>Unite -buffer-name=buffer  buffer<cr>
-
+nnoremap <leader>b :<C-u>Unite -buffer-name=buffer  buffer<cr>
+nnoremap <leader>r :<C-u>Unite -start-insert file_rec/async:!<CR>
+nnoremap <leader>e :<C-u>UniteWithBufferDir -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
 	set grepformat=%f:%l:%c:%m
@@ -111,14 +106,17 @@ endfunction
 map ,r :call RangerChooser()<CR>
 
 if has("gui_running")
-    set background=dark
-    set gfn=Tewi\ 11
-    set guioptions-=l
-    set guioptions-=r
-    set guioptions-=b
-    set guioptions-=T
+	colorscheme solarized
+	let g:airline_theme = 'solarized'
+	set background=dark
+	set gfn=Tewi\ 11
+	set guioptions-=l
+	set guioptions-=r
+	set guioptions-=b
+	set guioptions-=T
+else
+	let g:airline_theme = 'dark'
 endif
-
 if version >= 703
 	if exists("&undodir")
 		set undodir=~/.vim/undo//
