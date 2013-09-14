@@ -1,38 +1,21 @@
-!Xft.autohint:  0
-!Xft.antialias: 0
-!Xft.hinting:   true
-!Xft.hintstyle: hintslight
-!Xft.dpi:       96
-!Xft.rgba:      rgb
-!Xft.lcdfilter: lcddefault
+*Rxvt*scrollBar:        false
+*Rxvt*imLocale:         en_US.UTF-8
+*Rxvt*loginShell:       true
+*Rxvt*saveLines:        512
+*Rxvt*geometry:         90x25
+*Rxvt*boldMode:         true
+*Rxvt*inheritPixmap:    false
+*Rxvt*xftAntialias:     true
+*Rxvt*jumpScroll:       false
+*Rxvt*tintColor:        white
+*Rxvt*internalBorder:   2
+*Rxvt*borderless:       true
+*Rxvt.perl-ext-common:  default,matcher
+*Rxvt.url-launcher:     /usr/bin/firefox
+*Rxvt.matcher.button:   1
 
-Xcursor.theme: Black-DMZ-AA
-Xcursor.size:  22
-
-URxvt*scrollBar:        false
-URxvt*imLocale:         en_US.UTF-8
-URxvt*loginShell:       true
-URxvt*saveLines:        512
-URxvt*geometry:         90x25
-URxvt*boldMode:         true
-URxvt*inheritPixmap:    false
-URxvt*xftAntialias:     true
-URxvt*jumpScroll:       false
-URxvt*tintColor:        white
-URxvt*internalBorder:   2
-URxvt*borderless:       true
-URxvt.perl-ext-common:  default,matcher
-URxvt.url-launcher:     /usr/bin/firefox
-URxvt.matcher.button:   1
-
-!*font:             xft:DejaVu Sans Mono:pixelsize=10
 *font:              -lucy-tewi-medium-r-normal--11-90-75-75-p-58-iso10646-1
 *boldFont:          -lucy-tewi-medium-r-normal--11-90-75-75-p-58-iso10646-1
-!*font:             xft:Tewi:regular:size=11
-!*imFont:           xft:Tewi:regular:size=11
-!*boldFont:         xft:Tewi:bold:size=11
-!*italicFont:       xft:Tewi:italic:size=11
-!*boldItalicFont:   xft:Tewi:bold:italic:size=11
 
 *background: #292929
 *foreground: #dedede
