@@ -39,9 +39,9 @@ alias la="l -A"
 alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
 
-function cdl { cd $1 ; ls $2 }
-
 function wget { man curl }
+function cd { builtin cd $1 ; ls $2 }
+function cat { (( $# > 1 )) && /bin/cat "$@" }
 
 function tarpipe { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | pv | tar xzvf - }
