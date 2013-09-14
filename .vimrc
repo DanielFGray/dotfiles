@@ -17,6 +17,8 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'sheerun/vim-polyglot'
+NeoBundle 'noahfrederick/vim-noctu'
 
 syntax on
 filetype plugin indent on
@@ -51,20 +53,21 @@ set showcmd
 set mouse=a
 set nolazyredraw
 set autoread
-set t_Co=256
+set scrolloff=500
+set t_Co=16
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
 set ofu=syntaxcomplete#Complete
-
 set tags+=~/.vim/tags/gtk+.tags
+colorscheme noctu
 
 nnoremap <F6> :set paste!<CR>
 nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'dark'
+let g:airline_theme = 'dan'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -138,62 +141,3 @@ set undolevels=1000
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
 autocmd! bufwritepost ~/dotfiles/.vimrc source ~/.vimrc
 ca w!! w !sudo tee >/dev/null "%"
-
-" {{{ placebos
-hi Comment      ctermfg=12
-hi Constant     ctermfg=6
-hi Identifier   ctermfg=4
-hi Statement    ctermfg=2
-hi PreProc      ctermfg=1
-hi Type         ctermfg=3
-hi Special      ctermfg=5
-hi Underlined   ctermfg=7
-hi Ignore       ctermfg=9
-hi Error        ctermfg=11
-hi Todo         ctermfg=1
-hi ColorColumn  ctermbg=0
-hi CursorLine   ctermbg=0
-hi CursorColumn ctermbg=0
-
-hi link EasyMotionTarget ErrorMsg
-hi link EasyMotionShade  Comment
-
-hi link Number Constant
-hi! link StatusLine VertSplit
-hi! link StatusLineNC VertSplit
-hi! link Question Special
-hi! link MoreMsg Special
-hi! link Folded Normal
-
-hi link Operator Delimiter
-hi link Function Identifier
-hi link PmenuSel PmenuThumb
-hi link Error ErrorMsg
-hi link Conditional Keyword
-hi link Character String
-hi link Boolean Constant
-hi link Float Number
-hi link Repeat Statement
-hi link Label Statement
-hi link Exception Statement
-hi link Include PreProc
-hi link Define PreProc
-hi link Macro PreProc
-hi link PreCondit PreProc
-hi link StorageClass Type
-hi link Structure Type
-hi link Typedef Type
-hi link Tag Special
-hi link SpecialChar Special
-hi link SpecialComment Special
-hi link Debug Special
-
-hi clear SpellBad
-hi SpellBad ctermfg=red term=underline cterm=underline
-hi clear SpellCap
-hi SpellCap term=underline cterm=underline
-hi clear SpellRare
-hi SpellRare term=underline cterm=underline
-hi clear SpellLocal
-hi SpellLocal term=underline cterm=underline
-" }}}
