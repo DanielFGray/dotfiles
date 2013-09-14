@@ -2,7 +2,7 @@ ZSH="/home/dan/.oh-my-zsh"
 ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
 #DISABLE_LS_COLORS="true"
-plugins=(git zsh-syntax-highlighting vi-mode)
+plugins=(git git-extras tmux zsh-syntax-highlighting vi-mode)
 source $ZSH/oh-my-zsh.sh
 
 # if [[ -d "$HOME/.local/bin" ]]; then; export PATH="$HOME/.local/bin:$PATH"
