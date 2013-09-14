@@ -1,14 +1,15 @@
 [[ -x $(which fortune) ]] && fortune -as
 
 if [[ -f /etc/debian_version ]]; then
-	[[ -d /usr/local/share/perl/5.18.1/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/5.18.1/auto/share/dist/Cope:$PATH"
+	local PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
+	[[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
 	alias apt-get="sudo apt-get "
 	alias canhaz="apt-get install "
 	alias updupg="apt-get update; apt-get upgrade"
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-	alias compile="make -j3 && sudo checkinstall && echo success! || echo failed"
 	function pkgrm { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch { apt-cache search $* | sort | less }
+	function compile { ( make -j4 && sudo make install && sudo checkinstall ) && echo success! || echo failed }
 elif [[ -f /etc/arch-release ]]; then
 	[[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	alias pacman="sudo pacman "
