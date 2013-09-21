@@ -61,16 +61,17 @@ function run_once(cmd)
 	sexec('pgrep -x ' .. findme .. ' > /dev/null || (' .. cmd .. ')')
  end
 
-run_once ('urxvtd -q -f')
-run_once ('compton --config ~/.compton.conf')
-run_once ('mpd')
-run_once ('thunar --daemon')
-run_once ('xscreensaver -no-splash')
-run_once ('sonata --hidden')
-run_once ('clipit')
-run_once ('nm-applet')
-run_once ('pnmixer')
-run_once (homedir .. '.dropbox-dist/dropboxd')
+run_once('urxvtd -q -f')
+run_once('compton --config ~/.compton.conf')
+run_once('mpd')
+run_once('thunar --daemon')
+run_once('xscreensaver -no-splash')
+run_once('xfce4-power-manager')
+run_once('sonata --hidden')
+run_once('clipit')
+run_once('nm-applet')
+run_once('pnmixer')
+run_once(homedir .. '.dropbox-dist/dropboxd')
 -- }}}
 
 -- {{{ Menu
@@ -410,24 +411,30 @@ vicious.register(netupwidget, vicious.widgets.net, function(widget, args)
 	return args['{' .. i .. ' up_kb}'] .. 'k<span color="' .. theme.colors.base0 .. '">/' .. string.format('%.0f', args['{' .. i .. ' tx_mb}']) .. 'M</span>'
 end, 1.5)
 
--- mailicon = widget({ type = 'imagebox' })
--- mailicon.image = image(beautifultheme .. 'icons/mail.png')
--- mailwidget = widget({ type = 'textbox' })
--- vicious.register(mailwidget, vicious.widgets.mboxc, function(widget, args)
--- 	mailicon.visible = false
--- 	return ''
--- end, 55.5)
+mailicon = widget({ type = 'imagebox' })
+mailicon.image = image(beautifultheme .. 'icons/mail.png')
+mailwidget = widget({ type = 'textbox' })
+vicious.register(mailwidget, vicious.widgets.gmail, function(widget, args)
+	if args['{count}'] > 0 then
+		mailicon.visible = true
+		return args['{count}'] .. ' '
+	else
+		mailicon.visible = false
+		return ''
+	end
+end, 10)
 
-for s = 1, screen.count() do
-	mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
-	mylayoutbox[s] = awful.widget.layoutbox(s)
-	mylayoutbox[s]:buttons(awful.util.table.join(
-		awful.button({ }, 1, function() awful.layout.inc(layouts, 1) end),
-		awful.button({ }, 3, function() awful.layout.inc(layouts, -1) end),
-		awful.button({ }, 4, function() awful.layout.inc(layouts, 1) end),
-		awful.button({ }, 5, function() awful.layout.inc(layouts, -1) end)))
-	mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
-	mytasklist[s] = awful.widget.tasklist(function(c)
+
+ for s = 1, screen.count() do
+ 	mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
+ 	mylayoutbox[s] = awful.widget.layoutbox(s)
+ 	mylayoutbox[s]:buttons(awful.util.table.join(
+ 		awful.button({ }, 1, function() awful.layout.inc(layouts, 1) end),
+ 		awful.button({ }, 3, function() awful.layout.inc(layouts, -1) end),
+ 		awful.button({ }, 4, function() awful.layout.inc(layouts, 1) end),
+ 		awful.button({ }, 5, function() awful.layout.inc(layouts, -1) end)))
+ 	mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
+ 	mytasklist[s] = awful.widget.tasklist(function(c)
 		return awful.widget.tasklist.label.currenttags(c, s)
 	end, mytasklist.buttons)
 	mywibox[s] = { }
@@ -446,7 +453,7 @@ for s = 1, screen.count() do
 			netupwidget, netupicon,
 			netdownwidget, netdownicon,
 			wifiwidget, wifiicon,
-			-- mailwidget, mailicon, space,
+			mailwidget, mailicon,
 			mpdwidget, mpdicon,
 			spacer,
 			layout = awful.widget.layout.horizontal.rightleft
@@ -476,16 +483,16 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, 'Shift' }, 'd',             shifty.del),
 	awful.key({ modkey, 'Control' }, 'h',           shifty.send_prev),
 	awful.key({ modkey, 'Control' }, 'l',           shifty.send_next),
---	awful.key({ modkey, 'Control' }, 'n',           function()
---	                                                	local t = awful.tag.selected()
---	                                                	local s = awful.util.cycle(screen.count(), t.screen + 1)
---	                                                	awful.tag.history.restore()
---	                                                	t = shifty.tagtoscr(s, t)
---	                                                	awful.tag.viewonly(t)
---	                                                end),
+	awful.key({ modkey, 'Control' }, 'n',           function()
+	                                                	local t = awful.tag.selected()
+	                                                	local s = awful.util.cycle(screen.count(), t.screen + 1)
+	                                                	awful.tag.history.restore()
+	                                                	t = shifty.tagtoscr(s, t)
+	                                                	awful.tag.viewonly(t)
+	                                                end),
 	awful.key({ modkey }, 'a',                      shifty.add),
 	awful.key({ modkey }, 'r',                      shifty.rename),
-	awful.key({ modkey, 'Shift'}, 'a',              function() shifty.add({nopopup = true}) end),
+	awful.key({ modkey, 'Shift'}, 'a',              function() shifty.add({ nopopup = true }) end),
 	awful.key({ modkey }, 'j',                      function()
 	                                                	awful.client.focus.byidx(1)
 	                                                	if client.focus then client.focus:raise() end
@@ -494,17 +501,27 @@ globalkeys = awful.util.table.join(
 	                                                	awful.client.focus.byidx(-1)
 	                                                	if client.focus then client.focus:raise() end
 	                                                end),
-	awful.key({ modkey }, 'w',                      function() mnuMain:toggle({keygrabber = true}) end),
-	awful.key({ modkey, 'Shift' }, 'h',             function() shifty.tagtoscr(awful.util.cycle(screen.count(), mouse.screen +1)) end),
-	awful.key({ modkey, 'Shift' }, 'l',             function() shifty.tagtoscr(awful.util.cycle(screen.count(), mouse.screen -1)) end),
+	awful.key({ modkey }, 'w',                      function() mnuMain:toggle({ keygrabber = true}) end),
+	awful.key({ modkey, 'Shift' }, 'h',             function() shifty.tagtoscr(awful.util.cycle(screen.count(), mouse.screen + 1)) end),
+	awful.key({ modkey, 'Shift' }, 'l',             function() shifty.tagtoscr(awful.util.cycle(screen.count(), mouse.screen - 1)) end),
 	awful.key({ modkey, 'Shift' }, 'Left',          function() awful.screen.focus_relative(1) end),
 	awful.key({ modkey, 'Shift' }, 'Right',         function() awful.screen.focus_relative(-1) end),
 	awful.key({ modkey }, 'u',                      awful.client.urgent.jumpto),
 	awful.key({ modkey, 'Control' }, 'r',           awesome.restart),
 	awful.key({ modkey, 'Shift' }, 'q',             awesome.quit),
-	awful.key({ modkey }, 'Tab',                    function() awful.menu.clients(nil, {keygrabber = true }) end),
+	awful.key({ modkey }, 'Tab',                    function() awful.menu.clients(nil, { keygrabber = true }) end),
 	awful.key({ modkey }, 'Up',                     function() awful.client.swap.byidx(-1) end),
 	awful.key({ modkey }, 'Down',                   function() awful.client.swap.byidx(1) end),
+	awful.key({ modkey, 'Shift' }, 'Up',            function()
+	                                                	awful.client.focus.byidx(-1)
+	                                                	if client.focus then client.focus:raise() end
+	                                                	awful.client.swap.byidx(1)
+	                                                end),
+	awful.key({ modkey, 'Shift' }, 'Down',          function()
+	                                                	awful.client.focus.byidx(1)
+	                                                	if client.focus then client.focus:raise() end
+	                                                	awful.client.swap.byidx(-1)
+	                                                end),
 	awful.key({ modkey }, 'Left',                   function() awful.tag.incmwfact(-0.05) end),
 	awful.key({ modkey }, 'Right',                  function() awful.tag.incmwfact(0.05) end),
 	awful.key({ modkey, 'Control' }, 'Left',        function() awful.tag.incnmaster(1) end),
@@ -536,12 +553,12 @@ globalkeys = awful.util.table.join(
 	                                                	awful.util.getdir('cache') .. '/yubnub_eval')
 	                                                end),
 	awful.key({ modkey }, 'F4',                     function()
-	                                                	awful.prompt.run({prompt = ' Run Lua code: '},
+	                                                	awful.prompt.run({ prompt = ' Run Lua code: ' },
 	                                                	mypromptbox[mouse.screen].widget,
 	                                                	awful.util.eval, nil,
 	                                                	awful.util.getdir('cache') .. '/history_eval')
 	                                                end),
-	awful.key({ modkey }, 'Return',                 function() exec(term_cmd .. 'tmux') end),
+	awful.key({ modkey }, 'Return',                 function() exec(terminal) end),
 	awful.key({ modkey, 'Mod1' }, 'e',              function() exec(editor) end),
 	awful.key({ modkey, 'Mod1' }, 'f',              function() exec(filemanager) end),
 	awful.key({ modkey, 'Mod1' }, 'h',              function() exec(term_cmd .. 'htop') end),
@@ -571,16 +588,16 @@ for i = 1, (shifty.config.maxtags or 9) do
 		awful.key({ modkey }, i, function()
 			local t = awful.tag.viewonly(shifty.getpos(i))
 		end),
-		awful.key({modkey, 'Control'}, i, function()
+		awful.key({ modkey, 'Control' }, i, function()
 			local t = shifty.getpos(i)
 			t.selected = not t.selected
 		end),
-		awful.key({modkey, 'Control', 'Shift'}, i, function()
+		awful.key({ modkey, 'Control', 'Shift' }, i, function()
 			if client.focus then
 				awful.client.toggletag(shifty.getpos(i))
 			end
 		end),
-		awful.key({modkey, 'Shift'}, i, function()
+		awful.key({ modkey, 'Shift' }, i, function()
 			if client.focus then
 				t = shifty.getpos(i)
 				awful.client.movetotag(t)
