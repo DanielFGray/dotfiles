@@ -40,7 +40,7 @@ alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
 
 function wget { man curl }
-function cd { builtin cd $1 ; ls $2 }
+function cd { builtin cd $1 && ls $2 }
 function cat { (( $# > 1 )) && /bin/cat "$@" }
 
 function tarpipe { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" }
@@ -128,4 +128,20 @@ function byzanz {
 
 function simpleHTTP {
 	python -c "import SimpleHTTPServer, SocketServer, BaseHTTPServer; SimpleHTTPServer.test(SimpleHTTPServer.SimpleHTTPRequestHandler, type('Server', (BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn, object), {}))" 9090
+}
+
+function whitenoise { aplay -c 2 -f S16_LE -r 44100 /dev/urandom }
+function whichRelease {
+	dpkg -l |
+	awk '/^.i/ {print $2}' |
+	xargs apt-cache policy |
+	awk '/^[a-z0-9.\-]+:/ {pkg=$1}; /\*\*\*/ {OFS="\t"; ver=$2; getline; print pkg,ver,$2,$3}'
+}
+function upgradeRelease {
+	#apt-get install $(
+		whichRelease |
+		grep -v 'wheezy|\/var\/lib\/dpkg\/status' |
+		awk '{$2="";$3=""; print $0}' |
+		sed 's|/main||;s|:|/|;s|   ||'
+	#)
 }
