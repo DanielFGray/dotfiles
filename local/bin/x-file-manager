@@ -1,2 +1,2 @@
 #!/bin/sh
-exec $(dolphin $@ || nautilus $@ || thunar $@ )
+exec $(dolphin "$@" || nemo "$@" || nautilus "$@" || thunar "$@" )
