@@ -1,4 +1,4 @@
 source $HOME/.profile
 if [ -z "$DISPLAY" ] && [ $(tty) = /dev/tty1 ] ; then
-	startx
+	startx &> .xsession.log &
 fi
