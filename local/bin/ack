@@ -22,7 +22,7 @@ use Getopt::Long 2.35 ();
 
 use Carp 1.04 ();
 
-our $VERSION = '2.04';
+our $VERSION = '2.08';
 # Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
@@ -39,9 +39,10 @@ MAIN: {
     for ( @ARGV ) {
         last if ( $_ eq '--' );
 
-        # Get the --thpppt and --bar checking out of the way.
+        # Get the --thpppt, --bar, --cathy checking out of the way.
         /^--th[pt]+t+$/ && App::Ack::_thpppt($_);
         /^--bar$/ && App::Ack::_bar();
+        /^--cathy$/ && App::Ack::_cathy();
 
         # See if we want to ignore the environment. (Don't tell Al Gore.)
         if ( /^--(no)?env$/ ) {
@@ -241,6 +242,7 @@ sub show_types {
 # Set default colors, load Term::ANSIColor
 sub load_colors {
     eval 'use Term::ANSIColor 1.10 ()';
+    eval 'use Win32::Console::ANSI' if $App::Ack::is_windows;
 
     $ENV{ACK_COLOR_MATCH}    ||= 'black on_yellow';
     $ENV{ACK_COLOR_FILENAME} ||= 'bold green';
@@ -293,7 +295,7 @@ sub get_file_id {
 }
 
 # Returns a regex object based on a string and command-line options.
-# Dies when the regex $str is undefinied (i.e. not given on command line).
+# Dies when the regex $str is undefined (i.e. not given on command line).
 
 sub build_regex {
     my $str = shift;
@@ -507,22 +509,34 @@ sub print_line_with_options {
     }
     else {
         if ( $color ) {
-            my @capture_indices = get_capture_indices();
-            if( @capture_indices ) {
-                my $offset = 0; # additional offset for when we add stuff
+            $line =~ /$opt->{regex}/o; # this match is redundant, but we need
+                                       # to perfom it in order to get if
+                                       # capture groups are set
 
-                foreach my $index_pair ( @capture_indices ) {
-                    my ( $match_start, $match_end ) = @{$index_pair};
+            if ( @+ > 1 ) { # if we have captures
+                while ( $line =~ /$opt->{regex}/og ) {
+                    my $offset = 0; # additional offset for when we add stuff
+                    my $previous_match_end = 0;
 
-                    my $substring = substr( $line,
-                        $offset + $match_start, $match_end - $match_start );
-                    my $substitution = Term::ANSIColor::colored( $substring,
-                        $ENV{ACK_COLOR_MATCH} );
+                    for ( my $i = 1; $i < @+; $i++ ) {
+                        my ( $match_start, $match_end ) = ( $-[$i], $+[$i] );
 
-                    substr( $line, $offset + $match_start,
-                        $match_end - $match_start, $substitution );
+                        next unless defined($match_start);
+                        next if $match_start < $previous_match_end;
 
-                    $offset += length( $substitution ) - length( $substring );
+                        my $substring = substr( $line,
+                            $offset + $match_start, $match_end - $match_start );
+                        my $substitution = Term::ANSIColor::colored( $substring,
+                            $ENV{ACK_COLOR_MATCH} );
+
+                        substr( $line, $offset + $match_start,
+                            $match_end - $match_start, $substitution );
+
+                        $previous_match_end  = $match_end; # offsets do not need to be applied
+                        $offset             += length( $substitution ) - length( $substring );
+                    }
+
+                    pos($line) = $+[0] + $offset;
                 }
             }
             else {
@@ -532,6 +546,7 @@ sub print_line_with_options {
 
                     $matched = 1;
                     my ( $match_start, $match_end ) = ($-[0], $+[0]);
+                    next unless defined($match_start);
 
                     my $substring = substr( $line, $match_start,
                         $match_end - $match_start );
@@ -544,6 +559,7 @@ sub print_line_with_options {
                     pos($line) = $match_end +
                     (length( $substitution ) - length( $substring ));
                 }
+                # XXX why do we do this?
                 $line .= "\033[0m\033[K" if $matched;
             }
         }
@@ -736,7 +752,6 @@ sub print_line_with_context {
 
 {
 
-my @capture_indices;
 my $match_column_number;
 
 # does_match() MUST have an $opt->{regex} set.
@@ -745,7 +760,6 @@ sub does_match {
     my ( $opt, $line ) = @_;
 
     $match_column_number = undef;
-    @capture_indices     = ();
 
     if ( $opt->{v} ) {
         return ( $line !~ /$opt->{regex}/o );
@@ -755,22 +769,12 @@ sub does_match {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
-
-            if ( @- > 1 ) {
-                @capture_indices = map {
-                    [ $-[$_], $+[$_] ]
-                } ( 1 .. $#- );
-            }
             return 1;
         }
         else {
             return;
         }
     }
-}
-
-sub get_capture_indices {
-    return @capture_indices;
 }
 
 sub get_match_column {
@@ -840,7 +844,11 @@ sub main {
     }
 
     if ( not defined $opt->{color} ) {
-        $opt->{color} = !App::Ack::output_to_pipe() && !$App::Ack::is_windows;
+        my $windows_color = 1;
+        if ( $App::Ack::is_windows ) {
+            $windows_color = eval { require Win32::Console::ANSI; }
+        }
+        $opt->{color} = !App::Ack::output_to_pipe() && $windows_color;
     }
     if ( not defined $opt->{heading} and not defined $opt->{break}  ) {
         $opt->{heading} = $opt->{break} = !App::Ack::output_to_pipe();
@@ -1111,6 +1119,10 @@ or needs exit 2 on IO error, use I<grep>.
 
 =over 4
 
+=item B<--ackrc>
+
+Specifies an ackrc file to load after all others; see L</"ACKRC LOCATION SEMANTICS">.
+
 =item B<-A I<NUM>>, B<--after-context=I<NUM>>
 
 Print I<NUM> lines of trailing context after matching lines.
@@ -1140,7 +1152,7 @@ count.
 
 =item B<--[no]color>, B<--[no]colour>
 
-B<--color> highlights the matching text.  B<--nocolor> supresses
+B<--color> highlights the matching text.  B<--nocolor> suppresses
 the color.  This is on by default unless the output is redirected.
 
 On Windows, this option is off by default unless the
@@ -1195,12 +1207,12 @@ as a path to search.
 =item B<--files-from=I<FILE>>
 
 The list of files to be searched is specified in I<FILE>.  The list of
-files are seperated by newlines.  If I<FILE> is C<->, the list is loaded
+files are separated by newlines.  If I<FILE> is C<->, the list is loaded
 from standard input.
 
 =item B<--[no]filter>
 
-Forces ack to act as if it were recieving input via a pipe.
+Forces ack to act as if it were receiving input via a pipe.
 
 =item B<--[no]follow>
 
@@ -1456,6 +1468,10 @@ a regular expression.
 =item B<--bar>
 
 Check with the admiral for traps.
+
+=item B<--cathy>
+
+Chocolate, Chocolate, Chocolate!
 
 =back
 
@@ -1817,25 +1833,8 @@ searching behavior is driven by filetype.  B<If ack doesn't know
 what kind of file it is, ack ignores the file.>
 
 Use the C<-f> switch to see a list of files that ack will search
-for you.
-
-If you want ack to search files that it doesn't recognize, use the
-C<-a> switch.
-
-If you want ack to search every file, even ones that it always
-ignores like coredumps and backup files, use the C<-u> switch.
-
-=head2 Why does ack ignore unknown files by default?
-
-ack is designed by a programmer, for programmers, for searching
-large trees of code.  Most codebases have a lot files in them which
-aren't source files (like compiled object files, source control
-metadata, etc), and grep wastes a lot of time searching through all
-of those as well and returning matches from those files.
-
-That's why ack's behavior of not searching things it doesn't recognize
-is one of its greatest strengths: the speed you get from only
-searching the things that you want to be looking at.
+for you.  You can use the C<--show-types> switch to show which type
+ack thinks each file is.
 
 =head2 Wouldn't it be great if F<ack> did search & replace?
 
@@ -1849,7 +1848,7 @@ this from the Unix shell:
 
     $ perl -i -p -e's/foo/bar/g' $(ack -f --php)
 
-=head2 Can you make ack recognize F<.xyz> files?
+=head2 Can I make ack recognize F<.xyz> files?
 
 Yes!  Please see L</"Defining your own types">.  If you think
 that F<ack> should recognize a type by default, please see
@@ -1901,6 +1900,11 @@ would like to search for these, you may prefix your search term with C<--> or
 use the C<--match> option.  (However, don't forget that C<+> is a regular
 expression metacharacter!)
 
+=head2 Why does C<"ack '.{40000,}'"> fail?  Isn't that a valid regex?
+
+The Perl language limits the repetition quanitifier to 32K.  You
+can search for C<.{32767}> but not C<.{32768}>.
+
 =head1 ACKRC LOCATION SEMANTICS
 
 Ack can load its configuration from many sources.  This list
@@ -1922,15 +1926,15 @@ using C<--ignore-ack-defaults>.
 
 Options are then loaded from the global ackrc.  This is located at
 C</etc/ackrc> on Unix-like systems, and
-C<C:\Documents and Settings\All Users\Application Data> on Windows.
+C<C:\Documents and Settings\All Users\Application Data\ackrc> on Windows.
 This can be omitted using C<--noenv>.
 
 =item * User ackrc
 
 Options are then loaded from the user's ackrc.  This is located at
 C<$HOME/.ackrc> on Unix-like systems, and
-C<C:\Documents and Settings\$USER\Application Data>.  If a different
-ackrc is desired, it may be overriden with the C<$ACKRC> environment
+C<C:\Documents and Settings\$USER\Application Data\ackrc>.  If a different
+ackrc is desired, it may be overridden with the C<$ACKRC> environment
 variable.
 This can be omitted using C<--noenv>.
 
@@ -1941,9 +1945,15 @@ the first ackrc file with the name C<.ackrc> or C<_ackrc>, first searching
 in the current directory, then the parent directory, then the grandparent
 directory, etc.  This can be omitted using C<--noenv>.
 
+=item * --ackrc
+
+The C<--ackrc> option may be included on the command line to specify an
+ackrc file that can override all others.  It is consulted even if C<--noenv>
+is present.
+
 =item * ACK_OPTIONS
 
-Options are then loaded from the enviroment variable C<ACK_OPTIONS>.  This can
+Options are then loaded from the environment variable C<ACK_OPTIONS>.  This can
 be omitted using C<--noenv>.
 
 =item * Command line
@@ -1963,7 +1973,7 @@ A lot of changes were made for ack 2; here is a list of them.
 =item *
 
 When no selectors are specified, ack 1.x only searches through files that
-it can map to a file type.  ack 2.x, by constrast, will search through
+it can map to a file type.  ack 2.x, by contrast, will search through
 every regular, non-binary file that is not explicitly ignored via
 B<--ignore-file> or B<--ignore-dir>.  This is similar to the behavior of the
 B<-a/--all> option in ack 1.x.
@@ -2152,6 +2162,14 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Charles Lee,
+Joe McMahon,
+John Warwick,
+David Steinbrunner,
+Kara Martens,
+Volodymyr Medvid,
+Ron Savage,
+Konrad Borowski,
 Dale Sedivic,
 Michael McClimon,
 Andrew Black,
@@ -2244,7 +2262,7 @@ use strict;
 use warnings;
 
 
-our $VERSION = '1.12';
+our $VERSION = '1.10';
 
 
 
@@ -2279,7 +2297,7 @@ sub files {
     return sub {
         while (@queue) {
             my ($dirname,$file,$fullpath) = splice( @queue, 0, 3 );
-            if ( -f $fullpath || -p $fullpath || $fullpath =~ m{^/dev/fd} ) {
+            if ( -f $fullpath || -p $fullpath ) {
                 if ( $filter ) {
                     local $_ = $file;
                     local $File::Next::dir = $dirname;
@@ -2475,9 +2493,9 @@ our $VERSION;
 our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.04';
+    $VERSION = '2.08';
     $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
-    $GIT_REVISION = q{8f405b7};
+    $GIT_REVISION = q{0c5f694};
 }
 
 our $fh;
@@ -2597,8 +2615,69 @@ sub _bar {
 77I!+!7!?!7!I"71+!7,
 _BAR
 
-    $x =~ s/(.)(.)/$1x(ord($2)-32)/eg;
-    App::Ack::print( $x );
+    App::Ack::__pic($x);
+}
+
+sub _cathy {
+    my $x = <<'CATHY';
+ 0+!--+!
+ 0|! "C!H!O!C!O!L!A!T!E!!! !|!
+ 0|! "C!H!O!C!O!L!A!T!E!!! !|!
+ 0|! "C!H!O!C!O!L!A!T!E!!! !|!
+ 0|! $A"C!K!!! $|!
+ 0+!--+!
+ 6\! 1:!,!.! !
+ 7\! /.!M!~!Z!M!~!
+ 8\! /~!D! "M! !
+ 4.! $\! /M!~!.!8! +.!M# 4
+ 0,!.! (\! .~!M!N! ,+!I!.!M!.! 3
+ /?!O!.!M!:! '\! .O!.! +~!Z!=!N!.! 4
+ ..! !D!Z!.!Z!.! '\! 9=!M".! 6
+ /.! !.!~!M".! '\! 8~! 9
+ 4M!.! /.!7!N!M!.! F
+ 4.! &:!M! !N"M# !M"N!M! #D!M&=! =
+ :M!7!M#:! !~!M!7!,!$!M!:! #.! !O!N!.!M!:!M# ;
+ 8Z!M"~!N!$!D!.!N!?! !I!N!.! (?!M! !M!,!D!M".! 9
+ (?!Z!M!N!:! )=!M!O!8!.!M!+!M! !M!,! !O!M! +,!M!.!M!~!Z!N!M!:! &:!~! 0
+ &8!7!.!~!M"D!M!,! &M!?!=!8! !M!,!O! !M!+! !+!O!.!M! $M#~! !.!8!M!Z!.!M! !O!M"Z! %:!~!M!Z!M!Z!.! +
+ &:!M!7!,! *M!.!Z!M! !8"M!.!M!~! !.!M!.!=! #~!8!.!M! !7!M! "N!Z#I! !D!M!,!M!.! $."M!,! !M!.! *
+ 2$!O! "N! !.!M!I! !7" "M! "+!O! !~!M! !d!O!.!7!I!M!.! !.!O!=!M!.! !M",!M!.! %.!$!O!D! +
+ 1~!O! "M!+! !8!$! "M! "?!O! %Z!8!D!M!?!8!I!O!7!M! #M!.!M! "M",!M! 4
+ 07!~! ".!8! !.!M! "I!+! !.!M! &Z!D!.!7!=!M! !:!.!M! #:!8"+! !.!+!8! !8! 3
+ /~!M! #N! !~!M!$! !.!M! !.!M" &~!M! "~!M!O! "D! $M! !8! "M!,!M!+!D!.! 1
+ #.! #?!M!N!.! #~!O! $M!.!7!$! "?" !?!~!M! '7!8!?!M!.!+!M"O! $?"$!D! !.!O! !$!7!I!.! 0
+ $,!M!:!O!?! ".! !?!=! $=!:!O! !M! "M! !M! !+!$! (.! +.!M! !M!.! !8! !+"Z!~! $:!M!$! !.! '
+ #.!8!.!I!$! $7!I! %M" !=!M! !~!M!D! "7!I! .I!O! %?!=!,!D! !,!M! !D!~!8!~! %D!M! (
+ #.!M"?! $=!O! %=!N! "8!.! !Z!M! #M!~! (M!:! #.!M" &O! !M!.! !?!,! !8!.!N!~! $8!N!M!,!.! %
+ *$!O! &M!,! "O! !.!M!.! #M! (~!M( &O!.! !7! "M! !.!M!.!M!,! #.!M! !M! &
+ )=!8!.! $.!M!O!.! "$!.!I!N! !I!M# (7!M(I! %D"Z!M! "=!I! "M! !M!:! #~!D! '
+ )D! &8!N!:! ".!O! !M!="M! "M! (7!M) %." !M!D!."M!.! !$!=! !M!,! +
+ (M! &+!.!M! #Z!7!O!M!.!~!8! +,!M#D!?!M#D! #.!Z!M#,!Z!?! !~!N! "N!.! !M! +
+ 'D!:! %$!D! !?! #M!Z! !8!.! !M"?!7!?!7! '+!I!D! !?!O!:!M!:! ":!M!:! !M!7".!M! "8!+! !:!D! !.!M! *
+ %.!O!:! $.!O!+! !D!.! #M! "M!.!+!N!I!Z! "7!M!N!M!N!?!I!7!Z!=!M'D"~! #M!.!8!$! !:! !.!M! "N!?! !,!O! )
+ !.!?!M!:!M!I! %8!,! "M!.! #M! "N! !M!.! !M!.! !+!~! !.!M!.! ':!M! $M! $M!Z!$! !M!.! "D! "M! "?!M! (
+ !7!8! !+!I! ".! "$!=! ":!$! "+! !M!.! !O! !M!I!M".! !=!~! ",!O! '=!M! $$!,! #N!:! ":!8!.! !D!~! !,!M!.! !:!M!.! &
+ !:!,!.! &Z" #D! !.!8!."M!.! !8!?!Z!M!.!M! #Z!~! !?!M!Z!.! %~!O!.!8!$!N!8!O!I!:!~! !+! #M!.! !.!M!.! !+!M! ".!~!M!+! $
+ !.! 'D!I! #?!M!.!M!,! !.!Z! !.!8! #M&O!I!?! (~!I!M"." !M!Z!.! !M!N!.! "+!$!.! "M!.! !M!?!.! "8!M! $
+ (O!8! $M! !M!.! ".!:! !+!=! #M! #.!M! !+" *$!M":!.! !M!~! "M!7! #M! #7!Z! "M"$!M!.! !.! #
+ '$!Z! #.!7!+!M! $.!,! !+!:! #N! #.!M!.!+!M! +D!M! #=!N! ":!O! #=!M! #Z!D! $M!I! %
+ $,! ".! $.!M" %$!.! !?!~! "+!7!." !.!M!,! !M! *,!N!M!.$M!?! "D!,! #M!.! #N! +
+ ,M!Z! &M! "I!,! "M! %I!M! !?!=!.! (Z!8!M! $:!M!.! !,!M! $D! #.!M!.! )
+ +8!O! &.!8! "I!,! !~!M! &N!M! !M!D! '?!N!O!." $?!7! "?!~! #M!.! #I!D!.! (
+ 3M!,! "N!.! !D" &.!+!M!.! !M":!.":!M!7!M!D! 'M!.! "M!.! "M!,! $I! )
+ 3I! #M! "M!,! !:! &.!M" ".!,! !.!$!M!I! #.! !:! !.!M!?! "N!+! ".! /
+ 1M!,! #.!M!8!M!=!.! +~!N"O!Z"~! *+!M!.! "M! 2
+ 0.!M! &M!.! 8:! %.!M!Z! "M!=! *O!,! %
+ 0?!$! &N! )." .,! %."M! ":!M!.! 0
+ 0N!:! %?!O! #.! ..! &,! &.!D!,! "N!I! 0
+CATHY
+    App::Ack::__pic($x);
+}
+
+sub __pic {
+    my($compressed) = @_;
+    $compressed =~ s/(.)(.)/$1x(ord($2)-32)/eg;
+    App::Ack::print( $compressed );
     exit 0;
 }
 
@@ -2650,10 +2729,10 @@ Search output:
   -c, --count                   Show number of lines matching per file
   --[no]column                  Show the column number of the first match
 
-  -A NUM, --after-context=NUM   Print NUM lines of trailing context after matching
-                                lines.
-  -B NUM, --before-context=NUM  Print NUM lines of leading context before matching
-                                lines.
+  -A NUM, --after-context=NUM   Print NUM lines of trailing context after
+                                matching lines.
+  -B NUM, --before-context=NUM  Print NUM lines of leading context before
+                                matching lines.
   -C [NUM], --context[=NUM]     Print NUM lines (default 2) of output context.
 
   --print0                      Print null byte as separator between filenames,
@@ -2664,14 +2743,16 @@ Search output:
 
 
 File presentation:
-  --pager=COMMAND               Pipes all ack output through COMMAND.  For example,
-                                --pager="less -R".  Ignored if output is redirected.
-  --nopager                     Do not send output through a pager.  Cancels any
-                                setting in ~/.ackrc, ACK_PAGER or ACK_PAGER_COLOR.
-  --[no]heading                 Print a filename heading above each file's results.
-                                (default: on when used interactively)
-  --[no]break                   Print a break between results from different files.
-                                (default: on when used interactively)
+  --pager=COMMAND               Pipes all ack output through COMMAND.  For
+                                example, --pager="less -R".  Ignored if output
+                                is redirected.
+  --nopager                     Do not send output through a pager.  Cancels
+                                any setting in ~/.ackrc, ACK_PAGER or
+                                ACK_PAGER_COLOR.
+  --[no]heading                 Print a filename heading above each file's
+                                results.  (default: on when used interactively)
+  --[no]break                   Print a break between results from different
+                                files.  (default: on when used interactively)
   --group                       Same as --heading --break
   --nogroup                     Same as --noheading --nobreak
   --[no]color                   Highlight the matching text (default: on unless
@@ -2679,58 +2760,67 @@ File presentation:
   --[no]colour                  Same as --[no]color
   --color-filename=COLOR
   --color-match=COLOR
-  --color-lineno=COLOR          Set the color for filenames, matches, and line numbers.
+  --color-lineno=COLOR          Set the color for filenames, matches, and line
+                                numbers.
   --flush                       Flush output immediately, even when ack is used
                                 non-interactively (when output goes to a pipe or
                                 file).
 
 
 File finding:
-  -f                            Only print the files selected, without searching.
-                                The PATTERN must not be specified.
-  -g                            Same as -f, but only select files matching PATTERN.
+  -f                            Only print the files selected, without
+                                searching.  The PATTERN must not be specified.
+  -g                            Same as -f, but only select files matching
+                                PATTERN.
   --sort-files                  Sort the found files lexically.
   --show-types                  Show which types each file has.
   --files-from=FILE             Read the list of files to search from FILE.
   -x                            Read the list of files to search from STDIN.
 
 File inclusion/exclusion:
-  --[no]ignore-dir=name         Add/Remove directory from the list of ignored dirs
+  --[no]ignore-dir=name         Add/remove directory from list of ignored dirs
   --[no]ignore-directory=name   Synonym for ignore-dir
   --ignore-file=filter          Add filter for ignoring files
-  -r, -R, --recurse             Recurse into subdirectories (ack's default behavior)
+  -r, -R, --recurse             Recurse into subdirectories (default: on)
   -n, --no-recurse              No descending into subdirectories
   --[no]follow                  Follow symlinks.  Default is off.
-  -k, --known-types             Include only files with types that ack recognizes.
+  -k, --known-types             Include only files of types that ack recognizes.
 
-  --type=X                      Include only X files, where X is a recognized filetype.
+  --type=X                      Include only X files, where X is a recognized
+                                filetype.
   --type=noX                    Exclude X files.
                                 See "ack --help-types" for supported filetypes.
 
 File type specification:
   --type-set TYPE:FILTER:FILTERARGS
-                                Files with the given FILTERARGS applied to the given
-                                FILTER are recognized as being of type TYPE. This
-                                replaces an existing definition for type TYPE.
+                                Files with the given FILTERARGS applied to the
+                                given FILTER are recognized as being of type
+                                TYPE. This replaces an existing definition for
+                                type TYPE.
   --type-add TYPE:FILTER:FILTERARGS
-                                Files with the given FILTERARGS applied to the given
-                                FILTER are recognized as being of type TYPE.
+                                Files with the given FILTERARGS applied to the
+                                given FILTER are recognized as being type TYPE.
   --type-del TYPE               Removes all filters associated with TYPE.
 
 
 Miscellaneous:
-  --[no]env                     Ignore environment variables and global ackrc files.  --env is legal but redundant.
+  --[no]env                     Ignore environment variables and global ackrc
+                                files.  --env is legal but redundant.
   --ackrc=filename              Specify an ackrc file to use
-  --ignore-ack-defaults         Ignore the default definitions that ack includes.
-  --create-ackrc                Outputs a default ackrc for your customization to standard output.
+  --ignore-ack-defaults         Ignore default definitions included with ack.
+  --create-ackrc                Outputs a default ackrc for your customization
+                                to standard output.
   --help, -?                    This help
   --help-types                  Display all known types
-  --dump                        Dump information on which options are loaded from which RC files
-  --[no]filter                  Force ack to treat standard input as a pipe (--filter) or tty (--nofilter)
+  --dump                        Dump information on which options are loaded
+                                from which RC files
+  --[no]filter                  Force ack to treat standard input as a pipe
+                                (--filter) or tty (--nofilter)
   --man                         Man page
   --version                     Display version & copyright
   --thpppt                      Bill the Cat
   --bar                         The warning admiral
+  --cathy                       Chocolate! Chocolate! Chocolate!
 
 Exit status is 0 if match, 1 if no match.
 
@@ -3697,6 +3787,25 @@ sub process_filter_spec {
     }
 }
 
+sub uninvert_filter {
+    my ( $opt, @filters ) = @_;
+
+    return unless defined $opt->{filters} && @filters;
+
+    # loop through all the registered filters
+    # If we hit one that matches this extension and it's inverted, we need
+    # to delete it from the options
+    for ( my $i = 0; $i < @{ $opt->{filters} }; $i++ ) {
+        my $opt_filter = @{ $opt->{filters} }[$i];
+
+        # XXX do a real list comparison? This just checks string equivalence
+        if ( $opt_filter->is_inverted() && "$opt_filter->{filter}" eq "@filters" ) {
+            splice @{ $opt->{filters} }, $i, 1;
+            $i--;
+        }
+    }
+}
+
 sub process_filetypes {
     my ( $opt, $arg_sources ) = @_;
 
@@ -3721,6 +3830,9 @@ sub process_filetypes {
             my @filters = @{ $App::Ack::mappings{$name} };
             if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
+            }
+            else {
+                uninvert_filter( $opt, @filters );
             }
 
             push @{ $opt->{'filters'} }, @filters;
@@ -3801,6 +3913,8 @@ sub get_arg_spec {
     my $dash_a_explanation = <<EOT;
 This is because we now have -k/--known-types which makes it only select files
 of known types, rather than any text file (which is the behavior of ack 1.x).
+You may have options in a .ackrc, or in the ACKRC_OPTIONS environment variable.
+Try using the --dump flag.
 EOT
 
     return {
@@ -3863,7 +3977,11 @@ EOT
         'n|no-recurse'      => \$opt->{n},
         o                   => sub { $opt->{output} = '$&' },
         'output=s'          => \$opt->{output},
-        'pager=s'           => \$opt->{pager},
+        'pager:s'           => sub {
+            my ( undef, $value ) = @_;
+
+            $opt->{pager} = $value || $ENV{PAGER};
+        },
         'noignore-directory|noignore-dir=s'
                             => sub {
                                 my ( undef, $dir ) = @_;
@@ -4208,7 +4326,9 @@ sub check_for_mutually_exclusive_options {
 sub process_args {
     my $arg_sources = \@_;
 
-    my %opt;
+    my %opt = (
+        pager => $ENV{ACK_PAGER_COLOR} || $ENV{ACK_PAGER},
+    );
 
     check_for_mutually_exclusive_options($arg_sources);
 
@@ -4328,7 +4448,8 @@ sub _options_block {
 #   the --type-add option.
 
 
-# Directories to ignore
+### Directories to ignore
+
 # Bazaar
 --ignore-directory=is:.bzr
 
@@ -4381,9 +4502,14 @@ sub _options_block {
 # Perl Devel::Cover module's output directory
 --ignore-directory=is:cover_db
 
+# Node modules created by npm
+--ignore-directory=is:node_modules
 
+# CMake cache
+--ignore-directory=is:CMakeFiles
 
-# Files to ignore
+### Files to ignore
+
 # Backup files
 --ignore-file=ext:bak
 --ignore-file=match:/~$/
@@ -4398,18 +4524,24 @@ sub _options_block {
 --ignore-file=match:/core\.\d+$/
 
 # minified Javascript
---ignore-file=match:/[.]min[.]js$/
+--ignore-file=match:/[.-]min[.]js$/
 --ignore-file=match:/[.]js[.]min$/
 
 # minified CSS
 --ignore-file=match:/[.]min[.]css$/
 --ignore-file=match:/[.]css[.]min$/
 
+# PDFs, because they pass Perl's -T detection
+--ignore-file=ext:pdf
 
-# Filetypes defined
+# Common graphics, just as an optimization
+--ignore-file=ext:gif,jpg,jpeg,png
+
+
+### Filetypes defined
 
 # Perl http://perl.org/
---type-add=perl:ext:pl,pm,pod,t
+--type-add=perl:ext:pl,pm,pod,t,psgi
 --type-add=perl:firstlinematch:/^#!.*\bperl/
 
 # Makefiles http://www.gnu.org/s/make/
@@ -4457,6 +4589,9 @@ sub _options_block {
 # C header files
 --type-add=hh:ext:h
 
+# CoffeeScript http://coffeescript.org/
+--type-add=coffeescript:ext:coffee
+
 # C++
 --type-add=cpp:ext:cpp,cc,cxx,m,hpp,hh,h,hxx
 
@@ -4471,6 +4606,9 @@ sub _options_block {
 
 # Delphi http://en.wikipedia.org/wiki/Embarcadero_Delphi
 --type-add=delphi:ext:pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
+
+# Elixir http://elixir-lang.org/
+--type-add=elixir:ext:ex,exs
 
 # Emacs Lisp http://www.gnu.org/software/emacs
 --type-add=elisp:ext:el
@@ -4502,11 +4640,18 @@ sub _options_block {
 # JSP http://www.oracle.com/technetwork/java/javaee/jsp/index.html
 --type-add=jsp:ext:jsp,jspx,jhtm,jhtml
 
+# JSON http://www.json.org/
+--type-add=json:ext:json
+
+# Less http://www.lesscss.org/
+--type-add=less:ext:less
+
 # Common Lisp http://common-lisp.net/
 --type-add=lisp:ext:lisp,lsp
 
 # Lua http://www.lua.org/
 --type-add=lua:ext:lua
+--type-add=lua:firstlinematch:/^#!.*\blua(jit)?/
 
 # Objective-C
 --type-add=objc:ext:m,h
@@ -4541,6 +4686,9 @@ sub _options_block {
 
 # Rust http://www.rust-lang.org/
 --type-add=rust:ext:rs
+
+# Sass http://sass-lang.com
+--type-add=sass:ext:sass,scss
 
 # Scala http://www.scala-lang.org/
 --type-add=scala:ext:scala
