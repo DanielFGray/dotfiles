@@ -98,6 +98,17 @@ XXX
 *) pathe_apos=$pathe;;
 esac
 
+output="$output"'<separator label="'$pathe'" />
+<item label="Browse here...">
+	<action name="Execute">
+		<command>
+		 &apos;'"$open_folder_cmd"'&apos; &apos;'"$pathe_apos"'&apos;
+		</command>
+	</action>
+</item>
+<separator />
+'
+
 unset extra_entries directories_menu files_menu
 [ "$path" = "$HOME"/ ] && extra_entries="$shown_dotfiles"
 for i in "$path"* $extra_entries
@@ -141,18 +152,6 @@ XXX
         </command>
     </action>
 </item>'
-
-output="$output"'<separator label="'$pathe'" />
-<item label="Browse here...">
-	<action name="Execute">
-		<command>
-		 &apos;'"$open_folder_cmd"'&apos; &apos;'"$pathe_apos"'&apos;
-		</command>
-	</action>
-</item>
-<separator />
-'
-
 done
 
 [ -n "$directories_menu" ] && {
