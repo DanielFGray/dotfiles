@@ -1,8 +1,8 @@
 [[ -x $(which fortune) ]] && fortune -as
 
 if [[ -f /etc/debian_version ]]; then
-	local PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
-	[[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
+	# local PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
+	# [[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
 	alias apt-get="sudo apt-get "
 	alias canhaz="apt-get install "
 	alias updupg="apt-get update; apt-get upgrade"
@@ -46,15 +46,15 @@ function cat { (( $# > 1 )) && /bin/cat "$@" }
 function tarpipe { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" }
 function rtarpipe { ssh $1 "tar czf - $2" | pv | tar xzvf - }
 
-function moshsoup { mosh dan@soupwhale.com }
-function moshbagel { mosh dan@bagelbox.org }
 function soupget { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
 function soupplay {
 	mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' |
 	grep -i "$*" | sort | sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|')
 }
 
-function pgrep { unbuffer ps aux | grep $1 | grep -v grep }
+function sprunge { curl -sF 'sprunge=<-' http://sprunge.us }
+
+function pgrep { ps aux | grep $1 | grep -v grep }
 
 function newImage {
 	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2 &&
@@ -131,12 +131,14 @@ function simpleHTTP {
 }
 
 function whitenoise { aplay -c 2 -f S16_LE -r 44100 /dev/urandom }
+
 function whichRelease {
 	dpkg -l |
 	awk '/^.i/ {print $2}' |
 	xargs apt-cache policy |
 	awk '/^[a-z0-9.\-]+:/ {pkg=$1}; /\*\*\*/ {OFS="\t"; ver=$2; getline; print pkg,ver,$2,$3}'
 }
+
 function upgradeRelease {
 	#apt-get install $(
 		whichRelease |
