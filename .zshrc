@@ -1,15 +1,14 @@
-ZSH="/home/dan/.oh-my-zsh"
+ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
-#DISABLE_LS_COLORS="true"
-plugins=(git git-extras tmux zsh-syntax-highlighting vi-mode)
+plugins=(vi-mode git git-extras zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 # if [[ -d "$HOME/.local/bin" ]]; then; export PATH="$HOME/.local/bin:$PATH"
-# elif [[ -d "$HOME/.local/bin" ]]; then; export PATH="$HOME/.local/bin:$PATH"
+# elif [[ -d "$HOME/local/bin" ]]; then; export PATH="$HOME/local/bin:$PATH"
 # fi
 
-#export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
 
 alias -s png=qiv
@@ -31,4 +30,4 @@ bindkey "^[[8~" end-of-line
 bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
-source /home/dan/dotfiles/.alias.sh
+source $HOME/dotfiles/.alias.sh
