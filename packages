@@ -4,6 +4,7 @@ lm-sensors
 rsync
 mplayer2
 build-essential
+devscripts
 checkinstall
 git
 ctags
