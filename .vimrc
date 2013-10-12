@@ -52,21 +52,24 @@ set showcmd
 set mouse=a
 set nolazyredraw
 set autoread
-set scrolloff=500
+"" set scrolloff=500
 set t_Co=16
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
+""set clipboard=unnamedplus
 set ofu=syntaxcomplete#Complete
 set tags+=~/.vim/tags/gtk+.tags
 colorscheme noctu
+
+nnoremap :h :vert h 
 
 nnoremap <F6> :set paste!<CR>
 nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'dan'
+let g:airline_theme = 'dark'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -117,11 +120,7 @@ map ,r :call RangerChooser()<CR>
 if has("gui_running")
 	set background=dark
 	set gfn=Tewi\ 11
-	set guioptions-=L
-	set guioptions-=r
-	set guioptions-=b
-	set guioptions-=T
-	set guioptions-=m
+	set guioptions-=LrbTm
 endif
 if version >= 703
 	if exists("&undodir")
