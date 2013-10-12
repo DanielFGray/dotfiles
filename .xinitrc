@@ -6,7 +6,12 @@ synclient HorizTwoFingerScroll=1
 synclient EmulateTwoFingerMinW=20
 synclient EmulateTwoFingerMinZ=48
 
-(sleep 2 && (xrdb -load ~/.Xresources; xset +fp ~/.fonts; xset fp rehash)) &
+(sleep 1 && (
+	xmodmap ~/.xmodmap
+	xrdb -load ~/.Xresources
+	xset +fp ~/.fonts; xset fp rehash;
+	syndaemon -t -k -i 2 -d &
+)) &
 
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
 	for f in /etc/X11/xinit/xinitrc.d/*; do
@@ -15,8 +20,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 	unset f
 fi
 
-if [[ -f /etc/arch-release ]]; then
-	exec awesome
-elif [[ -f /etc/debian_version ]]; then
-	exec ck-launch-session dbus-launch awesome
+if [ -f /etc/arch-release ]; then
+	exec openbox-session
+elif [ -f /etc/debian_version ]; then
+	exec ck-launch-session dbus-launch $1
 fi
