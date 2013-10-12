@@ -61,6 +61,7 @@ function run_once(cmd)
 	sexec('pgrep -x ' .. findme .. ' > /dev/null || (' .. cmd .. ')')
  end
 
+exec    ('nitrogen --restore')
 run_once('urxvtd -q -f')
 run_once('compton --config ~/.compton.conf')
 run_once('mpd')
@@ -342,9 +343,9 @@ vicious.register(batwidget, vicious.widgets.bat, function(widget, args)
 			preset = naughty.config.presets.critical,
 			title = 'Low power',
 			text = "I'm dying! Plug me in!",
+			timeout = 15,
 		})
 	end
-
 	return args[1] .. percent
 end, 16.5, 'BAT0')
 
@@ -358,6 +359,7 @@ vicious.register(senswidget, vicious.widgets.thermal, function(widget, args)
 			preset = naughty.config.presets.critical,
 			title = 'Temperature Warning',
 			text = 'Is it me or is it hot in here?',
+			timeout = 13,
 		})
 		temp = '<span color="' .. theme.colors.red .. '">' .. temp .. '</span>'
 	end
@@ -566,7 +568,8 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, 'Mod1', 'Shift' }, 'l',     function() exec('screenlock --suspend') end),
 	awful.key({ modkey, 'Mod1' }, 'm',              function() exec(mpdclient) end),
 	awful.key({ modkey, 'Mod1' }, 'v',              function() exec('pavucontrol') end),
-	awful.key({ modkey, 'Mod1' }, 'w',              function() exec(browser) end)
+	awful.key({ modkey, 'Mod1' }, 'w',              function() exec(browser) end),
+	awful.key({ modkey, 'Mod1' }, 't',              function() sexec("synclient TouchpadOff=$(synclient -l | grep -c 'TouchpadOff.*=.*0')") end)
 )
 
 clientkeys = awful.util.table.join(
