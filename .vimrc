@@ -23,13 +23,10 @@ syntax on
 filetype plugin indent on
 NeoBundleCheck
 
-if version >= 703
-	set colorcolumn=80
-	set relativenumber
-	set cursorcolumn cursorline
-else
-	set number
-endif
+set relativenumber
+set number
+set colorcolumn=80
+set cursorcolumn cursorline
 set laststatus=2
 set hlsearch
 set backspace=indent,eol,start
@@ -52,12 +49,15 @@ set showcmd
 set mouse=a
 set nolazyredraw
 set autoread
-"" set scrolloff=500
+set report=0
+set confirm
+set modeline
+set modelines=2
+set scrolloff=5
 set t_Co=16
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
-""set clipboard=unnamedplus
 set ofu=syntaxcomplete#Complete
 set tags+=~/.vim/tags/gtk+.tags
 colorscheme noctu
@@ -69,7 +69,7 @@ nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'dark'
+let g:airline_theme = 'lucius'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -89,10 +89,11 @@ let g:unite_split_rule = 'botright'
 let g:unite_enable_start_insert = 1
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>y :<C-u>Unite -buffer-name=yank    history/yank<cr>
-nnoremap <leader>b :<C-u>Unite -buffer-name=buffer  buffer<cr>
-nnoremap <leader>r :<C-u>Unite -start-insert file_rec/async:!<CR>
-nnoremap <leader>e :<C-u>UniteWithBufferDir -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
+nnoremap <leader>uy :<C-u>Unite -buffer-name=yank    history/yank<cr>
+nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer  buffer<cr>
+nnoremap <leader>ur :<C-u>Unite register<cr>
+nnoremap <leader>uf :<C-u>Unite -start-insert file_rec/async:!<cr>
+nnoremap <leader>ue :<C-u>UniteWithBufferDir -buffer-name=files -prompt=%\  buffer file_mru bookmark file<cr>
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
 	set grepformat=%f:%l:%c:%m
@@ -119,6 +120,7 @@ map ,r :call RangerChooser()<CR>
 
 if has("gui_running")
 	set background=dark
+	colorscheme smyck
 	set gfn=Tewi\ 11
 	set guioptions-=L
 	set guioptions-=r
