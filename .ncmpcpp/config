@@ -182,7 +182,8 @@ autocenter_mode = "yes"
 centered_cursor = "yes"
 # If enabled, currently highlighted position in the list will be always centered.
 
-progressbar_look = "█▋░"
+#progressbar_look = "█▋▒"
+ progressbar_look = "█▋░"
 # If set to "wrapped", going from last found position to next will take you to the first one (same
 # goes for the first position and going to previous one), otherwise no actions will be performed.
 

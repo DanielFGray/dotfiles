@@ -5,7 +5,7 @@ while true; do
 	case $install in
 	'' ) break ;;
 	* )
-		echo sudo apt-get install $install
+		sudo apt-get install $install
 		break ;;
 	esac
 done
@@ -17,10 +17,10 @@ else
 		read -e -p 'install vim plugins? (y/n) ' vimplugins
 		case $vimplugins in
 			[Yy]* )
-				echo ln -vfs ~/dotfiles/.{vimrc,zshrc,tmux.conf} ~
-				echo mkdir -vp ~/.vim/{bundle,colors,cache,undo,backups,swaps}
-				echo git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
-				echo vim +NeoBundleUpdate +q
+				ln -vfs ~/dotfiles/.vimrc ~
+				mkdir -vp ~/.vim/{bundle,colors,cache,undo,backups,swaps}
+				git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
+				vim +NeoBundleUpdate +q
 				break ;;
 			* ) break ;;
 		esac
@@ -34,11 +34,26 @@ else
 		read -e -p 'git clone oh-my-zsh and plugins? (y/n) ' zshconf
 		case $zshconf in
 			[Yy]* )
-				echo git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-				echo mkdir -vp ~/.oh-my-zsh/custom/plugins
-				echo git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+				ln -vfs ~/dotfiles/.zshrc ~
+				git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+				mkdir -vp ~/.oh-my-zsh/custom/plugins
+				git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 				break ;;
 			* ) break ;;
+		esac
+	done
+fi
+
+if ! type "awesome" &> /dev/null; then
+	echo &> /dev/null
+else
+	while true; do
+		read -e -p 'symlink awesome dir? (y/n) ' awesomeconf
+		case $awesomeconf in
+			[Yy]* )
+				ln -svf ~/dotfiles/.config/awesome ~/.config
+				break ;;
+			*) break ;;
 		esac
 	done
 fi
