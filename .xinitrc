@@ -3,8 +3,6 @@
 synclient TapButton1=1
 synclient VertTwoFingerScroll=1
 synclient HorizTwoFingerScroll=1
-synclient EmulateTwoFingerMinW=20
-synclient EmulateTwoFingerMinZ=48
 
 (sleep 1 && (
 	xmodmap ~/.xmodmap

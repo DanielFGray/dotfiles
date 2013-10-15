@@ -4,6 +4,7 @@ if [[ -f /etc/debian_version ]]; then
 	# local PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
 	# [[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
 	alias apt-get="sudo apt-get "
+	alias dpkg="sudo dpkg "
 	alias canhaz="apt-get install "
 	alias updupg="apt-get update; apt-get upgrade"
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
@@ -70,7 +71,7 @@ function importss {
 }
 
 function burnusb {
-	sudo dd if=$1 of=$2 bs=4M conv=sync
+	sudo dd if=$1 of=$2 bs=4M conv=sync ; notify-send -u critical 'burnusb' 'done'
 }
 
 function changeroot {

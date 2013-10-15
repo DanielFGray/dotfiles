@@ -120,7 +120,11 @@ map ,r :call RangerChooser()<CR>
 if has("gui_running")
 	set background=dark
 	set gfn=Tewi\ 11
-	set guioptions-=LrbTm
+	set guioptions-=L
+	set guioptions-=r
+	set guioptions-=b
+	set guioptions-=T
+	set guioptions-=m
 endif
 if version >= 703
 	if exists("&undodir")

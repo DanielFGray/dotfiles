@@ -59,7 +59,7 @@ theme.taglist_squares_sel   = beautifultheme .. 'taglist/squarefza.png'
 theme.taglist_squares_unsel = beautifultheme .. 'taglist/squareza.png'
 
 --theme.wallpaper_cmd         = { 'awsetbg /usr/share/awesome/themes/sky/sky-background.png' }
-theme.wallpaper_cmd         = { 'nitrogen --restore' }
+--theme.wallpaper_cmd         = { 'nitrogen --restore' }
 theme.taglist_squares       = 'true'
 theme.titlebar_close_button = 'true'
 theme.menu_height           = '16'
