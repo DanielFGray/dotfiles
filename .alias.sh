@@ -71,7 +71,9 @@ function importss {
 }
 
 function burnusb {
-	sudo dd if=$1 of=$2 bs=4M conv=sync ; notify-send -u critical 'burnusb' 'done'
+	sudo dd if=$1 of=$2 bs=4M conv=sync
+	sync
+	notify-send -u critical 'burnusb' 'done'
 }
 
 function changeroot {
