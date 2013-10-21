@@ -4,9 +4,6 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(vi-mode git git-extras zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
-# if [[ -d "$HOME/.local/bin" ]]; then; export PATH="$HOME/.local/bin:$PATH"
-# elif [[ -d "$HOME/local/bin" ]]; then; export PATH="$HOME/local/bin:$PATH"
-# fi
 
 export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"

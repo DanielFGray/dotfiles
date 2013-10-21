@@ -23,8 +23,8 @@ syntax on
 filetype plugin indent on
 NeoBundleCheck
 
-set relativenumber
 set number
+set relativenumber
 set colorcolumn=80
 set cursorcolumn cursorline
 set laststatus=2
