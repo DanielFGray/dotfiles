@@ -59,13 +59,15 @@ nitrogen
 pavucontrol
 pulseaudio
 pulseaudio-utils
-pulseaudo-module-x11
+pulseaudio-module-x11
 qiv
 rxvt-unicode-256color
 scrot
 vim-gtk
+wmctrl
 xarchiver
 xchm
+xdotool
 xfburn
 xinit
 xscreensaver
