@@ -27,4 +27,4 @@ bindkey "^[[8~" end-of-line
 bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
 
-source $HOME/dotfiles/.alias.sh
+[ -f $HOME/.bash_aliases ] && source $HOME/.bash_aliases
