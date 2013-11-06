@@ -1,8 +1,8 @@
 [[ -x $(which fortune) ]] && fortune -as
 
-if [[ -f /etc/debian_version ]]; then
-	# local PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
-	# [[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
+if [ -f /etc/debian_version ]; then
+	local PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
+	[[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
 	alias apt-get="sudo apt-get "
 	alias dpkg="sudo dpkg "
 	alias canhaz="apt-get install "
@@ -11,17 +11,17 @@ if [[ -f /etc/debian_version ]]; then
 	function pkgrm { sudo apt-get purge $* && sudo apt-get autoremove }
 	function pkgsearch { apt-cache search $* | sort | less }
 	function compile { ( make -j4 && sudo make install && sudo checkinstall ) && echo success! || echo failed }
-elif [[ -f /etc/arch-release ]]; then
+elif [ -f /etc/arch-release ]; then
 	[[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	alias pacman="sudo pacman "
 	alias canhaz="pacman -S "
 	alias updupg="pacman -Syu "
 	alias pkgrm="pacman -Rsu "
 	function pkgsearch { unbuffer yaourt -Ss $* | less }
-elif [[ -f /etc/redhat-release ]]; then
+elif [ -f /etc/redhat-release ]; then
 	alias yum="sudo yum "
 	alias canhaz="yum install "
-elif [[ -f /etc/gentoo-release ]]; then
+elif [ -f /etc/gentoo-release ]; then
 	alias canhaz="sudo emerge -av "
 fi
 
@@ -39,6 +39,8 @@ alias l="ls -lgo"
 alias la="l -A"
 alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
+
+alias ga="git add -p"
 
 function wget { man curl }
 function cd { builtin cd $1 && ls $2 }
