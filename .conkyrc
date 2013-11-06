@@ -49,13 +49,13 @@ ${top name 2}${alignr}${top mem 2} ${top cpu 2}
 ${top name 3}${alignr}${top mem 3} ${top cpu 3}
 ${top name 4}${alignr}${top mem 4} ${top cpu 4}
 
-wlp2s0 $alignr${addr wlp2s0}
-signal $alignr${wireless_link_qual_perc wlp2s0}%
-rate$alignr${wireless_bitrate wlp2s0}
-Outbound${alignr}${upspeed wlp2s0}
-${upspeedgraph wlp2s0}
-Inbound${alignr}${downspeed wlp2s0}
-${downspeedgraph wlp2s0}$if_mpd_playing
+wlan0 $alignr${addr wlan0}
+signal $alignr${wireless_link_qual_perc wlan0}%
+rate$alignr${wireless_bitrate wlan0}
+Outbound${alignr}${upspeed wlan0}
+${upspeedgraph wlan0}
+Inbound${alignr}${downspeed wlan0}
+${downspeedgraph wlan0}$if_mpd_playing
 
 ${scroll 28 5 $mpd_title}
 ${color}by $mpd_artist
