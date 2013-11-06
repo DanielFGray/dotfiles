@@ -1,19 +1,27 @@
+apt-file
 at
 autoconf
 automake
 autotools-dev
+binutils
 bc
 build-essential
 checkinstall
+colordiff
 ctags
 curl
 debconf
+deborphan
 debianutils
 devscripts
+dpkg-dev
+dialog
 diffutils
 dzen2
 expect
+figlet
 fortunes-off
+fortunes-debian-hints
 git
 htop
 imagemagick
@@ -29,7 +37,9 @@ pv
 ranger
 rsync
 rtorrent
+toilet
 tmux
+usbutils
 vim
 zsh
 
@@ -41,7 +51,6 @@ apvlv
 arandr
 awesome
 awesome-extra
-byzanz
 byzanz
 clipit xclip
 conky
@@ -55,6 +64,7 @@ gtk2-engines-murrine gtk3-engines-unico
 gtk-redshift
 luakit
 lxappearance
+mixxx
 nitrogen
 pavucontrol
 pulseaudio
@@ -73,3 +83,4 @@ xinit
 xscreensaver
 xsel
 xutils
+zsnes:i386
