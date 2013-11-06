@@ -1,2 +1,2 @@
 #!/bin/bash
-vim -c 'cd ~/dotfiles' -p ~/dotfiles/.{alias.sh,zshrc,vimrc,tmux.conf,config/awesome/rc.lua}
+vim -c 'cd ~/dotfiles' +'e ~/dotfiles/.zshrc | vsplit ~/dotfiles/.bash_aliases | tabnew ~/dotfiles/.vimrc | tabnew ~/dotfiles/local.tmux.conf | tabnew ~/dotfiles/.config/awesome/rc.lua'
