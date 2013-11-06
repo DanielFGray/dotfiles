@@ -69,7 +69,7 @@ nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'lucius'
+let g:airline_theme = 'bubblegum'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -88,6 +88,10 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
+
+let g:syntastic_enable_signs = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
 
 let g:unite_data_directory='~/.vim/cache/unite'
 let g:unite_prompt='» '
@@ -134,7 +138,7 @@ map ,r :call RangerChooser()<CR>
 
 if has("gui_running")
 	set background=dark
-	colorscheme smyck
+	colorscheme desert
 	set gfn=Tewi\ 11
 	set guioptions-=L
 	set guioptions-=r
