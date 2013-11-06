@@ -59,7 +59,7 @@ theme.taglist_squares_sel   = beautifultheme .. 'taglist/squarefza.png'
 theme.taglist_squares_unsel = beautifultheme .. 'taglist/squareza.png'
 
 --theme.wallpaper_cmd         = { 'awsetbg /usr/share/awesome/themes/sky/sky-background.png' }
---theme.wallpaper_cmd         = { 'nitrogen --restore' }
+theme.wallpaper_cmd         = { 'nitrogen --restore' }
 theme.taglist_squares       = 'true'
 theme.titlebar_close_button = 'true'
 theme.menu_height           = '16'
@@ -87,5 +87,4 @@ theme.titlebar_maximized_button_normal_inactive = beautifultheme .. 'titlebar/ma
 theme.titlebar_maximized_button_focus_inactive =  beautifultheme .. 'titlebar/maximized_focus_inactive.png'
 theme.titlebar_maximized_button_normal_active =   beautifultheme .. 'titlebar/maximized_normal_active.png'
 theme.titlebar_maximized_button_focus_active =    beautifultheme .. 'titlebar/maximized_focus_active.png'
-
 return theme
