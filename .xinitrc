@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+
 synclient TapButton1=1
 synclient VertTwoFingerScroll=1
 synclient HorizTwoFingerScroll=1
@@ -18,8 +20,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 	unset f
 fi
 
-if [ -f /etc/arch-release ]; then
-	exec openbox-session
-elif [ -f /etc/debian_version ]; then
+if [ -f /etc/debian_version ]; then
 	exec ck-launch-session dbus-launch $1
+elif [ -f /etc/arch-release ]; then
+	exec dbus-launch awesome -c $HOME/.config/awesome/35.lua
 fi
