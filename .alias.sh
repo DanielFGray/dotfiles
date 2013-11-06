@@ -1,23 +1,22 @@
-[[ -x $(which fortune) ]] && fortune -as
+[ -x $(which fortune) ] && fortune -as
 
 if [ -f /etc/debian_version ]; then
-	local PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
-	[[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
+	PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
+	[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
 	alias apt-get="sudo apt-get "
 	alias dpkg="sudo dpkg "
 	alias canhaz="apt-get install "
 	alias updupg="apt-get update; apt-get upgrade"
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-	function pkgrm { sudo apt-get purge $* && sudo apt-get autoremove }
-	function pkgsearch { apt-cache search $* | sort | less }
-	function compile { ( make -j4 && sudo make install && sudo checkinstall ) && echo success! || echo failed }
+	pkgrm() { sudo apt-get purge $* && sudo apt-get autoremove ;}
+	pkgsearch() { apt-cache search $* | sort | less ;}
 elif [ -f /etc/arch-release ]; then
-	[[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+	[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	alias pacman="sudo pacman "
 	alias canhaz="pacman -S "
 	alias updupg="pacman -Syu "
 	alias pkgrm="pacman -Rsu "
-	function pkgsearch { unbuffer yaourt -Ss $* | less }
+	pkgsearch() { unbuffer yaourt -Ss $* | less ;}
 elif [ -f /etc/redhat-release ]; then
 	alias yum="sudo yum "
 	alias canhaz="yum install "
@@ -40,45 +39,43 @@ alias la="l -A"
 alias cdu="cdu -is -d h "
 alias historygrep="history | grep -v 'history' | grep -E "
 
-alias ga="git add -p"
+wget() { man curl ;}
+cd() { builtin cd $1 && ls $2 ;}
+cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 
-function wget { man curl }
-function cd { builtin cd $1 && ls $2 }
-function cat { (( $# > 1 )) && /bin/cat "$@" }
+tarpipe() { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" ;}
+rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
 
-function tarpipe { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" }
-function rtarpipe { ssh $1 "tar czf - $2" | pv | tar xzvf - }
-
-function soupget { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv }
-function soupplay {
+soupget() { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv ;}
+soupplay() {
 	mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' |
 	grep -i "$*" | sort | sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|')
 }
 
-function sprunge { curl -sF 'sprunge=<-' http://sprunge.us }
+sprunge() { curl -sF 'sprunge=<-' http://sprunge.us ;}
 
-function pgrep { ps aux | grep $1 | grep -v grep }
+pgrep() { ps aux | grep $1 | grep -v grep ;}
 
-function newImage {
+newImage() {
 	convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:$1 $2 &&
 	optipng $2 &&
 	qiv $2
 }
 
-function importss {
+importss() {
 	import $1 &&
 	convert -trim $1 $1 &&
 	optipng $1 &&
 	qiv $1
 }
 
-function burnusb {
+burnusb() {
 	sudo dd if=$1 of=$2 bs=4M conv=sync
 	sync
 	notify-send -u critical 'burnusb' 'done'
 }
 
-function changeroot {
+changeroot() {
 	sudo cp -L /etc/resolv.conf $1/etc/resolv.conf
 	sudo mount -t proc proc $1/proc
 	sudo mount -t sysfs sys $1/sys
@@ -87,7 +84,7 @@ function changeroot {
 	sudo chroot $1/ /bin/bash
 }
 
-function extract {
+extract() {
 	if [ -f $1 ] ; then
 		case $1 in
 			*.tar.bz2)   tar xvjf $1 ;;
@@ -108,7 +105,7 @@ function extract {
 	fi
 }
 
-function curltar {
+curltar() {
 	case $1 in
 		*.tar.bz2)   curl -kL $1 | tar xvjf   -  ;;
 		*.tar.gz)    curl -kL $1 | tar xvzf   -  ;;
@@ -125,26 +122,26 @@ function curltar {
 	esac
 }
 
-function byzanz {
+byzanz() {
 	local date=`date '+%F-%s'`
 	byzanz-record "$@" ~/images/screenshots/${date}.gif &&
 	mirage ~/images/screenshots/${date}.gif
 }
 
-function simpleHTTP {
+simpleHTTP() {
 	python -c "import SimpleHTTPServer, SocketServer, BaseHTTPServer; SimpleHTTPServer.test(SimpleHTTPServer.SimpleHTTPRequestHandler, type('Server', (BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn, object), {}))" 9090
 }
 
-function whitenoise { aplay -c 2 -f S16_LE -r 44100 /dev/urandom }
+whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
-function whichRelease {
+whichRelease() {
 	dpkg -l |
 	awk '/^.i/ {print $2}' |
 	xargs apt-cache policy |
 	awk '/^[a-z0-9.\-]+:/ {pkg=$1}; /\*\*\*/ {OFS="\t"; ver=$2; getline; print pkg,ver,$2,$3}'
 }
 
-function upgradeRelease {
+upgradeRelease() {
 	#apt-get install $(
 		whichRelease |
 		grep -v 'wheezy|\/var\/lib\/dpkg\/status' |
