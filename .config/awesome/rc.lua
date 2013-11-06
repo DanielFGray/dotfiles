@@ -512,18 +512,20 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, 'Control' }, 'r',           awesome.restart),
 	awful.key({ modkey, 'Shift' }, 'q',             awesome.quit),
 	awful.key({ modkey }, 'Tab',                    function() awful.menu.clients(nil, { keygrabber = true }) end),
-	awful.key({ modkey }, 'Up',                     function() awful.client.swap.byidx(-1) end),
-	awful.key({ modkey }, 'Down',                   function() awful.client.swap.byidx(1) end),
-	awful.key({ modkey, 'Shift' }, 'Up',            function()
+	awful.key({ modkey }, 'Up',                     function()
+	                                                	-- awful.client.cycle(true)
 	                                                	awful.client.focus.byidx(-1)
 	                                                	if client.focus then client.focus:raise() end
 	                                                	awful.client.swap.byidx(1)
 	                                                end),
-	awful.key({ modkey, 'Shift' }, 'Down',          function()
+	awful.key({ modkey }, 'Down',                   function()
+	                                                	-- awful.client.cycle(false)
 	                                                	awful.client.focus.byidx(1)
 	                                                	if client.focus then client.focus:raise() end
 	                                                	awful.client.swap.byidx(-1)
 	                                                end),
+	awful.key({ modkey, 'Shift' }, 'Up',            function() awful.client.swap.byidx(-1) end),
+	awful.key({ modkey, 'Shift' }, 'Down',          function() awful.client.swap.byidx(1) end),
 	awful.key({ modkey }, 'Left',                   function() awful.tag.incmwfact(-0.05) end),
 	awful.key({ modkey }, 'Right',                  function() awful.tag.incmwfact(0.05) end),
 	awful.key({ modkey, 'Control' }, 'Left',        function() awful.tag.incnmaster(1) end),
