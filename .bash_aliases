@@ -1,5 +1,8 @@
 [ -x $(which fortune) ] && fortune -as
 
+export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+export EDITOR="vim"
+
 if [ -f /etc/debian_version ]; then
 	PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
 	[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
@@ -149,3 +152,5 @@ upgradeRelease() {
 		sed 's|/main||;s|:|/|;s|   ||'
 	#)
 }
+
+# vim:ft=sh:
