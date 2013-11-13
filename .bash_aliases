@@ -46,11 +46,6 @@ wget() { man curl ;}
 cd() { builtin cd $1 && ls $2 ;}
 cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 
-unpatch () {
-	find . -name "*.orig" -o -name "*.rej"  -type f -exec rm {} \;
-	find . -name "b" -type d -exec rm -rf {} \;
-}
-
 tarpipe() { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" ;}
 rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
 
