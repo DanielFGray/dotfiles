@@ -16,6 +16,7 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle 'sheerun/vim-polyglot'
 NeoBundle 'noahfrederick/vim-noctu'
 NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'spolu/dwm.vim'
 syntax on
 filetype plugin indent on
 NeoBundleCheck
