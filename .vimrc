@@ -3,20 +3,19 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', { 'build' : { 'unix' : 'make -f make_unix.mak' }}
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'mhinz/vim-tmuxify'
-NeoBundle 'mattn/zencoding-vim'
-NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'tristen/vim-sparkup'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'scrooloose/syntastic'
+NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'sheerun/vim-polyglot'
 NeoBundle 'noahfrederick/vim-noctu'
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'spolu/dwm.vim'
 syntax on
 filetype plugin indent on
 NeoBundleCheck
