@@ -32,9 +32,13 @@
 !yellow
 *color3:  #d9c964
 *color11: #d9cf8f
-!blue
+!!blue
+!*color4:  #0390c4
+!*color12: #3d84cf
+!blue 
 *color4:  #0390c4
-*color12: #3d84cf
+!*color4:  #64a2d9
+*color12: #8f99d9
 !magenta
 *color5:  #9a64d9
 *color13: #b08fd9
