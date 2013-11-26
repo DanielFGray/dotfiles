@@ -40,7 +40,7 @@ alias ls="ls -Fh --color --group-directories-first "
 alias l="ls -lgo"
 alias la="l -A"
 alias cdu="cdu -is -d h "
-alias historygrep="history | grep -v 'history' | grep -E "
+alias historygrep="history | grep -v 'history' | grep "
 
 wget() { man curl ;}
 cd() { builtin cd $1 && ls $2 ;}

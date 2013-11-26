@@ -4,10 +4,15 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', { 'build' : { 'unix' : 'make -f make_unix.mak' }}
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neosnippet'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'Raimondi/delimitMate'
+NeoBundle 'othree/xml.vim'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
+NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-repeat'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'mhinz/vim-tmuxify'
 NeoBundle 'tristen/vim-sparkup'
@@ -83,6 +88,10 @@ endif
 set undolevels=1000
 
 "" auto completion
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+inoremap <expr><BS>      neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
 autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
@@ -93,8 +102,28 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#auto_completion_start_length = 3
+let g:neocomplete#sources#dictionary#dictionaries = {  'default' : '' }
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
+endif
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+
+"" snippets
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+if has('conceal')
+  set conceallevel=2 concealcursor=i
 endif
 
 "" unite.vim settings
