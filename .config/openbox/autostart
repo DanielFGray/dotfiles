@@ -29,10 +29,9 @@ hsetroot -solid "#2E3436" &
 ## 3. sleep - give compositor time to start
 ## 4. tint2 panel
 (\
-nitrogen --restore && \
-cb-compositor --start && \
-sleep 2s && \
-(xfce4-panel || tint2) \
+nitrogen --restore &
+compton --config ~/.compton.conf &
+sleep 2s && (xfce4-panel || tint2) &
 ) &
 
 ## Volume control for systray
