@@ -5,7 +5,7 @@ DELAY=10
 
 # Sound notification to let one know when recording is about to start (and ends)
 beep() {
-    paplay /home/dan/downloads/Ping-da-ding-ding-ding.ogg &
+    paplay $HOME/downloads/Ping-da-ding-ding-ding.ogg &
 }
 
 # Duration and output file
@@ -23,7 +23,7 @@ read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
 
 echo Delaying $DELAY seconds. After that, byzanz will start
 for (( i=$DELAY; i>0; --i )) ; do
-    echo $i
+    echo -n "$i.. "
     sleep 1
 done
 
