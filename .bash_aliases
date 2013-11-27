@@ -137,20 +137,4 @@ simpleHTTP() {
 
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
-whichRelease() {
-	dpkg -l |
-	awk '/^.i/ {print $2}' |
-	xargs apt-cache policy |
-	awk '/^[a-z0-9.\-]+:/ {pkg=$1}; /\*\*\*/ {OFS="\t"; ver=$2; getline; print pkg,ver,$2,$3}'
-}
-
-upgradeRelease() {
-	#apt-get install $(
-		whichRelease |
-		grep -v 'wheezy|\/var\/lib\/dpkg\/status' |
-		awk '{$2="";$3=""; print $0}' |
-		sed 's|/main||;s|:|/|;s|   ||'
-	#)
-}
-
 # vim:ft=sh:
