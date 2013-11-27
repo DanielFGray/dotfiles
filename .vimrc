@@ -66,8 +66,6 @@ set t_Co=16
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
-set ofu=syntaxcomplete#Complete
-set tags+=~/.vim/tags/gtk+.tags
 set cryptmethod=blowfish
 colorscheme noctu
 
@@ -90,10 +88,8 @@ endif
 set undolevels=1000
 
 "" auto completion
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-inoremap <expr><BS>      neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
+set ofu=syntaxcomplete#Complete
+set tags+=~/.vim/tags/gtk+.tags
 autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
@@ -112,7 +108,10 @@ if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+inoremap <expr><BS>      neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "" snippets
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
