@@ -4,6 +4,8 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(vi-mode git git-extras zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
+[ -f $HOME/.bash_aliases ] && source $HOME/.bash_aliases
+
 alias -s png=qiv
 alias -s jpg=qiv
 alias -s gif=qiv
