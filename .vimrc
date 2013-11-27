@@ -17,6 +17,7 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'mhinz/vim-tmuxify'
 NeoBundle 'tristen/vim-sparkup'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'edkolev/tmuxline.vim'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'sheerun/vim-polyglot'
@@ -194,11 +195,19 @@ nnoremap <leader>gu <Esc>:Git pull<CR>
 
 "" status line
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'bubblegum'
+let g:airline_theme = 'ubaryd'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
+let g:tmuxline_preset = {
+    \'a'       : '#S',
+    \'b'       : ['#I:#P','#F'],
+    \'c'       : ['#T',''],
+    \'win'     : ['#I','#W'],
+    \'cwin'    : ['#I','#W'],
+    \'y'       : '#(uptime | sed -e "s/.*://g; s/,//g")',
+    \'options' : {'status-justify' : 'right'}}
 
 if has("gui_running")
 	set background=dark
@@ -210,6 +219,12 @@ if has("gui_running")
 	set guioptions-=T
 	set guioptions-=m
 endif
+
+augroup Tmux "{{{2
+	au!
+	autocmd VimEnter,BufNewFile,BufReadPost * call system('tmux rename-window "vim - ' . split(substitute(getcwd(), $HOME, '~', ''), '/')[-1] . '"')
+	autocmd VimLeave * call system('tmux rename-window ' . split(substitute(getcwd(), $HOME, '~', ''), '/')[-1])
+augroup END
 
 autocmd! bufwritepost ~/.vimrc          source ~/.vimrc
 autocmd! bufwritepost ~/dotfiles/.vimrc source ~/.vimrc
