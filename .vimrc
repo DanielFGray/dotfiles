@@ -67,6 +67,7 @@ set ttimeoutlen=25
 set background=dark
 set ofu=syntaxcomplete#Complete
 set tags+=~/.vim/tags/gtk+.tags
+set cryptmethod=blowfish
 colorscheme noctu
 
 ca w!! w !sudo tee >/dev/null "%"
