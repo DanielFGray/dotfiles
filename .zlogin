@@ -3,7 +3,7 @@ if [ "$SSH_CONNECTION" = "" ]; then
 		if [ -f /etc/debian_version ]; then
 			exec xinit awesome &> .xsession.log
 		else
-			startx &> .xsession.log &
+			exec startx &> .xsession.log
 		fi
 	fi
 else

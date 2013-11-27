@@ -23,5 +23,5 @@ fi
 if [ -f /etc/debian_version ]; then
 	exec ck-launch-session dbus-launch $1
 elif [ -f /etc/arch-release ]; then
-	exec dbus-launch awesome -c $HOME/.config/awesome/35.lua
+	exec dbus-launch awesome
 fi
