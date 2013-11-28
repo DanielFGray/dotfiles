@@ -8,12 +8,14 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'othree/xml.vim'
+NeoBundle 'marijnh/tern_for_vim'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'mhinz/vim-startify'
+NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'mhinz/vim-tmuxify'
 NeoBundle 'tristen/vim-sparkup'
 NeoBundle 'bling/vim-airline'
@@ -193,7 +195,7 @@ nnoremap <leader>gu <Esc>:Git pull<CR>
 
 "" status line
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'ubaryd'
+let g:airline_theme = 'lucius'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
