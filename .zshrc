@@ -1,6 +1,7 @@
 ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
+DEFAULT_USER="dan"
 plugins=(vi-mode git git-extras zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
