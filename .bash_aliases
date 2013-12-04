@@ -6,19 +6,16 @@ export EDITOR="vim"
 if [ -f /etc/debian_version ]; then
 	PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
 	[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
-	alias apt-get="sudo apt-get "
-	alias dpkg="sudo dpkg "
-	alias canhaz="apt-get install "
-	alias updupg="apt-get update; apt-get upgrade"
+	alias canhaz="sudo apt-get install "
+	alias updupg="sudo apt-get update; sudo apt-get dist-upgrade"
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
 	pkgrm() { sudo apt-get purge $* && sudo apt-get autoremove ;}
 	pkgsearch() { apt-cache search $* | sort | less ;}
 elif [ -f /etc/arch-release ]; then
 	[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
-	alias pacman="sudo pacman "
-	alias canhaz="pacman -S "
-	alias updupg="pacman -Syu "
-	alias pkgrm="pacman -Rsu "
+	alias canhaz="sudo yaourt -S "
+	alias updupg="sudo yaourt -Syu "
+	alias pkgrm="sudo pacman -Rsu "
 	pkgsearch() { unbuffer yaourt -Ss $* | less ;}
 elif [ -f /etc/redhat-release ]; then
 	alias yum="sudo yum "
