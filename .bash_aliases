@@ -52,7 +52,7 @@ soupplay() {
 	grep -i "$*" | sort | sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|')
 }
 
-sprunge() { curl -sF 'sprunge=<-' http://sprunge.us ;}
+sprunge() { \curl -sF 'sprunge=<-' http://sprunge.us ;}
 
 pgrep() { ps aux | grep $1 | grep -v grep ;}
 
