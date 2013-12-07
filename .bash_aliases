@@ -13,8 +13,8 @@ if [ -f /etc/debian_version ]; then
 	pkgsearch() { apt-cache search $* | sort | less ;}
 elif [ -f /etc/arch-release ]; then
 	[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
-	alias canhaz="sudo yaourt -S "
-	alias updupg="sudo yaourt -Syu "
+	alias canhaz="yaourt -S "
+	alias updupg="yaourt -Syu "
 	alias pkgrm="sudo pacman -Rsu "
 	pkgsearch() { unbuffer yaourt -Ss $* | less ;}
 elif [ -f /etc/redhat-release ]; then
