@@ -107,25 +107,38 @@ extract() {
 
 curltar() {
 	case $1 in
-		*.tar.bz2)   curl -kL $1 | tar xvjf   -  ;;
-		*.tar.gz)    curl -kL $1 | tar xvzf   -  ;;
-		*.bz2)       curl -kL $1 | bunzip2    -  ;;
-		*.rar)       curl -kL $1 | unrar x    -  ;;
-		*.gz)        curl -kL $1 | gunzip     -  ;;
-		*.tar)       curl -kL $1 | tar xvf    -  ;;
-		*.tbz2)      curl -kL $1 | tar xvjf   -  ;;
-		*.tgz)       curl -kL $1 | tar xvzf   -  ;;
-		*.zip)       curl -kL $1 | unzip      -  ;;
-		*.Z)         curl -kL $1 | uncompress -  ;;
-		*.7z)        curl -kL $1 | 7z x       -  ;;
-		*)           curl -kLO $1
+		*.tar.bz2)   \curl -kL $1 | tar xvjf   -  ;;
+		*.tar.gz)    \curl -kL $1 | tar xvzf   -  ;;
+		*.bz2)       \curl -kL $1 | bunzip2    -  ;;
+		*.rar)       \curl -kL $1 | unrar x    -  ;;
+		*.gz)        \curl -kL $1 | gunzip     -  ;;
+		*.tar)       \curl -kL $1 | tar xvf    -  ;;
+		*.tbz2)      \curl -kL $1 | tar xvjf   -  ;;
+		*.tgz)       \curl -kL $1 | tar xvzf   -  ;;
+		*.zip)       \curl -kL $1 | unzip      -  ;;
+		*.Z)         \curl -kL $1 | uncompress -  ;;
+		*.7z)        \curl -kL $1 | 7z x       -  ;;
+		*)           \curl -kLO $1
 	esac
 }
 
 byzanz() {
-	local date=`date '+%F-%s'`
-	byzanz-record "$@" ~/images/screenshots/${date}.gif &&
-	mirage ~/images/screenshots/${date}.gif
+	local date=$(date '+%F-%s')
+	local file=~/images/screenshots/${date}.gif
+	byzanz-record "$@" ${file} &&
+	mirage $file > /dev/null
+	if [ -x "$(which pomf)" ]; then
+		while true; do
+			printf 'upload to pomf?'
+			read upload
+			case $upload in
+				[Yy]* )
+					pomf "$file"
+					break ;;
+				*) break ;;
+			esac
+		done
+	fi
 }
 
 simpleHTTP() {
