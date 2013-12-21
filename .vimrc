@@ -8,7 +8,7 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'othree/xml.vim'
-NeoBundle 'marijnh/tern_for_vim'
+NeoBundle 'junegunn/vim-easy-align'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
@@ -68,6 +68,7 @@ set shortmess+=I
 set ttimeoutlen=25
 set background=dark
 set cryptmethod=blowfish
+set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
 colorscheme noctu
 
 ca w!! w !sudo tee >/dev/null "%"
