@@ -62,13 +62,6 @@ newImage() {
 	qiv $2
 }
 
-importss() {
-	import $1 &&
-	convert -trim $1 $1 &&
-	optipng $1 &&
-	qiv $1
-}
-
 burnusb() {
 	sudo dd if=$1 of=$2 bs=4M conv=sync
 	sync
