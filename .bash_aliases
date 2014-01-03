@@ -49,7 +49,9 @@ rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
 soupget() { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv ;}
 soupplay() {
 	mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' |
-	grep -i "$*" | sort | sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|')
+		grep -i "$*" |
+		sort |
+		sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|' )
 }
 
 sprunge() { \curl -sF 'sprunge=<-' http://sprunge.us ;}
@@ -75,6 +77,16 @@ changeroot() {
 	sudo mount -o bind /dev $1/dev
 	sudo mount -t devpts pts $1/dev/pts/
 	sudo chroot $1/ /bin/bash
+	while true; do
+		printf "unmount $1? "
+		read unmount
+		case $unmount in
+			[Yy]* )
+				sudo umount -l $1/
+				break ;;
+			*) break ;;
+		esac
+	done
 }
 
 extract() {
@@ -119,10 +131,10 @@ byzanz() {
 	local date=$(date '+%F-%s')
 	local file=~/images/screenshots/${date}.gif
 	byzanz-record "$@" ${file} &&
-	mirage $file > /dev/null
+	mirage $file 2> /dev/null
 	if [ -x "$(which pomf)" ]; then
 		while true; do
-			printf 'upload to pomf?'
+			printf 'upload to pomf? '
 			read upload
 			case $upload in
 				[Yy]* )
