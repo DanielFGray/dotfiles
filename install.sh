@@ -1,11 +1,21 @@
 #!/bin/bash
 
 while true; do
-	read -e -p 'sudo apt-get install ' -i "$(tr '\n' ' ' < ~/dotfiles/packages)" install
+	read -e -p 'packages to install: ' -i "$(tr '\n' ' ' < ~/dotfiles/packages)" install
 	case $install in
 	'' ) break ;;
 	* )
-		sudo apt-get install $install
+		if [ -f /etc/debian_version ]; then
+			sudo apt-get install $install
+		elif [ -f /etc/arch-release ]; then
+			sudo pacman -S $install
+		elif [ -f /etc/redhat-release ]; then
+			sudo yum $install
+		elif [ -f /etc/gentoo-release ]; then
+			sudo emerge -avl $install
+		else
+			echo "I don't know how to install"
+		fi
 		break ;;
 	esac
 done
