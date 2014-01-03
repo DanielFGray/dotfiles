@@ -38,58 +38,57 @@ delete-in() {
 		LBUFFER="$LBUFFER[1,$LSEARCH]"
 		return
 	elif [ "$CHAR" = "(" ] || [ "$CHAR" = ")" ] || [ "$CHAR" = "b" ]; then
-			LCHAR="("
-			RCHAR=")"
+		LCHAR="("
+		RCHAR=")"
 	elif [ "$CHAR" = "[" ] || [ "$CHAR" = "]" ]; then
-			LCHAR="["
-			RCHAR="]"
+		LCHAR="["
+		RCHAR="]"
 	elif [ $CHAR = "{" ] || [ $CHAR = "}" ] || [ "$CHAR" = "B" ]; then
-			LCHAR="{"
-			RCHAR="}"
+		LCHAR="{"
+		RCHAR="}"
 	else
-			LCHAR="$CHAR"
-			RCHAR="$CHAR"
+		LCHAR="$CHAR"
+		RCHAR="$CHAR"
 	fi
 	LSEARCH=${#LBUFFER}
 	while [ "$LSEARCH" -gt 0 ] && [ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]; do
-			LSEARCH=$(expr $LSEARCH - 1)
+		LSEARCH=$(expr $LSEARCH - 1)
 	done
 	if [ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]; then
-			return
+		return
 	fi
 	RSEARCH=0
 	while [ "$RSEARCH" -lt $(expr ${#RBUFFER} + 1 ) ] && [ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]; do
-			RSEARCH=$(expr $RSEARCH + 1)
+		RSEARCH=$(expr $RSEARCH + 1)
 	done
 	if [ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]; then
-			return
+		return
 	fi
 	RBUFFER="$RBUFFER[$RSEARCH,${#RBUFFER}]"
 	LBUFFER="$LBUFFER[1,$LSEARCH]"
 }
 zle -N delete-in
 
-
 change-in() {
-        zle delete-in
-        zle vi-insert
+	zle delete-in
+	zle vi-insert
 }
 zle -N change-in
 
 delete-around() {
-        zle delete-in
-        zle vi-backward-char
-        zle vi-delete-char
-        zle vi-delete-char
+	zle delete-in
+	zle vi-backward-char
+	zle vi-delete-char
+	zle vi-delete-char
 }
 zle -N delete-around
 
 change-around() {
-        zle delete-in
-        zle vi-backward-char
-        zle vi-delete-char
-        zle vi-delete-char
-        zle vi-insert
+	zle delete-in
+	zle vi-backward-char
+	zle vi-delete-char
+	zle vi-delete-char
+	zle vi-insert
 }
 zle -N change-around
 
