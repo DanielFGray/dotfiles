@@ -5,7 +5,7 @@ DELAY=10
 
 # Sound notification to let one know when recording is about to start (and ends)
 beep() {
-    paplay $HOME/downloads/Ping-da-ding-ding-ding.ogg &
+    paplay $HOME/downloads/ding.ogg &
 }
 
 # Duration and output file
