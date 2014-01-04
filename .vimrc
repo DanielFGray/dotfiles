@@ -196,7 +196,7 @@ nnoremap <leader>gu <Esc>:Git pull<CR>
 
 "" status line
 let g:airline_enable_branch = '1'
-let g:airline_theme = 'lucius'
+let g:airline_theme = 'bubblegum'
 let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
