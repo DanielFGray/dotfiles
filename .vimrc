@@ -196,6 +196,8 @@ nnoremap <leader>gl <Esc>:Glog<CR>
 nnoremap <leader>gp <Esc>:Git push<CR>
 nnoremap <leader>gu <Esc>:Git pull<CR>
 
+nmap <Leader>a <Plug>(EasyAlign)
+
 "" status line
 let g:airline_enable_branch = '1'
 let g:airline_theme = 'bubblegum'
