@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+if ! command -v byzanz-record > /dev/null; then
+	echo 'requires byzanz-record'
+	exit 1
+fi
+
+help() {
+	echo 'Usage:
+  -f [file name]
+  -w select particular window
+  -d duration
+  -D delay
+  -h this help
+  -s draw selectable region
+  -- pass additional options to byzanz-record (ie -c for cursor)'
+	exit
+}
+
+file="$HOME/images/screenshots/$(date '+%F-%s').gif"
+window=false
+region=false
+duration='10'
+delay=0
+
+OPTERR=0
+while getopts "hf:wd:D:s" opt; do
+	case "$opt" in
+		f) file=$OPTARG ;;
+		w) window=true;region=false  ;;
+		s) window=false;region=true  ;;
+		d) duration=$OPTARG  ;;
+		D) delay=$OPTARG  ;;
+		h) help  ;;
+		'?') echo >&2 RUH ROH; exit 1;;
+	esac
+done
+shift $((OPTIND-1))
+
+delay() {
+	for (( i=delay; i>0; --i )) ; do
+		echo -n "$i.. "
+		sleep 1
+	done
+	echo 'recording'
+}
+
+
+if [ $window == true ]; then
+	XWININFO=$(xwininfo)
+	read X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
+	read Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
+	read W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
+	read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
+	echo "saving to $file"
+	delay
+	byzanz-record --duration="$duration" --x="$X" --y="$Y" --width="$W" --height="$H" "$@" "$file"
+elif [ $region == true ]; then
+	if command -v xrectsel > /dev/null; then
+		arguments=$(xrectsel "--x=%x --y=%y --width=%w --height=%h")
+		echo "saving to $file"
+		delay
+		byzanz-record --duration="$duration" "$arguments" "$@" "$file"
+	else
+		echo >&2 'xrectsel required for -s'
+		echo >&2 '  https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c'
+	fi
+else
+	echo "saving to $file"
+	delay
+	byzanz-record --duration="$duration" "$@" "$file"
+fi
+
+#TODO: changeable image viewer
+[ -f "$file" ] && mirage "$file" 2> /dev/null
+
+if [ -f "$file" ] && command -v pomf > /dev/null; then
+	while true; do
+		printf 'upload to pomf? '
+		read upload
+		case $upload in
+			[Yy]* )
+				pomf "${file}"
+				break ;;
+			*) break ;;
+		esac
+	done
+fi
