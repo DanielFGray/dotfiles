@@ -36,7 +36,7 @@ alias grep="grep --color=auto -P "
 alias ls="ls -Fh --color --group-directories-first "
 alias l="ls -lgo "
 alias la="l -A "
-alias cdu="cdu -is -d h "
+alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
 
 wget() { man curl ;}
