@@ -46,14 +46,6 @@ cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 tarpipe() { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" ;}
 rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
 
-soupget() { ssh dan@ssh.soupwhale.com "tar czf - $1" | pv --wait | tar xzv ;}
-soupplay() {
-	mplayer -playlist <(ssh dan@ssh.soupwhale.com 'find ~/downloads/ -iname "*.mp3"' |
-		grep -i "$*" |
-		sort |
-		sed 's|^/home/dan/downloads|http://dan.soupwhale.com/whatisyourquest|' )
-}
-
 sprunge() { \curl -sF 'sprunge=<-' http://sprunge.us ;}
 
 pgrep() { ps aux | grep $1 | grep -v grep ;}
