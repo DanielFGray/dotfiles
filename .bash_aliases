@@ -120,25 +120,6 @@ curltar() {
 	esac
 }
 
-byzanz() {
-	local date=$(date '+%F-%s')
-	local file=~/images/screenshots/${date}.gif
-	byzanz-record "$@" ${file} &&
-	mirage $file 2> /dev/null
-	if [ -x "$(which pomf)" ]; then
-		while true; do
-			printf 'upload to pomf? '
-			read upload
-			case $upload in
-				[Yy]* )
-					pomf "$file"
-					break ;;
-				*) break ;;
-			esac
-		done
-	fi
-}
-
 simpleHTTP() {
 	python -c "import SimpleHTTPServer, SocketServer, BaseHTTPServer; SimpleHTTPServer.test(SimpleHTTPServer.SimpleHTTPRequestHandler, type('Server', (BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn, object), {}))" 9090
 }
