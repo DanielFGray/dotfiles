@@ -70,6 +70,9 @@ set cryptmethod=blowfish
 set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
 colorscheme noctu
 
+noremap ; :
+noremap : ;
+
 ca w!! w !sudo tee >/dev/null "%"
 nnoremap <F6> :set paste!<CR>
 
