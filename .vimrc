@@ -47,7 +47,7 @@ set wildmenu
 set wildcharm=<C-z>
 set switchbuf=useopen,usetab
 set autoindent smartindent
-set smartindent smarttab
+set smarttab
 set tabstop=4 softtabstop=4 shiftwidth=4
 set foldmethod=marker
 set ruler
