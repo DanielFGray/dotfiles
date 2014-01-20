@@ -228,3 +228,14 @@ augroup END
 
 autocmd! bufwritepost ~/.vimrc          source ~/.vimrc
 autocmd! bufwritepost ~/dotfiles/.vimrc source ~/.vimrc
+
+function! Dotfiles()
+	cd ~/dotfiles
+	edit .zshrc
+	vsplit .bash_aliases
+	tabnew .vimrc
+	vert help quickref
+	tabnew local.tmux.conf
+	vert diffsplit remote.tmux.conf
+	tabnew .config/awesome/rc.lua
+endfunction
