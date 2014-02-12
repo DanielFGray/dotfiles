@@ -181,8 +181,13 @@ let g:syntastic_warning_symbol = '∆'
 let g:syntastic_style_warning_symbol = '≈'
 
 "" tmux integration
-let g:tmuxify_pane_split = '-v'
-let g:tmuxify_pane_size = '10'
+let g:tmuxify_custom_command = 'tmux split-window -d -l 10'
+let g:tmuxify_run = {
+	\ 'lilypond': ' for file in %; do; lilypond $file; mupdf "${file[@]/%ly/pdf}"; done',
+	\ 'ruby': ' ruby %',
+	\ 'python': ' python %',
+	\ 'javascript': ' nodejs %'
+\}
 
 " gundo settings
 nnoremap <F5> :GundoToggle<CR>
