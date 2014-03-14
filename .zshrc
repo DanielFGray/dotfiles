@@ -7,6 +7,8 @@ source $ZSH/oh-my-zsh.sh
 
 [ -f $HOME/.bash_aliases ] && source $HOME/.bash_aliases
 
+autoload -U zmv
+
 alias -s png=qiv
 alias -s jpg=qiv
 alias -s gif=qiv
@@ -16,15 +18,22 @@ alias -s wmv=mplayer
 alias -s mpg=mplayer
 alias -s pdf=apvlv
 
+alias zcp='noglob zmv -C '
+alias zln='noglob zmv -L '
+alias zmv='noglob zmv '
+
+alias -g L='|less'
+alias -g DN='>/dev/null'
+
 bindkey -v
-bindkey "^[[A"  history-search-backward
-bindkey "^[[B"  history-search-forward
-bindkey "^[[5~" up-line-or-history
-bindkey "^[[6~" down-line-or-history
-bindkey "^[[7~" beginning-of-line
-bindkey "^[[8~" end-of-line
-bindkey "^[[1~" beginning-of-line
-bindkey "^[[4~" end-of-line
+bindkey '^[[A'  history-search-backward
+bindkey '^[[B'  history-search-forward
+bindkey '^[[5~' up-line-or-history
+bindkey '^[[6~' down-line-or-history
+bindkey '^[[7~' beginning-of-line
+bindkey '^[[8~' end-of-line
+bindkey '^[[1~' beginning-of-line
+bindkey '^[[4~' end-of-line
 
 delete-in() {
 	local CHAR LCHAR RCHAR LSEARCH RSEARCH COUNT
@@ -92,9 +101,20 @@ change-around() {
 }
 zle -N change-around
 
-bindkey -M vicmd "ca" change-around
-bindkey -M vicmd "ci" change-in
-bindkey -M vicmd "cc" vi-change-whole-line
-bindkey -M vicmd "da" delete-around
-bindkey -M vicmd "di" delete-in
-bindkey -M vicmd "dd" kill-whole-line
+bindkey -M vicmd 'ca' change-around
+bindkey -M vicmd 'ci' change-in
+bindkey -M vicmd 'cc' vi-change-whole-line
+bindkey -M vicmd 'da' delete-around
+bindkey -M vicmd 'di' delete-in
+bindkey -M vicmd 'dd' kill-whole-line
+
+fancy-ctrl-z () {
+	if [[ $#BUFFER -eq 0 ]]; then
+		bg
+		zle redisplay
+	else
+		zle push-input
+	fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
