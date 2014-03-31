@@ -1,5 +1,3 @@
-[ -x $(which fortune) ] && fortune -as
-
 export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
 
@@ -39,8 +37,8 @@ alias la="l -A "
 alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
 
-wget() { man curl ;}
 cd() { builtin cd $1 && ls $2 ;}
+wget() { man curl ;}
 cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 
 tarpipe() { tar czf - $2 | pv | ssh $1 "tar xzvf - $3" ;}
@@ -130,5 +128,7 @@ ding() {
 	[ -n $1 ] && notify-send "$@"
 	paplay ~/downloads/ding.ogg &> /dev/null
 }
+
+[ -x $(which fortune) ] && fortune -as
 
 # vim:ft=sh:
