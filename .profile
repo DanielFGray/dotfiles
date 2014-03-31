@@ -18,8 +18,8 @@ fi
 
 if [ -d "/sbin" ] ; then
     PATH="/sbin:$PATH"
-
 fi
+
 if [ -d "/usr/sbin" ] ; then
     PATH="/usr/sbin:$PATH"
 fi
