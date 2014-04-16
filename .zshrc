@@ -36,26 +36,37 @@ bindkey '^[[8~' end-of-line
 bindkey '^[[1~' beginning-of-line
 bindkey '^[[4~' end-of-line
 
+fancy-ctrl-z () {
+	if [[ "$#BUFFER" -eq 0 ]]; then
+		bg
+		zle redisplay
+	else
+		zle push-input
+	fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
 delete-in() {
 	local CHAR LCHAR RCHAR LSEARCH RSEARCH COUNT
 	read -k CHAR
-	if [ "$CHAR" = "w" ]; then
+	if [ "$CHAR" = 'w' ]; then
 		zle vi-backward-word
 		LSEARCH=$CURSOR
 		zle vi-forward-word
 		RSEARCH=$CURSOR
-		RBUFFER="$BUFFER[$RSEARCH+1,${#BUFFER}]"
-		LBUFFER="$LBUFFER[1,$LSEARCH]"
+		RBUFFER="$BUFFER[$RSEARCH + 1, ${#BUFFER}]"
+		LBUFFER="$LBUFFER[1, $LSEARCH]"
 		return
-	elif [ "$CHAR" = "(" ] || [ "$CHAR" = ")" ] || [ "$CHAR" = "b" ]; then
+	elif [ "$CHAR" = '(' ] || [ "$CHAR" = ')' ] || [ "$CHAR" = 'b' ]; then
 		LCHAR="("
 		RCHAR=")"
-	elif [ "$CHAR" = "[" ] || [ "$CHAR" = "]" ]; then
+	elif [ "$CHAR" = '[' ] || [ "$CHAR" = ']' ]; then
 		LCHAR="["
 		RCHAR="]"
-	elif [ $CHAR = "{" ] || [ $CHAR = "}" ] || [ "$CHAR" = "B" ]; then
-		LCHAR="{"
-		RCHAR="}"
+	elif [ $CHAR = '{' ] || [ $CHAR = '}' ] || [ "$CHAR" = 'B' ]; then
+		LCHAR='{'
+		RCHAR='}'
 	else
 		LCHAR="$CHAR"
 		RCHAR="$CHAR"
@@ -74,8 +85,8 @@ delete-in() {
 	if [ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]; then
 		return
 	fi
-	RBUFFER="$RBUFFER[$RSEARCH,${#RBUFFER}]"
-	LBUFFER="$LBUFFER[1,$LSEARCH]"
+	RBUFFER="$RBUFFER[$RSEARCH, ${#RBUFFER}]"
+	LBUFFER="$LBUFFER[1, $LSEARCH]"
 }
 zle -N delete-in
 
@@ -108,14 +119,3 @@ bindkey -M vicmd 'cc' vi-change-whole-line
 bindkey -M vicmd 'da' delete-around
 bindkey -M vicmd 'di' delete-in
 bindkey -M vicmd 'dd' kill-whole-line
-
-fancy-ctrl-z () {
-	if [[ $#BUFFER -eq 0 ]]; then
-		bg
-		zle redisplay
-	else
-		zle push-input
-	fi
-}
-zle -N fancy-ctrl-z
-bindkey '^Z' fancy-ctrl-z

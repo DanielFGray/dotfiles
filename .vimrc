@@ -47,8 +47,7 @@ set splitright
 set wildmenu
 set wildcharm=<C-z>
 set switchbuf=useopen,usetab
-set autoindent smartindent
-set smarttab
+set autoindent smartindent smarttab
 set tabstop=4 softtabstop=4 shiftwidth=4
 set foldmethod=marker
 set ruler
@@ -184,9 +183,9 @@ let g:syntastic_style_warning_symbol = '≈'
 "" tmux integration
 let g:tmuxify_custom_command = 'tmux split-window -d -l 10'
 let g:tmuxify_run = {
-	\ 'lilypond': ' for file in %; do; lilypond $file; mupdf "${file[@]/%ly/pdf}"; done',
-	\ 'ruby': ' ruby %',
-	\ 'python': ' python %',
+	\ 'lilypond':   ' for file in %; do; lilypond $file; mupdf "${file[@]/%ly/pdf}"; done',
+	\ 'ruby':       ' ruby %',
+	\ 'python':     ' python %',
 	\ 'javascript': ' nodejs %'
 \}
 

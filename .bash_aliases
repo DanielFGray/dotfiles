@@ -74,6 +74,7 @@ changeroot() {
 		case $unmount in
 			[Yy]* )
 				sudo umount -l $1/
+				sudo chroot /
 				break ;;
 			*) break ;;
 		esac

@@ -7,10 +7,10 @@ while true; do
 	* )
 		if [ -f /etc/debian_version ]; then
 			sudo apt-get install $install
+		elif [ -f /etc/redhat-release ]; then
+			sudo yum install $install
 		elif [ -f /etc/arch-release ]; then
 			sudo pacman -S $install
-		elif [ -f /etc/redhat-release ]; then
-			sudo yum $install
 		elif [ -f /etc/gentoo-release ]; then
 			sudo emerge -avl $install
 		else
