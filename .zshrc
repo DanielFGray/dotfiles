@@ -9,15 +9,6 @@ source $ZSH/oh-my-zsh.sh
 
 autoload -U zmv
 
-alias -s png=qiv
-alias -s jpg=qiv
-alias -s gif=qiv
-alias -s mp3=mplayer
-alias -s avi=mplayer
-alias -s wmv=mplayer
-alias -s mpg=mplayer
-alias -s pdf=apvlv
-
 alias zcp='noglob zmv -C '
 alias zln='noglob zmv -L '
 alias zmv='noglob zmv '
