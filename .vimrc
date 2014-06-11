@@ -1,13 +1,26 @@
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#rc(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc', { 'build' : { 'unix' : 'make -f make_unix.mak' }}
-NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimproc',               {'build': {'unix': 'make -f make_unix.mak'}}
+NeoBundle 'Shougo/unite.vim',             {'name': 'unite.vim', 'depends': 'vimproc'}
+NeoBundleLazy 'thinca/vim-unite-history', {'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
+NeoBundleLazy 'Shougo/unite-help',        {'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
+NeoBundleLazy 'Shougo/unite-outline',     {'autoload': {'unite_sources': 'outline'}}
+NeoBundleLazy 'Shougo/unite-session',     {'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
+NeoBundleLazy 'Shougo/neomru.vim',        {'autoload': {'unite_sources': 'file_mru'}}
+NeoBundleLazy 'tsukkee/unite-tag',        {'autoload': {'unite_sources': ['tag', 'tag/file']}}
+NeoBundleFetch 'Shougo/neocomplcache.vim'
+
+NeoBundle 'Shougo/context_filetype.vim'
+NeoBundle 'Shougo/echodoc'
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'Shougo/vimfiler'
+NeoBundleLazy 'osyo-manga/unite-filetype'
+
 NeoBundle 'scrooloose/syntastic'
-NeoBundle 'Raimondi/delimitMate'
-NeoBundle 'othree/xml.vim'
+NeoBundle 'terryma/vim-expand-region'
 NeoBundle 'wellle/targets.vim'
 NeoBundle 'junegunn/vim-easy-align'
 NeoBundle 'tpope/vim-fugitive'
@@ -18,14 +31,25 @@ NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'mhinz/vim-tmuxify'
-NeoBundle 'tristen/vim-sparkup'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'marijnh/tern_for_vim'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'sheerun/vim-polyglot'
 NeoBundle 'noahfrederick/vim-noctu'
+
+NeoBundleLazy 'mattn/emmet-vim',        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
+NeoBundle 'Raimondi/delimitMate',       {'autoload': {'filetypes': ['html', 'xml']}}
+NeoBundleLazy 'othree/html5.vim',       {'autoload': {'filetypes': ['html']}}
+NeoBundleLazy 'groenewege/vim-less',    {'autoload': {'filetypes': ['less']}}
+NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload': {'filetypes': ['css', 'scss', 'sass']}}
+NeoBundleLazy 'digitaltoad/vim-jade',   {'autoload': {'filetypes': ['jade']}}
+
+NeoBundleLazy 'moll/vim-node',                          {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'jelera/vim-javascript-syntax',           {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'burnettk/vim-angular',                   {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
 syntax on
 filetype plugin indent on
 NeoBundleCheck
@@ -107,31 +131,33 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#auto_completion_start_length = 3
-let g:neocomplete#sources#dictionary#dictionaries = {  'default' : '' }
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+"" let g:neocomplete#sources#dictionary#dictionaries = {  'default' : '' }
+"" let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
+"" if !exists('g:neocomplete#sources#omni#input_patterns')
+""   let g:neocomplete#sources#omni#input_patterns = {}
+"" endif
+"" if !exists('g:neocomplete#keyword_patterns')
+""     let g:neocomplete#keyword_patterns = {}
+"" endif
+"" let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 inoremap <expr><BS>      neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "" snippets
+let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
+let g:neosnippet#enable_snipmate_compatibility=1
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
+\	"\<Plug>(neosnippet_expand_or_jump)"
+\	: pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+\	"\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 if has('conceal')
-  set conceallevel=2 concealcursor=i
+	set conceallevel=2 concealcursor=i
 endif
 
 "" unite.vim settings
@@ -140,7 +166,9 @@ let g:unite_prompt = '» '
 let g:unite_source_history_yank_enable = 1
 let g:unite_winheight = 10
 let g:unite_split_rule = 'botright'
-let g:unite_enable_start_insert = 1
+call unite#custom#profile('default', 'context', {
+\	'start_insert': 1
+\})
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#set_profile('files', 'smartcase', 1)
@@ -150,6 +178,9 @@ nnoremap <leader>uy :<C-u>Unite -buffer-name=yank    history/yank<cr>
 nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer  buffer<cr>
 nnoremap <leader>uf :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async<cr><c-u>
 nnoremap <leader>ue :<C-u>UniteWithBufferDir -buffer-name=files -prompt=%\  buffer file_mru bookmark file<cr>
+nnoremap <leader>uo :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
+nnoremap <leader>uh :<C-u>Unite -auto-resize -buffer-name=help help<cr>
+nnoremap <leader>ut :<C-u>Unite -auto-resize -buffer-name=tag tag tag/file<cr>
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
 	set grepformat=%f:%l:%C:%m
@@ -179,11 +210,12 @@ let g:syntastic_error_symbol = '✗'
 let g:syntastic_style_error_symbol = '✠'
 let g:syntastic_warning_symbol = '∆'
 let g:syntastic_style_warning_symbol = '≈'
+let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
 
 "" tmux integration
 let g:tmuxify_custom_command = 'tmux split-window -d -l 10'
 let g:tmuxify_run = {
-	\ 'lilypond':   ' for file in %; do; lilypond $file; mupdf "${file[@]/%ly/pdf}"; done',
+	\ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%ly/pdf}"; done',
 	\ 'ruby':       ' ruby %',
 	\ 'python':     ' python %',
 	\ 'javascript': ' nodejs %'
@@ -233,6 +265,7 @@ augroup END
 
 autocmd! bufwritepost ~/.vimrc          source ~/.vimrc
 autocmd! bufwritepost ~/dotfiles/.vimrc source ~/.vimrc
+autocmd FileType vim setlocal keywordprg=:help
 
 function! Dotfiles()
 	cd ~/dotfiles
