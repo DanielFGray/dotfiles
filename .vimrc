@@ -1,3 +1,4 @@
+"" {{{ bundles
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#rc(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
@@ -50,6 +51,8 @@ NeoBundleLazy 'marijnh/tern_for_vim',                   {'autoload': {'filetypes
 NeoBundleLazy 'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
+"" }}}
+
 syntax on
 filetype plugin indent on
 NeoBundleCheck
@@ -118,7 +121,7 @@ if exists("&directory")
 endif
 set undolevels=1000
 
-"" auto completion
+"" {{{ auto completion
 set ofu=syntaxcomplete#Complete
 set tags+=~/.vim/tags/gtk+.tags
 autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
@@ -144,8 +147,9 @@ inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 inoremap <expr><BS>      neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
+"" "}}}
 
-"" snippets
+"" {{{ snippets
 let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
 let g:neosnippet#enable_snipmate_compatibility=1
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -159,8 +163,9 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
 	set conceallevel=2 concealcursor=i
 endif
+"" }}}
 
-"" unite.vim settings
+"" {{{ unite.vim settings
 let g:unite_data_directory = '~/.vim/cache/unite'
 let g:unite_prompt = '» '
 let g:unite_source_history_yank_enable = 1
@@ -201,8 +206,9 @@ function! s:unite_settings()
 	imap <buffer> <esc> <Plug>(unite_exit)
 	nmap <buffer> <esc> <Plug>(unite_exit)
 endfunction
+"" }}}
 
-"" syntax chechking
+"" {{{ syntax chechking
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -211,8 +217,9 @@ let g:syntastic_style_error_symbol = '✠'
 let g:syntastic_warning_symbol = '∆'
 let g:syntastic_style_warning_symbol = '≈'
 let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+"" }}}
 
-"" tmux integration
+"" {{{ tmux integration
 let g:tmuxify_custom_command = 'tmux split-window -d -l 10'
 let g:tmuxify_run = {
 	\ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%ly/pdf}"; done',
@@ -220,14 +227,16 @@ let g:tmuxify_run = {
 	\ 'python':     ' python %',
 	\ 'javascript': ' nodejs %'
 \}
+"" }}}
 
-" gundo settings
+" {{{ gundo settings
 nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 let g:gundo_width = 60
 let g:gundo_preview_height = 40
+"" }}}
 
-" fugitive shortcuts
+" {{{ fugitive shortcuts
 nnoremap <leader>gs <Esc>:Gstatus<CR>
 nnoremap <leader>gd <Esc>:Gdiff<CR>
 nnoremap <leader>gc <Esc>:Gcommit<CR>
