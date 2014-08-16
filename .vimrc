@@ -102,6 +102,7 @@ colorscheme noctu
 
 noremap ; :
 noremap : ;
+nnoremap Y y$
 
 ca w!! w !sudo tee >/dev/null "%"
 nnoremap <F6> :set paste!<CR>
