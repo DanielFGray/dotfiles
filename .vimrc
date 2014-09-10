@@ -189,18 +189,16 @@ let g:unite_prompt = '» '
 let g:unite_source_history_yank_enable = 1
 let g:unite_winheight = 10
 let g:unite_split_rule = 'botright'
-call unite#custom#profile('default', 'context', {
-\	'start_insert': 1
-\})
+call unite#custom#profile('default', 'context', { 'start_insert': 1 })
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#set_profile('files', 'smartcase', 1)
-call unite#custom#source('line,outline','matchers','matcher_fuzzy')
+call unite#custom#source('line, outline', 'matchers', 'matcher_fuzzy')
 nnoremap <leader>ur :<C-u>Unite register<cr>
 nnoremap <leader>uy :<C-u>Unite -buffer-name=yank    history/yank<cr>
 nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer  buffer<cr>
-nnoremap <leader>uf :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async<cr><c-u>
-nnoremap <leader>ue :<C-u>UniteWithBufferDir -buffer-name=files -prompt=%\  buffer file_mru bookmark file<cr>
+nnoremap <leader>uf :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async<cr>
+nnoremap <leader>ue :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<cr>
 nnoremap <leader>uo :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
 nnoremap <leader>uh :<C-u>Unite -auto-resize -buffer-name=help help<cr>
 nnoremap <leader>ut :<C-u>Unite -auto-resize -buffer-name=tag tag tag/file<cr>
