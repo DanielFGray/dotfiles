@@ -2,14 +2,14 @@
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#rc(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc',               {'build': {'unix': 'make -f make_unix.mak'}}
-NeoBundle 'Shougo/unite.vim',             {'name': 'unite.vim', 'depends': 'vimproc'}
-NeoBundleLazy 'thinca/vim-unite-history', {'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
-NeoBundleLazy 'Shougo/unite-help',        {'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
-NeoBundleLazy 'Shougo/unite-outline',     {'autoload': {'unite_sources': 'outline'}}
-NeoBundleLazy 'Shougo/unite-session',     {'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
-NeoBundleLazy 'Shougo/neomru.vim',        {'autoload': {'unite_sources': 'file_mru'}}
-NeoBundleLazy 'tsukkee/unite-tag',        {'autoload': {'unite_sources': ['tag', 'tag/file']}}
+NeoBundle 'Shougo/vimproc',               { 'build': {'unix': 'make -f make_unix.mak'}}
+NeoBundle 'Shougo/unite.vim',             { 'name': 'unite.vim', 'depends': 'vimproc'}
+NeoBundleLazy 'thinca/vim-unite-history', { 'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
+NeoBundleLazy 'Shougo/unite-help',        { 'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
+NeoBundleLazy 'Shougo/unite-outline',     { 'autoload': {'unite_sources': 'outline'}}
+NeoBundleLazy 'Shougo/unite-session',     { 'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
+NeoBundleLazy 'Shougo/neomru.vim',        { 'autoload': {'unite_sources': 'file_mru'}}
+NeoBundleLazy 'tsukkee/unite-tag',        { 'autoload': {'unite_sources': ['tag', 'tag/file']}}
 NeoBundleFetch 'Shougo/neocomplcache.vim'
 
 NeoBundle 'Shougo/context_filetype.vim'
@@ -18,7 +18,7 @@ NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/vimfiler'
-NeoBundleLazy 'osyo-manga/unite-filetype'
+NeoBundle 'osyo-manga/unite-filetype'
 
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'terryma/vim-expand-region'
@@ -35,27 +35,31 @@ NeoBundle 'mhinz/vim-tmuxify'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'noahfrederick/vim-noctu'
+NeoBundle 'Shougo/vimshell.vim'
+NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
+NeoBundle 'jaxbot/browserlink.vim'
 
-NeoBundleLazy 'mattn/emmet-vim',        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
-NeoBundle 'Raimondi/delimitMate',       {'autoload': {'filetypes': ['html', 'xml']}}
-NeoBundleLazy 'othree/html5.vim',       {'autoload': {'filetypes': ['html']}}
-NeoBundleLazy 'groenewege/vim-less',    {'autoload': {'filetypes': ['less']}}
-NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload': {'filetypes': ['css', 'scss', 'sass']}}
-NeoBundleLazy 'digitaltoad/vim-jade',   {'autoload': {'filetypes': ['jade']}}
+NeoBundleLazy 'mattn/emmet-vim',        { 'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
+NeoBundle 'Raimondi/delimitMate',       { 'autoload': {'filetypes': ['html', 'xml']}}
+NeoBundleLazy 'othree/html5.vim',       { 'autoload': {'filetypes': ['html']}}
+NeoBundleLazy 'groenewege/vim-less',    { 'autoload': {'filetypes': ['less']}}
+NeoBundleLazy 'hail2u/vim-css3-syntax', { 'autoload': {'filetypes': ['css', 'scss', 'sass']}}
+NeoBundleLazy 'digitaltoad/vim-jade',   { 'autoload': {'filetypes': ['jade']}}
+NeoBundleLazy 'moll/vim-node',          { 'autoload': {'filetypes': ['javascript']}}
 
-NeoBundleLazy 'moll/vim-node',                          {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'jelera/vim-javascript-syntax',           {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'burnettk/vim-angular',                   {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'jelera/vim-javascript-syntax',           { 'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'othree/javascript-libraries-syntax.vim', { 'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'burnettk/vim-angular',                   { 'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'marijnh/tern_for_vim',                   { 'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'pangloss/vim-javascript',                { 'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'sheerun/vim-polyglot',                   { 'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'walm/jshint.vim',                        { 'autoload': {'filetypes': ['javascript']}}
 "" }}}
 
 syntax on
 filetype plugin indent on
 NeoBundleCheck
+
 
 "" TODO: more comments
 set number
