@@ -288,9 +288,9 @@ augroup Tmux
 	autocmd VimLeave * call system('tmux rename-window ' . split(substitute(getcwd(), $HOME, '~', ''), '/')[-1])
 augroup END
 
-autocmd! bufwritepost ~/.vimrc          source ~/.vimrc
-autocmd! bufwritepost ~/dotfiles/.vimrc source ~/.vimrc
+autocmd! bufwritepost ~/.vimrc,~/dotfiles/.vimrc source ~/.vimrc | AirlineRefresh
 autocmd FileType vim setlocal keywordprg=:help
+au VimResized * :wincmd =
 
 function! Dotfiles()
 	cd ~/dotfiles
