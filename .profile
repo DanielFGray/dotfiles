@@ -16,5 +16,13 @@ if [ -d "$HOME/.local/bin" ] ; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
+# if [ -s "$HOME/.rvm/scripts/rvm" ] ; then
+# 	source "$HOME/.rvm/scripts/rvm"
+# fi
+
+if [ -d "$HOME/.rvm/bin" ] ; then
+	PATH="$PATH:$HOME/.rvm/bin"
+fi
+
 PATH="/usr/games:$PATH"
 PATH="/usr/local/sbin:$PATH"
