@@ -37,7 +37,7 @@ alias la="l -A "
 alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
 
-cd() { builtin cd $1 && ls $2 ;}
+cd() { builtin cd "$1" && ls $2 ;}
 wget() { man curl ;}
 cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 
