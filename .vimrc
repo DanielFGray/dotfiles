@@ -102,14 +102,25 @@ set ttimeoutlen=25
 set background=dark
 set cryptmethod=blowfish
 set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
+set diffopt=vertical
 colorscheme noctu
 
 noremap ; :
 noremap : ;
 nnoremap Y y$
+nnoremap / /\v
+vnoremap / /\v
+nnoremap n nzzzv
+nnoremap N Nzzzv
+cnoremap 5s/ %smagic/
+cnoremap s/ smagic/
+cnoremap vh vert h 
 
 ca w!! w !sudo tee >/dev/null "%"
-nnoremap <F6> :set paste!<CR>
+set pastetoggle=<F6>
+nmap <Leader>a <Plug>(EasyAlign)
+map + <Plug>(expand_region_expand)
+map _ <Plug>(expand_region_shrink)
 
 if version >= 703
 	if exists("&undodir")
