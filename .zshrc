@@ -13,9 +13,9 @@ alias zcp='noglob zmv -C '
 alias zln='noglob zmv -L '
 alias zmv='noglob zmv '
 
-alias -g L='|less'
-alias -g V='|vim -'
-alias -g DN='>/dev/null'
+alias -g L='| less'
+alias -g V='| vim -'
+alias -g DN='> /dev/null'
 
 bindkey -v
 bindkey '^[[A'  history-search-backward
@@ -27,7 +27,7 @@ bindkey '^[[8~' end-of-line
 bindkey '^[[1~' beginning-of-line
 bindkey '^[[4~' end-of-line
 
-fancy-ctrl-z () {
+fancy-ctrl-z() {
 	if [[ "$#BUFFER" -eq 0 ]]; then
 		bg
 		zle redisplay
