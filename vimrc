@@ -1,6 +1,6 @@
 "" {{{ bundles
 set runtimepath+=~/.vim/bundle/neobundle.vim/
-call neobundle#rc(expand('~/.vim/bundle/'))
+call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc',                             {'build': {'unix': 'make -f make_unix.mak'}}
 NeoBundle 'Shougo/unite.vim',                           {'name': 'unite.vim', 'depends': 'vimproc'}
@@ -56,11 +56,12 @@ NeoBundleLazy 'marijnh/tern_for_vim',                   {'autoload': {'filetypes
 NeoBundleLazy 'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
+NeoBundleCheck
+call neobundle#end()
 "" }}}
 
 syntax on
 filetype plugin indent on
-NeoBundleCheck
 
 
 "" TODO: more comments
