@@ -117,13 +117,13 @@ nnoremap / /\v
 vnoremap / /\v
 nnoremap n nzzzv
 nnoremap N Nzzzv
-cnoremap 5s/ %smagic/
-cnoremap s/ smagic/
+cnoremap s/ sm/
 cnoremap vh vert h 
 
 ca w!! w !sudo tee >/dev/null "%"
 set pastetoggle=<F6>
 nmap <Leader>a <Plug>(EasyAlign)
+vmap <Leader>a <Plug>(EasyAlign)
 map + <Plug>(expand_region_expand)
 map _ <Plug>(expand_region_shrink)
 
