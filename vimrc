@@ -37,12 +37,13 @@ NeoBundle 'sjl/gundo.vim'
 NeoBundle 'zhaocai/GoldenView.Vim'
 NeoBundle 'noahfrederick/vim-noctu'
 NeoBundle 'Shougo/vimshell.vim'
+NeoBundle 'jaxbot/browserlink.vim',                     {'autoload': {'filetypes': ['html', 'javascript', 'css']}}
 NeoBundle 'mattn/gist-vim',                             {'depends': 'mattn/webapi-vim'}
-NeoBundle 'jaxbot/browserlink.vim'
 
 NeoBundleLazy 'mattn/emmet-vim',                        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
 NeoBundleLazy 'tmhedberg/matchit',                      {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
 NeoBundleLazy 'Raimondi/delimitMate',                   {'autoload': {'filetypes': ['html', 'xml']}}
+NeoBundleLazy 'gregsexton/MatchTag',                    {'autoload': {'filetypes': ['html', 'xml']}}
 NeoBundleLazy 'othree/html5.vim',                       {'autoload': {'filetypes': ['html']}}
 NeoBundleLazy 'groenewege/vim-less',                    {'autoload': {'filetypes': ['less']}}
 NeoBundleLazy 'hail2u/vim-css3-syntax',                 {'autoload': {'filetypes': ['css', 'scss', 'sass']}}
@@ -52,10 +53,11 @@ NeoBundleLazy 'moll/vim-node',                          {'autoload': {'filetypes
 NeoBundleLazy 'jelera/vim-javascript-syntax',           {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'burnettk/vim-angular',                   {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}, 'build': {'unix': 'npm install'}}
 NeoBundleLazy 'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'kchmck/vim-coffee-script',               {'autoload': {'filetypes': ['coffee']}}
 NeoBundleCheck
 call neobundle#end()
 "" }}}
