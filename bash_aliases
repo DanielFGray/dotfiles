@@ -122,7 +122,7 @@ curltar() {
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
 ding() {
-	[ -n $1 ] && notify-send "$@"
+	[ -n $1 ] && notify-send -u critical "$@" &> /dev/null
 	paplay ~/downloads/ding.ogg &> /dev/null
 }
 
