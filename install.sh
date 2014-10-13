@@ -85,9 +85,11 @@ if !type 'tmux' &> /dev/null; then
 	echo 2> 'tmux not found'
 else
 	while true; do
-		read -e -p 'symlink tmux.conf? (y/n) ' tmuxconf1
+		read -e -p 'symlink tmux.conf and install plugins? (y/n) ' tmuxconf1
 		case $tmuxconf1 in
 			[Yy]* )
+				mkdir -p ~/.tmux/plugins
+				git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 				#TODO: mv existing
 				read -e -p 'local or remote tmux.conf? (l/r) ' tmuxconf2
 				case $tmuxconf2 in
