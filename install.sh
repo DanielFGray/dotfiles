@@ -24,7 +24,9 @@
 #fi
 
 #TODO: mv existing
-ln -sv ~/dotfiles/.{bashrc,bash_aliases,profile} ~
+ln -sfv ~/dotfiles/bashrc ~/.bashrc
+ln -sfv ~/dotfiles/bash_aliases ~/.bash_aliases
+ln -sfv ~/dotfiles/profile ~/.profile
 
 if ! type 'vim' &> /dev/null; then
 	echo 2> 'vim not found'
@@ -34,9 +36,9 @@ else
 		case $vimplugins in
 			[Yy]* )
 				#TODO: mv existing
-				ln -vs ~/dotfiles/.vimrc ~/.vimrc
+				ln -vfs ~/dotfiles/vimrc ~/.vimrc
 				mkdir -vp ~/.vim/{bundle,colors,cache,undo,backups,swaps}
-				git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle #TODO: if dir exists : cd && git pull
+				git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim #TODO: if dir exists : cd && git pull
 				vim +NeoBundleUpdate +q
 				break ;;
 			* ) break ;;
@@ -53,9 +55,11 @@ else
 			[Yy]* )
 				git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh #TODO: if dir exists : cd && git pull
 				mkdir -vp ~/.oh-my-zsh/custom/plugins
-				git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins #TODO: if dir exists : cd && git pull
+				git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting #TODO: if dir exists : cd && git pull
 				#TODO: mv existing
-				ln -vs ~/dotfiles/.{zshrc,zprofile,zlogin} ~
+				ln -vfs ~/dotfiles/zshrc ~/.zshrc
+				ln -vfs ~/dotfiles/zprofile ~/.zprofile
+				ln -vfs ~/dotfiles/zlogin ~/.zlogin
 				break ;;
 			* ) break ;;
 		esac
@@ -70,7 +74,7 @@ else
 		case $awesomeconf in
 			[Yy]* )
 				#TODO: mv existing
-				ln -sf ~/dotfiles/.config/awesome ~/.config
+				ln -fsf ~/dotfiles/config/awesome ~/.config
 				break ;;
 			* ) break ;;
 		esac
@@ -88,10 +92,10 @@ else
 				read -e -p 'local or remote tmux.conf? (l/r) ' tmuxconf2
 				case $tmuxconf2 in
 					[Ll]* )
-						ln -sv ~/dotfiles/local.tmux.conf ~/.tmux.conf
+						ln -fsv ~/dotfiles/local.tmux.conf ~/.tmux.conf
 						break ;;
 					[Rr]* )
-						ln -sv ~/dotfiles/remote.tmux.conf ~/.tmux.conf
+						ln -fsv ~/dotfiles/remote.tmux.conf ~/.tmux.conf
 						break ;;
 					* ) break ;;
 				esac
