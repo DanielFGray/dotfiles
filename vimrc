@@ -195,8 +195,8 @@ let g:unite_split_rule = 'botright'
 call unite#custom#profile('default', 'context', { 'start_insert': 1 })
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#set_profile('files', 'smartcase', 1)
-call unite#custom#source('line, outline', 'matchers', 'matcher_fuzzy')
+call unite#set_profile('files', 'context.smartcase', 1)
+call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
 nnoremap <leader>ur :<C-u>Unite register<cr>
 nnoremap <leader>uy :<C-u>Unite -buffer-name=yank    history/yank<cr>
 nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer  buffer<cr>
