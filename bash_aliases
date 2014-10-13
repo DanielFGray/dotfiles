@@ -119,10 +119,6 @@ curltar() {
 	esac
 }
 
-simpleHTTP() {
-	python -c "import SimpleHTTPServer, SocketServer, BaseHTTPServer; SimpleHTTPServer.test(SimpleHTTPServer.SimpleHTTPRequestHandler, type('Server', (BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn, object), {}))" 9090
-}
-
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
 ding() {
