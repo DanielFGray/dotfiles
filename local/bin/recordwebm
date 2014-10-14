@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]]; then
+	echo "Needs an argument for file name."
+	exit
+fi
+
+RES=$(xdpyinfo | awk '/dimensions/{print $2}')
+FPS="60"
+
+ffmpeg \
+-f x11grab -s "$RES" -i :0.0 \
+-c:v libvpx -crf 12 -s "$RES" -b:v 1200k \
+-preset ultrafast \
+-b 1000k -threads 4 \
+-f webm $1
