@@ -301,11 +301,11 @@ au VimResized * :wincmd =
 
 function! Dotfiles()
 	cd ~/dotfiles
-	edit .zshrc
-	vsplit .bash_aliases
-	tabnew .vimrc
+	edit zshrc
+	vsplit bash_aliases
+	tabnew vimrc
 	vert help quickref
 	tabnew local.tmux.conf
 	vert diffsplit remote.tmux.conf
-	tabnew .config/awesome/rc.lua
+	tabnew config/awesome/rc.lua
 endfunction
