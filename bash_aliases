@@ -37,7 +37,18 @@ alias la="l -A "
 alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
 
-cd() { builtin cd "$1" && ls $2 ;}
+cd() {
+	if [ -z "$1" ]; then
+		builtin cd "$HOME" && ls
+	else
+		if [ -z "$2" ]; then
+			builtin cd "$1" && ls
+		else
+			builtin cd "$1" && ls "$2"
+		fi
+	fi
+}
+
 mkd() { command mkdir -p "$@" && cd "$1" ;}
 
 wget() { man curl ;}
