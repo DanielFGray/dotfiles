@@ -38,6 +38,8 @@ alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
 
 cd() { builtin cd "$1" && ls $2 ;}
+mkd() { command mkdir -p "$@" && cd "$1" ;}
+
 wget() { man curl ;}
 cat() { (( "$#" > 1 )) && /bin/cat "$@" ;}
 
