@@ -192,19 +192,20 @@ let g:unite_prompt = '» '
 let g:unite_source_history_yank_enable = 1
 let g:unite_winheight = 10
 let g:unite_split_rule = 'botright'
+let g:unite_force_overwrite_statusline = 0
 call unite#custom#profile('default', 'context', { 'start_insert': 1 })
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#set_profile('files', 'context.smartcase', 1)
 call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
-nnoremap <leader>ur :<C-u>Unite register<cr>
-nnoremap <leader>uy :<C-u>Unite -buffer-name=yank    history/yank<cr>
-nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer  buffer<cr>
-nnoremap <leader>uf :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async<cr>
-nnoremap <leader>ue :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<cr>
-nnoremap <leader>uo :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
-nnoremap <leader>uh :<C-u>Unite -auto-resize -buffer-name=help help<cr>
-nnoremap <leader>ut :<C-u>Unite -auto-resize -buffer-name=tag tag tag/file<cr>
+nnoremap <leader>ur :<C-u>Unite -buffer-name=register register -auto-resize <cr>
+nnoremap <leader>uy :<C-u>Unite -buffer-name=yank history/yank<cr>
+nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer buffer<cr>
+nnoremap <leader>uf :<C-u>Unite -buffer-name=files -toggle -auto-resize file_rec/async<cr>
+nnoremap <leader>ue :<C-u>Unite -buffer-name=files buffer file_mru bookmark file<cr>
+nnoremap <leader>uo :<C-u>Unite -buffer-name=outline outline -auto-resize<cr>
+nnoremap <leader>uh :<C-u>Unite -buffer-name=help help -auto-resize<cr>
+nnoremap <leader>ut :<C-u>Unite -buffer-name=tag tag tag/file -auto-resize<cr>
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
 	set grepformat=%f:%l:%C:%m
@@ -224,6 +225,9 @@ function! s:unite_settings()
 	imap <buffer> <C-k> <Plug>(unite_select_previous_line)
 	imap <buffer> <esc> <Plug>(unite_exit)
 	nmap <buffer> <esc> <Plug>(unite_exit)
+	imap <silent><buffer><expr> <C-x> unite#do_action('split')
+	imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+	imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
 endfunction
 "" }}}
 
