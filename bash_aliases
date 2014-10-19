@@ -57,8 +57,7 @@ newImage() {
 burnusb() {
 	sudo dd if="$1" of="$2" bs=4M conv=sync
 	sync
-	ding
-	notify-send -u critical 'burnusb' 'done'
+	ding 'burnusb' 'done'
 }
 
 changeroot() {
