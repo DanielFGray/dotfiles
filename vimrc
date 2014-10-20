@@ -118,6 +118,8 @@ noremap : ;
 nnoremap Y y$
 nnoremap n nzzzv
 nnoremap N Nzzzv
+vnoremap < <gv
+vnoremap > >gv
 cnoremap vh vert h 
 ca w!! w !sudo tee >/dev/null "%"
 
