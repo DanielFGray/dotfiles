@@ -309,6 +309,12 @@ autocmd! bufwritepost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | AirlineRefresh
 autocmd FileType vim nnore <silent><buffer> K :<C-U>vert help <C-R><C-W><CR>
 autocmd VimResized * :wincmd =
 
+autocmd BufReadPost *
+\	if line("'\"") > 0 && line("'\"") <= line("$") |
+\		exe 'normal! g`"zvzz' |
+\	endif
+
+
 function! Dotfiles()
 	cd ~/dotfiles
 	edit zshrc
