@@ -2,65 +2,64 @@
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc',                             {'build': {'unix': 'make -f make_unix.mak'}}
-NeoBundle 'Shougo/unite.vim',                           {'name': 'unite.vim', 'depends': 'vimproc'}
-NeoBundleLazy 'thinca/vim-unite-history',               {'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
-NeoBundleLazy 'Shougo/unite-help',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
-NeoBundleLazy 'Shougo/unite-outline',                   {'autoload': {'unite_sources': 'outline'}}
-NeoBundleLazy 'Shougo/unite-session',                   {'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
-NeoBundleLazy 'Shougo/neomru.vim',                      {'autoload': {'unite_sources': 'file_mru'}}
-NeoBundleLazy 'tsukkee/unite-tag',                      {'autoload': {'unite_sources': ['tag', 'tag/file']}}
 NeoBundleFetch 'Shougo/neocomplcache.vim'
+NeoBundle      'Shougo/vimproc',                             {'build': {'unix': 'make -f make_unix.mak'}}
+NeoBundle      'Shougo/unite.vim',                           {'name': 'unite.vim', 'depends': 'vimproc'}
+NeoBundleLazy  'thinca/vim-unite-history',               {'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
+NeoBundleLazy  'Shougo/unite-help',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
+NeoBundleLazy  'Shougo/unite-outline',                   {'autoload': {'unite_sources': 'outline'}}
+NeoBundleLazy  'Shougo/unite-session',                   {'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
+NeoBundleLazy  'Shougo/neomru.vim',                      {'autoload': {'unite_sources': 'file_mru'}}
+NeoBundleLazy  'tsukkee/unite-tag',                      {'autoload': {'unite_sources': ['tag', 'tag/file']}}
+NeoBundle      'Shougo/context_filetype.vim'
+NeoBundle      'Shougo/echodoc'
+NeoBundle      'Shougo/neocomplete.vim'
+NeoBundle      'Shougo/neosnippet'
+NeoBundle      'Shougo/neosnippet-snippets'
+NeoBundle      'Shougo/vimfiler'
+NeoBundle      'osyo-manga/unite-filetype'
 
-NeoBundle 'Shougo/context_filetype.vim'
-NeoBundle 'Shougo/echodoc'
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'Shougo/vimfiler'
-NeoBundle 'osyo-manga/unite-filetype'
+NeoBundle      'scrooloose/syntastic'
+NeoBundle      'terryma/vim-expand-region'
+NeoBundle      'wellle/targets.vim'
+NeoBundle      'junegunn/vim-easy-align'
+NeoBundle      'tpope/vim-fugitive'
+NeoBundle      'tpope/vim-surround'
+NeoBundle      'tpope/vim-abolish'
+NeoBundle      'tpope/vim-unimpaired'
+NeoBundle      'tpope/vim-repeat'
+NeoBundle      'tpope/vim-vinegar'
+NeoBundle      'mhinz/vim-startify'
+NeoBundle      'mhinz/vim-tmuxify'
+NeoBundle      'bling/vim-airline'
+NeoBundle      'sjl/gundo.vim'
+NeoBundle      'zhaocai/GoldenView.Vim'
+NeoBundle      'noahfrederick/vim-noctu'
 NeoBundle      'Shougo/vimshell.vim',                    {'autoload': {'commands': [{'name': 'VimShell', 'complete': 'customlist,vimshell#complete'}, 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop']}}
+NeoBundle      'Keithbsmiley/investigate.vim'
 NeoBundle      'Raimondi/delimitMate'
 NeoBundleLazy  'haya14busa/incsearch.vim',               {'autoload': {'mappings': ['<Plug>(incsearch-']}}
+NeoBundleLazy  'jaxbot/browserlink.vim',                 {'autoload': {'filetypes': ['html', 'javascript', 'css']}}
+NeoBundleLazy  'mattn/gist-vim',                         {'depends': 'mattn/webapi-vim'}
 
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'terryma/vim-expand-region'
-NeoBundle 'wellle/targets.vim'
-NeoBundle 'junegunn/vim-easy-align'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-unimpaired'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-vinegar'
-NeoBundle 'mhinz/vim-startify'
-NeoBundle 'mhinz/vim-tmuxify'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'sjl/gundo.vim'
-NeoBundle 'zhaocai/GoldenView.Vim'
-NeoBundle 'noahfrederick/vim-noctu'
-NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'jaxbot/browserlink.vim',                     {'autoload': {'filetypes': ['html', 'javascript', 'css']}}
-NeoBundle 'mattn/gist-vim',                             {'depends': 'mattn/webapi-vim'}
+NeoBundleLazy  'mattn/emmet-vim',                        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
+NeoBundleLazy  'Valloric/MatchTagAlways',                {'autoload': {'filetypes': ['html', 'xhtml', 'xml', 'jinja']}}
+NeoBundleLazy  'tmhedberg/matchit',                      {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
+NeoBundleLazy  'gregsexton/MatchTag',                    {'autoload': {'filetypes': ['html', 'xml']}}
+NeoBundleLazy  'othree/html5.vim',                       {'autoload': {'filetypes': ['html']}}
+NeoBundleLazy  'groenewege/vim-less',                    {'autoload': {'filetypes': ['less']}}
+NeoBundleLazy  'hail2u/vim-css3-syntax',                 {'autoload': {'filetypes': ['css', 'scss', 'sass']}}
+NeoBundleLazy  'digitaltoad/vim-jade',                   {'autoload': {'filetypes': ['jade']}}
 
-NeoBundleLazy 'mattn/emmet-vim',                        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
-NeoBundleLazy 'tmhedberg/matchit',                      {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
-NeoBundleLazy 'Raimondi/delimitMate',                   {'autoload': {'filetypes': ['html', 'xml']}}
-NeoBundleLazy 'gregsexton/MatchTag',                    {'autoload': {'filetypes': ['html', 'xml']}}
-NeoBundleLazy 'othree/html5.vim',                       {'autoload': {'filetypes': ['html']}}
-NeoBundleLazy 'groenewege/vim-less',                    {'autoload': {'filetypes': ['less']}}
-NeoBundleLazy 'hail2u/vim-css3-syntax',                 {'autoload': {'filetypes': ['css', 'scss', 'sass']}}
-NeoBundleLazy 'digitaltoad/vim-jade',                   {'autoload': {'filetypes': ['jade']}}
-
-NeoBundleLazy 'moll/vim-node',                          {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'jelera/vim-javascript-syntax',           {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'burnettk/vim-angular',                   {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}, 'build': {'unix': 'npm install'}}
-NeoBundleLazy 'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'kchmck/vim-coffee-script',               {'autoload': {'filetypes': ['coffee']}}
+NeoBundleLazy  'moll/vim-node',                          {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy  'jelera/vim-javascript-syntax',           {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy  'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy  'burnettk/vim-angular',                   {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy  'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}, 'build': {'unix': 'npm install'}}
+NeoBundleLazy  'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy  'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy  'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy  'kchmck/vim-coffee-script',               {'autoload': {'filetypes': ['coffee']}}
 NeoBundleCheck
 call neobundle#end()
 "" }}}
@@ -111,6 +110,7 @@ set background=dark
 set cryptmethod=blowfish
 set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
 set diffopt=vertical
+set pastetoggle=<F6>
 colorscheme noctu
 
 noremap ; :
@@ -119,9 +119,8 @@ nnoremap Y y$
 nnoremap n nzzzv
 nnoremap N Nzzzv
 cnoremap vh vert h 
-
 ca w!! w !sudo tee >/dev/null "%"
-set pastetoggle=<F6>
+
 nmap <Leader>a <Plug>(EasyAlign)
 vmap <Leader>a <Plug>(EasyAlign)
 map + <Plug>(expand_region_expand)
@@ -252,7 +251,7 @@ let g:tmuxify_run = {
 \}
 "" }}}
 
-" {{{ gundo settings
+"" {{{ gundo settings
 nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 let g:gundo_width = 60
@@ -274,7 +273,7 @@ let g:incsearch#auto_nohlsearch = 1
 let g:incsearch#magic = '\v'
 "" }}}
 
-" {{{ fugitive shortcuts
+"" {{{ fugitive shortcuts
 nnoremap <leader>gs <Esc>:Gstatus<CR>
 nnoremap <leader>gd <Esc>:Gdiff<CR>
 nnoremap <leader>gc <Esc>:Gcommit<CR>
