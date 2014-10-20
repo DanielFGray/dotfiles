@@ -114,11 +114,8 @@ colorscheme noctu
 noremap ; :
 noremap : ;
 nnoremap Y y$
-nnoremap / /\v
-vnoremap / /\v
 nnoremap n nzzzv
 nnoremap N Nzzzv
-cnoremap s/ sm/
 cnoremap vh vert h 
 
 ca w!! w !sudo tee >/dev/null "%"
