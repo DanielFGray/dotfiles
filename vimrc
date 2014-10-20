@@ -20,6 +20,7 @@ NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'osyo-manga/unite-filetype'
 NeoBundle      'Shougo/vimshell.vim',                    {'autoload': {'commands': [{'name': 'VimShell', 'complete': 'customlist,vimshell#complete'}, 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop']}}
+NeoBundle      'Raimondi/delimitMate'
 NeoBundleLazy  'haya14busa/incsearch.vim',               {'autoload': {'mappings': ['<Plug>(incsearch-']}}
 
 NeoBundle 'scrooloose/syntastic'
