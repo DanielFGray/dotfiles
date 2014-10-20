@@ -19,6 +19,7 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'osyo-manga/unite-filetype'
+NeoBundleLazy  'haya14busa/incsearch.vim',               {'autoload': {'mappings': ['<Plug>(incsearch-']}}
 
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'terryma/vim-expand-region'
@@ -257,6 +258,21 @@ nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right = 1
 let g:gundo_width = 60
 let g:gundo_preview_height = 40
+"" }}}
+
+"" {{{ searching
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+let g:incsearch#consistent_n_direction = 1
+let g:incsearch#auto_nohlsearch = 1
+let g:incsearch#magic = '\v'
 "" }}}
 
 " {{{ fugitive shortcuts
