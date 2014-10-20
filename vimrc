@@ -303,12 +303,6 @@ if has("gui_running")
 	set guioptions-=m
 endif
 
-augroup Tmux
-	au!
-	autocmd VimEnter,BufNewFile,BufReadPost * call system('tmux rename-window "vim - ' . split(substitute(getcwd(), $HOME, '~', ''), '/')[-1] . '"')
-	autocmd VimLeave * call system('tmux rename-window ' . split(substitute(getcwd(), $HOME, '~', ''), '/')[-1])
-augroup END
-
 autocmd! bufwritepost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | AirlineRefresh
 autocmd FileType vim nnore <silent><buffer> K :<C-U>vert help <C-R><C-W><CR>
 autocmd VimResized * :wincmd =
