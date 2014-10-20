@@ -14,6 +14,7 @@ alias zln='noglob zmv -L '
 alias zmv='noglob zmv '
 
 alias -g L='| less'
+alias -g S='| sort'
 alias -g V='| vim -'
 alias -g DN='> /dev/null'
 
