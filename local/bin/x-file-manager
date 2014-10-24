@@ -1,2 +1,9 @@
-#!/bin/sh
-exec $(dolphin "$@" || nemo "$@" || nautilus "$@" || thunar "$@" )
+#!/bin/bash
+
+fav=( 'dolphin' 'nemo' 'nautilus' 'thunar' )
+for x in "${fav[@]}"; do
+	if command -v "$x" &> /dev/null; then
+		( exec "$x" "$@" ) &
+		break
+	fi
+done
