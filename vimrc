@@ -155,15 +155,14 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#auto_completion_start_length = 3
-"" let g:neocomplete#sources#dictionary#dictionaries = {  'default' : '' }
-"" let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
-"" if !exists('g:neocomplete#sources#omni#input_patterns')
-""   let g:neocomplete#sources#omni#input_patterns = {}
-"" endif
-"" if !exists('g:neocomplete#keyword_patterns')
-""     let g:neocomplete#keyword_patterns = {}
-"" endif
-"" let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+let g:neocomplete#sources#dictionary#dictionaries = {  'default' : '' }
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 inoremap <expr><BS>      neocomplete#smart_close_popup()."\<C-h>"
