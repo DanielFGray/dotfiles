@@ -4,25 +4,12 @@ if [ -n "$BASH_VERSION" ]; then
 	fi
 fi
 
-if [ -d "/sbin" ] ; then
-	PATH="/sbin:$PATH"
-fi
+dirs=( "/sbin" "/usr/bin" "/usr/local/sbin" "/usr/games" "$HOME/bin" "$HOME/.local/bin" "$HOME/.gem/ruby/3.1.0/bin" "$HOME/.rvm/bin" "$HOME/.npm/bin" )
 
-if [ -d "/usr/sbin" ] ; then
-	PATH="/usr/sbin:$PATH"
-fi
+for d in "${dirs[@]}"; do;
+	if [ -d "$d" ]; then
+		export PATH="$d:$PATH"
+	fi
+done
 
-if [ -d "$HOME/.local/bin" ] ; then
-	PATH="$HOME/.local/bin:$PATH"
-fi
-
-# if [ -s "$HOME/.rvm/scripts/rvm" ] ; then
-# 	source "$HOME/.rvm/scripts/rvm"
-# fi
-
-if [ -d "$HOME/.rvm/bin" ] ; then
-	PATH="$PATH:$HOME/.rvm/bin"
-fi
-
-PATH="/usr/games:$PATH"
-PATH="/usr/local/sbin:$PATH"
+# vim: ft=sh
