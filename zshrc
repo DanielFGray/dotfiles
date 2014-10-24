@@ -36,7 +36,6 @@ fancy-ctrl-z() {
 		zle push-input
 	fi
 }
-zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
 
 delete-in() {
@@ -80,13 +79,11 @@ delete-in() {
 	RBUFFER="$RBUFFER[$RSEARCH, ${#RBUFFER}]"
 	LBUFFER="$LBUFFER[1, $LSEARCH]"
 }
-zle -N delete-in
 
 change-in() {
 	zle delete-in
 	zle vi-insert
 }
-zle -N change-in
 
 delete-around() {
 	zle delete-in
@@ -94,7 +91,6 @@ delete-around() {
 	zle vi-delete-char
 	zle vi-delete-char
 }
-zle -N delete-around
 
 change-around() {
 	zle delete-in
@@ -103,6 +99,11 @@ change-around() {
 	zle vi-delete-char
 	zle vi-insert
 }
+
+zle -N fancy-ctrl-z
+zle -N delete-in
+zle -N change-in
+zle -N delete-around
 zle -N change-around
 
 bindkey -M vicmd 'ca' change-around
