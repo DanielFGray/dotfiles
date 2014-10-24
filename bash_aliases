@@ -38,7 +38,7 @@ alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
 
 cd() {
-	if [ -z "$1" ]; then
+	if [ -z "$@" ]; then
 		builtin cd "$HOME" && ls
 	else
 		if [ -z "$2" ]; then
