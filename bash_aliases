@@ -57,6 +57,15 @@ cat() { (( "$#" > 1 )) && /bin/cat "$@" ;}
 tarpipe() { tar czf - "$2" | pv | ssh "$1" "tar xzvf - $3" ;}
 rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
 
+txs() {
+	if [[ "$1" = "-v" ]]; then
+		shift
+		tmux split-window -vd "$@"
+	else
+		tmux split-window -hd "$@"
+	fi
+}
+
 sprunge() { \curl -sF 'sprunge=<-' http://sprunge.us ;}
 
 pgrep() { ps aux | grep "$1" | grep -v grep ;}
