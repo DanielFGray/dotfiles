@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 fav=( 'dolphin' 'nemo' 'nautilus' 'thunar' )
 for x in "${fav[@]}"; do
