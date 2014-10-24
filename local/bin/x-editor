@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # vim –servername VIMSERVER &
 exec x-terminal-emulator -e "vim $@"
