@@ -67,7 +67,6 @@ call neobundle#end()
 syntax on
 filetype plugin indent on
 
-
 "" TODO: more comments
 set number
 set relativenumber
