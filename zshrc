@@ -28,6 +28,20 @@ bindkey '^[[8~' end-of-line
 bindkey '^[[1~' beginning-of-line
 bindkey '^[[4~' end-of-line
 
+zle -N fancy-ctrl-z
+zle -N delete-in
+zle -N change-in
+zle -N delete-around
+zle -N change-around
+
+bindkey '^Z' fancy-ctrl-z
+bindkey -M vicmd 'ca' change-around
+bindkey -M vicmd 'ci' change-in
+bindkey -M vicmd 'cc' vi-change-whole-line
+bindkey -M vicmd 'da' delete-around
+bindkey -M vicmd 'di' delete-in
+bindkey -M vicmd 'dd' kill-whole-line
+
 fancy-ctrl-z() {
 	if [[ "$#BUFFER" -eq 0 ]]; then
 		bg
@@ -36,7 +50,6 @@ fancy-ctrl-z() {
 		zle push-input
 	fi
 }
-bindkey '^Z' fancy-ctrl-z
 
 delete-in() {
 	local CHAR LCHAR RCHAR LSEARCH RSEARCH COUNT
@@ -99,16 +112,3 @@ change-around() {
 	zle vi-delete-char
 	zle vi-insert
 }
-
-zle -N fancy-ctrl-z
-zle -N delete-in
-zle -N change-in
-zle -N delete-around
-zle -N change-around
-
-bindkey -M vicmd 'ca' change-around
-bindkey -M vicmd 'ci' change-in
-bindkey -M vicmd 'cc' vi-change-whole-line
-bindkey -M vicmd 'da' delete-around
-bindkey -M vicmd 'di' delete-in
-bindkey -M vicmd 'dd' kill-whole-line
