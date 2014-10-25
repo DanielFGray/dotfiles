@@ -346,9 +346,9 @@
       <action name="Execute">
         <startupnotify>
           <enabled>true</enabled>
-          <name>thunar</name>
+          <name>x-file-manager</name>
         </startupnotify>
-        <command>thunar</command>
+        <command>x-file-manager</command>
       </action>
     </keybind>
     <keybind key="W-t">
