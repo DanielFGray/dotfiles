@@ -40,7 +40,7 @@
                     'Active' - where the active window is -->
   </placement>
   <theme>
-    <name>Mire_v2_grey</name>
+    <name>Mire_v2_blue</name>
     <titleLayout>DSLIMC</titleLayout>
     <!--
       avaible characters are NDSLIMC, each can occur at most once.
