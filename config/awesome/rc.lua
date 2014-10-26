@@ -532,7 +532,7 @@ modal_music = {
 	end,
 }
 
-modal_mode = {
+client_keys = {
 	c = function(c)
 		c:kill()
 	end,
@@ -572,14 +572,14 @@ clientkeys = awful.util.table.join(
 		c:swap(awful.client.getmaster())
 	end),
 	awful.key({ modkey, "Mod1" }, "o", awful.client.movetoscreen ),
-	awful.key({ modkey }, "z", function(c)
+	awful.key({ modkey }, "c", function(c)
 		keygrabber.run(function(mod, key, event)
 			if event == "release" then
 				return true
 			end
 			keygrabber.stop()
-			if modal_mode[key] then
-				modal_mode[key](c)
+			if client_keys[key] then
+				client_keys[key](c)
 			end
 			return true
 		end)
