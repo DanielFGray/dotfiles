@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # cb-hotcorners:
 # A script for adding hot corners to Openbox.
 # Written for CrunchBang Linux <http://crunchbang.org/>

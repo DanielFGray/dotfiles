@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # cb-aerosnap:
 # A script for adding aero style window snapping to Openbox.
 # Written for CrunchBang Linux <http://crunchbang.org/>
