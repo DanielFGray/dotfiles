@@ -252,7 +252,7 @@ let g:tmuxify_run = {
 	\ 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%tex/pdf}"; done',
 	\ 'ruby':       ' ruby %',
 	\ 'python':     ' python %',
-	\ 'javascript': ' nodejs %'
+	\ 'javascript': ' node %'
 \}
 "" }}}
 
