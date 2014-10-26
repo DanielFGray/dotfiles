@@ -7,17 +7,17 @@ NeoBundle      'Shougo/vimproc',                             {'build': {'unix': 
 NeoBundle      'Shougo/unite.vim',                           {'name': 'unite.vim', 'depends': 'vimproc'}
 NeoBundleLazy  'thinca/vim-unite-history',               {'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
 NeoBundleLazy  'Shougo/unite-help',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
-NeoBundleLazy  'Shougo/unite-outline',                   {'autoload': {'unite_sources': 'outline'}}
-NeoBundleLazy  'Shougo/unite-session',                   {'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
-NeoBundleLazy  'Shougo/neomru.vim',                      {'autoload': {'unite_sources': 'file_mru'}}
-NeoBundleLazy  'tsukkee/unite-tag',                      {'autoload': {'unite_sources': ['tag', 'tag/file']}}
+NeoBundleLazy  'Shougo/unite-outline',                   {'depends': 'unite.vim', 'autoload': {'unite_sources': 'outline'}}
+NeoBundleLazy  'Shougo/unite-session',                   {'depends': 'unite.vim', 'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
+NeoBundleLazy  'Shougo/neomru.vim',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': 'file_mru'}}
+NeoBundleLazy  'tsukkee/unite-tag',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': ['tag', 'tag/file']}}
+NeoBundle      'osyo-manga/unite-filetype',              {'depends': 'unite.vim'}
 NeoBundle      'Shougo/context_filetype.vim'
 NeoBundle      'Shougo/echodoc'
 NeoBundle      'Shougo/neocomplete.vim'
 NeoBundle      'Shougo/neosnippet'
 NeoBundle      'Shougo/neosnippet-snippets'
 NeoBundle      'Shougo/vimfiler'
-NeoBundle      'osyo-manga/unite-filetype'
 
 NeoBundle      'scrooloose/syntastic'
 NeoBundle      'terryma/vim-expand-region'
