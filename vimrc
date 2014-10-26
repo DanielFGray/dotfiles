@@ -2,8 +2,8 @@
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle      'Shougo/vimproc',                             {'build': {'unix': 'make -f make_unix.mak'}}
-NeoBundle      'Shougo/unite.vim',                           {'name': 'unite.vim', 'depends': 'vimproc'}
+NeoBundle      'Shougo/vimproc',                         {'name': 'vimproc', 'build': {'unix': 'make -f make_unix.mak'}}
+NeoBundle      'Shougo/unite.vim',                       {'name': 'unite.vim', 'depends': 'vimproc'}
 NeoBundleLazy  'thinca/vim-unite-history',               {'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
 NeoBundleLazy  'Shougo/unite-help',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
 NeoBundleLazy  'Shougo/unite-outline',                   {'depends': 'unite.vim', 'autoload': {'unite_sources': 'outline'}}
