@@ -33,6 +33,9 @@ NeoBundle      'mhinz/vim-startify'
 NeoBundle      'mhinz/vim-tmuxify'
 NeoBundle      'bling/vim-airline'
 NeoBundle      'sjl/gundo.vim'
+NeoBundle      'kana/vim-textobj-user',                  {'name': 'vim-textobj-user'}
+NeoBundle      'reedes/vim-textobj-sentence',            {'depends': 'vim-textobj-user'}
+NeoBundle      'kana/vim-textobj-function',              {'depends': 'vim-textobj-user'}
 NeoBundle      'zhaocai/GoldenView.Vim'
 NeoBundle      'noahfrederick/vim-noctu'
 NeoBundle      'Shougo/vimshell.vim',                    {'autoload': {'commands': [{'name': 'VimShell', 'complete': 'customlist,vimshell#complete'}, 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop']}}
