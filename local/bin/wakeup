@@ -3,6 +3,6 @@
 pkill aplay &> /dev/null
 mpc clear &> /dev/null
 mpc random on &> /dev/null
-amixer sset Master 65\% &> /dev/null
+amixer sset Master 100\% &> /dev/null
 [[ $# > 0 ]] && mpc load $1 &> /dev/null || mpc load brutal &> /dev/null
 mpc play &> /dev/null
