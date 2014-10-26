@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+fav=( 'mupdf' 'zathura' 'apvlv' 'evince' )
+for x in "${fav[@]}"; do
+	if command -v "$x" &> /dev/null; then
+		( exec "$x" "$@" ) &
+		break
+	fi
+done
