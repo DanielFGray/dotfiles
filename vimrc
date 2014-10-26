@@ -308,6 +308,7 @@ if has("gui_running")
 endif
 
 autocmd! bufwritepost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | AirlineRefresh
+autocmd! bufwritepost ~/.tmux.conf,~/dotfiles/*.tmux.conf call system('tmux source-file ~/.tmux.conf; tmux display-message "Sourced .tmux.conf"')
 autocmd FileType vim nnore <silent><buffer> K :<C-U>vert help <C-R><C-W><CR>
 autocmd VimResized * :wincmd =
 
