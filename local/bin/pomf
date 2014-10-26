@@ -15,7 +15,7 @@ if [[ -n "${1}" ]]; then
 		while [[ $n -le 3 ]]; do
 			printf "try #${n}..."
 			if [[ "${my_output}" =~ '"success":true,' ]]; then
-				return_file=$(echo "$my_output" | grep -Eo '"url":"[A-Za-z0-9]+.(png|gif|jpg)",' | sed 's/"url":"//;s/",//')
+				return_file=$(echo "$my_output" | grep -Eo '"url":"[A-Za-z0-9]+\.\w+",' | sed 's/"url":"//;s/",//')
 				printf 'done.\n'
 				break
 			else
