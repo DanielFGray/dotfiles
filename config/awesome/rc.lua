@@ -226,7 +226,7 @@ neticon = wibox.widget.background(wibox.widget.imagebox(beautiful.widget_net))
 netwidget = wibox.widget.background(lain.widgets.net({
 	settings = function()
 		widget:set_markup(
-			" U:" .. net_now.received .. " D:" .. net_now.sent .. " "
+			" D:" .. net_now.received .. " U:" .. net_now.sent .. " "
 		)
 	end
 }))
