@@ -132,6 +132,7 @@ tyrannical.properties.size_hints_honor = {
 }
 
 tyrannical.properties.intrusive = {
+	"gsimplecal",
 	"Pnmixer",
 	"thunar"
 }
