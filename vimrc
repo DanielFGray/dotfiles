@@ -44,6 +44,9 @@ NeoBundleLazy  'haya14busa/incsearch.vim',               {'autoload': {'mappings
 NeoBundleLazy  'jaxbot/browserlink.vim',                 {'autoload': {'filetypes': ['html', 'javascript', 'css']}}
 NeoBundleLazy  'mattn/gist-vim',                         {'depends': 'mattn/webapi-vim'}
 
+NeoBundleLazy  'LaTeX-Box-Team/LaTeX-Box',               {'autoload': {'filetypes': ['tex']}}
+NeoBundleLazy  'xuhdev/vim-latex-live-preview',          {'autoload': {'filetypes': ['tex']}}
+
 NeoBundleLazy  'mattn/emmet-vim',                        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
 NeoBundleLazy  'Valloric/MatchTagAlways',                {'autoload': {'filetypes': ['html', 'xhtml', 'xml', 'jinja']}}
 NeoBundleLazy  'tmhedberg/matchit',                      {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
