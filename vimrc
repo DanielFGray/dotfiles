@@ -323,9 +323,13 @@ function! Dotfiles()
 	cd ~/dotfiles
 	edit zshrc
 	vsplit bash_aliases
+	wincmd h
 	tabnew vimrc
 	vert help quickref
+	wincmd h
 	tabnew local.tmux.conf
 	vert diffsplit remote.tmux.conf
+	wincmd h
 	tabnew config/awesome/rc.lua
+	tabfirst
 endfunction
