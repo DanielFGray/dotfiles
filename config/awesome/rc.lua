@@ -75,6 +75,17 @@ run_once("redshift-gtk lat=29.27 lon=-94.87")
 
 tyrannical.tags = {
 	{
+		name = "term",
+		exclusive = true,
+		-- screen = { 1 },
+		layout = lain.layout.uselesstile,
+		class = {
+			"URxvt",
+			"sakura",
+			"xterm",
+			"gnome-terminal"
+		},
+	} , {
 		name = "web",
 		exclusive = true,
 		screen = { 3, 1 },
@@ -91,17 +102,6 @@ tyrannical.tags = {
 			"luakit",
 			"Transmission"
 		}
-	} , {
-		name = "term",
-		exclusive = true,
-		screen = { 1, 2 },
-		layout = lain.layout.uselesstile,
-		class = {
-			"URxvt",
-			"sakura",
-			"xterm",
-			"gnome-terminal"
-		},
 	} , {
 		name = "media",
 		exclusive = true,
