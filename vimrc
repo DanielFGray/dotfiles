@@ -298,8 +298,8 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 "" }}}
 
 if has("gui_running")
+	colorscheme slate
 	set background=dark
-	colorscheme desert
 	set gfn=Tewi\ 11
 	set guioptions-=L
 	set guioptions-=r
