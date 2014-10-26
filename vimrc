@@ -249,6 +249,7 @@ let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
 let g:tmuxify_custom_command = 'tmux split-window -d -l 10'
 let g:tmuxify_run = {
 	\ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%ly/pdf}"; done',
+	\ 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%tex/pdf}"; done',
 	\ 'ruby':       ' ruby %',
 	\ 'python':     ' python %',
 	\ 'javascript': ' nodejs %'
