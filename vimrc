@@ -149,7 +149,6 @@ set undolevels=1000
 
 "" {{{ auto completion
 set ofu=syntaxcomplete#Complete
-set tags+=~/.vim/tags/gtk+.tags
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
