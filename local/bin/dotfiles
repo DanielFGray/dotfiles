@@ -1,2 +1,2 @@
 #!/bin/bash
-vim +'cd ~/dotfiles | e .zshrc | vsplit .bash_aliases | tabnew .vimrc | tabnew local.tmux.conf | tabnew .config/awesome/rc.lua | tabfirst'
+vim +'call Dotfiles()'
