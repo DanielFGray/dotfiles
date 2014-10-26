@@ -34,7 +34,7 @@ local layouts = {
 	lain.layout.uselesstile,
 	lain.layout.centerwork,
 	lain.layout.uselessfair,
-	lain.layout.uselesspiral,
+	awful.layout.suit.max,
 }
 
 tyrannical.settings.default_layout = lain.layout.uselesstile
