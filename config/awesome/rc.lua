@@ -232,7 +232,7 @@ netwidget = wibox.widget.background(lain.widgets.net({
 }))
 
 spr = wibox.widget.textbox(" ")
-lsep = wibox.widget.textbox(markup("#666", ""))
+lsep = wibox.widget.textbox(markup("#666", " "))
 
 mywibox = {}
 mypromptbox = {}
