@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+echoerr() { echo "$@" 1>&2; }
+
+if ! command -v "mpc" &> /dev/null; then
+	echoerr 'command not found: mpc'
+	exit 1
+fi
+
+if [[ ! -x $HOME/.fzf/fzf ]]; then
+	echoerr "command not found: $HOME/.fzf/fzf"
+	exit 1
+fi
+
+songs=$(mpc listall | sort | tac | "$HOME"/.fzf/fzf --reverse -m -e +s)
+if [[ "$songs" ]]; then
+	mpc -q add <<< "$songs"
+	index=$(mpc playlist | wc -l)
+	if [[ $( echo "$songs" | wc -l ) -gt 1 ]]; then
+		index=$(( $(echo "$index") - $(echo "$songs" | wc -l) + 1))
+	fi
+	mpc -q play "$index"
+fi
