@@ -13,10 +13,10 @@ if [[ ! -x $HOME/.fzf/fzf ]]; then
 fi
 
 mapfile -t songs < <(mpc listall | sort -r | "$HOME/.fzf/fzf" --reverse -m -e +s)
-if [[ "${#songs[@]}" -gt 0 ]]; then
+if (( ${#songs[@]} > 0 )); then
 	printf '%s\n' "${songs[@]}" | mpc -q add
 	index=$(mpc playlist | wc -l)
-	if [[ "${#songs[@]}" -gt 1 ]]; then
+	if (( ${#songs[@]} > 1 )); then
 		index=$(( $index - ${#songs[@]} + 1))
 	fi
 	mpc -q play "$index"
