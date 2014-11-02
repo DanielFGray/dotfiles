@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-echoerr() { echo "$@" 1>&2; }
-
 player=''
-
 supported=( 'mpc' )
+
 for x in "${supported[@]}"; do
 	if command -v "$x" &> /dev/null; then
 		player="$x"
@@ -21,7 +19,7 @@ if [ -z "$player" ]; then
 fi
 
 if [[ ! -x $HOME/.fzf/fzf ]]; then
-	echoerr "command not found: $HOME/.fzf/fzf"
+	echo "command not found: $HOME/.fzf/fzf" 1>&2
 	exit 1
 fi
 
