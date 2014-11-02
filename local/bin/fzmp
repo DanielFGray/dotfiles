@@ -11,10 +11,8 @@ for x in "${supported[@]}"; do
 done
 
 if [[ -z "$player" ]]; then
-	echo "no supported music player found" 1>&2
-	printf '    fzmp currently supports: ' 1>&2
-	printf '%s ' "${supported[@]}" 1>&2
-	echo 1>&2
+	printf 1>&2 'no supported music player found\n'
+	printf 1>&2 '    fzmp currently supports: %s\n' "${supported[*]}"
 	exit 1
 fi
 
@@ -35,4 +33,6 @@ do_mpc() {
 	fi
 }
 
-[[ "$player" == 'mpc' ]] && do_mpc
+case "$player" in
+	'mpc') do_mpc ;;
+esac
