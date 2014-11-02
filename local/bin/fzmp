@@ -10,9 +10,9 @@ for x in "${supported[@]}"; do
 	fi
 done
 
-if [ -z "$player" ]; then
-	echo -e "no supported music player found" 1>&2
-	printf 'fzmp currently supports: ' 1>&2
+if [[ -z "$player" ]]; then
+	echo "no supported music player found" 1>&2
+	printf '    fzmp currently supports: ' 1>&2
 	printf '%s ' "${supported[@]}" 1>&2
 	echo 1>&2
 	exit 1
