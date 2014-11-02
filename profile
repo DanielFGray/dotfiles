@@ -4,7 +4,17 @@ if [ -n "$BASH_VERSION" ]; then
 	fi
 fi
 
-dirs=( "/sbin" "/usr/bin" "/usr/local/sbin" "/usr/games" "$HOME/bin" "$HOME/.local/bin" "$HOME/.gem/ruby/3.1.0/bin" "$HOME/.rvm/bin" "$HOME/.npm/bin" )
+dirs=(
+	"/sbin"
+	"/usr/bin"
+	"/usr/local/sbin"
+	"/usr/games"
+	"$HOME/bin"
+	"$HOME/.rvm/bin"
+	"$HOME/.gem/ruby/2.1.0/bin"
+	"$HOME/.npm/bin"
+	"$HOME/.local/bin"
+)
 
 for d in "${dirs[@]}"; do;
 	if [ -d "$d" ]; then
