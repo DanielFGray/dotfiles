@@ -10,6 +10,7 @@ local lain              = require("lain")
 local freedesktop_utils = require("freedesktop.utils")
 local freedesktop_menu  = require("freedesktop.menu")
 
+--{{{ Error handling
 if awesome.startup_errors then
 	naughty.notify({
 		preset = naughty.config.presets.critical,
@@ -31,7 +32,9 @@ do
 		in_error = false
 	end)
 end
+--}}}
 
+--{{{ Layouts
 local layouts = {
 	awful.layout.suit.floating,
 	lain.layout.uselesstile,
@@ -39,7 +42,9 @@ local layouts = {
 	lain.layout.uselessfair,
 	awful.layout.suit.max
 }
+--}}}
 
+--{{{ Variables
 modkey         = "Mod4"
 exec           = awful.util.spawn
 sexec          = awful.util.spawn_with_shell
@@ -219,6 +224,7 @@ shifty.config.defaults = {
 }
 -- }}}
 
+--{{{ Wibox widgets
 markup = lain.util.markup
 spr = wibox.widget.textbox(" ")
 lsep = wibox.widget.textbox(markup("#666", " "))
@@ -314,7 +320,9 @@ netwidget = wibox.widget.background(lain.widgets.net({
 		)
 	end
 }))
+--}}}
 
+--{{{ Wibox controls
 mywibox = {}
 mypromptbox = {}
 mylayoutbox = {}
@@ -431,7 +439,9 @@ end
 
 shifty.taglist = mytaglist
 shifty.init()
+--}}}
 
+--{{{ Keybinds
 root.buttons(awful.util.table.join(
 	awful.button({ modkey }, 2, awful.client.floating.toggle ),
 	awful.button({ }, 4, awful.tag.viewnext),
@@ -708,7 +718,9 @@ for i = 1,(shifty.config.maxtags or 9) do
 end
 
 root.keys(globalkeys)
+--}}}
 
+--{{{ Signals
 client.connect_signal("manage", function(c, startup)
 	c:connect_signal("mouse::enter", function(c)
 		if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
@@ -796,4 +808,4 @@ for s = 1, screen.count() do
 			end
 		end
 	end)
-end
+end--}}}
