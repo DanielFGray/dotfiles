@@ -1,11 +1,14 @@
-local awful      = require("awful")
-awful.rules      = require("awful.rules")
-awful.autofocus  = require("awful.autofocus")
-local wibox      = require("wibox")
-local beautiful  = require("beautiful")
-local naughty    = require("naughty")
-local tyrannical = require("tyrannical")
-local lain       = require("lain")
+local awful             = require("awful")
+awful.autofocus         = require("awful.autofocus")
+awful.rules             = require("awful.rules")
+local wibox             = require("wibox")
+local beautiful         = require("beautiful")
+local naughty           = require("naughty")
+local menubar           = require("menubar")
+local shifty            = require("shifty")
+local lain              = require("lain")
+local freedesktop_utils = require("freedesktop.utils")
+local freedesktop_menu  = require("freedesktop.menu")
 
 if awesome.startup_errors then
 	naughty.notify({
@@ -34,13 +37,10 @@ local layouts = {
 	lain.layout.uselesstile,
 	lain.layout.centerwork,
 	lain.layout.uselessfair,
-	awful.layout.suit.max,
+	awful.layout.suit.max
 }
 
-tyrannical.settings.default_layout = lain.layout.uselesstile
-
 modkey         = "Mod4"
-homedir        = os.getenv("HOME") .. "/"
 exec           = awful.util.spawn
 sexec          = awful.util.spawn_with_shell
 configdir      = awful.util.getdir("config") .. "/"
@@ -49,6 +49,7 @@ beautifultheme = configdir .. "themes/darkness/"
 terminal       = "x-terminal-emulator"
 browser        = "x-www-browser"
 filemanager    = "x-file-manager"
+mpdclient      = "sonata --visible"
 editor         = os.getenv("EDITOR") or "vim" or "nano"
 editor_cmd     = terminal .. " -e " .. editor
 
