@@ -73,77 +73,159 @@ run_once("pnmixer")
 run_once("xfce4-power-manager")
 run_once("redshift-gtk lat=29.27 lon=-94.87")
 
-tyrannical.tags = {
+shifty.config.tags = {
+	term = {
+		layout    = lain.layout.uselesstile,
+		position  = 1,
+		exclusive = true,
+		mwfact    = 0.5,
+	},
+	web = {
+		layout    = lain.layout.uselessfair,
+		exclusive = true,
+		position  = 2,
+		slave     = false,
+		spawn     = browser,
+	},
+	android = {
+		layout    = lain.layout.uselesstile,
+		position  = 3,
+	},
+	audio = {
+		layout    = lain.layout.uselesstile,
+		position  = 3,
+		exclusive = false,
+	},
+}
+
+shifty.config.apps = {
 	{
-		name = "term",
-		exclusive = true,
-		-- screen = { 1 },
-		layout = lain.layout.uselesstile,
-		class = {
-			"URxvt",
-			"sakura",
-			"xterm",
-			"gnome-terminal"
+		match = {
+			"gmrun",
+			"gsimplecal",
+			"xfrun4",
+			"krunner",
+			"pnmixer",
+			".*notify.*"
 		},
-	} , {
-		name = "web",
-		exclusive = true,
-		screen = { 3, 1 },
-		layout = lain.layout.uselesstile,
-		class = {
-			"Google Chrome",
-			"Google-chrome",
-			"Chromium",
+		slave = false,
+		intrusive = true,
+		honorsizehints = true,
+		skip_taskbar = true,
+		float = true,
+		sticky = true,
+		ontop = true
+	}, {
+		match = {
 			"Firefox",
+			"Iceweasel",
+			"Vimperator",
 			"Pentadactyl",
-			"Epiphany",
-			"Opera",
-			"Nightly",
+			"chromium",
+			"google.chrome.*",
 			"luakit",
-			"Transmission"
-		}
-	} , {
-		name = "media",
-		exclusive = true,
-		screen = { 2, 3 },
-		layout = awful.layout.suit.floating,
-		class = {
-			"mpv",
-			"mplayer",
-			"popcorn-time"
+			"Nightly",
+			"uzbl",
 		},
+		tag = "web",
+	}, {
+		match = {
+			"Shredder.*",
+			"Thunderbird",
+			"mutt",
+		},
+		tag = "mail",
+	}, {
+		match = {
+			"OpenOffice.*",
+			"Abiword",
+			"Gnumeric",
+		},
+		tag = "office",
+	}, {
+		match = {
+			"Mirage",
+			"qiv",
+			"gimp",
+			"gtkpod",
+			"Ufraw",
+			"easytag",
+		},
+		tag = "media",
+	}, {
+		match = {
+			"MPlayer.*",
+			"mpv.*",
+			"popcorn-time",
+			"Gnuplot",
+			"galculator",
+		},
+		tag = "media",
+		float = true,
+	}, {
+		match = {
+			mpdclient,
+			"pavucontrol",
+			"sonata",
+			"gmpc",
+			"ncmpcpp",
+			"audacity",
+			"mixxx",
+			"guitarpro",
+		},
+		tag = "audio",
+		slave = true,
+	}, {
+		match = {
+			terminal,
+			".*term.*",
+			"urxvt.*",
+			"konsole",
+		},
+		tag = "term",
+		slave = true,
+	}, {
+		match = {
+			"android.*",
+			"Android.*"
+		},
+		tag = "android",
+	}, {
+		match = { "" },
+		honorsizehints = false,
+		buttons = awful.util.table.join(
+			awful.button({ }, 1, function(c)
+				client.focus = c
+				c:raise()
+			end),
+			awful.button({ modkey }, 1, function(c)
+				client.focus = c
+				c:raise()
+				awful.mouse.client.move(c)
+			end),
+			awful.button({ modkey }, 3, awful.mouse.client.resize)
+		)
 	}
 }
 
-tyrannical.properties.floating = {
-	"screenshot",
-	"Synapse",
-	"Insert Picture",
-	"Pnmixer",
-	"New Form",
-	"file operation"
+shifty.config.defaults = {
+	layout = awful.layout.suit.floating,
+	ncol = 1,
+	mwfact = 0.50,
+	floatBars = true,
+	guess_name = true,
+	guess_position = true,
 }
+-- }}}
 
-tyrannical.properties.size_hints_honor = {
-	xterm = false,
-	URxvt = false,
-	aterm = false,
-	sauer_client = false,
-}
-
-tyrannical.properties.intrusive = {
-	"gsimplecal",
-	"Pnmixer",
-	"thunar"
-}
-tyrannical.settings.block_children_focus_stealing = false
-tyrannical.settings.group_children = true
 markup = lain.util.markup
+spr = wibox.widget.textbox(" ")
+lsep = wibox.widget.textbox(markup("#666", " "))
 
 clockicon = wibox.widget.background(wibox.widget.imagebox(beautiful.widget_clock))
 mytextclock = wibox.widget.background(awful.widget.textclock(" %a %d %b %r ", 1))
 
-lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
+lain.widgets.calendar:attach(mytextclock)
 
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
 mpdwidget = lain.widgets.mpd({
@@ -232,9 +314,6 @@ netwidget = wibox.widget.background(lain.widgets.net({
 	end
 }))
 
-spr = wibox.widget.textbox(" ")
-lsep = wibox.widget.textbox(markup("#666", " "))
-
 mywibox = {}
 mypromptbox = {}
 mylayoutbox = {}
@@ -282,7 +361,8 @@ mytasklist.buttons = awful.util.table.join(
 	awful.button({ }, 5, function()
 		awful.client.focus.byidx(-1)
 		if client.focus then client.focus:raise() end
-	end))
+	end)
+)
 
 for s = 1, screen.count() do
 	mypromptbox[s] = awful.widget.prompt()
@@ -347,6 +427,9 @@ for s = 1, screen.count() do
 	layout:set_right(right_layout)
 	mywibox[s]:set_widget(layout)
 end
+
+shifty.taglist = mytaglist
+shifty.init()
 
 root.buttons(awful.util.table.join(
 	awful.button({ modkey }, 2, awful.client.floating.toggle ),
@@ -431,9 +514,9 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, "Control" }, "n", awful.client.restore),
 	awful.key({ modkey, "Control" }, "r", awesome.restart),
 	awful.key({ modkey, "Shift" }, "q", awesome.quit),
-	awful.key({ modkey }, "r", function()
-		mypromptbox[mouse.screen]:run()
-	end),
+	-- awful.key({ modkey }, "r", function()
+	-- 	mypromptbox[mouse.screen]:run()
+	-- end),
 	awful.key({ modkey }, "F4", function()
 		awful.prompt.run({ prompt = "Run Lua code: " },
 		mypromptbox[mouse.screen].widget,
@@ -448,12 +531,6 @@ globalkeys = awful.util.table.join(
 	end),
 	awful.key({ }, "XF86AudioMute", function()
 		exec("amixer -q sset Master toggle")
-	end),
-	awful.key({ modkey, }, "a", function()
-		lain.util.add_tag(mypromptbox)
-	end),
-	awful.key({ modkey, "Shift" }, "r", function()
-		lain.util.rename_tag(mypromptbox)
 	end),
 	awful.key({ modkey, "Shift" }, "d", function()
 		lain.util.remove_tag()
@@ -486,6 +563,24 @@ globalkeys = awful.util.table.join(
 			end
 			return true
 		end)
+	end),
+    awful.key({ modkey }, "r", function()
+		menubar.show()
+	end),
+	awful.key({ modkey, "Shift" }, "d", shifty.del),
+	awful.key({ modkey, "Shift" }, "n", shifty.send_prev),
+	awful.key({ modkey }, "n", shifty.send_next),
+	awful.key({ modkey, "Control" }, "n", function()
+		local t = awful.tag.selected()
+		local s = awful.util.cycle(screen.count(), awful.tag.getscreen(t) + 1)
+		awful.tag.history.restore()
+		t = shifty.tagtoscr(s, t)
+		awful.tag.viewonly(t)
+	end),
+	awful.key({ modkey }, "a", shifty.add),
+	awful.key({ modkey, "Shift" }, "r", shifty.rename),
+	awful.key({ modkey, "Shift" }, "a", function()
+		shifty.add({ nopopup = true })
 	end)
 )
 
@@ -545,9 +640,9 @@ client_keys = {
 				return true
 			end
 			keygrabber.stop()
-			if key == 'u' then
+			if key == "u" then
 				c.fullscreen = not c.fullscreen
-			elseif key == 'l' then
+			elseif key == "l" then
 				awful.client.floating.toggle(c)
 			end
 			return true
@@ -586,63 +681,30 @@ clientkeys = awful.util.table.join(
 	end)
 )
 
-for i = 1, 9 do
+shifty.config.clientkeys = clientkeys
+shifty.config.modkey = modkey
+
+for i = 1,(shifty.config.maxtags or 9) do
 	globalkeys = awful.util.table.join(globalkeys,
-		awful.key({ modkey }, "#" .. i + 9, function()
-			local screen = mouse.screen
-			local tag = awful.tag.gettags(screen)[i]
-			if tag then
-				awful.tag.viewonly(tag)
-			end
-		end),
-		awful.key({ modkey, "Control" }, "#" .. i + 9, function()
-			local screen = mouse.screen
-			local tag = awful.tag.gettags(screen)[i]
-			if tag then
-				awful.tag.viewtoggle(tag)
-			end
-		end),
-		awful.key({ modkey, "Shift" }, "#" .. i + 9, function()
-			local tag = awful.tag.gettags(client.focus.screen)[i]
-			if client.focus and tag then
-				awful.client.movetotag(tag)
-			end
-		end),
-		awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9, function()
-			local tag = awful.tag.gettags(client.focus.screen)[i]
-			if client.focus and tag then
-				awful.client.toggletag(tag)
-			end
-		end)
-	)
+	awful.key({ modkey }, "#" .. i + 9, function()
+		awful.tag.viewonly(shifty.getpos(i))
+	end),
+	awful.key({ modkey, "Control" }, "#" .. i + 9, function()
+		awful.tag.viewtoggle(shifty.getpos(i))
+	end),
+	awful.key({ modkey, "Shift" }, "#" .. i + 9, function()
+		if client.focus then
+			local t = shifty.getpos(i)
+			awful.client.movetotag(t)
+			awful.tag.viewonly(t)
+		end
+	end),
+	awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9, function()
+		if client.focus then
+			awful.client.toggletag(shifty.getpos(i))
+		end
+	end))
 end
-
-clientbuttons = awful.util.table.join(
-	awful.button({ }, 1, function(c)
-		client.focus = c
-		c:raise()
-	end),
-	awful.button({ modkey }, 1, function(c)
-		awful.mouse.client.move()
-	end),
-	awful.button({ modkey }, 3, function(c)
-		awful.mouse.client.resize()
-	end)
-)
-
-awful.rules.rules = {
-	{
-		rule = { },
-		properties = {
-			border_width = beautiful.border_width,
-			border_color = beautiful.border_normal,
-			focus = true,
-			keys = clientkeys,
-			buttons = clientbuttons,
-			size_hints_honor = true
-		}
-	}
-}
 
 root.keys(globalkeys)
 
