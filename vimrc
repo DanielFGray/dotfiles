@@ -32,12 +32,13 @@ NeoBundle      'mhinz/vim-startify'
 NeoBundle      'mhinz/vim-tmuxify'
 NeoBundle      'bling/vim-airline'
 NeoBundle      'sjl/gundo.vim'
-NeoBundle      'kana/vim-textobj-user',                  {'name': 'vim-textobj-user'}
-NeoBundle      'reedes/vim-textobj-sentence',            {'depends': 'vim-textobj-user'}
-NeoBundle      'kana/vim-textobj-function',              {'depends': 'vim-textobj-user'}
+NeoBundleLazy  'kana/vim-textobj-user',                  {'name': 'vim-textobj-user'}
+NeoBundleLazy  'reedes/vim-textobj-sentence',            {'depends': 'vim-textobj-user'}
+NeoBundleLazy  'kana/vim-textobj-function',              {'depends': 'vim-textobj-user'}
+NeoBundleLazy  'christoomey/vim-titlecase',              {'autoload': {'mappings': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}}
 NeoBundle      'zhaocai/GoldenView.Vim'
 NeoBundle      'noahfrederick/vim-noctu'
-NeoBundle      'Shougo/vimshell.vim',                    {'autoload': {'commands': [{'name': 'VimShell', 'complete': 'customlist,vimshell#complete'}, 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop']}}
+NeoBundleLazy  'Shougo/vimshell.vim',                    {'autoload': {'commands': [{'name': 'VimShell', 'complete': 'customlist,vimshell#complete'}, 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop']}}
 NeoBundle      'Keithbsmiley/investigate.vim'
 NeoBundle      'Raimondi/delimitMate'
 NeoBundleLazy  'haya14busa/incsearch.vim',               {'autoload': {'mappings': ['<Plug>(incsearch-']}}
@@ -127,11 +128,6 @@ vnoremap > >gv
 cnoremap vh vert h 
 ca w!! w !sudo tee >/dev/null "%"
 
-nmap <Leader>a <Plug>(EasyAlign)
-vmap <Leader>a <Plug>(EasyAlign)
-map + <Plug>(expand_region_expand)
-map _ <Plug>(expand_region_shrink)
-
 if version >= 703
 	if exists("&undodir")
 		set undodir=~/.vim/undo//
@@ -175,7 +171,6 @@ inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "" {{{ snippets
 let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
-let g:neosnippet#enable_snipmate_compatibility=1
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_target)
@@ -295,6 +290,19 @@ let g:airline_detect_whitespace = 0
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
+"" }}}
+
+"" {{{ misc plugins
+nmap <Leader>a <Plug>(EasyAlign)
+vmap <Leader>a <Plug>(EasyAlign)
+
+map + <Plug>(expand_region_expand)
+map _ <Plug>(expand_region_shrink)
+
+let g:titlecase_map_keys = 0
+nmap <leader>gt <Plug>Titlecase
+vmap <leader>gt <Plug>Titlecase
+nmap <leader>gT <Plug>TitlecaseLine
 "" }}}
 
 if has("gui_running")
