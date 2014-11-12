@@ -7,14 +7,14 @@ if [ -f /etc/debian_version ]; then
 	alias canhaz="sudo apt-get install "
 	alias updupg="sudo apt-get update; sudo apt-get dist-upgrade"
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-	pkgrm() { sudo apt-get purge "$*" && sudo apt-get autoremove ;}
-	pkgsearch() { apt-cache search "$*" | sort | less ;}
+	pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
+	pkgsearch() { apt-cache search "$@" | sort | less ;}
 elif [ -f /etc/arch-release ]; then
 	[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	alias canhaz="yaourt -S "
 	alias updupg="yaourt -Syu "
 	alias pkgrm="sudo pacman -Rsu "
-	pkgsearch() { unbuffer yaourt -Ss "$*" | less ;}
+	pkgsearch() { unbuffer yaourt -Ss "$@" | less ;}
 elif [ -f /etc/redhat-release ]; then
 	alias yum="sudo yum "
 	alias canhaz="yum install "
