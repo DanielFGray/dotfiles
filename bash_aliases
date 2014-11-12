@@ -66,7 +66,7 @@ txs() {
 	fi
 }
 
-sprunge() { \curl -sF 'sprunge=<-' http://sprunge.us ;}
+sprunge() { command curl -sF 'sprunge=<-' http://sprunge.us ;}
 
 pgrep() { ps aux | grep "$1" | grep -v grep ;}
 
