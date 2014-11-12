@@ -147,6 +147,6 @@ ding() {
 	paplay ~/downloads/ding.ogg &> /dev/null
 }
 
-[ -x $(which fortune) ] && fortune -as
+command -v fortune &> /dev/null && fortune -as
 
 # vim:ft=sh:
