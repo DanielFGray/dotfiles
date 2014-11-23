@@ -229,7 +229,7 @@ function! s:unite_settings()
 endfunction
 "" }}}
 
-"" {{{ syntax chechking
+"" {{{ syntax checking
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -326,6 +326,29 @@ autocmd BufReadPost *
 \		exe 'normal! g`"zvzz' |
 \	endif
 
+function! ToggleDistractions()
+	if !exists("g:distractionFree") || g:distractionFree==0
+		let g:distractionFree=1
+		set nocursorline nocursorcolumn colorcolumn=0
+		set nonumber norelativenumber
+		set nolist
+		set noruler
+		set noshowcmd
+		set noshowmode
+		set showtabline=0 laststatus=0
+	else
+		let g:distractionFree=0
+		set cursorline cursorcolumn colorcolumn=80
+		set number relativenumber
+		set list
+		set ruler
+		set showmode
+		set showcmd
+		set showtabline=2 laststatus=2
+		AirlineRefresh
+	endif
+endfunction
+nnoremap <silent> <leader>df <Esc>:<C-u>call ToggleDistractions()<CR>
 
 function! Dotfiles()
 	cd ~/dotfiles
