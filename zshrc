@@ -16,7 +16,7 @@ alias zmv='noglob zmv '
 alias -g L='| less'
 alias -g S='| sort'
 alias -g V='| vim -'
-alias -g DN='> /dev/null'
+alias -g DN='&> /dev/null'
 
 bindkey -v
 bindkey '^[[A'  history-search-backward
