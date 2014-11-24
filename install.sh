@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-thisdir$(pwd)
+thisdir=$(pwd)
 
 files=( '.profile' '.bash_aliases' )
 for f in "${HOME}/${files[@]}"; do
