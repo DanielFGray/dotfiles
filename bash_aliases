@@ -11,10 +11,10 @@ if [ -f /etc/debian_version ]; then
 	pkgsearch() { apt-cache search "$@" | sort | less ;}
 elif [ -f /etc/arch-release ]; then
 	[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
-	alias canhaz="yaourt -S "
-	alias updupg="yaourt -Syu "
+	alias canhaz="pacaur -S "
+	alias updupg="pacaur -Syu "
 	alias pkgrm="sudo pacman -Rsu "
-	pkgsearch() { unbuffer yaourt -Ss "$@" | less ;}
+	pkgsearch() { unbuffer pacaur -Ss "$@" | less ;}
 elif [ -f /etc/redhat-release ]; then
 	alias yum="sudo yum "
 	alias canhaz="yum install "
