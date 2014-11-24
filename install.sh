@@ -60,7 +60,7 @@ else
 	done
 fi
 
-if !type 'tmux' &> /dev/null; then
+if ! type 'tmux' &> /dev/null; then
 	echo 2> 'tmux not found'
 else
 	while true; do
@@ -88,7 +88,7 @@ else
 	done
 fi
 
-if !type 'awesome' &> /dev/null; then
+if ! type 'awesome' &> /dev/null; then
 	echo 2> 'awesome not found'
 else
 	while true; do
@@ -103,7 +103,7 @@ else
 	done
 fi
 
-if !type 'openbox' &> /dev/null; then
+if ! type 'openbox' &> /dev/null; then
 	echo 2> 'openbox not found'
 else
 	while true; do
