@@ -1,32 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-#if [ -z $(sudo -l 2>&1 | grep -P '^Sorry,|incorrect' | wc -l) ]; then
-#	while true; do
-#		# parse packages.txt for gui/cli, ask for each group
-#		read -e -p 'packages to install: ' -i "$(tr '\n' ' ' < ~/dotfiles/packages)" install
-#		case $install in
-#		'' ) break ;;
-#		* )
-#			if [ -f /etc/debian_version ]; then
-#				sudo apt-get install $install
-#			elif [ -f /etc/redhat-release ]; then
-#				sudo yum install $install
-#			elif [ -f /etc/arch-release ]; then
-#				sudo pacman -S $install
-#			elif [ -f /etc/gentoo-release ]; then
-#				sudo emerge -avl $install
-#			else
-#				echo "I don't know how to install"
-#			fi
-#			break ;;
-#		esac
-#	done
-#fi
+thisdir$(pwd)
 
-#TODO: mv existing
-ln -sfv ~/dotfiles/bashrc ~/.bashrc
-ln -sfv ~/dotfiles/bash_aliases ~/.bash_aliases
-ln -sfv ~/dotfiles/profile ~/.profile
+files=( '.profile' '.bash_aliases' )
+for f in "${HOME}/${files[@]}"; do
+	if [[ -f "$f" ]]; then
+		mv "${HOME}/${f}" "${HOME}/old.${f}"
+	fi
+done
+
+ln -vs "${thisdir}/bash_aliases" "${HOME}/.bash_aliases"
+ln -vs "${thisdir}/profile" "${HOME}/.profile"
 
 if ! type 'vim' &> /dev/null; then
 	echo 2> 'vim not found'
@@ -35,11 +19,12 @@ else
 		read -e -p 'install vim plugins? (y/n) ' vimplugins
 		case $vimplugins in
 			[Yy]* )
-				#TODO: mv existing
-				ln -vfs ~/dotfiles/vimrc ~/.vimrc
-				mkdir -vp ~/.vim/{bundle,colors,cache,undo,backups,swaps}
-				git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim #TODO: if dir exists : cd && git pull
-				vim +NeoBundleUpdate +q
+				[ -f "${HOME}/.vimrc" ] && mv "${HOME}/.vimrc" "${HOME}/old.vimrc"
+				ln -vs "${thisdir}/vimrc" "${HOME}/.vimrc"
+				mkdir -vp "${HOME}/.vim/{bundle,colors,cache,undo,backups,swaps}"
+
+				git clone https://github.com/Shougo/neobundle.vim "${HOME}/.vim/bundle/neobundle.vim" #TODO: if dir exists : cd && git pull
+				vim +NeoBundleCheckUpdate +q
 				break ;;
 			* ) break ;;
 		esac
@@ -53,13 +38,50 @@ else
 		read -e -p 'git clone oh-my-zsh and plugins? (y/n) ' zshconf
 		case $zshconf in
 			[Yy]* )
-				git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh #TODO: if dir exists : cd && git pull
-				mkdir -vp ~/.oh-my-zsh/custom/plugins
-				git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting #TODO: if dir exists : cd && git pull
-				#TODO: mv existing
-				ln -vfs ~/dotfiles/zshrc ~/.zshrc
-				ln -vfs ~/dotfiles/zprofile ~/.zprofile
-				ln -vfs ~/dotfiles/zlogin ~/.zlogin
+				if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
+					git clone https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh" #TODO: if dir exists : cd && git pull
+				fi
+				if [[ ! -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]]; then
+					mkdir -vp "${HOME}/.oh-my-zsh/custom/plugins"
+					git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" #TODO: if dir exists : cd && git pull
+				fi
+				zshfiles=( '.zshrc' '.zprofile' '.zlogin' )
+				for f in "${HOME}/${zshfiles[@]}"; do
+					if [[ -f "$f" ]]; then
+						mv "${HOME}/${f}" "${HOME}/old.${f}"
+					fi
+				done
+				ln -vs "${thisdir}/zshrc" "${HOME}/.zshrc"
+				ln -vs "${thisdir}/zprofile" "${HOME}/.zprofile"
+				ln -vs "${thisdir}/zlogin" "${HOME}/.zlogin"
+				break ;;
+			* ) break ;;
+		esac
+	done
+fi
+
+if !type 'tmux' &> /dev/null; then
+	echo 2> 'tmux not found'
+else
+	while true; do
+		read -e -p 'symlink tmux.conf and install plugins? (y/n) ' tmuxconf1
+		case $tmuxconf1 in
+			[Yy]* )
+				if [[ -d "${HOME}/.tmux/plugins/tpm" ]]; then
+					mkdir -p "${HOME}/.tmux/plugins"
+					git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
+				fi
+				[ -f "${HOME}/.tmux.conf" ] && mv "${HOME}/.tmux.conf" "${HOME}/old.tmux.conf"
+				read -e -p 'local or remote tmux.conf? (l/r) ' tmuxconf2
+				case $tmuxconf2 in
+					[Ll]* )
+						ln -vs "${thisdir}/local.tmux.conf" "${HOME}/.tmux.conf"
+						break ;;
+					[Rr]* )
+						ln -vs "${thisdir}/remote.tmux.conf" "${HOME}/.tmux.conf"
+						break ;;
+					* ) break ;;
+				esac
 				break ;;
 			* ) break ;;
 		esac
@@ -74,33 +96,22 @@ else
 		case $awesomeconf in
 			[Yy]* )
 				#TODO: mv existing
-				ln -fsf ~/dotfiles/config/awesome ~/.config
+				ln -vs "${thisdir}/config/awesome" "${HOME}/.config"
 				break ;;
 			* ) break ;;
 		esac
 	done
 fi
 
-if !type 'tmux' &> /dev/null; then
-	echo 2> 'tmux not found'
+if !type 'openbox' &> /dev/null; then
+	echo 2> 'openbox not found'
 else
 	while true; do
-		read -e -p 'symlink tmux.conf and install plugins? (y/n) ' tmuxconf1
-		case $tmuxconf1 in
+		read -e -p 'symlink openbox dir? (y/n) ' openboxconf
+		case $openboxconf in
 			[Yy]* )
-				mkdir -p ~/.tmux/plugins
-				git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 				#TODO: mv existing
-				read -e -p 'local or remote tmux.conf? (l/r) ' tmuxconf2
-				case $tmuxconf2 in
-					[Ll]* )
-						ln -fsv ~/dotfiles/local.tmux.conf ~/.tmux.conf
-						break ;;
-					[Rr]* )
-						ln -fsv ~/dotfiles/remote.tmux.conf ~/.tmux.conf
-						break ;;
-					* ) break ;;
-				esac
+				ln -vs "${thisdir}/config/openbox" "${HOME}/.config"
 				break ;;
 			* ) break ;;
 		esac
