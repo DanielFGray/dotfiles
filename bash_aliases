@@ -41,11 +41,9 @@ cd() {
 	if [ -z "$@" ]; then
 		builtin cd "$HOME" && ls
 	else
-		if [ -z "$2" ]; then
-			builtin cd "$1" && ls
-		else
-			builtin cd "$1" && ls "$2"
-		fi
+		local dir="$1"
+		shift
+		builtin cd "$dir" && ls "$@";
 	fi
 }
 
