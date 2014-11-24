@@ -2,15 +2,22 @@
 
 thisdir=$(pwd)
 
-files=( '.profile' '.bash_aliases' )
-for f in "${HOME}/${files[@]}"; do
-	if [[ -f "$f" ]]; then
-		mv "${HOME}/${f}" "${HOME}/old.${f}"
-	fi
+while true; do
+	read -e -p 'symlink profile and bash_aliases? (y/n) ' defaults
+	case $defaults in
+		[Yy]* )
+			files=( '.profile' '.bash_aliases' )
+			for f in "${files[@]}"; do
+				if [[ -f "${HOME}/$f" ]]; then
+					mv "${HOME}/${f}" "${HOME}/old.${f}"
+				fi
+			done
+			ln -vs "${thisdir}/bash_aliases" "${HOME}/.bash_aliases"
+			ln -vs "${thisdir}/profile" "${HOME}/.profile"
+			break ;;
+		* ) break ;;
+	esac
 done
-
-ln -vs "${thisdir}/bash_aliases" "${HOME}/.bash_aliases"
-ln -vs "${thisdir}/profile" "${HOME}/.profile"
 
 if ! type 'vim' &> /dev/null; then
 	echo 2> 'vim not found'
@@ -47,8 +54,8 @@ else
 					git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 				fi
 				zshfiles=( '.zshrc' '.zprofile' '.zlogin' )
-				for f in "${HOME}/${zshfiles[@]}"; do
-					if [[ -f "$f" ]]; then
+				for f in "${zshfiles[@]}"; do
+					if [[ -f "${HOME}/$f" ]]; then
 						mv "${HOME}/${f}" "${HOME}/old.${f}"
 					fi
 				done
