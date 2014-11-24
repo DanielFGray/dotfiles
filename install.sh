@@ -19,11 +19,12 @@ else
 		read -e -p 'install vim plugins? (y/n) ' vimplugins
 		case $vimplugins in
 			[Yy]* )
-				[ -f "${HOME}/.vimrc" ] && mv "${HOME}/.vimrc" "${HOME}/old.vimrc"
+				[[ -f "${HOME}/.vimrc" ]] && mv "${HOME}/.vimrc" "${HOME}/old.vimrc"
 				ln -vs "${thisdir}/vimrc" "${HOME}/.vimrc"
 				mkdir -vp "${HOME}/.vim/{bundle,colors,cache,undo,backups,swaps}"
-
-				git clone https://github.com/Shougo/neobundle.vim "${HOME}/.vim/bundle/neobundle.vim" #TODO: if dir exists : cd && git pull
+				if [[ ! -d "${HOME}/.vim/bundle/neobundle.vim" ]]; then
+					git clone https://github.com/Shougo/neobundle.vim "${HOME}/.vim/bundle/neobundle.vim" #TODO: if dir exists : cd && git pull
+				fi
 				vim +NeoBundleCheckUpdate +q
 				break ;;
 			* ) break ;;
@@ -71,7 +72,7 @@ else
 					mkdir -p "${HOME}/.tmux/plugins"
 					git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 				fi
-				[ -f "${HOME}/.tmux.conf" ] && mv "${HOME}/.tmux.conf" "${HOME}/old.tmux.conf"
+				[[ -f "${HOME}/.tmux.conf" ]] && mv "${HOME}/.tmux.conf" "${HOME}/old.tmux.conf"
 				read -e -p 'local or remote tmux.conf? (l/r) ' tmuxconf2
 				case $tmuxconf2 in
 					[Ll]* )
