@@ -15,7 +15,7 @@ ln -vs "${thisdir}/profile" "${HOME}/.profile"
 if ! type 'vim' &> /dev/null; then
 	echo 2> 'vim not found'
 else
-	while true; do #TODO: Why is this necessary?
+	while true; do
 		read -e -p 'install vim plugins? (y/n) ' vimplugins
 		case $vimplugins in
 			[Yy]* )
@@ -23,7 +23,7 @@ else
 				ln -vs "${thisdir}/vimrc" "${HOME}/.vimrc"
 				mkdir -vp "${HOME}/.vim/{bundle,colors,cache,undo,backups,swaps}"
 				if [[ ! -d "${HOME}/.vim/bundle/neobundle.vim" ]]; then
-					git clone https://github.com/Shougo/neobundle.vim "${HOME}/.vim/bundle/neobundle.vim" #TODO: if dir exists : cd && git pull
+					git clone https://github.com/Shougo/neobundle.vim "${HOME}/.vim/bundle/neobundle.vim"
 				fi
 				vim +NeoBundleCheckUpdate +q
 				break ;;
@@ -40,11 +40,11 @@ else
 		case $zshconf in
 			[Yy]* )
 				if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
-					git clone https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh" #TODO: if dir exists : cd && git pull
+					git clone https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh"
 				fi
 				if [[ ! -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]]; then
 					mkdir -vp "${HOME}/.oh-my-zsh/custom/plugins"
-					git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" #TODO: if dir exists : cd && git pull
+					git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 				fi
 				zshfiles=( '.zshrc' '.zprofile' '.zlogin' )
 				for f in "${HOME}/${zshfiles[@]}"; do
@@ -68,7 +68,7 @@ else
 		read -e -p 'symlink tmux.conf and install plugins? (y/n) ' tmuxconf1
 		case $tmuxconf1 in
 			[Yy]* )
-				if [[ -d "${HOME}/.tmux/plugins/tpm" ]]; then
+				if [[ ! -d "${HOME}/.tmux/plugins/tpm" ]]; then
 					mkdir -p "${HOME}/.tmux/plugins"
 					git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 				fi
@@ -96,7 +96,6 @@ else
 		read -e -p 'symlink awesome dir? (y/n) ' awesomeconf
 		case $awesomeconf in
 			[Yy]* )
-				#TODO: mv existing
 				ln -vs "${thisdir}/config/awesome" "${HOME}/.config"
 				break ;;
 			* ) break ;;
@@ -111,7 +110,6 @@ else
 		read -e -p 'symlink openbox dir? (y/n) ' openboxconf
 		case $openboxconf in
 			[Yy]* )
-				#TODO: mv existing
 				ln -vs "${thisdir}/config/openbox" "${HOME}/.config"
 				break ;;
 			* ) break ;;
