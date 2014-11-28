@@ -1,26 +1,27 @@
 export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export EDITOR="vim"
 
-if [ -f /etc/debian_version ]; then
+if [[ -f /etc/debian_version ]]; then
 	PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
-	[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
+	[[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
 	alias canhaz="sudo apt-get install "
 	alias updupg="sudo apt-get update; sudo apt-get dist-upgrade"
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
 	pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
 	pkgsearch() { apt-cache search "$@" | sort | less ;}
-elif [ -f /etc/arch-release ]; then
-	[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+elif [[ -f /etc/arch-release ]]; then
+	[[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 	alias canhaz="pacaur -S "
 	alias updupg="pacaur -Syu "
 	alias pkgrm="sudo pacman -Rsu "
 	pkgsearch() { unbuffer pacaur -Ss "$@" | less ;}
-elif [ -f /etc/redhat-release ]; then
+elif [[ -f /etc/redhat-release ]]; then
 	alias yum="sudo yum "
 	alias canhaz="yum install "
-elif [ -f /etc/gentoo-release ]; then
+elif [[ -f /etc/gentoo-release ]]; then
 	alias canhaz="sudo emerge -av "
 fi
+
 
 alias cp="cp -v "
 alias mv="mv -v "
@@ -30,15 +31,16 @@ alias curl="curl -v "
 alias chown="chown -v "
 alias chmod="chmod -v "
 alias rename="rename -v "
-alias grep="grep --color=auto -P "
 alias ls="ls -Fh --color --group-directories-first "
 alias l="ls -lgo "
 alias la="l -A "
 alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
+alias grep="grep --color=auto --exclude-dir=.cvs --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --color=auto -P "
+unset GREP_OPTIONS
 
 cd() {
-	if [ -z "$@" ]; then
+	if [[ -z "$@" ]]; then
 		builtin cd "$HOME" && ls
 	else
 		local dir="$1"
@@ -47,7 +49,7 @@ cd() {
 	fi
 }
 
-mkd() { command mkdir -p "$@" && cd "$1" ;}
+mkd() { mkdir -p "$@" && cd "$1" ;}
 
 wget() { man curl ;}
 cat() { (( "$#" > 1 )) && /bin/cat "$@" ;}
@@ -101,7 +103,7 @@ changeroot() {
 }
 
 extract() {
-	if [ -f "$1" ] ; then
+	if [[ -f "$1" ]] ; then
 		case "$1" in
 			*.tar.bz2)   tar xvjf "$1"  ;;
 			*.tar.gz)    tar xvzf "$1"  ;;

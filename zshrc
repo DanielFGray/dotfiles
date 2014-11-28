@@ -5,7 +5,7 @@ DEFAULT_USER="dan"
 plugins=(vi-mode git git-extras zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
-[ -f $HOME/.bash_aliases ] && source $HOME/.bash_aliases
+[[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
 
 autoload -U zmv
 
@@ -43,7 +43,7 @@ bindkey -M vicmd 'di' delete-in
 bindkey -M vicmd 'dd' kill-whole-line
 
 fancy-ctrl-z() {
-	if [[ "$#BUFFER" -eq 0 ]]; then
+	if [[ "$#BUFFER" == 0 ]]; then
 		bg
 		zle redisplay
 	else
@@ -54,7 +54,7 @@ fancy-ctrl-z() {
 delete-in() {
 	local CHAR LCHAR RCHAR LSEARCH RSEARCH COUNT
 	read -k CHAR
-	if [ "$CHAR" = 'w' ]; then
+	if [[ "$CHAR" == 'w' ]]; then
 		zle vi-backward-word
 		LSEARCH=$CURSOR
 		zle vi-forward-word
@@ -62,13 +62,13 @@ delete-in() {
 		RBUFFER="$BUFFER[$RSEARCH + 1, ${#BUFFER}]"
 		LBUFFER="$LBUFFER[1, $LSEARCH]"
 		return
-	elif [ "$CHAR" = '(' ] || [ "$CHAR" = ')' ] || [ "$CHAR" = 'b' ]; then
+	elif [[ "$CHAR" == '(' ]] || [[ "$CHAR" == ')' ]] || [[ "$CHAR" == 'b' ]]; then
 		LCHAR="("
 		RCHAR=")"
-	elif [ "$CHAR" = '[' ] || [ "$CHAR" = ']' ]; then
+	elif [[ "$CHAR" == '[' ]] || [[ "$CHAR" == ']' ]]; then
 		LCHAR="["
 		RCHAR="]"
-	elif [ $CHAR = '{' ] || [ $CHAR = '}' ] || [ "$CHAR" = 'B' ]; then
+	elif [[ $CHAR == '{' ]] || [[ $CHAR == '}' ]] || [[ "$CHAR" == 'B' ]]; then
 		LCHAR='{'
 		RCHAR='}'
 	else
@@ -76,17 +76,17 @@ delete-in() {
 		RCHAR="$CHAR"
 	fi
 	LSEARCH=${#LBUFFER}
-	while [ "$LSEARCH" -gt 0 ] && [ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]; do
+	while [[ "$LSEARCH" > 0 ]] && [[ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]]; do
 		LSEARCH=$(expr $LSEARCH - 1)
 	done
-	if [ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]; then
+	if [[ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]]; then
 		return
 	fi
 	RSEARCH=0
-	while [ "$RSEARCH" -lt $(expr ${#RBUFFER} + 1 ) ] && [ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]; do
+	while [[ "$RSEARCH" < $(expr ${#RBUFFER} + 1 ) ]] && [[ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]]; do
 		RSEARCH=$(expr $RSEARCH + 1)
 	done
-	if [ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]; then
+	if [[ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]]; then
 		return
 	fi
 	RBUFFER="$RBUFFER[$RSEARCH, ${#RBUFFER}]"
