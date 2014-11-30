@@ -1,0 +1,4 @@
+gemhome: /home/dan/.gems
+gempath:
+- /home/dan/.gems
+- /usr/lib/ruby/gems/1.9.1
