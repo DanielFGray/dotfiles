@@ -149,4 +149,6 @@ ding() {
 
 command -v fortune &> /dev/null && fortune -as
 
+command -v fzf &> /dev/null && command -v ag &> /dev/null && export FZF_DEFAULT_COMMAND='ag -l -g ""'
+
 # vim:ft=sh:
