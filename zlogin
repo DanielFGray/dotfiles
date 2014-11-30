@@ -3,5 +3,5 @@ if [ "$SSH_CONNECTION" = "" ]; then
 		exec startx
 	fi
 else
-	([[ $(tmux ls 2>/dev/null) != '' ]] && tmux attach) || tmux
+	([[ $(tmux ls &> /dev/null) != '' ]] && tmux attach) || mux start main
 fi
