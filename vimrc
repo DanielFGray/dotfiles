@@ -196,14 +196,15 @@ call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#set_profile('files', 'context.smartcase', 1)
 call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
-nnoremap <leader>ur :<C-u>Unite -buffer-name=register register -auto-resize <cr>
-nnoremap <leader>uy :<C-u>Unite -buffer-name=yank history/yank<cr>
-nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer buffer<cr>
-nnoremap <leader>uf :<C-u>Unite -buffer-name=files -toggle -auto-resize file_rec/async<cr>
-nnoremap <leader>ue :<C-u>Unite -buffer-name=files buffer file_mru bookmark file<cr>
-nnoremap <leader>uo :<C-u>Unite -buffer-name=outline outline -auto-resize<cr>
-nnoremap <leader>uh :<C-u>Unite -buffer-name=help help -auto-resize<cr>
-nnoremap <leader>ut :<C-u>Unite -buffer-name=tag tag tag/file -auto-resize<cr>
+nnoremap <silent> <leader>ur :<C-u>Unite register -buffer-name=register -auto-resize <cr>
+nnoremap <silent> <leader>uy :<C-u>Unite history/yank -buffer-name=yank<cr>
+nnoremap <silent> <leader>ub :<C-u>Unite buffer -buffer-name=buffer<cr>
+nnoremap <silent> <leader>ug :<c-u>Unite grep -buffer-name=grep <cr>
+nnoremap <silent> <leader>uf :<C-u>Unite file_rec/async -buffer-name=files -toggle -auto-resize<cr>
+nnoremap <silent> <leader>ue :<C-u>Unite buffer file_mru bookmark file -buffer-name=files<cr>
+nnoremap <silent> <leader>uo :<C-u>Unite outline -buffer-name=outline -auto-resize<cr>
+nnoremap <silent> <leader>uh :<C-u>Unite help -buffer-name=help -auto-resize<cr>
+nnoremap <silent> <leader>ut :<C-u>Unite tag tag/file -buffer-name=tag -auto-resize<cr>
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
 	set grepformat=%f:%l:%C:%m
