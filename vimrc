@@ -302,9 +302,12 @@ map + <Plug>(expand_region_expand)
 map _ <Plug>(expand_region_shrink)
 
 let g:titlecase_map_keys = 0
-nmap <leader>gt <Plug>Titlecase
-vmap <leader>gt <Plug>Titlecase
-nmap <leader>gT <Plug>TitlecaseLine
+nmap <silent> <leader>gt <Plug>Titlecase
+vmap <silent> <leader>gt <Plug>Titlecase
+nmap <silent> <leader>gT <Plug>TitlecaseLine
+
+let g:goldenview__enable_default_mapping=0
+nmap <silent> <C-n>  <Plug>GoldenViewSplit
 "" }}}
 
 if has("gui_running")
