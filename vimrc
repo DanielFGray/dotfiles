@@ -60,7 +60,6 @@ NeoBundleLazy  'digitaltoad/vim-jade',                   {'autoload': {'filetype
 NeoBundleLazy  'moll/vim-node',                          {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy  'jelera/vim-javascript-syntax',           {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy  'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy  'burnettk/vim-angular',                   {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy  'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}, 'build': {'unix': 'npm install'}}
 NeoBundleLazy  'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy  'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
@@ -112,7 +111,7 @@ set t_Co=16
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
-set cryptmethod=blowfish
+set cryptmethod=blowfish2
 set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
 set diffopt=vertical
 set pastetoggle=<F6>
@@ -216,7 +215,7 @@ elseif executable('ack')
 	set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
 	set grepformat=%f:%l:%c:%m
 	let g:unite_source_grep_command='ack'
-	let g:unite_source_grep_default_opts='--no-heading --no-color -a'
+	let g:unite_source_grep_default_opts='--no-heading --no-color'
 	let g:unite_source_grep_recursive_opt=''
 endif
 autocmd FileType unite call s:unite_settings()
