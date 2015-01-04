@@ -21,34 +21,34 @@ NeoBundle      'Shougo/vimfiler'
 NeoBundle      'scrooloose/syntastic'
 NeoBundle      'terryma/vim-expand-region'
 NeoBundle      'wellle/targets.vim'
-NeoBundle      'junegunn/vim-easy-align'
 NeoBundle      'tpope/vim-fugitive'
 NeoBundle      'tpope/vim-surround'
-NeoBundle      'tpope/vim-abolish'
+NeoBundleLazy  'tpope/vim-abolish',                      {'autoload': {'commands': ['A','Abolish','S','Subvert']}}
 NeoBundle      'tpope/vim-unimpaired'
 NeoBundle      'tpope/vim-repeat'
 NeoBundle      'tpope/vim-vinegar'
 NeoBundle      'mhinz/vim-startify'
 NeoBundle      'mhinz/vim-tmuxify'
 NeoBundle      'bling/vim-airline'
-NeoBundle      'sjl/gundo.vim'
+NeoBundle      'Raimondi/delimitMate'
+NeoBundle      'noahfrederick/vim-noctu'
+NeoBundleLazy  'junegunn/vim-easy-align',                {'autoload': {'mappings': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}}
+NeoBundleLazy  'sjl/gundo.vim',                          {'autoload': {'commands': 'GundoToggle'}}
+NeoBundleLazy  'justinmk/vim-sneak',                     {'autoload': {'mappings': ['<Plug>Sneak']}}
 NeoBundleLazy  'kana/vim-textobj-user',                  {'name': 'vim-textobj-user'}
 NeoBundleLazy  'reedes/vim-textobj-sentence',            {'depends': 'vim-textobj-user'}
 NeoBundleLazy  'kana/vim-textobj-function',              {'depends': 'vim-textobj-user'}
 NeoBundleLazy  'christoomey/vim-titlecase',              {'autoload': {'mappings': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}}
-NeoBundle      'zhaocai/GoldenView.Vim'
-NeoBundle      'noahfrederick/vim-noctu'
-NeoBundleLazy  'Shougo/vimshell.vim',                    {'autoload': {'commands': [{'name': 'VimShell', 'complete': 'customlist,vimshell#complete'}, 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop']}}
-NeoBundle      'Keithbsmiley/investigate.vim'
-NeoBundle      'Raimondi/delimitMate'
+NeoBundleLazy  'zhaocai/GoldenView.Vim',                 {'autoload': {'mappings': ['<Plug>GoldenViewSplit']}}
+NeoBundleLazy  'Shougo/vimshell.vim',                    {'autoload': {'commands': 'VimShell'}}
 NeoBundleLazy  'haya14busa/incsearch.vim',               {'autoload': {'mappings': ['<Plug>(incsearch-']}}
 NeoBundleLazy  'jaxbot/browserlink.vim',                 {'autoload': {'filetypes': ['html', 'javascript', 'css']}}
-NeoBundleLazy  'mattn/gist-vim',                         {'depends': 'mattn/webapi-vim'}
+NeoBundleLazy  'mattn/gist-vim',                         {'depends': 'mattn/webapi-vim', 'autoload': {'commands': ['Gist']}}
 
 NeoBundleLazy  'LaTeX-Box-Team/LaTeX-Box',               {'autoload': {'filetypes': ['tex']}}
 NeoBundleLazy  'xuhdev/vim-latex-live-preview',          {'autoload': {'filetypes': ['tex']}}
 
-NeoBundleLazy  'mattn/emmet-vim',                        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
+NeoBundleLazy  'mattn/emmet-vim',                        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache', 'php']}}
 NeoBundleLazy  'Valloric/MatchTagAlways',                {'autoload': {'filetypes': ['html', 'xhtml', 'xml', 'jinja']}}
 NeoBundleLazy  'tmhedberg/matchit',                      {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
 NeoBundleLazy  'gregsexton/MatchTag',                    {'autoload': {'filetypes': ['html', 'xml']}}
@@ -273,6 +273,14 @@ map g# <Plug>(incsearch-nohl-g#)
 let g:incsearch#consistent_n_direction = 1
 let g:incsearch#auto_nohlsearch = 1
 let g:incsearch#magic = '\v'
+
+map <silent> s <Plug>Sneak_s
+map <silent> f <Plug>Sneak_f
+map <silent> F <Plug>Sneak_F
+map <silent> t <Plug>Sneak_t
+map <silent> T <Plug>Sneak_T
+
+
 "" }}}
 
 "" {{{ fugitive shortcuts
