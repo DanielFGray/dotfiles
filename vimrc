@@ -32,16 +32,16 @@ NeoBundle      'mhinz/vim-tmuxify'
 NeoBundle      'bling/vim-airline'
 NeoBundle      'Raimondi/delimitMate'
 NeoBundle      'noahfrederick/vim-noctu'
+NeoBundle      'justinmk/vim-sneak'
+NeoBundle      'haya14busa/incsearch.vim'
 NeoBundleLazy  'junegunn/vim-easy-align',                {'autoload': {'mappings': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}}
 NeoBundleLazy  'sjl/gundo.vim',                          {'autoload': {'commands': 'GundoToggle'}}
-NeoBundleLazy  'justinmk/vim-sneak',                     {'autoload': {'mappings': ['<Plug>Sneak']}}
 NeoBundleLazy  'kana/vim-textobj-user',                  {'name': 'vim-textobj-user'}
 NeoBundleLazy  'reedes/vim-textobj-sentence',            {'depends': 'vim-textobj-user'}
 NeoBundleLazy  'kana/vim-textobj-function',              {'depends': 'vim-textobj-user'}
 NeoBundleLazy  'christoomey/vim-titlecase',              {'autoload': {'mappings': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}}
 NeoBundleLazy  'zhaocai/GoldenView.Vim',                 {'autoload': {'mappings': ['<Plug>GoldenViewSplit']}}
 NeoBundleLazy  'Shougo/vimshell.vim',                    {'autoload': {'commands': 'VimShell'}}
-NeoBundleLazy  'haya14busa/incsearch.vim',               {'autoload': {'mappings': ['<Plug>(incsearch-']}}
 NeoBundleLazy  'jaxbot/browserlink.vim',                 {'autoload': {'filetypes': ['html', 'javascript', 'css']}}
 NeoBundleLazy  'mattn/gist-vim',                         {'depends': 'mattn/webapi-vim', 'autoload': {'commands': ['Gist']}}
 
