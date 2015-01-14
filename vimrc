@@ -16,7 +16,7 @@ NeoBundle      'Shougo/echodoc'
 NeoBundle      'Shougo/neocomplete.vim'
 NeoBundle      'Shougo/neosnippet'
 NeoBundle      'Shougo/neosnippet-snippets'
-NeoBundle      'Shougo/vimfiler'
+NeoBundleLazy  'Shougo/vimfiler',                        {'autoload': {'commands': ['VimFiler']}}
 
 NeoBundle      'scrooloose/syntastic'
 NeoBundle      'terryma/vim-expand-region'
