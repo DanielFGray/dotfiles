@@ -9,17 +9,19 @@ dirs=(
 	"/usr/bin"
 	"/usr/local/sbin"
 	"/usr/games"
-	"$HOME/bin"
-	"$HOME/.rvm/bin"
-	"$HOME/.gem/ruby/2.1.0/bin"
-	"$HOME/.npm/bin"
-	"$HOME/.local/bin"
+	"${HOME}/.rvm/bin"
+	"$(ruby -e 'print Gem.user_dir')/bin"
+	"${HOME}/.npm/bin"
+	"${HOME}/.cabal/bin"
+	"${HOME}/.local/bin"
 )
 
-for d in "${dirs[@]}"; do;
+for d in "${dirs[@]}"; do
 	if [ -d "$d" ]; then
-		export PATH="$d:$PATH"
+		PATH="$d:$PATH"
 	fi
 done
+
+export PATH
 
 # vim: ft=sh
