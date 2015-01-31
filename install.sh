@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-thisdir=$(pwd)
+thisdir="${BASH_SOURCE%/*}"
 
 read -e -p 'symlink profile and bash_aliases? (y/n) ' defaults
 case $defaults in
@@ -8,7 +8,7 @@ case $defaults in
 		files=( '.profile' '.bash_aliases' )
 		for f in "${files[@]}"; do
 			if [[ -f "${HOME}/$f" ]]; then
-				mv "${HOME}/${f}" "${HOME}/old.${f}"
+				mv -v "${HOME}/${f}" "${HOME}/old${f}"
 			fi
 		done
 		ln -vs "${thisdir}/bash_aliases" "${HOME}/.bash_aliases"
@@ -18,7 +18,7 @@ case $defaults in
 esac
 
 if ! type 'vim' &> /dev/null; then
-	echo 2> 'vim not found'
+	echo >&2 'vim not found'
 else
 	read -e -p 'install vim plugins? (y/n) ' vimplugins
 	case $vimplugins in
@@ -36,7 +36,7 @@ else
 fi
 
 if ! type 'zsh' &> /dev/null; then
-	echo 2> 'zsh not found'
+	echo >&2 'zsh not found'
 else
 	read -e -p 'git clone oh-my-zsh and plugins? (y/n) ' zshconf
 	case $zshconf in
@@ -51,8 +51,8 @@ else
 			zshfiles=( '.zshrc' '.zprofile' '.zlogin' )
 			for f in "${zshfiles[@]}"; do
 				if [[ -f "${HOME}/$f" ]]; then
-					mv "${HOME}/${f}" "${HOME}/old.${f}"
-				fi
+					mv -v "${HOME}/${f}" "${HOME}/old${f}"
+				fi 
 			done
 			;;
 		* ) ;;
@@ -60,13 +60,13 @@ else
 fi
 
 if ! type 'tmux' &> /dev/null; then
-	echo 2> 'tmux not found'
+	echo >&2 'tmux not found'
 else
 	read -e -p 'symlink tmux.conf and install plugins? (y/n) ' tmuxconf1
 	case $tmuxconf1 in
 		[Yy]* )
 			if [[ ! -d "${HOME}/.tmux/plugins/tpm" ]]; then
-				mkdir -p "${HOME}/.tmux/plugins"
+				mkdir -vp "${HOME}/.tmux/plugins"
 				git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 			fi
 			[[ -f "${HOME}/.tmux.conf" ]] && mv "${HOME}/.tmux.conf" "${HOME}/old.tmux.conf"
@@ -86,7 +86,7 @@ else
 fi
 
 if ! type 'awesome' &> /dev/null; then
-	echo 2> 'awesome not found'
+	echo >&2 'awesome not found'
 else
 	read -e -p 'symlink awesome dir? (y/n) ' awesomeconf
 	case $awesomeconf in
@@ -98,7 +98,7 @@ else
 fi
 
 if ! type 'openbox' &> /dev/null; then
-	echo 2> 'openbox not found'
+	echo >&2 'openbox not found'
 else
 	read -e -p 'symlink openbox dir? (y/n) ' openboxconf
 	case $openboxconf in
