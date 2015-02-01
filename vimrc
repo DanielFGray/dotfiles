@@ -68,7 +68,15 @@ Plug 'marijnh/tern_for_vim',                   {'for': 'javascript', 'do': 'npm 
 Plug 'pangloss/vim-javascript',                {'for': 'javascript'}
 Plug 'sheerun/vim-polyglot',                   {'for': 'javascript'}
 Plug 'walm/jshint.vim',                        {'for': 'javascript'}
-Plug 'kchmck/vim-coffee-script',               {'for': 'coffee'}
+
+Plug 'raichoo/purescript-vim',                 {'for': 'purescript'}
+
+Plug 'lukerandall/haskellmode-vim',            {'for': 'haskell'}
+Plug 'raichoo/haskell-vim',                    {'for': 'haskell'}
+Plug 'eagletmt/ghcmod-vim',                    {'for': 'haskell'}
+Plug 'ujihisa/neco-ghc',                       {'for': 'haskell'}
+
+Plug 'junegunn/fzf',                           { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 call plug#end()
 "" }}}
 
