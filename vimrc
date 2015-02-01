@@ -23,7 +23,7 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/vimfiler',                        {'on': 'VimFiler'}
 
 Plug 'scrooloose/syntastic'
-Plug 'terryma/vim-expand-region'
+Plug 'gcmt/wildfire.vim'
 Plug 'wellle/targets.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
