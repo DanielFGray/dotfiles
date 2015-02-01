@@ -13,7 +13,13 @@ NeoBundleLazy  'tsukkee/unite-tag',                      {'depends': 'unite.vim'
 NeoBundle      'osyo-manga/unite-filetype',              {'depends': 'unite.vim'}
 NeoBundle      'Shougo/context_filetype.vim'
 NeoBundle      'Shougo/echodoc'
-NeoBundle      'Shougo/neocomplete.vim'
+if has('lua') && version >= 703 && has('patch885')
+	NeoBundle      'Shougo/neocomplete.vim'
+	let g:completionEngine = 'neocomplete'
+else
+	NeoBundle      'Shougo/neocomplcache.vim'
+	let g:completionEngine = 'neocomplcache'
+endif
 NeoBundle      'Shougo/neosnippet'
 NeoBundle      'Shougo/neosnippet-snippets'
 NeoBundleLazy  'Shougo/vimfiler',                        {'autoload': {'commands': ['VimFiler']}}
@@ -23,7 +29,7 @@ NeoBundle      'terryma/vim-expand-region'
 NeoBundle      'wellle/targets.vim'
 NeoBundle      'tpope/vim-fugitive'
 NeoBundle      'tpope/vim-surround'
-NeoBundleLazy  'tpope/vim-abolish',                      {'autoload': {'commands': ['A','Abolish','S','Subvert']}}
+NeoBundle      'tpope/vim-abolish'
 NeoBundle      'tpope/vim-unimpaired'
 NeoBundle      'tpope/vim-repeat'
 NeoBundle      'tpope/vim-vinegar'
@@ -111,7 +117,11 @@ set t_Co=16
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
-set cryptmethod=blowfish2
+if version >= 704 && has('patch399')
+	set cryptmethod=blowfish2
+else
+	set cryptmethod=blowfish
+endif
 set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
 set diffopt=vertical
 set pastetoggle=<F6>
@@ -143,6 +153,7 @@ endif
 set undolevels=1000
 
 "" {{{ auto completion
+"" if has('lua') && version >= 703 && has('patch885')
 set ofu=syntaxcomplete#Complete
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
@@ -150,21 +161,17 @@ autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
 let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#auto_completion_start_length = 3
-let g:neocomplete#sources#dictionary#dictionaries = {  'default' : '' }
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-inoremap <expr><BS>      neocomplete#smart_close_popup()."\<C-h>"
+let g:{g:completionEngine}#enable_at_startup = 1
+let g:{g:completionEngine}#enable_smart_case = 1
+let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
+let g:{g:completionEngine}#auto_completion_start_length = 3
+let g:{g:completionEngine}#sources#dictionary#dictionaries = {  'default' : '' }
+let g:{g:completionEngine}#sources#omni#input_patterns = {}
+let g:{g:completionEngine}#keyword_patterns = {}
+let g:{g:completionEngine}#keyword_patterns['default'] = '\h\w*'
+inoremap <expr><C-g>     {g:completionEngine}#undo_completion()
+inoremap <expr><C-l>     {g:completionEngine}#complete_common_string()
+inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-h>"
 inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
 "" "}}}
 
