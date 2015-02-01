@@ -26,7 +26,7 @@ else
 			[[ -f "${HOME}/.vimrc" ]] && mv "${HOME}/.vimrc" "${HOME}/old.vimrc"
 			ln -vs "${thisdir}/vimrc" "${HOME}/.vimrc"
 			mkdir -vp "${HOME}/.vim/{autoload,bundle,colors,cache,undo,backups,swaps}"
-			curl -fLo https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim > $HOME/.vim/autoload/plug.vim
+			curl -fLo $HOME/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 			;;
 		* ) ;;
 	esac
