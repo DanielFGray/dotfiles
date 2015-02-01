@@ -25,11 +25,8 @@ else
 		[Yy]* )
 			[[ -f "${HOME}/.vimrc" ]] && mv "${HOME}/.vimrc" "${HOME}/old.vimrc"
 			ln -vs "${thisdir}/vimrc" "${HOME}/.vimrc"
-			mkdir -vp "${HOME}/.vim/{bundle,colors,cache,undo,backups,swaps}"
-			if [[ ! -d "${HOME}/.vim/bundle/neobundle.vim" ]]; then
-				git clone https://github.com/Shougo/neobundle.vim "${HOME}/.vim/bundle/neobundle.vim"
-			fi
-			vim +NeoBundleCheckUpdate +q
+			mkdir -vp "${HOME}/.vim/{autoload,bundle,colors,cache,undo,backups,swaps}"
+			curl -fLo https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim > $HOME/.vim/autoload/plug.vim
 			;;
 		* ) ;;
 	esac
