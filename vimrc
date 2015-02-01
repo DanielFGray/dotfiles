@@ -1,78 +1,75 @@
 "" {{{ bundles
-set runtimepath+=~/.vim/bundle/neobundle.vim/
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle      'Shougo/vimproc',                         {'name': 'vimproc', 'build': {'unix': 'make -f make_unix.mak'}}
-NeoBundle      'Shougo/unite.vim',                       {'name': 'unite.vim', 'depends': 'vimproc'}
-NeoBundleLazy  'thinca/vim-unite-history',               {'depends': 'unite.vim', 'autoload': {'unite_sources': 'history/command'}}
-NeoBundleLazy  'Shougo/unite-help',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': 'help'}}
-NeoBundleLazy  'Shougo/unite-outline',                   {'depends': 'unite.vim', 'autoload': {'unite_sources': 'outline'}}
-NeoBundleLazy  'Shougo/unite-session',                   {'depends': 'unite.vim', 'autoload': {'unite_sources': 'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
-NeoBundleLazy  'Shougo/neomru.vim',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': 'file_mru'}}
-NeoBundleLazy  'tsukkee/unite-tag',                      {'depends': 'unite.vim', 'autoload': {'unite_sources': ['tag', 'tag/file']}}
-NeoBundle      'osyo-manga/unite-filetype',              {'depends': 'unite.vim'}
-NeoBundle      'Shougo/context_filetype.vim'
-NeoBundle      'Shougo/echodoc'
+call plug#begin('~/.vim/bundle')
+Plug 'Shougo/vimproc'                          {'do': 'make'}
+Plug 'Shougo/unite.vim'
+Plug 'thinca/vim-unite-history'
+Plug 'Shougo/unite-help'
+Plug 'Shougo/unite-outline'
+Plug 'Shougo/unite-session'
+Plug 'Shougo/neomru.vim'
+Plug 'tsukkee/unite-tag'
+Plug 'osyo-manga/unite-filetype'
+Plug 'Shougo/context_filetype.vim'
+Plug 'Shougo/echodoc'
 if has('lua') && version >= 703 && has('patch885')
-	NeoBundle      'Shougo/neocomplete.vim'
-	let g:completionEngine = 'neocomplete'
+|   Plug 'Shougo/neocomplete.vim'
+|   let g:completionEngine = 'neocomplete'
 else
-	NeoBundle      'Shougo/neocomplcache.vim'
-	let g:completionEngine = 'neocomplcache'
+|   Plug 'Shougo/neocomplcache.vim'
+|   let g:completionEngine = 'neocomplcache'
 endif
-NeoBundle      'Shougo/neosnippet'
-NeoBundle      'Shougo/neosnippet-snippets'
-NeoBundleLazy  'Shougo/vimfiler',                        {'autoload': {'commands': ['VimFiler']}}
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'Shougo/vimfiler',                        {'on': 'VimFiler'}
 
-NeoBundle      'scrooloose/syntastic'
-NeoBundle      'terryma/vim-expand-region'
-NeoBundle      'wellle/targets.vim'
-NeoBundle      'tpope/vim-fugitive'
-NeoBundle      'tpope/vim-surround'
-NeoBundle      'tpope/vim-abolish'
-NeoBundle      'tpope/vim-unimpaired'
-NeoBundle      'tpope/vim-repeat'
-NeoBundle      'tpope/vim-vinegar'
-NeoBundle      'mhinz/vim-startify'
-NeoBundle      'mhinz/vim-tmuxify'
-NeoBundle      'bling/vim-airline'
-NeoBundle      'Raimondi/delimitMate'
-NeoBundle      'noahfrederick/vim-noctu'
-NeoBundle      'justinmk/vim-sneak'
-NeoBundle      'haya14busa/incsearch.vim'
-NeoBundleLazy  'junegunn/vim-easy-align',                {'autoload': {'mappings': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}}
-NeoBundleLazy  'sjl/gundo.vim',                          {'autoload': {'commands': 'GundoToggle'}}
-NeoBundleLazy  'kana/vim-textobj-user',                  {'name': 'vim-textobj-user'}
-NeoBundleLazy  'reedes/vim-textobj-sentence',            {'depends': 'vim-textobj-user'}
-NeoBundleLazy  'kana/vim-textobj-function',              {'depends': 'vim-textobj-user'}
-NeoBundleLazy  'christoomey/vim-titlecase',              {'autoload': {'mappings': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}}
-NeoBundleLazy  'zhaocai/GoldenView.Vim',                 {'autoload': {'mappings': ['<Plug>GoldenViewSplit']}}
-NeoBundleLazy  'Shougo/vimshell.vim',                    {'autoload': {'commands': 'VimShell'}}
-NeoBundleLazy  'jaxbot/browserlink.vim',                 {'autoload': {'filetypes': ['html', 'javascript', 'css']}}
-NeoBundleLazy  'mattn/gist-vim',                         {'depends': 'mattn/webapi-vim', 'autoload': {'commands': ['Gist']}}
+Plug 'scrooloose/syntastic'
+Plug 'terryma/vim-expand-region'
+Plug 'wellle/targets.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-vinegar'
+Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-tmuxify'
+Plug 'bling/vim-airline'
+Plug 'Raimondi/delimitMate'
+Plug 'noahfrederick/vim-noctu'
+Plug 'justinmk/vim-sneak'
+Plug 'haya14busa/incsearch.vim'
+Plug 'junegunn/vim-easy-align',                {'on': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}
+Plug 'sjl/gundo.vim',                          {'on': 'GundoToggle'}
+Plug 'kana/vim-textobj-user'
+Plug 'reedes/vim-textobj-sentence'
+Plug 'kana/vim-textobj-function'
+Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}
+Plug 'zhaocai/GoldenView.Vim',                 {'on': '<Plug>GoldenViewSplit'}
+Plug 'Shougo/vimshell.vim',                    {'on': 'VimShell'}
+Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'css']}
+Plug 'mattn/gist-vim',                         {'on': 'Gist'}
 
-NeoBundleLazy  'LaTeX-Box-Team/LaTeX-Box',               {'autoload': {'filetypes': ['tex']}}
-NeoBundleLazy  'xuhdev/vim-latex-live-preview',          {'autoload': {'filetypes': ['tex']}}
+Plug 'LaTeX-Box-Team/LaTeX-Box',               {'for': 'tex'}
+Plug 'xuhdev/vim-latex-live-preview',          {'for': 'tex'}
 
-NeoBundleLazy  'mattn/emmet-vim',                        {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache', 'php']}}
-NeoBundleLazy  'Valloric/MatchTagAlways',                {'autoload': {'filetypes': ['html', 'xhtml', 'xml', 'jinja']}}
-NeoBundleLazy  'tmhedberg/matchit',                      {'autoload': {'filetypes': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}}
-NeoBundleLazy  'gregsexton/MatchTag',                    {'autoload': {'filetypes': ['html', 'xml']}}
-NeoBundleLazy  'othree/html5.vim',                       {'autoload': {'filetypes': ['html']}}
-NeoBundleLazy  'groenewege/vim-less',                    {'autoload': {'filetypes': ['less']}}
-NeoBundleLazy  'hail2u/vim-css3-syntax',                 {'autoload': {'filetypes': ['css', 'scss', 'sass']}}
-NeoBundleLazy  'digitaltoad/vim-jade',                   {'autoload': {'filetypes': ['jade']}}
+Plug 'mattn/emmet-vim',                        {'for': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache', 'php']}
+Plug 'Valloric/MatchTagAlways',                {'for': ['html', 'xhtml', 'xml', 'jinja']}
+Plug 'tmhedberg/matchit',                      {'for': ['html', 'xml', 'xsl', 'xslt', 'xsd', 'css', 'sass', 'scss', 'less', 'mustache']}
+Plug 'gregsexton/MatchTag',                    {'for': ['html', 'xml']}
+Plug 'othree/html5.vim',                       {'for': 'html'}
+Plug 'groenewege/vim-less',                    {'for': 'less'}
+Plug 'hail2u/vim-css3-syntax',                 {'for': ['css', 'scss', 'sass']}
+Plug 'digitaltoad/vim-jade',                   {'for': 'jade'}
 
-NeoBundleLazy  'moll/vim-node',                          {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy  'jelera/vim-javascript-syntax',           {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy  'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy  'marijnh/tern_for_vim',                   {'autoload': {'filetypes': ['javascript']}, 'build': {'unix': 'npm install'}}
-NeoBundleLazy  'pangloss/vim-javascript',                {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy  'sheerun/vim-polyglot',                   {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy  'walm/jshint.vim',                        {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy  'kchmck/vim-coffee-script',               {'autoload': {'filetypes': ['coffee']}}
-NeoBundleCheck
-call neobundle#end()
+Plug 'moll/vim-node',                          {'for': 'javascript'}
+Plug 'jelera/vim-javascript-syntax',           {'for': 'javascript'}
+Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
+Plug 'marijnh/tern_for_vim',                   {'for': 'javascript', 'do': 'npm install'}
+Plug 'pangloss/vim-javascript',                {'for': 'javascript'}
+Plug 'sheerun/vim-polyglot',                   {'for': 'javascript'}
+Plug 'walm/jshint.vim',                        {'for': 'javascript'}
+Plug 'kchmck/vim-coffee-script',               {'for': 'coffee'}
+call plug#end()
 "" }}}
 
 syntax on
