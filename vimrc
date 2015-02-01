@@ -12,11 +12,11 @@ Plug 'osyo-manga/unite-filetype'
 Plug 'Shougo/context_filetype.vim'
 Plug 'Shougo/echodoc'
 if has('lua') && version >= 703 && has('patch885')
-|   Plug 'Shougo/neocomplete.vim'
-|   let g:completionEngine = 'neocomplete'
+	Plug 'Shougo/neocomplete.vim'
+	let g:completionEngine = 'neocomplete'
 else
-|   Plug 'Shougo/neocomplcache.vim'
-|   let g:completionEngine = 'neocomplcache'
+	Plug 'Shougo/neocomplcache.vim'
+	let g:completionEngine = 'neocomplcache'
 endif
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
