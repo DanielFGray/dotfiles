@@ -158,7 +158,6 @@ endif
 set undolevels=1000
 
 "" {{{ auto completion
-"" if has('lua') && version >= 703 && has('patch885')
 set ofu=syntaxcomplete#Complete
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
