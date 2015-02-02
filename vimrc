@@ -141,6 +141,7 @@ vnoremap < <gv
 vnoremap > >gv
 cnoremap vh vert h 
 ca w!! w !sudo tee >/dev/null "%"
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 if version >= 703
 	if exists("&undodir")
