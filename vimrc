@@ -11,7 +11,7 @@ Plug 'tsukkee/unite-tag'
 Plug 'osyo-manga/unite-filetype'
 Plug 'Shougo/context_filetype.vim'
 Plug 'Shougo/echodoc'
-if has('lua') && version >= 703 && has('patch885')
+if has('lua') && (version >= 704 || version == 703 && has('patch885'))
 	Plug 'Shougo/neocomplete.vim'
 	let g:completionEngine = 'neocomplete'
 else
