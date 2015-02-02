@@ -159,12 +159,6 @@ endif
 set undolevels=1000
 
 "" {{{ auto completion
-set ofu=syntaxcomplete#Complete
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
 let g:acp_enableAtStartup = 0
 let g:{g:completionEngine}#enable_at_startup = 1
 let g:{g:completionEngine}#enable_smart_case = 1
