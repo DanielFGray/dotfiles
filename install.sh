@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-thisdir="$(pwd)"
+cd "${BASH_SOURCE%/*}"
+thisdir="$PWD"
 
 has() {
 	if type "$1" &> /dev/null; then
