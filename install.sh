@@ -69,17 +69,9 @@ if has 'tmux' && prompt 'symlink tmux.conf and install plugins?'; then
 		git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 	fi
 	[[ -f "${HOME}/.tmux.conf" ]] && mv "${HOME}/.tmux.conf" "${HOME}/old.tmux.conf"
-	if prompt 'use remote tmux conf?' N; then
+	if prompt 'use remote tmux conf?'; then
 		ln -vs "${thisdir}/remote.tmux.conf" "${HOME}/.tmux.conf"
 	else
 		ln -vs "${thisdir}/local.tmux.conf" "${HOME}/.tmux.conf"
 	fi
-fi
-
-if has 'awesome' && prompt 'symlink awesome dir?'; then
-	ln -vs "${thisdir}/config/awesome" "${HOME}/.config"
-fi
-
-if has 'openbox' && prompt 'symlink openbox dir?'; then
-	ln -vs "${thisdir}/config/openbox" "${HOME}/.config"
 fi
