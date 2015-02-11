@@ -47,9 +47,9 @@ if prompt 'symlink profile and bash_aliases?'; then
 fi
 
 if has 'vim' && prompt 'install vim plugins?'; then
-	backup_then_symlink 'vimrc'
 	mkdir -vp ${HOME}/.vim/{autoload,bundle,colors,cache,undo,backups,swaps}
 	curl -fLo ${HOME}/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	backup_then_symlink 'vimrc'
 fi
 
 if has 'zsh' && prompt 'git clone oh-my-zsh and plugins?'; then
