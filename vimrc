@@ -148,6 +148,11 @@ cnoremap vh vert h
 ca w!! w !sudo tee >/dev/null "%"
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
+noremap j gj
+noremap k gk
+noremap gj j
+noremap gk k
+
 if version >= 703
 	if exists("&undodir")
 		set undodir=~/.vim/undo//
