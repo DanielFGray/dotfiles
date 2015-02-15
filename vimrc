@@ -28,12 +28,14 @@ Plug 'wellle/targets.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
 Plug 'mhinz/vim-startify'
 Plug 'mhinz/vim-tmuxify'
 Plug 'bling/vim-airline'
+Plug 'dahu/Insertlessly'
 Plug 'Raimondi/delimitMate'
 Plug 'noahfrederick/vim-noctu'
 Plug 'justinmk/vim-sneak'
@@ -47,7 +49,9 @@ Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug
 Plug 'zhaocai/GoldenView.Vim',                 {'on': '<Plug>GoldenViewSplit'}
 Plug 'Shougo/vimshell.vim',                    {'on': 'VimShell'}
 Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'css']}
+Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
+Plug 'airblade/vim-gitgutter'
 
 Plug 'LaTeX-Box-Team/LaTeX-Box',               {'for': 'tex'}
 Plug 'xuhdev/vim-latex-live-preview',          {'for': 'tex'}
