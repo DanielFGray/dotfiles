@@ -80,7 +80,7 @@ Plug 'raichoo/haskell-vim',                    {'for': 'haskell'}
 Plug 'eagletmt/ghcmod-vim',                    {'for': 'haskell'}
 Plug 'ujihisa/neco-ghc',                       {'for': 'haskell'}
 
-Plug 'junegunn/fzf',                           { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf',                           {'dir': '~/.fzf', 'do': 'yes \| ./install'}
 call plug#end()
 "" }}}
 
