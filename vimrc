@@ -135,6 +135,7 @@ set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
 set diffopt=vertical
 set pastetoggle=<F6>
 colorscheme noctu
+let g:mapleader = "\<Space>"
 
 noremap ; :
 noremap : ;
