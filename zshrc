@@ -11,12 +11,10 @@ if [[ -f ~/.fzf.zsh  && -x ~/.fzf/fzf ]]; then
 	#source ~/.fzf.zsh
 	unalias historygrep
 	function historygrep {
-		print -z $(fc -nl 1 | grep -v 'history' | fzf +s -e -q "$@")
+		print -z $(fc -nl 1 | grep -v 'history' | fzf +s -e -q "$*")
 	}
 	alias fzcmd='print -z $(print -rl $commands:t ${(k)functions} ${(k)aliases} | sort | uniq | fzf -e)'
 fi
-
-
 
 autoload -U zmv
 
