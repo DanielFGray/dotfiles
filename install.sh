@@ -7,7 +7,7 @@ has() {
 	if type "$1" &> /dev/null; then
 		return 0
 	else
-		echo >&2 "$1 not found"
+		[[ ! "$2" == '-s' ]] && echo >&2 "$1 not found"
 		return 1
 	fi
 }
