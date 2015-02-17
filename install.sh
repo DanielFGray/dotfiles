@@ -82,3 +82,28 @@ if has 'tmux' && prompt 'symlink tmux.conf and install plugins?'; then
 		ln -vs "${thisdir}/local.tmux.conf" "${HOME}/.tmux.conf"
 	fi
 fi
+
+if has 'xmodmap' && prompt 'symlink xmodmap?'; then
+	backup_then_symlink 'xmodmap'
+	xmodmap ~/.xmodmap
+fi
+
+if has 'xrdb' && prompt 'symlink Xresources?'; then
+	backup_then_symlink 'Xresources'
+	xrdb -load ~/.Xresources
+fi
+
+if has 'fc-cache' && prompt 'install tewi?'; then
+	mkdir -p ~/build
+	cd ~/build
+	if [[ ! -d "${HOME}/build/tewi-font" ]]; then
+		git clone https://github.com/lucy/tewi-font
+		cd ~/build/tewi-font
+	else
+		cd ~/build/tewi-font
+		git pull
+	fi
+	make
+	cp *.pcf ~/.fonts
+	mkfontdir ~/.fonts; xset +fp ~/.fonts ; xset fp rehash; fc-cache -f
+fi
