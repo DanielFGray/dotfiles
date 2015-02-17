@@ -42,10 +42,10 @@ prompt() {
 	done
 }
 
-#if ! has 'git' -s || ! has 'curl' -s; then
-	#echo >&2 'git and curl both required'
-	#exit 1
-#fi
+if ! has 'git' -s || ! has 'curl' -s; then
+	echo >&2 'git and curl both required'
+	exit 1
+fi
 
 if prompt 'symlink profile and bash_aliases?'; then
 	backup_then_symlink 'profile' 'bash_aliases'
