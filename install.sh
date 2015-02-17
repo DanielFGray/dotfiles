@@ -52,8 +52,10 @@ if prompt 'symlink profile and bash_aliases?'; then
 fi
 
 if has 'vim' && prompt 'install vim plugins?'; then
-	mkdir -vp ${HOME}/.vim/{autoload,bundle,colors,cache,undo,backups,swaps}
-	curl -fLo ${HOME}/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	mkdir -vp ${HOME}/.vim/{autoload,bundle,cache,undo,backups,swaps}
+	if [[ ! -f ${HOME}/.vim/autoload/plug.vim ]]; then
+		curl -fLo ${HOME}/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	fi
 	backup_then_symlink 'vimrc'
 fi
 
