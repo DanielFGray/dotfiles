@@ -151,7 +151,7 @@ nnoremap n nzzzv
 nnoremap N Nzzzv
 vnoremap < <gv
 vnoremap > >gv
-cnoremap vh vert h 
+command -nargs=* -complete=help H :vert help <args>
 ca w!! w !sudo tee >/dev/null "%"
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
