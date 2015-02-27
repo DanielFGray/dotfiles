@@ -7,13 +7,15 @@ source $ZSH/oh-my-zsh.sh
 
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
 
-if [[ -f ~/.fzf.zsh  && -x ~/.fzf/fzf ]]; then
-	#source ~/.fzf.zsh
+if command -v fzf &> /dev/null; then
 	unalias historygrep
 	function historygrep {
 		print -z $(fc -nl 1 | grep -v 'history' | fzf +s -e -q "$*")
 	}
-	alias fzcmd='print -z $(print -rl $commands:t ${(k)functions} ${(k)aliases} | sort | uniq | fzf -e)'
+	function fzcmd {
+		print -z $(printf -rl $commands:t ${(k)functions} ${(k)aliases} | sort | uniq | fzf -e -q "$*")
+	}
+
 fi
 
 autoload -U zmv
