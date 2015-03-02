@@ -1,5 +1,5 @@
-if [ "$SSH_CONNECTION" = "" ]; then
-	if [ -z "$DISPLAY" ] && [ $(tty) = /dev/tty1 ] ; then
+if [[ -z "$SSH_CONNECTION" ]]; then
+	if [[ -z "$DISPLAY" &&  $(tty) == '/dev/tty1' ]] ; then
 		exec startx
 	fi
 else
