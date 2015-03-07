@@ -357,6 +357,7 @@ augroup VIM
 	autocmd FileType vim nnore <silent><buffer> K <Esc>:<C-U>vert help <C-R><C-W><CR>
 	autocmd VimResized * :wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+	autocmd FileType netrw nnoremap q <Esc>:bd<CR>
 	autocmd FileType markdown,text set wrap | set linebreak | set colorcolumn=0 | set nocursorline | set nocursorcolumn
 augroup END
 
