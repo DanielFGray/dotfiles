@@ -365,28 +365,70 @@ augroup VIM
 	autocmd FileType markdown,text set wrap | set linebreak | set colorcolumn=0 | set nocursorline | set nocursorcolumn
 augroup END
 
+let g:distractionFree=0
 function! ToggleDistractions()
-	if !exists("g:distractionFree") || g:distractionFree==0
-		let g:distractionFree=1
-		set nocursorline nocursorcolumn colorcolumn=0
-		set nonumber norelativenumber
+	if g:distractionFree==0
+		let g:cursorline_default     = &cursorline
+		let g:cursorcolumn_default   = &cursorcolumn
+		let g:colorcolumn_default    = &colorcolumn
+		let g:number_default         = &number
+		let g:relativenumber_default = &relativenumber
+		let g:list_default           = &list
+		let g:ruler_default          = &ruler
+		let g:showcmd_default        = &showcmd
+		let g:showmode_default       = &showmode
+		let g:showtabline_default    = &showtabline
+		let g:laststatus_default     = &laststatus
+		let g:gitgutter_default      = get(g:, 'gitgutter_enabled', 0)
+		let g:airline_default        = exists("#airline")
+		set nocursorline
+		set nocursorcolumn
+		set colorcolumn=0
+		set nonumber
+		set norelativenumber
 		set nolist
 		set noruler
-		set noshowcmd
 		set noshowmode
-		set showtabline=0 laststatus=0
-		GitGutterDisable
+		set noshowcmd
+		set showtabline=0
+		set laststatus=0
+		if exists('$TMUX')
+			silent! !tmux set -q status off
+		endif
+		if exists(':Limelight')
+			silent! Limelight
+		endif
+		if g:gitgutter_default
+			silent! GitGutterDisable
+		endif
+		silent! redraw!
+		let g:distractionFree=1
 	else
+		let &cursorline     = g:cursorline_default
+		let &cursorcolumn   = g:cursorcolumn_default
+		let &cursorcolumn   = g:cursorcolumn_default
+		let &number         = g:number_default
+		let &relativenumber = g:relativenumber_default
+		let &list           = g:list_default
+		let &ruler          = g:ruler_default
+		let &showmode       = g:showmode_default
+		let &showcmd        = g:showcmd_default
+		let &showtabline    = g:showtabline_default
+		let &laststatus     = g:laststatus_default
+		if exists('$TMUX')
+			silent! !tmux set -q status on
+		endif
+		if exists(':Limelight')
+			silent! Limelight!
+		endif
+		if g:gitgutter_default
+			silent! GitGutterEnable
+		endif
+		if g:airline_default
+			silent! AirlineRefresh
+		endif
+		silent! redraw!
 		let g:distractionFree=0
-		set cursorline cursorcolumn colorcolumn=80
-		set number relativenumber
-		set list
-		set ruler
-		set showmode
-		set showcmd
-		set showtabline=2 laststatus=2
-		GitGutterEnable
-		AirlineRefresh
 	endif
 endfunction
 nnoremap <silent> <leader>df <Esc>:<C-u>call ToggleDistractions()<CR>
