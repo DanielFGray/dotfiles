@@ -350,15 +350,15 @@ if has("gui_running")
 	set guioptions-=m
 endif
 
-if !exists("autocommands_loaded")
-	let autocommands_loaded = 1
+augroup VIM
+	autocmd!
 	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | AirlineRefresh
 	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf call system('tmux source-file ~/.tmux.conf; tmux display-message "Sourced .tmux.conf"')
 	autocmd FileType vim nnore <silent><buffer> K <Esc>:<C-U>vert help <C-R><C-W><CR>
 	autocmd VimResized * :wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
 	autocmd FileType markdown,text set wrap | set linebreak | set colorcolumn=0 | set nocursorline | set nocursorcolumn
-endif
+augroup END
 
 function! ToggleDistractions()
 	if !exists("g:distractionFree") || g:distractionFree==0
