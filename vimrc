@@ -371,6 +371,7 @@ function! ToggleDistractions()
 		set noshowcmd
 		set noshowmode
 		set showtabline=0 laststatus=0
+		GitGutterDisable
 	else
 		let g:distractionFree=0
 		set cursorline cursorcolumn colorcolumn=80
