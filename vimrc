@@ -59,6 +59,8 @@ Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
 Plug 'airblade/vim-gitgutter'
 
+Plug 'tejr/vim-tmux'
+
 Plug 'LaTeX-Box-Team/LaTeX-Box',               {'for': 'tex'}
 Plug 'xuhdev/vim-latex-live-preview',          {'for': 'tex'}
 
