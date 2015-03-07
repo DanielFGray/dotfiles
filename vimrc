@@ -58,6 +58,7 @@ Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'c
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
 Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/limelight.vim'
 
 Plug 'tejr/vim-tmux'
 
@@ -130,7 +131,7 @@ set confirm
 set modeline
 set modelines=2
 set scrolloff=5
-set t_Co=16
+""set t_Co=16
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
@@ -337,6 +338,9 @@ nmap <silent> <leader>gT <Plug>TitlecaseLine
 
 let g:goldenview__enable_default_mapping=0
 nmap <silent> <C-n>  <Plug>GoldenViewSplit
+
+let g:limelight_conceal_ctermfg = 'DarkGray'
+
 "" }}}
 
 if has("gui_running")
