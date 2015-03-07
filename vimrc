@@ -145,8 +145,6 @@ set pastetoggle=<F6>
 colorscheme noctu
 let g:mapleader = "\<Space>"
 
-noremap ; :
-noremap : ;
 nnoremap Y y$
 nnoremap n nzzzv
 nnoremap N Nzzzv
