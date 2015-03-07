@@ -42,7 +42,6 @@ Plug 'tpope/vim-vinegar'
 Plug 'mhinz/vim-startify'
 Plug 'mhinz/vim-tmuxify'
 Plug 'bling/vim-airline'
-Plug 'dahu/Insertlessly'
 Plug 'Raimondi/delimitMate'
 Plug 'noahfrederick/vim-noctu'
 Plug 'justinmk/vim-sneak'
@@ -380,10 +379,16 @@ function! ToggleDistractions()
 		set showmode
 		set showcmd
 		set showtabline=2 laststatus=2
+		GitGutterEnable
 		AirlineRefresh
 	endif
 endfunction
 nnoremap <silent> <leader>df <Esc>:<C-u>call ToggleDistractions()<CR>
+
+function! InsertNewLine()
+	execute "normal! i\<Return>"
+endfunction
+nnoremap <Return> <Esc>:call InsertNewLine()<CR>
 
 function! Dotfiles()
 	cd ~/dotfiles
