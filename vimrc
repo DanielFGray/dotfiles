@@ -368,19 +368,22 @@ augroup END
 let g:distractionFree=0
 function! ToggleDistractions()
 	if g:distractionFree==0
-		let g:cursorline_default     = &cursorline
-		let g:cursorcolumn_default   = &cursorcolumn
-		let g:colorcolumn_default    = &colorcolumn
-		let g:number_default         = &number
-		let g:relativenumber_default = &relativenumber
-		let g:list_default           = &list
-		let g:ruler_default          = &ruler
-		let g:showcmd_default        = &showcmd
-		let g:showmode_default       = &showmode
-		let g:showtabline_default    = &showtabline
-		let g:laststatus_default     = &laststatus
-		let g:gitgutter_default      = get(g:, 'gitgutter_enabled', 0)
-		let g:airline_default        = exists("#airline")
+		let g:distractionSettings = {
+			\ 'cursorline':     &cursorline,
+			\ 'cursorcolumn':   &cursorcolumn,
+			\ 'colorcolumn':    &colorcolumn,
+			\ 'number':         &number,
+			\ 'relativenumber': &relativenumber,
+			\ 'list':           &list,
+			\ 'ruler':          &ruler,
+			\ 'showcmd':        &showcmd,
+			\ 'showmode':       &showmode,
+			\ 'showtabline':    &showtabline,
+			\ 'laststatus':     &laststatus,
+			\ 'gitgutter':      exists(':GitGutter'),
+			\ 'airline':        exists("#airline"),
+			\ 'limelight':      exists(':Limelight')
+			\ }
 		set nocursorline
 		set nocursorcolumn
 		set colorcolumn=0
@@ -395,38 +398,34 @@ function! ToggleDistractions()
 		if exists('$TMUX')
 			silent! !tmux set -q status off
 		endif
-		if exists(':Limelight')
+		if g:distractionSettings['limelight']
 			silent! Limelight
 		endif
-		if g:gitgutter_default
+		if g:distractionSettings['gitgutter']
 			silent! GitGutterDisable
 		endif
 		silent! redraw!
 		let g:distractionFree=1
 	else
-		let &cursorline     = g:cursorline_default
-		let &cursorcolumn   = g:cursorcolumn_default
-		let &cursorcolumn   = g:cursorcolumn_default
-		let &number         = g:number_default
-		let &relativenumber = g:relativenumber_default
-		let &list           = g:list_default
-		let &ruler          = g:ruler_default
-		let &showmode       = g:showmode_default
-		let &showcmd        = g:showcmd_default
-		let &showtabline    = g:showtabline_default
-		let &laststatus     = g:laststatus_default
 		if exists('$TMUX')
 			silent! !tmux set -q status on
 		endif
-		if exists(':Limelight')
+		if g:distractionSettings['limelight']
 			silent! Limelight!
 		endif
-		if g:gitgutter_default
+		if g:distractionSettings['gitgutter']
 			silent! GitGutterEnable
 		endif
-		if g:airline_default
-			silent! AirlineRefresh
+		if g:distractionSettings['airline']
+			silent!
+			AirlineRefresh
 		endif
+		remove(g:distractionSettings, 'airline')
+		remove(g:distractionSettings, 'gitgitter')
+		remove(g:distractionSettings, 'limelight')
+		for [k, v] in items(g:distractionSettings)
+			execute printf("let &%s = %s", k, string(v))
+		endfor
 		silent! redraw!
 		let g:distractionFree=0
 	endif
