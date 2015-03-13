@@ -152,6 +152,7 @@ vnoremap > >gv
 command! -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+noremap Q <Esc>:if input('close current buffer? ') == 'y' \| bd \| endif<CR>
 
 noremap j gj
 noremap k gk
