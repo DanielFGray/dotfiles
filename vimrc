@@ -124,7 +124,6 @@ set list
 set fillchars+=vert:│
 set listchars=tab:\|\ ,eol:★,trail:◥,extends:>,precedes:<,nbsp:.
 set showcmd
-set mouse=a
 set nolazyredraw
 set autoread
 set report=0
