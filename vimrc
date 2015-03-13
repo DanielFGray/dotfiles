@@ -147,8 +147,6 @@ colorscheme noctu
 let g:mapleader = "\<Space>"
 
 nnoremap Y y$
-nnoremap n nzzzv
-nnoremap N Nzzzv
 vnoremap < <gv
 vnoremap > >gv
 command! -nargs=* -complete=help H :vert help <args>
@@ -286,8 +284,8 @@ let g:gundo_preview_height = 40
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
-map n  <Plug>(incsearch-nohl-n)
-map N  <Plug>(incsearch-nohl-N)
+map n  <Plug>(incsearch-nohl-n)zvzt
+map N  <Plug>(incsearch-nohl-N)zvzt
 map *  <Plug>(incsearch-nohl-*)
 map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
