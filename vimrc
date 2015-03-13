@@ -59,6 +59,7 @@ Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'c
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
 Plug 'airblade/vim-gitgutter'
+Plug 'DanielFGray/DistractionFree.vim'
 Plug 'junegunn/limelight.vim'
 
 Plug 'tejr/vim-tmux'
@@ -337,6 +338,10 @@ nmap <silent> <leader>gT <Plug>TitlecaseLine
 
 let g:goldenview__enable_default_mapping=0
 nmap <silent> <C-n>  <Plug>GoldenViewSplit
+
+let g:distraction_free#toggle_tmux = 1
+let g:distraction_free#toggle_limelight = 1
+noremap <leader>df <Esc>:DistractionsToggle<CR>
 
 let g:limelight_conceal_ctermfg = 'DarkGray'
 
