@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-if ! command -v byzanz-record > /dev/null; then
+has() {
+	if type "$1" &> /dev/null; then
+		return 0
+	else
+		[[ ! "$2" == '-s' ]] && echo >&2 "$1 not found"
+		return 1
+	fi
+}
+
+if ! has 'byzanz-record'; then
 	echo 'requires byzanz-record'
 	exit 1
 fi
@@ -39,50 +48,46 @@ shift $((OPTIND-1))
 
 delay() {
 	for (( i=delay; i>0; --i )) ; do
-		echo -n "$i.. "
+		echo -ne "$i..\r"
 		sleep 1
 	done
 	echo 'recording'
 }
 
-
-if [ $window == true ]; then
-	XWININFO=$(xwininfo)
-	read X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
-	read Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
-	read W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
-	read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
-	echo "saving to $file"
-	delay
-	byzanz-record --duration="$duration" --x="$X" --y="$Y" --width="$W" --height="$H" "$@" "$file"
-elif [ $region == true ]; then
-	if command -v xrectsel > /dev/null; then
-		arguments=$(xrectsel "--x=%x --y=%y --width=%w --height=%h")
-		echo "saving to $file"
-		delay
-		byzanz-record --duration="$duration" "$arguments" "$@" "$file"
+if [[ "$window" == true ]]; then
+	echo -ne 'click a window\r'
+	xwininfo=$(xwininfo)
+	read x < <(awk -F':' '/Absolute upper-left X/{print $2}' <<< "$xwininfo")
+	read y < <(awk -F':' '/Absolute upper-left Y/{print $2}' <<< "$xwininfo")
+	read w < <(awk -F':' '/Width/{print $2}' <<< "$xwininfo")
+	read h < <(awk -F':' '/Height/{print $2}' <<< "$xwininfo")
+	printf -v args '%s %s %s %s' "--x=$x" "--y=$y" "--width=$w" "--height=$h"
+elif [[ "$region" == true ]]; then
+	if has 'xrectsel'; then
+		echo -ne 'select a region\r'
+		args=$(xrectsel '--x=%x --y=%y --width=%w --height=%h')
 	else
 		echo >&2 'xrectsel required for -s'
 		echo >&2 '  https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c'
 	fi
-else
-	echo "saving to $file"
-	delay
-	byzanz-record --duration="$duration" "$@" "$file"
 fi
 
-#TODO: changeable image viewer
-[ -f "$file" ] && mirage "$file" 2> /dev/null
+echo "saving to $file"
+delay
+byzanz-record --duration="$duration" "$args" "$@" "$file"
 
-if [ -f "$file" ] && command -v pomf > /dev/null; then
-	while true; do
-		printf 'upload to pomf? '
-		read upload
-		case $upload in
-			[Yy]* )
-				pomf "${file}"
-				break ;;
-			*) break ;;
-		esac
-	done
+#TODO: changeable image viewer
+if [[ -f "$file" ]] && has -s 'mirage';then
+	mirage "$file" &> /dev/null
+fi
+
+if [[ -f "$file" ]] && has -s 'pomf'; then
+	printf 'upload to pomf? '
+	read upload
+	case "$upload" in
+		[Yy]* )
+			pomf "${file}"
+			break ;;
+		*) break ;;
+	esac
 fi
