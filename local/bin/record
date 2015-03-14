@@ -45,7 +45,7 @@ record() {
 		offset=":0.0+${dimensions['x']},${dimensions['y']}"
 		ffmpeg -y -loglevel panic -f x11grab -s "$size" -i "$offset" -t "$duration"\
 			-c:v libvpx -crf 12 -s "$size" -b:v 1200k \
-			-preset ultrafast \
+			-preset fast \
 			-b 1000k -threads 4 \
 			-f webm "$file"
 	else
