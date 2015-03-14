@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+has() {
+	if type "$1" &> /dev/null; then
+		return 0
+	else
+		[[ ! "$2" == '-s' ]] && echo >&2 "$1 not found"
+		return 1
+	fi
+}
+
+delay() {
+	for (( i=delay; i>0; --i )) ; do
+		echo -ne "$i..             \r"
+		sleep 1
+	done
+	echo -ne 'recording                \r'
+}
+
+getdimensions() {
+	if [[ "$window" == true ]]; then
+		echo -ne 'click a window\r'
+		xwininfo=$(xwininfo)
+		read x < <(awk -F':' '/Absolute upper-left X/{print $2}' <<< "$xwininfo")
+		read y < <(awk -F':' '/Absolute upper-left Y/{print $2}' <<< "$xwininfo")
+		read w < <(awk -F':' '/Width/{print $2}' <<< "$xwininfo")
+		read h < <(awk -F':' '/Height/{print $2}' <<< "$xwininfo")
+		dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
+	elif [[ "$region" == true ]]; then
+		if ! has xrectsel -s; then
+			echo >&2 'xrectsel required for -s'
+			exit 1
+		fi
+		echo -ne 'select a region\r'
+		#TODO: don't use eval
+		eval dimensions=( $(xrectsel "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )
+	fi
+}
+
+record() {
+	if [[ $1 == 'byzanz' ]] ; then
+		byzanz-record --duration="$duration" --x=${dimensions['x']} --y=${dimensions['y']} --width=${dimensions['w']} --height=${dimensions['h']} "$file"
+	elif [[ $1 == 'ffmpeg' ]]; then
+		size="${dimensions['w']}x${dimensions['h']}"
+		offset=":0.0+${dimensions['x']},${dimensions['y']}"
+		ffmpeg -y -loglevel panic -f x11grab -s "$size" -i "$offset" -t "$duration"\
+			-c:v libvpx -crf 12 -s "$size" -b:v 1200k \
+			-preset ultrafast \
+			-b 1000k -threads 4 \
+			-f webm "$file"
+	else
+		echo >&2 'how did I get here?'
+	fi
+}
+
+help() {
+	echo 'Usage:
+  -f file name
+  -w select particular window
+  -d duration
+  -D delay
+  -h this help
+  -s draw selectable region'
+	exit
+}
+
+file="$(date +%F-%s).gif"
+window=false
+region=false
+duration='10'
+delay=0
+declare -A dimensions
+
+OPTERR=0
+while getopts "hf:wd:D:s" opt; do
+	case "$opt" in
+		f) file="$OPTARG" ;;
+		w) window=true; region=false ;;
+		s) window=false; region=true ;;
+		d) duration="$OPTARG" ;;
+		D) delay="$OPTARG" ;;
+		h) help ;;
+	esac
+done
+
+case "$file" in
+	*gif) cmd='byzanz' ;;
+	*webm) cmd='ffmpeg' ;;
+	*) echo >&2 'unknown file type, must be gif or webm'
+		exit 1 ;;
+esac
+
+getdimensions
+delay
+record "$cmd"
