@@ -64,11 +64,11 @@ getdimensions() {
 	if [[ "$window" == true ]]; then
 		echo -ne 'click a window\r'
 		xwininfo=$(xwininfo)
-		#TODO: read x y w h < <(awk..)
-		read x < <(awk -F':' '/Absolute upper-left X/{print $2}' <<< "$xwininfo")
-		read y < <(awk -F':' '/Absolute upper-left Y/{print $2}' <<< "$xwininfo")
-		read w < <(awk -F':' '/Width/{print $2}' <<< "$xwininfo")
-		read h < <(awk -F':' '/Height/{print $2}' <<< "$xwininfo")
+		read x y w h < <(awk -F':' '/Absolute upper-left X/ { x = $2 }
+		/Absolute upper-left Y/ { y = $2 }
+		/Width/ { w = $2 }
+		/Height/ { h = $2 }
+		END { print x, y, w, h }' <<< "$xwininfo")
 		dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
 	elif [[ "$region" == true ]]; then
 		if ! has xrectsel; then
