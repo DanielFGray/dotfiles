@@ -87,7 +87,7 @@ getdimensions() {
 record() {
 	#TODO: maybe remove byzanz altogether in favor of plain ffmpeg?
 	if [[ $1 == 'byzanz' ]] ; then
-		byzanz-record --duration="$duration" --x=${dimensions['x']} --y=${dimensions['y']} --width=${dimensions['w']} --height=${dimensions['h']} "$file"
+		byzanz-record --duration="$duration" --x="${dimensions['x']}" --y="${dimensions['y']}" --width="${dimensions['w']}" --height="${dimensions['h']}" "$file"
 	elif [[ $1 == 'ffmpeg' ]]; then
 		size="${dimensions['w']}x${dimensions['h']}"
 		offset=":0.0+${dimensions['x']},${dimensions['y']}"
