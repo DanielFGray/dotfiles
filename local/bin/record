@@ -1,10 +1,40 @@
 #!/usr/bin/env bash
 
+file="$(date +%F-%s).gif"
+window=false
+region=false
+duration=10
+delay=0
+declare -A dimensions
+
 has() {
 	if type "$1" &> /dev/null; then
 		return 0
 	else
-		[[ ! "$2" == '-s' ]] && echo >&2 "$1 not found"
+		return 1
+	fi
+}
+
+err() {
+	echo -e "\033[1;31m$1" >&2
+}
+
+prompt() {
+	if [[ -z $2 || ${2^} = Y* ]]; then
+		prompt='Y/n'
+		default='Y'
+	elif [[ ${2^} = N* ]]; then
+		prompt='y/N'
+		default='N'
+	fi
+	read -p "$1 [$prompt] " -N1 ans
+	echo -e
+	if [[ -z $ans ]]; then
+		ans=$default
+	fi
+	if [[ ${ans^} = Y* ]]; then
+		return 0
+	elif [[ ${ans^} = N* ]]; then
 		return 1
 	fi
 }
@@ -21,23 +51,28 @@ getdimensions() {
 	if [[ "$window" == true ]]; then
 		echo -ne 'click a window\r'
 		xwininfo=$(xwininfo)
+		#TODO: read x y w h < <(awk..)
 		read x < <(awk -F':' '/Absolute upper-left X/{print $2}' <<< "$xwininfo")
 		read y < <(awk -F':' '/Absolute upper-left Y/{print $2}' <<< "$xwininfo")
 		read w < <(awk -F':' '/Width/{print $2}' <<< "$xwininfo")
 		read h < <(awk -F':' '/Height/{print $2}' <<< "$xwininfo")
 		dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
 	elif [[ "$region" == true ]]; then
-		if ! has xrectsel -s; then
-			echo >&2 'xrectsel required for -s'
+		if ! has xrectsel; then
+			err 'xrectsel required for -s'
 			exit 1
 		fi
 		echo -ne 'select a region\r'
 		#TODO: don't use eval
 		eval dimensions=( $(xrectsel "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )
+	else
+		scrsize=$(xdpyinfo | awk '/dimensions/{print $2}')
+		dimensions=( ['x']='0' ['y']='0' ['w']="${scrsize%%x*}" ['h']="${scrsize#*x}" )
 	fi
 }
 
 record() {
+	#TODO: maybe remove byzanz altogether in favor of plain ffmpeg?
 	if [[ $1 == 'byzanz' ]] ; then
 		byzanz-record --duration="$duration" --x=${dimensions['x']} --y=${dimensions['y']} --width=${dimensions['w']} --height=${dimensions['h']} "$file"
 	elif [[ $1 == 'ffmpeg' ]]; then
@@ -49,46 +84,58 @@ record() {
 			-b 1000k -threads 4 \
 			-f webm "$file"
 	else
-		echo >&2 'how did I get here?'
+		err 'how did I get here?'
+		exit 1
 	fi
 }
 
-help() {
-	echo 'Usage:
-  -f file name
-  -w select particular window
-  -d duration
-  -D delay
-  -h this help
-  -s draw selectable region'
+usage() {
+	echo 'Usage: record [OPTIONS]
+  -h  this help
+  -f  specify file name [defaults to $(date +%F-%s).gif]
+  -F  specify file name and overwrite if exists
+  -d  specify duration
+  -D  specify delay
+  -w  select window
+  -s  draw selectable region'
+# -k  display keystrokes during recording
 	exit
 }
 
-file="$(date +%F-%s).gif"
-window=false
-region=false
-duration='10'
-delay=0
-declare -A dimensions
-
 OPTERR=0
-while getopts "hf:wd:D:s" opt; do
+while getopts "f:F:d:D:swh" opt; do
 	case "$opt" in
-		f) file="$OPTARG" ;;
+		f) file="$OPTARG"; overwrite=false ;;
+		F) file="$OPTARG"; overwrite=true ;;
 		w) window=true; region=false ;;
 		s) window=false; region=true ;;
 		d) duration="$OPTARG" ;;
 		D) delay="$OPTARG" ;;
-		h) help ;;
+	#	k) screenkeys=true ;;
+		h) usage ;;
 	esac
 done
 
 case "$file" in
-	*gif) cmd='byzanz' ;;
-	*webm) cmd='ffmpeg' ;;
-	*) echo >&2 'unknown file type, must be gif or webm'
+	*gif)
+		if ! has byzanz-record; then
+			err 'need byzanz-record for recording gifs'
+			exit 1
+		fi
+		cmd='byzanz' ;;
+	*webm)
+		if ! has ffmpeg; then
+			err 'need ffmpeg for recording webms'
+			exit 1
+		fi
+		cmd='ffmpeg' ;;
+	*) err 'unknown file type, must be gif or webm'
 		exit 1 ;;
 esac
+
+if [[ -f "$file" && "$overwrite" == false ]] && ! prompt "overwrite ${file}? "; then
+	exit 1
+fi
 
 getdimensions
 delay
