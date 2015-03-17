@@ -7,6 +7,19 @@ duration=10
 delay=0
 declare -A dimensions
 
+usage() {
+	echo 'Usage: record [OPTIONS]
+  -h  this help
+  -f  specify file name [defaults to $(date +%F-%s).gif]
+  -F  specify file name and overwrite if exists
+  -d  specify duration
+  -D  specify delay
+  -w  select window
+  -s  draw selectable region'
+# -k  display keystrokes during recording
+	exit
+}
+
 has() {
 	if type "$1" &> /dev/null; then
 		return 0
@@ -87,19 +100,6 @@ record() {
 		err 'how did I get here?'
 		exit 1
 	fi
-}
-
-usage() {
-	echo 'Usage: record [OPTIONS]
-  -h  this help
-  -f  specify file name [defaults to $(date +%F-%s).gif]
-  -F  specify file name and overwrite if exists
-  -d  specify duration
-  -D  specify delay
-  -w  select window
-  -s  draw selectable region'
-# -k  display keystrokes during recording
-	exit
 }
 
 OPTERR=0
