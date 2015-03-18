@@ -86,20 +86,28 @@ getdimensions() {
 
 record() {
 	#TODO: maybe remove byzanz altogether in favor of plain ffmpeg?
-	if [[ $1 == 'byzanz' ]] ; then
-		byzanz-record --duration="$duration" --x="${dimensions['x']}" --y="${dimensions['y']}" --width="${dimensions['w']}" --height="${dimensions['h']}" "$file"
-	elif [[ $1 == 'ffmpeg' ]]; then
-		size="${dimensions['w']}x${dimensions['h']}"
-		offset=":0.0+${dimensions['x']},${dimensions['y']}"
-		ffmpeg -y -loglevel panic -f x11grab -s "$size" -i "$offset" -t "$duration"\
-			-c:v libvpx -crf 12 -s "$size" -b:v 1200k \
-			-preset fast \
-			-b 1000k -threads 4 \
-			-f webm "$file"
-	else
-		err 'how did I get here?'
-		exit 1
-	fi
+	case "$1" in
+		'byzanz')
+			byzanz-record \
+				--duration="$duration"\
+				--x="${dimensions['x']}"\
+				--y="${dimensions['y']}"\
+				--width="${dimensions['w']}"\
+				--height="${dimensions['h']}"\
+				"$file" ;;
+		'ffmpeg')
+			size="${dimensions['w']}x${dimensions['h']}"
+			offset=":0.0+${dimensions['x']},${dimensions['y']}"
+			ffmpeg -y -loglevel panic\
+				-f x11grab -s "$size" -i "$offset" -t "$duration"\
+				-c:v libvpx -crf 12 -s "$size" -b:v 1200k \
+				-preset fast \
+				-b 1000k -threads 4 \
+				-f webm "$file" ;;
+		*)
+			err 'how did I get here?'
+			exit 1
+	esac
 }
 
 OPTERR=0
