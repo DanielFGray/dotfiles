@@ -120,7 +120,7 @@ while getopts "f:F:d:D:swh" opt; do
 		d) duration="$OPTARG" ;;
 		D) delay="$OPTARG" ;;
 	#	k) screenkeys=true ;;
-		h) usage ;;
+		h) usage; exit 0 ;;
 	esac
 done
 
