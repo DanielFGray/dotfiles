@@ -53,7 +53,6 @@ Plug 'kana/vim-textobj-user'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'kana/vim-textobj-function'
 Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}
-Plug 'zhaocai/GoldenView.Vim',                 {'on': '<Plug>GoldenViewSplit'}
 Plug 'Shougo/vimshell.vim',                    {'on': 'VimShell'}
 Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'css']}
 Plug 'mattn/webapi-vim'
@@ -61,6 +60,7 @@ Plug 'mattn/gist-vim',                         {'on': 'Gist'}
 Plug 'airblade/vim-gitgutter'
 Plug 'DanielFGray/DistractionFree.vim'
 Plug 'junegunn/limelight.vim'
+Plug 'terryma/vim-multiple-cursors'
 
 Plug 'tejr/vim-tmux'
 
