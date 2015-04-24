@@ -302,13 +302,19 @@ let g:incsearch#consistent_n_direction = 1
 let g:incsearch#auto_nohlsearch = 1
 let g:incsearch#magic = '\v'
 
-map <silent> s <Plug>Sneak_s
+let g:sneak#prompt = '(sneak)» '
 map <silent> f <Plug>Sneak_f
 map <silent> F <Plug>Sneak_F
 map <silent> t <Plug>Sneak_t
 map <silent> T <Plug>Sneak_T
+map <silent> ; <Plug>SneakNext
+map <silent> , <Plug>SneakPrevious
 
-
+augroup SneakPluginColors
+	autocmd!
+	autocmd ColorScheme * hi SneakPluginTarget guifg=black guibg=red ctermfg=black ctermbg=red
+	autocmd ColorScheme * hi SneakPluginScope  guifg=black guibg=yellow ctermfg=black ctermbg=yellow
+augroup END
 "" }}}
 
 "" {{{ fugitive shortcuts
