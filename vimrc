@@ -369,31 +369,15 @@ endif
 
 augroup VIM
 	autocmd!
-	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | AirlineRefresh
-	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf call system('tmux source-file ~/.tmux.conf; tmux display-message "Sourced .tmux.conf"')
+	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
+	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('( tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf" ) ||  tmux display-message "ERR sourcing .tmux.conf"') | endif
 	autocmd FileType vim nnore <silent><buffer> K <Esc>:<C-U>vert help <C-R><C-W><CR>
 	autocmd VimResized * :wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
-	autocmd FileType netrw nnoremap q <Esc>:bd<CR>
-	autocmd FileType markdown,text set wrap | set linebreak | set colorcolumn=0 | set nocursorline | set nocursorcolumn
+	autocmd FileType markdown,text set wrap linebreak colorcolumn=0 nocursorline nocursorcolumn
 augroup END
 
 function! InsertNewLine()
 	execute "normal! i\<Return>"
 endfunction
 nnoremap <Return> <Esc>:call InsertNewLine()<CR>
-
-function! Dotfiles()
-	cd ~/dotfiles
-	edit zshrc
-	vsplit bash_aliases
-	wincmd h
-	tabnew vimrc
-	vert help quickref
-	wincmd h
-	tabnew local.tmux.conf
-	vert diffsplit remote.tmux.conf
-	wincmd h
-	tabnew config/awesome/rc.lua
-	tabfirst
-endfunction
