@@ -264,6 +264,8 @@ let g:syntastic_style_error_symbol = '✠'
 let g:syntastic_warning_symbol = '∆'
 let g:syntastic_style_warning_symbol = '≈'
 let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+
+let g:echodoc_enable_at_startup=1
 "" }}}
 
 "" {{{ tmux integration
