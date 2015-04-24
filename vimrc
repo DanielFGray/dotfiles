@@ -100,7 +100,7 @@ filetype plugin indent on
 
 "" TODO: more comments
 set number
-set relativenumber
+try | set relativenumber | catch | endtry
 set colorcolumn=80
 set cursorcolumn cursorline
 set laststatus=2
@@ -136,11 +136,10 @@ set scrolloff=5
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
-if version >= 704 && has('patch399')
-	set cryptmethod=blowfish2
-else
+try
 	set cryptmethod=blowfish
-endif
+	set cryptmethod=blowfish2
+catch | endtry
 set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
 set diffopt=vertical
 set pastetoggle=<F6>
