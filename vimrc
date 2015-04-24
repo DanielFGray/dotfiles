@@ -104,33 +104,29 @@ try | set relativenumber | catch | endtry
 set colorcolumn=80
 set cursorcolumn cursorline
 set laststatus=2
-set hlsearch
-set incsearch
+set hlsearch incsearch
 set infercase
 set backspace=indent,eol,start
 set nowrap
 set showmatch
 set equalalways
 set splitright
-set wildmenu
-set wildcharm=<C-z>
+set wildmenu wildcharm=<C-z>
 set switchbuf=useopen,usetab
 set autoindent smartindent smarttab
 set tabstop=4 softtabstop=4 shiftwidth=4
 set foldmethod=marker
-set ruler
-set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
+set ruler rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set hidden
-set list
+set list listchars=tab:\|\ ,eol:★,trail:◥,extends:>,precedes:<,nbsp:.
 set fillchars+=vert:│
-set listchars=tab:\|\ ,eol:★,trail:◥,extends:>,precedes:<,nbsp:.
 set showcmd
+set noshowmode
 set nolazyredraw
 set autoread
 set report=0
 set confirm
-set modeline
-set modelines=2
+set modeline modelines=2
 set scrolloff=5
 ""set t_Co=16
 set shortmess+=I
@@ -140,7 +136,7 @@ try
 	set cryptmethod=blowfish
 	set cryptmethod=blowfish2
 catch | endtry
-set sessionoptions=blank,buffers,curdir,help,resize,tabpages,winsize,winpos
+set sessionoptions-=options
 set diffopt=vertical
 set pastetoggle=<F6>
 colorscheme noctu
@@ -149,7 +145,7 @@ let g:mapleader = "\<Space>"
 nnoremap Y y$
 vnoremap < <gv
 vnoremap > >gv
-command! -nargs=* -complete=help H :vert help <args>
+command! -bar -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 noremap <silent> Q <Esc>:call PromptQuit()<CR>
