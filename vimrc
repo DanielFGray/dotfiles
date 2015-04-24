@@ -340,16 +340,13 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 nmap <Leader>a <Plug>(EasyAlign)
 vmap <Leader>a <Plug>(EasyAlign)
 
-map + <Plug>(expand_region_expand)
-map _ <Plug>(expand_region_shrink)
+map + <Plug>(wildfire-fuel)
+map _ <Plug>(wildfire-water)
 
 let g:titlecase_map_keys = 0
 nmap <silent> <leader>gt <Plug>Titlecase
 vmap <silent> <leader>gt <Plug>Titlecase
 nmap <silent> <leader>gT <Plug>TitlecaseLine
-
-let g:goldenview__enable_default_mapping=0
-nmap <silent> <C-n>  <Plug>GoldenViewSplit
 
 let g:distraction_free#toggle_tmux = 1
 let g:distraction_free#toggle_limelight = 1
