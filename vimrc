@@ -163,20 +163,22 @@ command! -bar -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
 
 "" {{{ auto completion
-let g:acp_enableAtStartup = 0
-let g:{g:completionEngine}#enable_at_startup = 1
-let g:{g:completionEngine}#enable_smart_case = 1
-let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-let g:{g:completionEngine}#auto_completion_start_length = 3
-let g:{g:completionEngine}#sources#dictionary#dictionaries = {  'default' : '' }
-let g:{g:completionEngine}#sources#omni#input_patterns = {}
-let g:{g:completionEngine}#keyword_patterns = {}
-let g:{g:completionEngine}#keyword_patterns['default'] = '\h\w*'
-let g:{g:completionEngine}#data_directory = "~/.vim/cache/neocomplete"
-inoremap <expr><C-g>     {g:completionEngine}#undo_completion()
-inoremap <expr><C-l>     {g:completionEngine}#complete_common_string()
-inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-h>"
-inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
+if exists('g:completionEngine')
+	let g:acp_enableAtStartup = 0
+	let g:{g:completionEngine}#enable_at_startup = 1
+	let g:{g:completionEngine}#enable_smart_case = 1
+	let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
+	let g:{g:completionEngine}#auto_completion_start_length = 3
+	let g:{g:completionEngine}#sources#dictionary#dictionaries = {  'default' : '' }
+	let g:{g:completionEngine}#sources#omni#input_patterns = {}
+	let g:{g:completionEngine}#keyword_patterns = {}
+	let g:{g:completionEngine}#keyword_patterns['default'] = '\h\w*'
+	let g:{g:completionEngine}#data_directory = "~/.vim/cache/neocomplete"
+	inoremap <expr><C-g>     {g:completionEngine}#undo_completion()
+	inoremap <expr><C-l>     {g:completionEngine}#complete_common_string()
+	inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-h>"
+	inoremap <expr><TAB>     pumvisible() ? "\<C-n>" : "\<TAB>"
+endif
 "" "}}}
 
 "" {{{ snippets
