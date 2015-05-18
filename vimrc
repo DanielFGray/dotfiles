@@ -21,7 +21,7 @@ Plug 'Shougo/echodoc'
 if has('lua') && (version >= 704 || version == 703 && has('patch885'))
 	Plug 'Shougo/neocomplete.vim'
 	let g:completionEngine = 'neocomplete'
-else
+elseif has('lua')
 	Plug 'Shougo/neocomplcache.vim'
 	let g:completionEngine = 'neocomplcache'
 endif
@@ -38,6 +38,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-commentary'
 Plug 'mhinz/vim-startify'
@@ -99,8 +100,8 @@ syntax on
 filetype plugin indent on
 
 "" TODO: more comments
-set number
-try | set relativenumber | catch | endtry
+try | set number
+set relativenumber
 set colorcolumn=80
 set cursorcolumn cursorline
 set laststatus=2
@@ -132,50 +133,34 @@ set scrolloff=5
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
-try
-	set cryptmethod=blowfish
-	set cryptmethod=blowfish2
-catch | endtry
+set cryptmethod=blowfish
+set cryptmethod=blowfish2
 set sessionoptions-=options
 set diffopt=vertical
 set pastetoggle=<F6>
+set undodir=~/.vim/undo/
+set undofile
+set undoreload=10000
+set backupdir=~/.vim/backups/
+set directory=~/.vim/swaps/
+set undolevels=1000
 colorscheme noctu
 let g:mapleader = "\<Space>"
-
-nnoremap Y y$
-vnoremap < <gv
-vnoremap > >gv
-command! -bar -nargs=* -complete=help H :vert help <args>
-cabbrev w!! w !sudo tee >/dev/null "%"
-cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
-noremap <silent> Q <Esc>:call PromptQuit()<CR>
-function! PromptQuit()
-	echo 'close current buffer?'
-	if nr2char(getchar()) =~ 'y'
-		bd
-	endif
-	silent! redraw!
-endfunction
+catch | endtry
 
 noremap j gj
 noremap k gk
 noremap gj j
 noremap gk k
+nnoremap Y y$
+vnoremap < <gv
+vnoremap > >gv
+map ]] ]]zt
+map [[ [[zt
 
-if version >= 703
-	if exists("&undodir")
-		set undodir=~/.vim/undo//
-	endif
-	set undofile
-	set undoreload=10000
-endif
-if exists("&backupdir")
-	set backupdir=~/.vim/backups//
-endif
-if exists("&directory")
-	set directory=~/.vim/swaps//
-endif
-set undolevels=1000
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+command! -bar -nargs=* -complete=help H :vert help <args>
+cabbrev w!! w !sudo tee >/dev/null "%"
 
 "" {{{ auto completion
 let g:acp_enableAtStartup = 0
@@ -187,6 +172,7 @@ let g:{g:completionEngine}#sources#dictionary#dictionaries = {  'default' : '' }
 let g:{g:completionEngine}#sources#omni#input_patterns = {}
 let g:{g:completionEngine}#keyword_patterns = {}
 let g:{g:completionEngine}#keyword_patterns['default'] = '\h\w*'
+let g:{g:completionEngine}#data_directory = "~/.vim/cache/neocomplete"
 inoremap <expr><C-g>     {g:completionEngine}#undo_completion()
 inoremap <expr><C-l>     {g:completionEngine}#complete_common_string()
 inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-h>"
@@ -269,7 +255,8 @@ let g:echodoc_enable_at_startup=1
 "" }}}
 
 "" {{{ tmux integration
-let g:tmuxify_custom_command = 'tmux split-window -d -l 10'
+let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
+let g:tmuxify_global_maps = 1
 let g:tmuxify_run = {
 	\ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%ly/pdf}"; done',
 	\ 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%tex/pdf}"; done',
@@ -378,4 +365,13 @@ augroup END
 function! InsertNewLine()
 	execute "normal! i\<Return>"
 endfunction
-nnoremap <Return> <Esc>:call InsertNewLine()<CR>
+nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
+
+function! PromptQuit()
+	echo 'close current buffer?'
+	if nr2char(getchar()) =~ 'y'
+		bd
+	endif
+	silent! redraw!
+endfunction
+noremap <silent> Q <Esc>:call PromptQuit()<CR>
