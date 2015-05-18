@@ -52,7 +52,7 @@ cd() {
 mkd() { mkdir -p "$@" && cd "$1" ;}
 
 wget() { man curl ;}
-cat() { (( "$#" > 1 )) && /bin/cat "$@" ;}
+cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 
 tarpipe() { tar czf - "$2" | pv | ssh "$1" "tar xzvf - $3" ;}
 rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
