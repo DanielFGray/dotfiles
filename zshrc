@@ -87,7 +87,7 @@ delete-in() {
 		RCHAR="$CHAR"
 	fi
 	LSEARCH=${#LBUFFER}
-	while [[ "$LSEARCH" > 0 ]] && [[ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]]; do
+	while (( $LSEARCH > 0 )) && [[ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]]; do
 		LSEARCH=$(expr $LSEARCH - 1)
 	done
 	if [[ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]]; then
