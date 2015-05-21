@@ -123,8 +123,9 @@ set tabstop=4 softtabstop=4 shiftwidth=4
 set foldmethod=marker
 set ruler rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set hidden
-set list listchars=tab:\|\ ,eol:★,trail:◥,extends:>,precedes:<,nbsp:.
-set fillchars+=vert:│
+set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
+" set listchars+=eol:↵
+set fillchars=stl:\ ,stlnc:\ ,vert:│,fold:-,diff:-
 set showcmd
 set noshowmode
 set nolazyredraw
