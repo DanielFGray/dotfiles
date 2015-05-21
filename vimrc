@@ -170,13 +170,17 @@ cabbrev w!! w !sudo tee >/dev/null "%"
 augroup VIM
 	autocmd!
 	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
-	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('( tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf" ) ||  tmux display-message "ERR sourcing .tmux.conf"') | endif
-	autocmd FileType vim nnore <silent><buffer> K <Esc>:<C-U>vert help <C-R><C-W><CR>
-	autocmd VimResized * :wincmd =
+	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
+	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
+	autocmd VimResized * wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
-	autocmd FileType markdown,text set wrap linebreak colorcolumn=0 nocursorline nocursorcolumn
-	augroup END
-endif
+	autocmd FileType markdown,text,man setlocal wrap linebreak colorcolumn=0 nocursorline nocursorcolumn
+	autocmd FileType help wincmd L
+	autocmd FileType vim-plug setlocal nonu nornu nolist
+	if has('nvim')
+		autocmd TermOpen * setlocal nolist nocursorline nocursorcolumn
+	endif
+augroup END
 
 function! InsertNewLine()
 	execute "normal! i\<Return>"
