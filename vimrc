@@ -45,7 +45,6 @@ Plug 'mhinz/vim-startify'
 Plug 'mhinz/vim-tmuxify'
 Plug 'bling/vim-airline'
 Plug 'Raimondi/delimitMate'
-Plug 'noahfrederick/vim-noctu'
 Plug 'justinmk/vim-sneak'
 Plug 'haya14busa/incsearch.vim'
 Plug 'junegunn/vim-easy-align',                {'on': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}
@@ -62,6 +61,12 @@ Plug 'airblade/vim-gitgutter'
 Plug 'DanielFGray/DistractionFree.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'terryma/vim-multiple-cursors'
+
+Plug 'gosukiwi/vim-atom-dark'
+Plug 'noahfrederick/vim-noctu'
+Plug 'wesQ3/wombat.vim'
+Plug 'widatama/vim-phoenix'
+Plug 'benjaminwhite/Benokai'
 
 Plug 'tejr/vim-tmux'
 
@@ -100,11 +105,10 @@ syntax on
 filetype plugin indent on
 
 "" TODO: more comments
-try | set number
-set relativenumber
+set number
+try | set relativenumber | catch | endtry
 set colorcolumn=80
 set cursorcolumn cursorline
-set laststatus=2
 set hlsearch incsearch
 set infercase
 set backspace=indent,eol,start
@@ -133,8 +137,10 @@ set scrolloff=5
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
-set cryptmethod=blowfish
-set cryptmethod=blowfish2
+try
+	set cryptmethod=blowfish
+	set cryptmethod=blowfish2
+catch | endtry
 set sessionoptions-=options
 set diffopt=vertical
 set pastetoggle=<F6>
@@ -144,9 +150,7 @@ set undoreload=10000
 set backupdir=~/.vim/backups/
 set directory=~/.vim/swaps/
 set undolevels=1000
-colorscheme noctu
 let g:mapleader = "\<Space>"
-catch | endtry
 
 noremap j gj
 noremap k gk
@@ -161,6 +165,54 @@ map [[ [[zt
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 command! -bar -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
+
+augroup VIM
+	autocmd!
+	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
+	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('( tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf" ) ||  tmux display-message "ERR sourcing .tmux.conf"') | endif
+	autocmd FileType vim nnore <silent><buffer> K <Esc>:<C-U>vert help <C-R><C-W><CR>
+	autocmd VimResized * :wincmd =
+	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+	autocmd FileType markdown,text set wrap linebreak colorcolumn=0 nocursorline nocursorcolumn
+	augroup END
+endif
+
+function! InsertNewLine()
+	execute "normal! i\<Return>"
+endfunction
+nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
+
+function! PromptQuit()
+	echo 'close current buffer?'
+	if nr2char(getchar()) =~ 'Y'
+		bd
+	endif
+	silent! redraw!
+endfunction
+noremap <silent> Q <Esc>:call PromptQuit()<CR>
+
+function! VisualCmd(command) range abort
+	let n = @n
+	silent! normal gv"ny
+	echo system(a:command, @n)
+	let @n = n
+endfunction
+command! -range=% -nargs=* -complete=shellcmd Filter call VisualCmd(<q-args>)
+
+if has("gui_running")
+	colorscheme atom-dark
+	set background=dark
+	set guioptions-=L
+	set guioptions-=r
+	set guioptions-=b
+	set guioptions-=T
+	set guioptions-=m
+	if has("gui_gtk2")
+		set guifont=Tewi\ 9,DejaVu\ Sans\ Mono\ 8
+	endif
+else
+	colorscheme noctu
+endif
 
 "" {{{ auto completion
 if exists('g:completionEngine')
@@ -342,38 +394,3 @@ noremap <leader>df <Esc>:DistractionsToggle<CR>
 let g:limelight_conceal_ctermfg = 'DarkGray'
 
 "" }}}
-
-if has("gui_running")
-	colorscheme slate
-	set background=dark
-	set gfn=Tewi\ 11
-	set guioptions-=L
-	set guioptions-=r
-	set guioptions-=b
-	set guioptions-=T
-	set guioptions-=m
-endif
-
-augroup VIM
-	autocmd!
-	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
-	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('( tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf" ) ||  tmux display-message "ERR sourcing .tmux.conf"') | endif
-	autocmd FileType vim nnore <silent><buffer> K <Esc>:<C-U>vert help <C-R><C-W><CR>
-	autocmd VimResized * :wincmd =
-	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
-	autocmd FileType markdown,text set wrap linebreak colorcolumn=0 nocursorline nocursorcolumn
-augroup END
-
-function! InsertNewLine()
-	execute "normal! i\<Return>"
-endfunction
-nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
-
-function! PromptQuit()
-	echo 'close current buffer?'
-	if nr2char(getchar()) =~ 'y'
-		bd
-	endif
-	silent! redraw!
-endfunction
-noremap <silent> Q <Esc>:call PromptQuit()<CR>
