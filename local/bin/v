@@ -3,7 +3,7 @@
 usage() {
 	tee << HELP
 v [OPTIONS] [FILES]
-creates a new vim server or uses an existing one
+create a new vim server or interact with an existing one
 
     -d       disable focusing on vim
     -s       associate tmux pane in vim
