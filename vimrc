@@ -399,4 +399,18 @@ let g:limelight_conceal_ctermfg = 'DarkGray'
 
 let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
 let g:pencil#textwidth = 80
+
+if has('nvim')
+	let g:startify_custom_header = [
+	\ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
+	\ '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃',
+	\ '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹',
+	\ '']
+else
+	let g:startify_custom_header = [
+	\ '        ╻ ╻╻┏┳┓',
+	\ '        ┃┏┛┃┃┃┃',
+	\ '        ┗┛ ╹╹ ╹',
+	\ '']
+endif
 "" }}}
