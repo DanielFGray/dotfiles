@@ -151,6 +151,9 @@ command -v fortune &> /dev/null && fortune -as
 
 command -v fzf &> /dev/null && command -v ag &> /dev/null && export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
+if [[ ! -e "$HOME/.node_history" ]]; then
+	touch $HOME/.node_history
+fi
 export NODE_REPL_HISTORY_FILE="$HOME/.node_history"
 
 # vim:ft=sh:
