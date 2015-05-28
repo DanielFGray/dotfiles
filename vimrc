@@ -171,11 +171,10 @@ augroup VIM
 	autocmd!
 	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
 	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
-	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
 	autocmd VimResized * wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
-	autocmd FileType markdown,text,man setlocal wrap linebreak colorcolumn=0 nocursorline nocursorcolumn
-	autocmd FileType help wincmd L
+	autocmd FileType help wincmd L | vert resize 80
+	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
 	autocmd FileType vim-plug setlocal nonu nornu nolist
 	if has('nvim')
 		autocmd TermOpen * setlocal nolist nocursorline nocursorcolumn
