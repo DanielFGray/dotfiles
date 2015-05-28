@@ -21,14 +21,13 @@ Plug 'Shougo/echodoc'
 if has('lua') && (version >= 704 || version == 703 && has('patch885'))
 	Plug 'Shougo/neocomplete.vim'
 	let g:completionEngine = 'neocomplete'
-elseif has('lua')
+else
+" elseif has('lua')
 	Plug 'Shougo/neocomplcache.vim'
 	let g:completionEngine = 'neocomplcache'
 endif
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'Shougo/vimfiler',                        {'on': 'VimFiler'}
-
 Plug 'scrooloose/syntastic'
 Plug 'gcmt/wildfire.vim'
 Plug 'wellle/targets.vim'
@@ -53,7 +52,6 @@ Plug 'kana/vim-textobj-user'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'kana/vim-textobj-function'
 Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}
-Plug 'Shougo/vimshell.vim',                    {'on': 'VimShell'}
 Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'css']}
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
@@ -63,11 +61,8 @@ Plug 'junegunn/limelight.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'reedes/vim-pencil'
 
-Plug 'gosukiwi/vim-atom-dark'
 Plug 'noahfrederick/vim-noctu'
-Plug 'wesQ3/wombat.vim'
-Plug 'widatama/vim-phoenix'
-Plug 'benjaminwhite/Benokai'
+Plug 'gosukiwi/vim-atom-dark'
 
 Plug 'tejr/vim-tmux'
 
