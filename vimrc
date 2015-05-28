@@ -41,6 +41,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sleuth'
 Plug 'mhinz/vim-startify'
 Plug 'mhinz/vim-tmuxify'
 Plug 'bling/vim-airline'
@@ -115,8 +116,7 @@ set equalalways
 set splitright
 set wildmenu wildcharm=<C-z>
 set switchbuf=useopen,usetab
-set autoindent smartindent smarttab
-set tabstop=4 softtabstop=4 shiftwidth=4
+set tabstop=4 shiftwidth=4
 set foldmethod=marker
 set ruler rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set hidden
