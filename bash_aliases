@@ -1,5 +1,5 @@
-export PAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
-export EDITOR="vim"
+export PAGER="/bin/sh -c \"col -b | vim -u NONE -S '/home/dan/dotfiles/less.vim' -c 'set ft=man' -\""
+export EDITOR='vim'
 
 if [[ -f /etc/debian_version ]]; then
 	PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
