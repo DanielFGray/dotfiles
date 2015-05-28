@@ -61,6 +61,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'DanielFGray/DistractionFree.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'reedes/vim-pencil'
 
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'noahfrederick/vim-noctu'
@@ -173,6 +174,8 @@ augroup VIM
 	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
 	autocmd VimResized * wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+	autocmd FileType markdown,mkd call pencil#init()                 | setlocal colorcolumn=0 nocursorline nocursorcolumn 
+	autocmd FileType text         call pencil#init({'wrap': 'hard'}) | setlocal colorcolumn=0 nocursorline nocursorcolumn 
 	autocmd FileType help wincmd L | vert resize 80
 	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
 	autocmd FileType vim-plug setlocal nonu nornu nolist
@@ -397,4 +400,6 @@ noremap <leader>df <Esc>:DistractionsToggle<CR>
 
 let g:limelight_conceal_ctermfg = 'DarkGray'
 
+let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+let g:pencil#textwidth = 80
 "" }}}
