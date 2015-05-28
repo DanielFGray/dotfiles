@@ -51,6 +51,7 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'junegunn/vim-easy-align',                {'on': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}
 Plug 'sjl/gundo.vim',                          {'on': 'GundoToggle'}
 Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'kana/vim-textobj-function'
 Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}
