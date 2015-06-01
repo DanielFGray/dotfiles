@@ -1,4 +1,4 @@
-export PAGER="/bin/sh -c \"col -b | vim -u NONE -S '/home/dan/dotfiles/less.vim' -c 'set ft=man' -\""
+export PAGER="/bin/sh -c \"col -b | vim -u NONE -S '/home/dan/dotfiles/less.vim' -S '~/.vim/bundle/vim-noctu/colors/noctu.vim' -c 'set ft=man' -\""
 export EDITOR='vim'
 
 if [[ -f /etc/debian_version ]]; then
