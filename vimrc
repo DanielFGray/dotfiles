@@ -42,6 +42,7 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-speeddating'
 Plug 'mhinz/vim-startify'
 Plug 'mhinz/vim-tmuxify'
 Plug 'bling/vim-airline'
@@ -63,6 +64,7 @@ Plug 'DanielFGray/DistractionFree.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'reedes/vim-pencil'
+Plug 'dyng/ctrlsf.vim'
 
 Plug 'noahfrederick/vim-noctu'
 Plug 'gosukiwi/vim-atom-dark'
@@ -353,6 +355,21 @@ map <silent> T <Plug>Sneak_T
 map <silent> ; <Plug>SneakNext
 map <silent> , <Plug>SneakPrevious
 
+map <leader>f <Plug>CtrlSFPrompt
+
+function! Multiple_cursors_before()
+	if exists(':NeoCompleteLock')==2
+		exe 'NeoCompleteLock'
+	endif
+endfunction
+
+" Called once only when the multiple selection is canceled (default <Esc>)
+function! Multiple_cursors_after()
+	if exists(':NeoCompleteUnlock')==2
+		exe 'NeoCompleteUnlock'
+	endif
+endfunction
+
 augroup SneakPluginColors
 	autocmd!
 	autocmd ColorScheme * hi SneakPluginTarget guifg=black guibg=red ctermfg=black ctermbg=red
@@ -397,7 +414,7 @@ noremap <leader>df <Esc>:DistractionsToggle<CR>
 
 let g:limelight_conceal_ctermfg = 'DarkGray'
 
-let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+let g:pencil#wrapModeDefault = 'soft'
 let g:pencil#textwidth = 80
 
 if has('nvim')
