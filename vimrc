@@ -1,7 +1,8 @@
 "" {{{ bundles
 
 if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+	silent !mkdir -p ~/.vim/{autoload,bundle,cache,undo,backups,swaps}
+	silent !curl -fLo ~/.vim/autoload/plug.vim
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	autocmd VimEnter * PlugInstall
 endif
@@ -21,14 +22,13 @@ Plug 'Shougo/echodoc'
 if has('lua') && (version >= 704 || version == 703 && has('patch885'))
 	Plug 'Shougo/neocomplete.vim'
 	let g:completionEngine = 'neocomplete'
-elseif has('lua')
+else
+" elseif has('lua')
 	Plug 'Shougo/neocomplcache.vim'
 	let g:completionEngine = 'neocomplcache'
 endif
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'Shougo/vimfiler',                        {'on': 'VimFiler'}
-
 Plug 'scrooloose/syntastic'
 Plug 'gcmt/wildfire.vim'
 Plug 'wellle/targets.vim'
@@ -41,6 +41,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-speeddating'
 Plug 'mhinz/vim-startify'
 Plug 'mhinz/vim-tmuxify'
@@ -51,10 +52,10 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'junegunn/vim-easy-align',                {'on': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}
 Plug 'sjl/gundo.vim',                          {'on': 'GundoToggle'}
 Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'kana/vim-textobj-function'
 Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}
-Plug 'Shougo/vimshell.vim',                    {'on': 'VimShell'}
 Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'css']}
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
@@ -62,12 +63,11 @@ Plug 'airblade/vim-gitgutter'
 Plug 'DanielFGray/DistractionFree.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'reedes/vim-pencil'
+Plug 'dyng/ctrlsf.vim'
 
-Plug 'gosukiwi/vim-atom-dark'
 Plug 'noahfrederick/vim-noctu'
-Plug 'wesQ3/wombat.vim'
-Plug 'widatama/vim-phoenix'
-Plug 'benjaminwhite/Benokai'
+Plug 'gosukiwi/vim-atom-dark'
 
 Plug 'tejr/vim-tmux'
 
@@ -119,8 +119,7 @@ set equalalways
 set splitright
 set wildmenu wildcharm=<C-z>
 set switchbuf=useopen,usetab
-set autoindent smartindent smarttab
-set tabstop=4 softtabstop=4 shiftwidth=4
+set tabstop=4 shiftwidth=4
 set foldmethod=marker
 set ruler rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set hidden
@@ -174,6 +173,8 @@ augroup VIM
 	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
 	autocmd VimResized * wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+	autocmd FileType markdown,mkd call pencil#init()                 | setlocal colorcolumn=0 nocursorline nocursorcolumn 
+	autocmd FileType text         call pencil#init({'wrap': 'hard'}) | setlocal colorcolumn=0 nocursorline nocursorcolumn 
 	autocmd FileType help wincmd L | vert resize 80
 	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
 	autocmd FileType vim-plug setlocal nonu nornu nolist
@@ -354,6 +355,21 @@ map <silent> T <Plug>Sneak_T
 map <silent> ; <Plug>SneakNext
 map <silent> , <Plug>SneakPrevious
 
+map <leader>f <Plug>CtrlSFPrompt
+
+function! Multiple_cursors_before()
+	if exists(':NeoCompleteLock')==2
+		exe 'NeoCompleteLock'
+	endif
+endfunction
+
+" Called once only when the multiple selection is canceled (default <Esc>)
+function! Multiple_cursors_after()
+	if exists(':NeoCompleteUnlock')==2
+		exe 'NeoCompleteUnlock'
+	endif
+endfunction
+
 augroup SneakPluginColors
 	autocmd!
 	autocmd ColorScheme * hi SneakPluginTarget guifg=black guibg=red ctermfg=black ctermbg=red
@@ -398,16 +414,20 @@ noremap <leader>df <Esc>:DistractionsToggle<CR>
 
 let g:limelight_conceal_ctermfg = 'DarkGray'
 
-function! Multiple_cursors_before()
-	if exists(':NeoCompleteLock')==2
-		exe 'NeoCompleteLock'
-	endif
-endfunction
+let g:pencil#wrapModeDefault = 'soft'
+let g:pencil#textwidth = 80
 
-" Called once only when the multiple selection is canceled (default <Esc>)
-function! Multiple_cursors_after()
-	if exists(':NeoCompleteUnlock')==2
-		exe 'NeoCompleteUnlock'
-	endif
-endfunction
+if has('nvim')
+	let g:startify_custom_header = [
+	\ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
+	\ '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃',
+	\ '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹',
+	\ '']
+else
+	let g:startify_custom_header = [
+	\ '        ╻ ╻╻┏┳┓',
+	\ '        ┃┏┛┃┃┃┃',
+	\ '        ┗┛ ╹╹ ╹',
+	\ '']
+endif
 "" }}}
