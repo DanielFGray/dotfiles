@@ -36,6 +36,7 @@ alias l="ls -lgo "
 alias la="l -A "
 alias cdu="cdu -isdhD "
 alias historygrep="history | grep -v 'history' | grep "
+alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
 alias grep="grep --color=auto --exclude-dir=.cvs --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --color=auto -P "
 unset GREP_OPTIONS
 
