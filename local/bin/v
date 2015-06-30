@@ -7,7 +7,6 @@ create a new vim server or interact with an existing one
 
     -h       show this help
     -d       disable focusing on vim
-    -s       associate tmux pane in vim
     + 'str'  return expr
     : 'str'  send command
     ! 'str'  send raw keys
@@ -30,69 +29,48 @@ while true; do
 		'-h'|'--help') usage; exit 0 ;;
 		'-d') select=false; ;;
 		'-s') sendpane=true ;;
-		-*) flags+=("$1")   ;;
 		*) break ;;
 	esac
 	shift
 done
 
-serv=$(vim --serverlist | grep -P '^VIM_[0-9]+$')
+serv=$(vim --serverlist | grep -P '^V_[0-9]+$')
 if [[ -n "$serv" ]]; then
-	{
-		if [[ -n "$TMUX" && "$select" == true ]]; then
-			pane=$(vim --servername "$serv" --remote-expr '$TMUX_PANE')
-			if [[ -n "$pane" ]]; then
-				tmux select-pane   -t "$pane"
-				tmux select-window -t "$pane"
-			fi
+	vimeval="vim --servername $serv"
+	if [[ -n "$TMUX" && "$select" == true ]]; then
+		pane=$($vimeval --remote-expr '$TMUX_PANE')
+		if [[ -n "$pane" ]]; then
+			tmux select-pane   -t "$pane"
+			tmux select-window -t "$pane"
 		fi
-	} &
+	fi
 	while true; do
 		case "$1" in
-			':')
-				if [[ -z "$2" ]]; then
-					err 'missing string for :'
-					shift; break
-				else
-					vim "${flags[@]}" --servername "$serv" --remote-send "<esc>:$2<cr>"
-					shift 2
-				fi
+			:*)
+				eval "$vimeval --remote-send '<esc>$1<cr>'"
+				shift
 				;;
-			'!')
-				if [[ -z "$2" ]]; then
-					err 'missing string for !'
-					shift; break
-				else
-					vim "${flags[@]}" --servername "$serv" --remote-send "$2"
-					shift 2
-				fi
+			!*)
+				eval "$vimeval --remote-send '${1:1}'"
+				shift
 				;;
-			'+')
-				if [[ -z "$2" ]]; then
-					err 'missing string for +'
-					shift; break
-				else
-					vim "${flags[@]}" --servername "$serv" --remote-expr "$2"
-					shift 2
-				fi
+			+*)
+				eval "$vimeval --remote-expr '${1:1}'"
+				shift
 				;;
 			* ) break ;;
 		esac
 	done
 	if (( $# > 0 )); then
-		vim "${flags[@]}" --servername "$serv" --remote-silent "$@"
+		eval "$vimeval --remote '$1'"
+		shift
 	fi
 elif [[ -t 0 ]]; then
 	if [[ "$select" == true && -n "$TMUX" ]]; then
 		tmux rename-window -t "$TMUX_PANE" 'vim'
-		tmux=$(tmux list-sessions -F '#S' | grep 'cmd')
-		if [[ -z "$tmux" ]]; then
-			tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s 'cmd' \; source-file ~/dotfiles/alt.tmux.conf' &
+		if ! tmux list-sessions -F '#S' | grep 'cmd' &> /dev/null; then
+			tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ~/dotfiles/tmux.alt.conf' &
 		fi
 	fi
-	serv="VIM_$(date +%s)"
-	exec vim "${flags[@]}" --servername "$serv" "$@"
-fi
-if [[ "$sendpane" == true ]]; then
-	(sleep 3 && vim "${flags[@]}" --servername "$serv" --remote-send  "<esc>:TxSetPane $TMUX_PANE<cr>") &
+	exec vim --servername "V_$(date +%s)" "$@"
 fi
