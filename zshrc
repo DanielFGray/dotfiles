@@ -15,8 +15,13 @@ if command -v fzf &> /dev/null; then
 	function fzcmd {
 		print -z $(printf -rl $commands:t ${(k)functions} ${(k)aliases} | sort | uniq | fzf -e -q "$*")
 	}
-
 fi
+
+unfunction cd
+chpwd() {
+	emulate -L zsh
+	ls
+}
 
 autoload -U zmv
 
