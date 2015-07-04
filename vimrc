@@ -391,7 +391,7 @@ nnoremap <leader>gu <Esc>:Git pull<CR>
 "" }}}
 
 "" {{{ status line
-let g:airline_theme = 'bubblegum'
+let g:airline_theme = 'hybridline'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#branch#enabled = 1
