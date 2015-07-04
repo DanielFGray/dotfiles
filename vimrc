@@ -85,9 +85,9 @@ Plug 'digitaltoad/vim-jade',                   {'for': 'jade'}
 
 Plug 'moll/vim-node',                          {'for': 'javascript'}
 Plug 'jelera/vim-javascript-syntax',           {'for': 'javascript'}
+Plug 'othree/yajs.vim',                        {'for': 'javascript'}
 Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
 Plug 'marijnh/tern_for_vim',                   {'for': 'javascript', 'do': 'npm install'}
-Plug 'pangloss/vim-javascript',                {'for': 'javascript'}
 Plug 'sheerun/vim-polyglot',                   {'for': 'javascript'}
 Plug 'walm/jshint.vim',                        {'for': 'javascript'}
 
@@ -169,6 +169,7 @@ cabbrev w!! w !sudo tee >/dev/null "%"
 
 augroup VIM
 	autocmd!
+	autocmd BufRead,BufNewFile *.es6 setfiletype javascript
 	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
 	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
 	autocmd VimResized * wincmd =
