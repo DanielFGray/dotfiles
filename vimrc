@@ -310,6 +310,9 @@ let g:syntastic_style_error_symbol = '✠'
 let g:syntastic_warning_symbol = '∆'
 let g:syntastic_style_warning_symbol = '≈'
 let g:syntastic_html_tidy_ignore_errors=[' proprietary attribute "ng-']
+if(executable('eslint'))
+	let g:syntastic_javascript_checkers=['eslint']
+endif
 
 let g:echodoc_enable_at_startup=1
 "" }}}
