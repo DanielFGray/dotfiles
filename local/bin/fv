@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+usage() {
+	cat <<'HELP'
+-s    string to search
+-c    command to execute [defaults to vim]
+HELP
+}
+
+has() {
+	type "$1" &> /dev/null
+}
+
+err() {
+	echo -e "\033[1;31m$1" >&2
+}
+
+if ! has 'ag' || ! has 'fzf'; then
+	err 'requires fzf and ag installed'
+	exit 1
+fi
+
+cmd='vim'
+
+setCmd() {
+	if has "$1" ; then
+		cmd="$1"
+	else
+		err "$1 is not a valid command"
+		exit 1
+	fi
+}
+
+while true; do
+	case "$1" in
+		'-h'|'--help') usage; exit 0 ;;
+		'-s') search="$2"; shift ;;
+		'-c') setCmd "$2"; shift ;;
+		*) break ;;
+	esac
+	shift
+done
+
+str="$cmd"
+
+if [[ -n "$search" ]]; then
+	mapfile -t files < <(ag -l "$search" | fzf -e -m --reverse)
+	if [[ "$cmd" == 'vim' ]]; then
+		str+=" +/'$search'"
+	fi
+else
+	mapfile -t files < <(ag -l -g "" | fzf -e -m --reverse)
+fi
+
+if [[ "${#files[@]}" == 0 ]]; then
+	exit 0
+fi
+
+for f in "${files[@]}"; do
+	str+=" '$f'"
+done
+eval "$str"
