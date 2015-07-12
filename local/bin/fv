@@ -3,8 +3,8 @@
 usage() {
 	cat <<'HELP'
 -s    string to search
--t    list only text files
 -c    command to execute [defaults to vim]
+-a    search all text files
 HELP
 }
 
@@ -25,43 +25,69 @@ setCmd() {
 	fi
 }
 
-if ! has 'ag' || ! has 'fzf'; then
-	err 'requires fzf and ag installed'
+if ! has 'fzf'; then
+	err 'requires fzf installed'
 	exit 1
 fi
 
 cmd='vim'
-textOnly=false
-search=''
 cmdopts=()
-agopts=( '-t' )
+searchstr=''
+searchcmd=''
+searchopts=( '-l' )
 
 while getopts "hs:c:" opt; do
 	case "$opt" in
 		h) usage; exit 0         ;;
 		c) setCmd "$OPTARG"      ;;
-		a) agopts+=( "$OPTARG" ) ;;
+		a) searchopts+=( "$OPTARG" ) ;;
 	esac
 done
 shift "$((OPTIND-1))"
 
+for c in 'pt' 'ag' 'ack' 'grep'; do
+	if has "$c"; then
+		searchcmd="$c"
+		break
+	fi
+done
+
+if [[ $searchcmd  == 'grep' ]]; then
+	err 'you should strongly consider installing ag or ack'
+fi
+
 if [[ -n "$1" ]]; then
-	search="$1";
+	searchstr="$1";
 	shift
 fi
 
-if [[ "$search" != '' ]]; then
-	# agopts+=( '-g ""' )
-	agopts+=( "'$search'" )
+if [[ "$searchstr" != '' ]]; then
+	searchopts+=( "'$searchstr'" )
 	if [[ "$cmd" == 'vim' ]]; then
-		cmdopts+=( " +'/$search'" )
+		cmdopts+=( " +'/$searchstr'" )
 	fi
+else
+	case "$searchcmd" in
+		# 'pt')
+		# 	searchopts+=()
+		# 	;;
+		# 'ag')
+		# 	searchopts+=()
+		# 	;;
+		'ack')
+			searchopts+=("")
+			;;
+		'grep')
+			searchopts+=( '--exclude-dir=bower_components' '--exclude-dir=node_modules' '--exclude-dir=.cvs' '--exclude-dir=.git' '--exclude-dir=.hg' '--exclude-dir=.svn' )
+			searchopts+=( '-I' '-r' '')
+	esac
 fi
 
-# err "ag -l ${agopts[@]}"
-mapfile -t files < <(eval "ag -l ${agopts[@]}" | fzf -e -m --reverse +s)
+# err "$searchcmd ${searchopts[@]}"
+mapfile -t files < <("$searchcmd" "${searchopts[@]}" | fzf -e -m --reverse +s)
 
 if [[ ${#files[@]} == 0 ]]; then
+	# err 'no files selected, exiting'
 	exit 0
 fi
 
