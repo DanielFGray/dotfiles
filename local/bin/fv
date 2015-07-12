@@ -3,16 +3,26 @@
 usage() {
 	cat <<'HELP'
 -s    string to search
+-t    list only text files
 -c    command to execute [defaults to vim]
 HELP
 }
 
 has() {
-	type "$1" &> /dev/null
+	command -v "$1" &> /dev/null
 }
 
 err() {
-	echo -e "\033[1;31m$1" >&2
+	echo -e "\e[31m$1\e[0m" >&2
+}
+
+setCmd() {
+	 if has $1; then
+		cmd="$1"
+	else
+		err "$1 is not a valid command"
+		exit 1
+	fi
 }
 
 if ! has 'ag' || ! has 'fzf'; then
@@ -21,42 +31,38 @@ if ! has 'ag' || ! has 'fzf'; then
 fi
 
 cmd='vim'
+textOnly=false
+search=''
+cmdopts=()
+agopts=( '-t' )
 
-setCmd() {
-	if has "$1" ; then
-		cmd="$1"
-	else
-		err "$1 is not a valid command"
-		exit 1
-	fi
-}
-
-while true; do
-	case "$1" in
-		'-h'|'--help') usage; exit 0 ;;
-		'-s') search="$2"; shift ;;
-		'-c') setCmd "$2"; shift ;;
-		*) break ;;
+while getopts "hs:c:" opt; do
+	case "$opt" in
+		h) usage; exit 0         ;;
+		c) setCmd "$OPTARG"      ;;
+		a) agopts+=( "$OPTARG" ) ;;
 	esac
-	shift
 done
+shift "$((OPTIND-1))"
 
-str="$cmd"
-
-if [[ -n "$search" ]]; then
-	mapfile -t files < <(ag -l "$search" | fzf -e -m --reverse)
-	if [[ "$cmd" == 'vim' ]]; then
-		str+=" +/'$search'"
-	fi
-else
-	mapfile -t files < <(ag -l -g "" | fzf -e -m --reverse)
+if [[ -n "$1" ]]; then
+	search="$1";
+	shift
 fi
 
-if [[ "${#files[@]}" == 0 ]]; then
+if [[ "$search" != '' ]]; then
+	# agopts+=( '-g ""' )
+	agopts+=( "'$search'" )
+	if [[ "$cmd" == 'vim' ]]; then
+		cmdopts+=( " +'/$search'" )
+	fi
+fi
+
+# err "ag -l ${agopts[@]}"
+mapfile -t files < <(eval "ag -l ${agopts[@]}" | fzf -e -m --reverse +s)
+
+if [[ ${#files[@]} == 0 ]]; then
 	exit 0
 fi
 
-for f in "${files[@]}"; do
-	str+=" '$f'"
-done
-eval "$str"
+exec $cmd "${cmdopts[@]}" "${files[@]}"

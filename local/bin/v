@@ -13,64 +13,97 @@ create a new vim server or interact with an existing one
 HELP
 }
 
+has() {
+	command -v $1 &> /dev/null
+}
+
 err() {
 	if [[ -t 0 ]]; then
-		echo >&2 "$*"
+		echo -e "\e[31m$1\e[0m" >&2
 	else
 		zenity --error --text="$*" 2> /dev/null
 	fi
 }
 
-declare select=true
+declare noselect
 declare sendpane=false
+declare -a files
+declare -a vimopts
 
 while true; do
 	case "$1" in
 		'-h'|'--help') usage; exit 0 ;;
-		'-d') select=false; ;;
+		'-d') noselect=true; ;;
 		'-s') sendpane=true ;;
 		*) break ;;
 	esac
 	shift
 done
 
-serv=$(vim --serverlist | grep -P '^V_[0-9]+$')
-if [[ -n "$serv" ]]; then
-	vimeval="vim --servername $serv"
-	if [[ -n "$TMUX" && "$select" == true ]]; then
-		pane=$($vimeval --remote-expr '$TMUX_PANE')
+selectPane() {
+	serv="$1"
+	if [[ -n "$TMUX" && "$noselect" != true ]]; then
+		pane=$(vim --servername "$serv" --remote-expr '$TMUX_PANE')
 		if [[ -n "$pane" ]]; then
 			tmux select-pane   -t "$pane"
 			tmux select-window -t "$pane"
 		fi
 	fi
-	while true; do
-		case "$1" in
-			:*)
-				eval "$vimeval --remote-send '<esc>$1<cr>'"
-				shift
-				;;
-			!*)
-				eval "$vimeval --remote-send '${1:1}'"
-				shift
-				;;
-			+*)
-				eval "$vimeval --remote-expr '${1:1}'"
-				shift
-				;;
-			* ) break ;;
-		esac
-	done
-	if (( $# > 0 )); then
-		eval "$vimeval --remote '$1'"
-		shift
+}
+
+serv=$(vim --serverlist | grep -P '^V_[0-9]+$')
+if [[ -n "$serv" ]]; then
+	vimopts=( "--servername $serv" )
+	if (( $# == 0 )); then
+		if has fv; then
+			if [[ -t 0 ]]; then
+				fv -c "v ${noselect:+-d}"
+				exit 0
+			else
+				x-terminal-emulator -e 'fv' '-c' 'v'
+			fi
+		else
+			err 'fv command not found'
+			exit 1
+		fi
+	else
+		while (( $# > 0 )); do
+			case "$1" in
+				:*)
+					vim --servername "$serv" --remote-send "<esc>$1<cr>"
+					shift
+					;;
+				!*)
+					vim --servername "$serv" --remote-send "${1:1}"
+					shift
+					;;
+				+*)
+					vim --servername "$serv" --remote-expr "${1:1}"
+					shift
+					;;
+				*)
+					if [[ -f "$1" ]]; then
+						files+=("$1")
+					fi
+					shift
+					;;
+			esac
+		done
 	fi
+	for f in "${files[@]}"; do
+		# err "found file $f"
+		vim --servername "$serv" --remote "$f"
+	done
+	selectPane "$serv"
 elif [[ -t 0 ]]; then
-	if [[ "$select" == true && -n "$TMUX" ]]; then
+	if [[ "$noselect" != true && -n "$TMUX" ]]; then
 		tmux rename-window -t "$TMUX_PANE" 'vim'
 		if ! tmux list-sessions -F '#S' | grep 'cmd' &> /dev/null; then
 			tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ~/dotfiles/tmux.alt.conf' &
 		fi
 	fi
-	exec vim --servername "V_$(date +%s)" "$@"
+	serv="V_$(date +%s)"
+	exec vim --servername "$serv"  "$@"
+else
+	err 'please start a vim server'
 fi
