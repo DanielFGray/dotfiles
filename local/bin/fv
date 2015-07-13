@@ -82,7 +82,9 @@ case "$searchcmd" in
 	'ack')
 		if [[ "$searchstr" == '' ]]; then
 			if [[ "$allfiles" == false ]]; then
-				searchopts+=( '-g' '"^[^\.]"' )
+				searchopts+=( '-g' '^[^\.]' )
+			else
+				searchopts+=( '-f' )
 			fi
 		else
 			searchopts+=( '-l' )
