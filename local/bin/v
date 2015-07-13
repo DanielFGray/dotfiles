@@ -103,5 +103,6 @@ elif [[ -t 0 ]]; then
 	serv="V_$(date +%s)"
 	exec vim --servername "$serv"  "$@"
 else
-	err 'please start a vim server'
+	serv="V_$(date +%s)"
+	exec gvim --servername "$serv"  "$@"
 fi
