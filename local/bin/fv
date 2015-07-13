@@ -4,7 +4,7 @@ usage() {
 	cat <<'HELP'
 -s    string to search
 -c    command to execute [defaults to vim]
--a    search all text files
+-a    search all dirs and hidden files
 HELP
 }
 
@@ -34,18 +34,23 @@ cmd='vim'
 cmdopts=()
 searchstr=''
 searchcmd=''
-searchopts=( '-l' )
+searchopts=()
+allfiles=false
 
-while getopts "hs:c:" opt; do
+while getopts "hac:" opt; do
 	case "$opt" in
-		h) usage; exit 0         ;;
-		c) setCmd "$OPTARG"      ;;
-		a) searchopts+=( "$OPTARG" ) ;;
+		h) usage; exit 0    ;;
+		a) allfiles=true     ;;
+		c) setCmd "$OPTARG" ;;
 	esac
 done
 shift "$((OPTIND-1))"
 
-for c in 'pt' 'ag' 'ack' 'grep'; do
+if [[ "$cmd" == 'vim' ]] && has v; then
+	cmd='v'
+fi
+
+for c in 'ag' 'ack' 'grep'; do
 	if has "$c"; then
 		searchcmd="$c"
 		break
@@ -54,6 +59,7 @@ done
 
 if [[ $searchcmd  == 'grep' ]]; then
 	err 'you should strongly consider installing ag or ack'
+	sleep .5
 fi
 
 if [[ -n "$1" ]]; then
@@ -61,34 +67,66 @@ if [[ -n "$1" ]]; then
 	shift
 fi
 
-if [[ "$searchstr" != '' ]]; then
-	searchopts+=( "'$searchstr'" )
-	if [[ "$cmd" == 'vim' ]]; then
-		cmdopts+=( " +'/$searchstr'" )
-	fi
-else
-	case "$searchcmd" in
-		# 'pt')
-		# 	searchopts+=()
-		# 	;;
-		# 'ag')
-		# 	searchopts+=()
-		# 	;;
-		'ack')
+case "$searchcmd" in
+	'ag')
+		searchopts+=( '-l' )
+		if [[ "$allfiles" == true ]]; then
+			searchopts+=( '-a' '--hidden' )
+			if [[ "$searchstr" == '' ]]; then
+				searchopts+=( '-g' '' )
+			fi
+		else
+			searchopts+=( '-t' )
+		fi
+		;;
+	'ack')
+		if [[ "$searchstr" == '' ]]; then
+			if [[ "$allfiles" == false ]]; then
+				searchopts+=( '-g' '"^[^\.]"' )
+			fi
+		else
+			searchopts+=( '-l' )
+		# 	searchopts+=( '--match' )
+		fi
+		;;
+	'grep')
+		searchopts+=( '-l' '-r' )
+		if [[ "$allfiles" == false ]]; then
+			searchopts+=(
+				'--exclude-dir=bower_components'
+				'--exclude-dir=node_modules'
+				'--exclude-dir=.cvs'
+				'--exclude-dir=.git'
+				'--exclude-dir=.hg'
+				'--exclude-dir=.svn'
+				'-I' 
+			)
+		fi
+		if [[ "$searchstr" == '' ]]; then
 			searchopts+=("")
-			;;
-		'grep')
-			searchopts+=( '--exclude-dir=bower_components' '--exclude-dir=node_modules' '--exclude-dir=.cvs' '--exclude-dir=.git' '--exclude-dir=.hg' '--exclude-dir=.svn' )
-			searchopts+=( '-I' '-r' '')
-	esac
+		fi
+		;;
+esac
+
+if [[ "$searchstr" != '' ]]; then
+	searchopts+=( "$searchstr" )
 fi
 
-# err "$searchcmd ${searchopts[@]}"
-mapfile -t files < <("$searchcmd" "${searchopts[@]}" | fzf -e -m --reverse +s)
+err "$searchcmd ${searchopts[*]}"
+mapfile -t files < <("$searchcmd" "${searchopts[@]}" 2> /dev/null | fzf -e -m --reverse)
 
 if [[ ${#files[@]} == 0 ]]; then
 	# err 'no files selected, exiting'
 	exit 0
 fi
 
+if [[ "$searchstr" != '' ]]; then
+	if [[ "$cmd" == 'vim' ]]; then
+		cmdopts+=( "+'/$searchstr'" )
+	elif [[ "$cmd" == 'v' ]]; then
+		files+=( "'!/$searchstr<cr>n'" )
+	fi
+fi
+
+err "$cmd ${cmdopts[@]} ${files[*]}"
 exec $cmd "${cmdopts[@]}" "${files[@]}"
