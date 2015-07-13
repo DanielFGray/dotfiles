@@ -2,6 +2,9 @@
 
 usage() {
 	more <<'HELP'
+fv [OPTIONS] [SEARCH]
+fuzzy file filtering and command executing
+
 -c    command to execute [defaults to vim]
 -a    search all dirs and hidden files
 HELP
