@@ -5,7 +5,6 @@ usage() {
 v [OPTIONS] [FILES]
 create a new vim server or interact with an existing one
 
-    -h       show this help
     -d       disable focusing on vim
     + 'str'  return expr
     : 'str'  send command
