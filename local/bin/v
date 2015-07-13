@@ -63,7 +63,7 @@ if [[ -n "$serv" ]]; then
 				x-terminal-emulator -e 'fv' '-c' 'v'
 			fi
 		else
-			err 'fv command not found'
+			err 'enter a file name or install fv'
 			exit 1
 		fi
 	else
