@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-	cat <<'HELP'
+	more <<'HELP'
 v [OPTIONS] [FILES]
 create a new vim server or interact with an existing one
 
