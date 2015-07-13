@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-	cat <<'HELP'
--s    string to search
+	more <<'HELP'
 -c    command to execute [defaults to vim]
 -a    search all dirs and hidden files
 HELP
