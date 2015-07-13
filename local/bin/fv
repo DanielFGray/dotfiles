@@ -6,7 +6,7 @@ fv [OPTIONS] [SEARCH]
 fuzzy file filtering and command executing
 
 -c    command to execute [defaults to vim]
--a    search all dirs and hidden files
+-a    search all dirs and hidden files (still quirky)
 HELP
 }
 
@@ -116,7 +116,7 @@ if [[ "$searchstr" != '' ]]; then
 	searchopts+=( "$searchstr" )
 fi
 
-err "$searchcmd ${searchopts[*]}"
+# err "$searchcmd ${searchopts[*]}" # verbose option?
 mapfile -t files < <("$searchcmd" "${searchopts[@]}" 2> /dev/null | fzf -e -m --reverse)
 
 if [[ ${#files[@]} == 0 ]]; then
@@ -128,9 +128,9 @@ if [[ "$searchstr" != '' ]]; then
 	if [[ "$cmd" == 'vim' ]]; then
 		cmdopts+=( "+'/$searchstr'" )
 	elif [[ "$cmd" == 'v' ]]; then
-		files+=( "'!/$searchstr<cr>n'" )
+		( sleep 0.5 && v "!/$searchstr<cr>zv" ) &
 	fi
 fi
 
-err "$cmd ${cmdopts[@]} ${files[*]}"
+# err "$cmd ${cmdopts[@]} ${files[*]}" # verbose option?
 exec $cmd "${cmdopts[@]}" "${files[@]}"
