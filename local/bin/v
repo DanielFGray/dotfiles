@@ -50,6 +50,21 @@ selectPane() {
 	fi
 }
 
+startServer() {
+	serv="V_$(date +%s)"
+	if [[ -t 0 ]]; then
+		if [[ "$noselect" != true && -n "$TMUX" ]]; then
+			tmux rename-window -t "$TMUX_PANE" 'vim'
+			if ! tmux list-sessions -F '#S' | grep 'cmd' &> /dev/null; then
+				tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ~/dotfiles/tmux.alt.conf'
+			fi
+		fi &
+		exec vim --servername "$serv"  "$@"
+	else
+		exec gvim --servername "$serv"  "$@"
+	fi
+}
+
 serv=$(vim --serverlist | grep -P '^V_[0-9]+$')
 if [[ -n "$serv" ]]; then
 	vimopts=( "--servername $serv" )
@@ -92,16 +107,6 @@ if [[ -n "$serv" ]]; then
 		vim --servername "$serv" --remote "$f"
 	done
 	selectPane "$serv"
-elif [[ -t 0 ]]; then
-	if [[ "$noselect" != true && -n "$TMUX" ]]; then
-		tmux rename-window -t "$TMUX_PANE" 'vim'
-		if ! tmux list-sessions -F '#S' | grep 'cmd' &> /dev/null; then
-			tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ~/dotfiles/tmux.alt.conf' &
-		fi
-	fi
-	serv="V_$(date +%s)"
-	exec vim --servername "$serv"  "$@"
 else
-	serv="V_$(date +%s)"
-	exec gvim --servername "$serv"  "$@"
+	startServer
 fi
