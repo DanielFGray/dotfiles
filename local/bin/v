@@ -108,5 +108,5 @@ if [[ -n "$serv" ]]; then
 	done
 	selectPane "$serv"
 else
-	startServer
+	startServer "$@"
 fi
