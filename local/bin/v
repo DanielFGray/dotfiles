@@ -82,9 +82,7 @@ if [[ -n "$serv" ]]; then
 					shift
 					;;
 				*)
-					if [[ -f "$1" ]]; then
-						files+=("$1")
-					fi
+					files+=("$1")
 					shift
 					;;
 			esac
