@@ -83,23 +83,13 @@ if [[ -n "$serv" ]]; then
 	else
 		while (( $# > 0 )); do
 			case "$1" in
-				:*)
-					vim --servername "$serv" --remote-send "<esc>$1<cr>"
-					shift
-					;;
-				!*)
-					vim --servername "$serv" --remote-send "${1:1}"
-					shift
-					;;
-				+*)
-					vim --servername "$serv" --remote-expr "${1:1}"
-					shift
-					;;
-				*)
-					files+=("$1")
-					shift
-					;;
+				:*) vim --servername "$serv" --remote-send "<esc>$1<cr>" ;;
+				!*) vim --servername "$serv" --remote-send "${1:1}" ;;
+				+*) vim --servername "$serv" --remote-expr "${1:1}" ;;
+				http://* | https://* ) vim --servername "$serv" --remote-send "<esc>:enew | r !command curl -skL $1<cr>" ;;
+				*) files+=("$1") ;;
 			esac
+			shift
 		done
 	fi
 	for f in "${files[@]}"; do
