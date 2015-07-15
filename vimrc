@@ -112,7 +112,7 @@ filetype plugin indent on
 "" TODO: more comments
 set number
 try | set relativenumber | catch | endtry
-set colorcolumn=80
+set colorcolumn=0
 set cursorcolumn cursorline
 set hlsearch incsearch
 set infercase
@@ -158,10 +158,7 @@ set undolevels=1000
 let g:mapleader="\<Space>"
 
 nnoremap Y y$
-vnoremap < <gv
-vnoremap > >gv
-map ]] ]]zt
-map [[ [[zt
+map gf <esc>:e <cfile><CR>
 
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 command! -bar -nargs=* -complete=help H :vert help <args>
@@ -171,15 +168,15 @@ augroup VIM
 	autocmd!
 	autocmd BufRead,BufNewFile *.es6 setfiletype javascript
 	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
-	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/*.tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
+	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
 	autocmd VimResized * wincmd =
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
-	autocmd FileType markdown,mkd call pencil#init()                 | setlocal colorcolumn=0 nocursorline nocursorcolumn 
-	autocmd FileType text         call pencil#init({'wrap': 'hard'}) | setlocal colorcolumn=0 nocursorline nocursorcolumn 
+	autocmd FileType markdown,mkd call pencil#init()                 | setlocal nocursorline nocursorcolumn
+	autocmd FileType text         call pencil#init({'wrap': 'hard'}) | setlocal nocursorline nocursorcolumn
 	autocmd FileType help wincmd L | vert resize 80
 	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
 	autocmd FileType vim-plug setlocal nonu nornu nolist
-	if has('nvim')
+	if exists('*termopen')
 		autocmd TermOpen * setlocal nolist nocursorline nocursorcolumn
 	endif
 augroup END
@@ -222,7 +219,7 @@ endfunction
 nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
 
 if has("gui_running")
-	colorscheme atom-dark
+	colorscheme atom-dark-256
 	set background=dark
 	set guioptions-=L
 	set guioptions-=r
@@ -355,8 +352,8 @@ let g:gundo_preview_height=40
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
-map n  <Plug>(incsearch-nohl-n)zvzt
-map N  <Plug>(incsearch-nohl-N)zvzt
+map n  <Plug>(incsearch-nohl-n)zvzz
+map N  <Plug>(incsearch-nohl-N)zvzz
 map *  <Plug>(incsearch-nohl-*)
 map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
