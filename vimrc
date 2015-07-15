@@ -129,7 +129,7 @@ set ruler rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set hidden
 set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set listchars+=eol:↵
-set fillchars=stl:\ ,stlnc:\ ,vert:│,fold:-,diff:-
+set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\ 
 set showcmd
 set noshowmode
 set nolazyredraw
