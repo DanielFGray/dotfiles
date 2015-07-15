@@ -65,11 +65,14 @@ Plug 'junegunn/limelight.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'reedes/vim-pencil'
 Plug 'dyng/ctrlsf.vim'
+Plug 'jceb/vim-orgmode'
+Plug 'mhinz/vim-sayonara'
+Plug 'tommcdo/vim-exchange'
 
 Plug 'noahfrederick/vim-noctu'
 Plug 'gosukiwi/vim-atom-dark'
 
-Plug 'tejr/vim-tmux'
+Plug 'tejr/vim-tmux',                          {'for': 'tmux'}
 
 Plug 'LaTeX-Box-Team/LaTeX-Box',               {'for': 'tex'}
 Plug 'xuhdev/vim-latex-live-preview',          {'for': 'tex'}
@@ -90,6 +93,7 @@ Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
 Plug 'marijnh/tern_for_vim',                   {'for': 'javascript', 'do': 'npm install'}
 Plug 'sheerun/vim-polyglot',                   {'for': 'javascript'}
 Plug 'walm/jshint.vim',                        {'for': 'javascript'}
+Plug 'heavenshell/vim-jsdoc',                  {'for': 'javascript'}
 
 Plug 'raichoo/purescript-vim',                 {'for': 'purescript'}
 
@@ -151,12 +155,8 @@ set undoreload=10000
 set backupdir=~/.vim/backups/
 set directory=~/.vim/swaps/
 set undolevels=1000
-let g:mapleader = "\<Space>"
+let g:mapleader="\<Space>"
 
-noremap j gj
-noremap k gk
-noremap gj j
-noremap gk k
 nnoremap Y y$
 vnoremap < <gv
 vnoremap > >gv
@@ -191,20 +191,35 @@ nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
 
 function! PromptQuit()
 	echo 'close current buffer?'
-	if nr2char(getchar()) =~ 'Y'
-		bd
+	let char=nr2char(getchar())
+	echo char
+	if char=~'Y'
+		silent execute "normal \<esc>:Sayonara\<cr>"
+	elseif char=~'y'
+		silent execute "normal \<esc>:Sayonara!\<cr>"
 	endif
 	silent! redraw!
 endfunction
-noremap <silent> Q <Esc>:call PromptQuit()<CR>
+nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
 
-function! VisualCmd(command) range abort
-	let n = @n
-	silent! normal gv"ny
-	echo system(a:command, @n)
-	let @n = n
+function! Togglegjgk()
+	if !exists("g:togglegjgk") || g:togglegjgk==0
+		let g:togglegjgk=1
+		nnoremap j gj
+		nnoremap k gk
+		nnoremap gk k
+		nnoremap gj j
+		echo 'j/k swapped with gj/gk'
+	else
+		let g:togglegjgk=0
+		nunmap j
+		nunmap k
+		nunmap gk
+		nunmap gj
+		echo 'normal j/k'
+	endif
 endfunction
-command! -range=% -nargs=* -complete=shellcmd Filter call VisualCmd(<q-args>)
+nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
 
 if has("gui_running")
 	colorscheme atom-dark
@@ -415,7 +430,9 @@ let g:distraction_free#toggle_tmux=1
 let g:distraction_free#toggle_limelight=1
 noremap <leader>df <Esc>:DistractionsToggle<CR>
 
-let g:limelight_conceal_ctermfg = 'DarkGray'
+nnoremap <leader>jd <Plug>(jsdoc)
+
+let g:limelight_conceal_ctermfg='DarkGray'
 
 let g:pencil#wrapModeDefault='soft'
 let g:pencil#textwidth=80
