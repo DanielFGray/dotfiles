@@ -21,11 +21,11 @@ Plug 'Shougo/context_filetype.vim'
 Plug 'Shougo/echodoc'
 if has('lua') && (version >= 704 || version == 703 && has('patch885'))
 	Plug 'Shougo/neocomplete.vim'
-	let g:completionEngine = 'neocomplete'
+	let g:completionEngine='neocomplete'
 else
-" elseif has('lua')
+	" elseif has('lua')
 	Plug 'Shougo/neocomplcache.vim'
-	let g:completionEngine = 'neocomplcache'
+	let g:completionEngine='neocomplcache'
 endif
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
@@ -223,16 +223,15 @@ endif
 
 "" {{{ auto completion
 if exists('g:completionEngine')
-	let g:acp_enableAtStartup = 0
-	let g:{g:completionEngine}#enable_at_startup = 1
-	let g:{g:completionEngine}#enable_smart_case = 1
-	let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-	let g:{g:completionEngine}#auto_completion_start_length = 3
-	let g:{g:completionEngine}#sources#dictionary#dictionaries = {  'default' : '' }
-	let g:{g:completionEngine}#sources#omni#input_patterns = {}
-	let g:{g:completionEngine}#keyword_patterns = {}
-	let g:{g:completionEngine}#keyword_patterns['default'] = '\h\w*'
-	let g:{g:completionEngine}#data_directory = "~/.vim/cache/neocomplete"
+	let g:acp_enableAtStartup=0
+	let g:{g:completionEngine}#enable_at_startup=1
+	let g:{g:completionEngine}#enable_smart_case=1
+	let g:{g:completionEngine}#sources#syntax#min_keyword_length=3
+	let g:{g:completionEngine}#auto_completion_start_length=3
+	let g:{g:completionEngine}#sources#dictionary#dictionaries={  'default' : '' }
+	let g:{g:completionEngine}#sources#omni#input_patterns={}
+	let g:{g:completionEngine}#keyword_patterns={ 'default': '\h\w*' }
+	let g:{g:completionEngine}#data_directory="~/.vim/cache/neocomplete"
 	inoremap <expr><C-g>     {g:completionEngine}#undo_completion()
 	inoremap <expr><C-l>     {g:completionEngine}#complete_common_string()
 	inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-h>"
@@ -256,16 +255,16 @@ endif
 "" }}}
 
 "" {{{ unite.vim settings
-let g:unite_data_directory = '~/.vim/cache/unite'
-let g:unite_prompt = '» '
-let g:unite_source_history_yank_enable = 1
-let g:unite_winheight = 10
-let g:unite_split_rule = 'botright'
-let g:unite_force_overwrite_statusline = 0
+let g:unite_data_directory='~/.vim/cache/unite'
+let g:unite_prompt='» '
+let g:unite_source_history_yank_enable=1
+let g:unite_winheight=10
+let g:unite_split_rule='botright'
+let g:unite_force_overwrite_statusline=0
 nnoremap <silent> <leader>ur :<C-u>Unite register -buffer-name=register -auto-resize<CR>
 nnoremap <silent> <leader>uy :<C-u>Unite history/yank -buffer-name=yank<CR>
 nnoremap <silent> <leader>ub :<C-u>Unite buffer -buffer-name=buffer<CR>
-nnoremap <silent> <leader>ug :<c-u>Unite grep -buffer-name=grep <CR>
+nnoremap <silent> <leader>ug :<c-u>Unite grep -buffer-name=grep<CR>
 nnoremap <silent> <leader>uf :<C-u>Unite file_rec/async -buffer-name=files -toggle -auto-resize<CR>
 nnoremap <silent> <leader>ue :<C-u>Unite buffer file_mru bookmark file -buffer-name=files<CR>
 nnoremap <silent> <leader>uo :<C-u>Unite outline -buffer-name=outline -auto-resize<CR>
@@ -277,7 +276,7 @@ if executable('ag')
 	let g:unite_source_grep_command='ag'
 	let g:unite_source_grep_default_opts='--nocolor --nogroup --hidden'
 	let g:unite_source_grep_recursive_opt=''
-	let g:unite_source_rec_async_command = 'ag --follow --nocolor --nogroup --hidden -g ""'
+	let g:unite_source_rec_async_command='ag --follow --nocolor --nogroup --hidden -g ""'
 elseif executable('ack')
 	set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
 	set grepformat=%f:%l:%c:%m
@@ -303,13 +302,13 @@ endfunction
 "" }}}
 
 "" {{{ syntax checking
-let g:syntastic_enable_signs = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_style_error_symbol = '✠'
-let g:syntastic_warning_symbol = '∆'
-let g:syntastic_style_warning_symbol = '≈'
+let g:syntastic_enable_signs=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_check_on_open=1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_style_error_symbol='✠'
+let g:syntastic_warning_symbol='∆'
+let g:syntastic_style_warning_symbol='≈'
 let g:syntastic_html_tidy_ignore_errors=[' proprietary attribute "ng-']
 if(executable('eslint'))
 	let g:syntastic_javascript_checkers=['eslint']
@@ -319,9 +318,9 @@ let g:echodoc_enable_at_startup=1
 "" }}}
 
 "" {{{ tmux integration
-let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
-let g:tmuxify_global_maps = 1
-let g:tmuxify_run = {
+let g:tmuxify_custom_command='tmux split-window -d -v -p 25'
+let g:tmuxify_global_maps=1
+let g:tmuxify_run={
 	\ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%ly/pdf}"; done',
 	\ 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%tex/pdf}"; done',
 	\ 'ruby':       ' ruby %',
@@ -332,9 +331,9 @@ let g:tmuxify_run = {
 
 "" {{{ gundo settings
 nnoremap <F5> :GundoToggle<CR>
-let g:gundo_right = 1
-let g:gundo_width = 60
-let g:gundo_preview_height = 40
+let g:gundo_right=1
+let g:gundo_width=60
+let g:gundo_preview_height=40
 "" }}}
 
 "" {{{ searching
@@ -347,11 +346,11 @@ map *  <Plug>(incsearch-nohl-*)
 map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
-let g:incsearch#consistent_n_direction = 1
-let g:incsearch#auto_nohlsearch = 1
-let g:incsearch#magic = '\v'
+let g:incsearch#consistent_n_direction=1
+let g:incsearch#auto_nohlsearch=1
+let g:incsearch#magic='\v'
 
-let g:sneak#prompt = '(sneak)» '
+let g:sneak#prompt='(sneak)» '
 map <silent> f <Plug>Sneak_f
 map <silent> F <Plug>Sneak_F
 map <silent> t <Plug>Sneak_t
@@ -392,12 +391,12 @@ nnoremap <leader>gu <Esc>:Git pull<CR>
 "" }}}
 
 "" {{{ status line
-let g:airline_theme = 'hybridline'
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline_theme='hybridline'
+let g:airline_powerline_fonts=1
+let g:airline#extensions#whitespace#enabled=0
+let g:airline#extensions#branch#enabled=1
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#fnamemod=':t'
 "" }}}
 
 "" {{{ misc plugins
@@ -407,28 +406,28 @@ vmap <Leader>a <Plug>(EasyAlign)
 map + <Plug>(wildfire-fuel)
 map _ <Plug>(wildfire-water)
 
-let g:titlecase_map_keys = 0
+let g:titlecase_map_keys=0
 nmap <silent> <leader>gt <Plug>Titlecase
 vmap <silent> <leader>gt <Plug>Titlecase
 nmap <silent> <leader>gT <Plug>TitlecaseLine
 
-let g:distraction_free#toggle_tmux = 1
-let g:distraction_free#toggle_limelight = 1
+let g:distraction_free#toggle_tmux=1
+let g:distraction_free#toggle_limelight=1
 noremap <leader>df <Esc>:DistractionsToggle<CR>
 
 let g:limelight_conceal_ctermfg = 'DarkGray'
 
-let g:pencil#wrapModeDefault = 'soft'
-let g:pencil#textwidth = 80
+let g:pencil#wrapModeDefault='soft'
+let g:pencil#textwidth=80
 
 if has('nvim')
-	let g:startify_custom_header = [
+	let g:startify_custom_header=[
 	\ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
 	\ '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃',
 	\ '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹',
 	\ '']
 else
-	let g:startify_custom_header = [
+	let g:startify_custom_header=[
 	\ '        ╻ ╻╻┏┳┓',
 	\ '        ┃┏┛┃┃┃┃',
 	\ '        ┗┛ ╹╹ ╹',
