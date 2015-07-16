@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-fav=( 'firefox' 'luakit' )
-for x in "${fav[@]}"; do
-	if command -v "$x" &> /dev/null; then
+source ~/.bash_utils
+
+for x in 'firefox' 'luakit'; do
+	if has "$x"; then
 		( exec "$x" "$@" ) &
 		break
 	fi

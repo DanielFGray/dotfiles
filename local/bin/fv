@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ~/.bash_utils
+
 usage() {
 	more <<'HELP'
 fv [OPTIONS] [SEARCH]
@@ -8,14 +10,6 @@ fuzzy file filtering and command executing
 -c    command to execute [defaults to vim]
 -a    search all dirs and hidden files (still quirky)
 HELP
-}
-
-has() {
-	command -v "$1" &> /dev/null
-}
-
-err() {
-	echo -e "\e[31m$1\e[0m" >&2
 }
 
 setCmd() {

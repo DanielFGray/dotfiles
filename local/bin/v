@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ~/.bash_utils
+
 usage() {
 	more <<'HELP'
 v [OPTIONS] [FILES]
@@ -10,18 +12,6 @@ create a new vim server or interact with an existing one
     : 'str'  send command
     ! 'str'  send raw keys
 HELP
-}
-
-has() {
-	command -v $1 &> /dev/null
-}
-
-err() {
-	if [[ -t 0 ]]; then
-		echo -e "\e[31m$1\e[0m" >&2
-	else
-		zenity --error --text="$*" 2> /dev/null
-	fi
 }
 
 declare noselect
@@ -47,7 +37,7 @@ selectPane() {
 			tmux select-pane   -t "$pane"
 			tmux select-window -t "$pane"
 		fi
-	fi
+	fi &
 }
 
 startServer() {

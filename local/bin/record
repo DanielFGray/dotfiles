@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ~/.bash_utils
+
 file="$(date +%F-%s).gif"
 window=false
 region=false
@@ -8,7 +10,8 @@ delay=0
 declare -A dimensions
 
 usage() {
-	echo 'Usage: record [OPTIONS]
+	more <<'HELP'
+'Usage: record [OPTIONS]
   -h  this help
   -f  specify file name [defaults to $(date +%F-%s).gif]
   -F  specify file name and overwrite if exists
@@ -17,39 +20,7 @@ usage() {
   -w  select window
   -s  draw selectable region'
 # -k  display keystrokes during recording
-	exit
-}
-
-has() {
-	if type "$1" &> /dev/null; then
-		return 0
-	else
-		return 1
-	fi
-}
-
-err() {
-	echo -e "\033[1;31m$1" >&2
-}
-
-prompt() {
-	if [[ -z $2 || ${2^} = Y* ]]; then
-		prompt='Y/n'
-		default='Y'
-	elif [[ ${2^} = N* ]]; then
-		prompt='y/N'
-		default='N'
-	fi
-	read -p "$1 [$prompt] " -N1 ans
-	echo -e
-	if [[ -z $ans ]]; then
-		ans=$default
-	fi
-	if [[ ${ans^} = Y* ]]; then
-		return 0
-	elif [[ ${ans^} = N* ]]; then
-		return 1
-	fi
+HELP
 }
 
 delay() {
