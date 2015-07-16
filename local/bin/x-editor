@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
 
-# vim –servername VIMSERVER &
-exec x-terminal-emulator -e "vim $@"
+source ~/.bash_utils
+
+declare -a cmds
+
+for x in 'v' 'vim'; do
+	if has "$x"; then
+		cmds=( "$x" "$@" )
+		break
+	fi
+done
+
+x-terminal-emulator -e ${cmds[*]}

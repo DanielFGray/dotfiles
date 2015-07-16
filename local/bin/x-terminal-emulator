@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-fav=( 'urxvtcd' 'urxvtc' 'urxvt' 'xterm' )
-for x in "${fav[@]}"; do
-	if command -v "$x" &> /dev/null; then
+source ~/.bash_utils
+
+for x in 'urxvtcd' 'urxvtc' 'urxvt' 'xterm'; do
+	if has "$x"; then
 		( exec "$x" "$@" ) &
 		break
 	fi

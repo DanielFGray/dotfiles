@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-fav=( 'dolphin' 'nemo' 'nautilus' 'thunar' )
-for x in "${fav[@]}"; do
-	if command -v "$x" &> /dev/null; then
+source ~/.bash_utils
+
+for x in 'dolphin' 'nemo' 'nautilus' 'thunar'; do
+	if has "$x"; then
 		( exec "$x" "$@" ) &
 		break
 	fi

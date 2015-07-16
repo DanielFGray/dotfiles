@@ -1,6 +1,8 @@
 export PAGER="/bin/sh -c \"col -b | vim -u NONE -S '/home/dan/dotfiles/less.vim' -S '~/.vim/bundle/vim-noctu/colors/noctu.vim' -c 'set ft=man' -\""
 export EDITOR='vim'
 
+source ~/.bash_utils
+
 if [[ -f /etc/debian_version ]]; then
 	PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
 	[[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
@@ -148,9 +150,9 @@ ding() {
 	paplay ~/downloads/ding.ogg &> /dev/null
 }
 
-command -v fortune &> /dev/null && fortune -as
+has fortune && fortune -as
 
-command -v fzf &> /dev/null && command -v ag &> /dev/null && export FZF_DEFAULT_COMMAND='ag -l -g ""'
+has fzf && has ag && export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 if [[ ! -e "$HOME/.node_history" ]]; then
 	touch $HOME/.node_history

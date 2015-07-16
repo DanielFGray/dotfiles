@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+source ~/.bash_utils
+
+declare -a cmds
+
+if tmux ls; then
+	cmds=( 'tmux attach' )
+else
+	if has mux; then
+		cmds=( 'mux start main' )
+	else
+		cmds=( 'tmux' )
+	fi
+fi
+
+
+x-terminal-emulator -e ${cmds[*]}
