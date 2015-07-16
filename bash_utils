@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+info() {
+	if [[ -t 0 ]]; then
+		echo -e "\e[34m$1\e[0m" >&2
+	else
+		zenity --info --text="$*" &> /dev/null
+	fi
+}
+
+err() {
+	if [[ -t 0 ]]; then
+		echo -e "\e[31m$1\e[0m" >&2
+	else
+		zenity --error --text="$*" &> /dev/null
+	fi
+}
+
+prompt() {
+	if [[ -z $2 || ${2^} = Y* ]]; then
+		prompt='Y/n'
+		default='Y'
+	elif [[ ${2^} = N* ]]; then
+		prompt='y/N'
+		default='N'
+	fi
+	read -p "$1 [$prompt] " -N1 ans
+	echo -e
+	if [[ -z $ans ]]; then
+		ans=$default
+	fi
+	if [[ ${ans^} = Y* ]]; then
+		return 0
+	elif [[ ${ans^} = N* ]]; then
+		return 1
+	fi
+}
+
+has() {
+	verbose=false
+	if [[ $1 == '-v' ]]; then
+		verbose=true
+		shift
+	fi
+	if command -v "$1" &> /dev/null; then
+		return 0
+	else
+		[[ "$verbose" == true ]] && err "$1 not found"
+		return 1
+	fi
+}
+
+ask() {
+	if [[ -t 0 ]]; then
+		prompt='Y/n'
+		read -n1 -p "$* [$prompt] " ans
+		echo ''
+		if [[ ${ans^} == Y* ]]; then
+			return 0
+		else
+			return 1
+		fi
+	else
+		zenity --question --text="$@" 2> /dev/null
+	fi
+}
+
