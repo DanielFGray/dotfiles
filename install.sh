@@ -52,40 +52,39 @@ if has 'zsh' && ask 'git clone oh-my-zsh and plugins?'; then
 fi
 
 if has 'tmux' && ask 'symlink tmux.conf and install plugins?'; then
+	backup_then_symlink 'tmux.conf'
 	if [[ ! -d "${HOME}/.tmux/plugins/tpm" ]]; then
 		mkdir ${verbose:+-v} -vp "${HOME}/.tmux/plugins"
 		git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 	fi
-	[[ -f "${HOME}/.tmux.conf" ]] && mv "${HOME}/.tmux.conf" "${HOME}/old.tmux.conf"
-	if ask 'use remote tmux conf?'; then
-		ln ${verbose:+-v} -s "${thisdir}/remote.tmux.conf" "${HOME}/.tmux.conf"
-	else
-		ln ${verbose:+-v} -s "${thisdir}/local.tmux.conf" "${HOME}/.tmux.conf"
+fi
+
+if hax 'X'; then
+	if has 'xmodmap' && ask 'symlink xmodmap?'; then
+		backup_then_symlink 'xmodmap'
+		xmodmap ~/.xmodmap
+	fi
+
+	if has 'xrdb' && ask 'symlink Xresources?'; then
+		backup_then_symlink 'Xresources'
+		xrdb -load ~/.Xresources
+	fi
+
+	if has 'fc-cache' && ask 'install tewi?'; then
+		mkdir ${verbose:+-v} -p ~/build ~/.fonts
+		cd ~/build
+		if [[ ! -d "${HOME}/build/tewi-font" ]]; then
+			git clone https://github.com/lucy/tewi-font
+			cd ~/build/tewi-font
+		else
+			cd ~/build/tewi-font
+			git pull
+		fi
+		make
+		cp ${verbose:+-v} *.pcf ~/.fonts
+		mkfontdir ~/.fonts; xset +fp ~/.fonts ; xset fp rehash; fc-cache -f
+		cd "$thisdir"
 	fi
 fi
 
-if has 'xmodmap' && ask 'symlink xmodmap?'; then
-	backup_then_symlink 'xmodmap'
-	xmodmap ~/.xmodmap
-fi
-
-if has 'xrdb' && ask 'symlink Xresources?'; then
-	backup_then_symlink 'Xresources'
-	xrdb -load ~/.Xresources
-fi
-
-if has 'fc-cache' && ask 'install tewi?'; then
-	mkdir ${verbose:+-v} -p ~/build ~/.fonts
-	cd ~/build
-	if [[ ! -d "${HOME}/build/tewi-font" ]]; then
-		git clone https://github.com/lucy/tewi-font
-		cd ~/build/tewi-font
-	else
-		cd ~/build/tewi-font
-		git pull
-	fi
-	make
-	cp ${verbose:+-v} *.pcf ~/.fonts
-	mkfontdir ~/.fonts; xset +fp ~/.fonts ; xset fp rehash; fc-cache -f
-	cd "$thisdir"
-fi
+info 'done!'
