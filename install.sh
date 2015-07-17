@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-source ~/.bash_utils
-
 cd "${BASH_SOURCE%/*}"
 thisdir="$PWD"
 verbose=false
+
+source "${thisdir}/bash_utils"
 
 while true; do
 	case "$1" in
