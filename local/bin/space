@@ -1,0 +1,23 @@
+#!/usr/bin/awk -f
+
+function unitConversion(num) {
+	split("B MiB GiB", unit);
+	pointer=1;
+	while(num>=1024 && pointer < length(unit)) {
+		num = num/1024; pointer++;
+	}
+	return sprintf("%0.2f%s", num, unit[pointer]) ;
+}
+
+BEGIN {
+	if(system("command -v quota") == 0) {
+		while(("/usr/bin/quota -w" | getline) > 0) {
+			if(l++ < 2) continue
+			printf "You have %s remaining of %s\n", unitConversion($3-$2), unitConversion($3)
+		}
+	} else {
+		while(("df --total | tail -n1" | getline) > 0) {
+			printf "You have %s remaining of %s\n", unitConversion($2-$3), unitConversion($2)
+		}
+	}
+}
