@@ -10,8 +10,8 @@ function unitConversion(num) {
 }
 
 BEGIN {
-	if(system("command -v quota &> /dev/null") == 0) {
-		while(("/usr/bin/quota -w" | getline) > 0) {
+	if(system("command -v quota 1> /dev/null") == 0) {
+		while(("quota -w" | getline) > 0) {
 			if(l++ < 2) continue
 			printf "You have %s remaining of %s\n", unitConversion($3-$2), unitConversion($3)
 		}
