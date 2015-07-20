@@ -9,15 +9,6 @@ endif
 
 call plug#begin('~/.vim/bundle')
 Plug 'Shougo/vimproc',                         {'do': 'make'}
-Plug 'Shougo/unite.vim'
-Plug 'thinca/vim-unite-history'
-Plug 'Shougo/unite-help'
-Plug 'Shougo/unite-outline'
-Plug 'Shougo/unite-session'
-Plug 'Shougo/neomru.vim'
-Plug 'tsukkee/unite-tag'
-Plug 'osyo-manga/unite-filetype'
-Plug 'Shougo/context_filetype.vim'
 Plug 'Shougo/echodoc'
 if has('lua') && (version >= 704 || version == 703 && has('patch885'))
 	Plug 'Shougo/neocomplete.vim'
@@ -30,44 +21,44 @@ endif
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'scrooloose/syntastic'
-Plug 'gcmt/wildfire.vim'
-Plug 'wellle/targets.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-endwise'
+Plug 'Raimondi/delimitMate'
+
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-endwise'
-Plug 'jeetsukumaran/vim-filebeagle'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-speeddating'
-Plug 'mhinz/vim-startify'
-Plug 'mhinz/vim-tmuxify'
-Plug 'bling/vim-airline'
-Plug 'Raimondi/delimitMate'
-Plug 'justinmk/vim-sneak'
 Plug 'haya14busa/incsearch.vim'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}
 Plug 'junegunn/vim-easy-align',                {'on': ['<Plug>(EasyAlign)','<Plug>(LiveEasyAlign)']}
-Plug 'sjl/gundo.vim',                          {'on': 'GundoToggle'}
+
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
-Plug 'reedes/vim-textobj-sentence'
 Plug 'kana/vim-textobj-function'
-Plug 'christoomey/vim-titlecase',              {'on': ['<Plug>Titlecase', '<Plug>TitlecaseLine']}
+Plug 'reedes/vim-textobj-sentence'
+Plug 'wellle/targets.vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'justinmk/vim-sneak'
+Plug 'tommcdo/vim-exchange'
+
+Plug 'jeetsukumaran/vim-filebeagle'
+Plug 'bling/vim-airline'
 Plug 'jaxbot/browserlink.vim',                 {'for': ['html', 'javascript', 'css']}
+Plug 'DanielFGray/DistractionFree.vim'
+Plug 'sjl/gundo.vim',                          {'on': 'GundoToggle'}
+Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-tmuxify'
+Plug 'junegunn/limelight.vim'
+Plug 'reedes/vim-pencil'
+Plug 'mhinz/vim-sayonara'
+
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
 Plug 'airblade/vim-gitgutter'
-Plug 'DanielFGray/DistractionFree.vim'
-Plug 'junegunn/limelight.vim'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'reedes/vim-pencil'
-Plug 'dyng/ctrlsf.vim'
-Plug 'jceb/vim-orgmode'
-Plug 'mhinz/vim-sayonara'
-Plug 'tommcdo/vim-exchange'
+Plug 'tpope/vim-fugitive'
 
 Plug 'noahfrederick/vim-noctu'
 Plug 'gosukiwi/vim-atom-dark'
@@ -106,6 +97,7 @@ Plug 'junegunn/fzf',                           {'dir': '~/.fzf', 'do': 'yes \| .
 call plug#end()
 "" }}}
 
+"{{{ general settings
 syntax on
 filetype plugin indent on
 
@@ -155,36 +147,27 @@ set undoreload=10000
 set backupdir=~/.vim/backups/
 set directory=~/.vim/swaps/
 set undolevels=1000
-let g:mapleader="\<Space>"
 
-nnoremap Y y$
-map gf <esc>:e <cfile><CR>
-
-cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
-command! -bar -nargs=* -complete=help H :vert help <args>
-cabbrev w!! w !sudo tee >/dev/null "%"
-
-augroup VIM
-	autocmd!
-	autocmd BufRead,BufNewFile *.es6 setfiletype javascript
-	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
-	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
-	autocmd VimResized * wincmd =
-	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
-	autocmd FileType markdown,mkd call pencil#init()                 | setlocal nocursorline nocursorcolumn
-	autocmd FileType text         call pencil#init({'wrap': 'hard'}) | setlocal nocursorline nocursorcolumn
-	autocmd FileType help wincmd L | vert resize 80
-	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
-	autocmd FileType vim-plug setlocal nonu nornu nolist
-	if exists('*termopen')
-		autocmd TermOpen * setlocal nolist nocursorline nocursorcolumn
+if has("gui_running")
+	colorscheme atom-dark-256
+	set background=dark
+	set guioptions-=L
+	set guioptions-=r
+	set guioptions-=b
+	set guioptions-=T
+	set guioptions-=m
+	if has("gui_gtk2")
+		set guifont=Tewi\ 9,DejaVu\ Sans\ Mono\ 8
 	endif
-augroup END
+else
+	colorscheme noctu
+endif
+"}}}
 
+"{{{ functions
 function! InsertNewLine()
 	execute "normal! i\<Return>"
 endfunction
-nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
 
 function! PromptQuit()
 	echo 'close current buffer?'
@@ -197,7 +180,6 @@ function! PromptQuit()
 	endif
 	silent! redraw!
 endfunction
-nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
 
 function! Togglegjgk()
 	if !exists("g:togglegjgk") || g:togglegjgk==0
@@ -216,22 +198,83 @@ function! Togglegjgk()
 		echo 'normal j/k'
 	endif
 endfunction
-nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
+"}}}
 
-if has("gui_running")
-	colorscheme atom-dark-256
-	set background=dark
-	set guioptions-=L
-	set guioptions-=r
-	set guioptions-=b
-	set guioptions-=T
-	set guioptions-=m
-	if has("gui_gtk2")
-		set guifont=Tewi\ 9,DejaVu\ Sans\ Mono\ 8
+"{{{ autocmds
+augroup VIM
+	autocmd!
+	autocmd BufRead,BufNewFile *.es6 setfiletype javascript
+	autocmd BufWritePost ~/.vimrc,~/dotfiles/vimrc source ~/.vimrc | if exists(':AirlineRefresh') | execute 'AirlineRefresh' | endif
+	autocmd BufWritePost ~/.tmux.conf,~/dotfiles/tmux.conf | if exists('$TMUX') | call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') | endif
+	autocmd VimResized * wincmd =
+	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+	autocmd FileType markdown,mkd call pencil#init()                 | setlocal nocursorline nocursorcolumn
+	autocmd FileType text         call pencil#init({'wrap': 'hard'}) | setlocal nocursorline nocursorcolumn
+	autocmd FileType help wincmd L | vert resize 80
+	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
+	autocmd FileType vim-plug setlocal nonu nornu nolist
+	if exists('*termopen')
+		autocmd TermOpen * setlocal nolist nocursorline nocursorcolumn
 	endif
-else
-	colorscheme noctu
-endif
+augroup END
+"}}}
+
+"{{{ maps
+let g:mapleader="\<Space>"
+nnoremap Y y$
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+command! -bar -nargs=* -complete=help H :vert help <args>
+cabbrev w!! w !sudo tee >/dev/null "%"
+nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
+nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
+nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
+"}}}
+
+"" {{{ motions
+let g:sneak#prompt='(sneak)» '
+map <silent> f <Plug>Sneak_f
+map <silent> F <Plug>Sneak_F
+map <silent> t <Plug>Sneak_t
+map <silent> T <Plug>Sneak_T
+map <silent> ; <Plug>SneakNext
+map <silent> , <Plug>SneakPrevious
+augroup SneakPluginColors
+	autocmd!
+	autocmd ColorScheme * hi SneakPluginTarget guifg=black guibg=red ctermfg=black ctermbg=red
+	autocmd ColorScheme * hi SneakPluginScope  guifg=black guibg=yellow ctermfg=black ctermbg=yellow
+augroup END
+
+map + <Plug>(wildfire-fuel)
+map _ <Plug>(wildfire-water)
+"" }}}
+
+"" {{{ searching
+let g:incsearch#consistent_n_direction=1
+let g:incsearch#auto_nohlsearch=1
+let g:incsearch#magic='\v'
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+map n  <Plug>(incsearch-nohl-n)zvzz
+map N  <Plug>(incsearch-nohl-N)zvzz
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+
+function! Multiple_cursors_before()
+	if exists(':NeoCompleteLock')==2
+		exe 'NeoCompleteLock'
+	endif
+endfunction
+
+" Called once only when the multiple selection is canceled (default <Esc>)
+function! Multiple_cursors_after()
+	if exists(':NeoCompleteUnlock')==2
+		exe 'NeoCompleteUnlock'
+	endif
+endfunction
+"" }}}
 
 "" {{{ auto completion
 if exists('g:completionEngine')
@@ -266,53 +309,6 @@ if has('conceal')
 endif
 "" }}}
 
-"" {{{ unite.vim settings
-let g:unite_data_directory='~/.vim/cache/unite'
-let g:unite_prompt='» '
-let g:unite_source_history_yank_enable=1
-let g:unite_winheight=10
-let g:unite_split_rule='botright'
-let g:unite_force_overwrite_statusline=0
-nnoremap <silent> <leader>ur :<C-u>Unite register -buffer-name=register -auto-resize<CR>
-nnoremap <silent> <leader>uy :<C-u>Unite history/yank -buffer-name=yank<CR>
-nnoremap <silent> <leader>ub :<C-u>Unite buffer -buffer-name=buffer<CR>
-nnoremap <silent> <leader>ug :<c-u>Unite grep -buffer-name=grep<CR>
-nnoremap <silent> <leader>uf :<C-u>Unite file_rec/async -buffer-name=files -toggle -auto-resize<CR>
-nnoremap <silent> <leader>ue :<C-u>Unite buffer file_mru bookmark file -buffer-name=files<CR>
-nnoremap <silent> <leader>uo :<C-u>Unite outline -buffer-name=outline -auto-resize<CR>
-nnoremap <silent> <leader>uh :<C-u>Unite help -buffer-name=help -auto-resize<CR>
-nnoremap <silent> <leader>ut :<C-u>Unite tag tag/file -buffer-name=tag -auto-resize<CR>
-if executable('ag')
-	set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
-	set grepformat=%f:%l:%C:%m
-	let g:unite_source_grep_command='ag'
-	let g:unite_source_grep_default_opts='--nocolor --nogroup --hidden'
-	let g:unite_source_grep_recursive_opt=''
-	let g:unite_source_rec_async_command='ag --follow --nocolor --nogroup --hidden -g ""'
-elseif executable('ack')
-	set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
-	set grepformat=%f:%l:%c:%m
-	let g:unite_source_grep_command='ack'
-	let g:unite_source_grep_default_opts='--no-heading --no-color'
-	let g:unite_source_grep_recursive_opt=''
-endif
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-	call unite#custom#profile('default', 'context', {'start_insert': 1})
-	call unite#filters#sorter_default#use(['sorter_rank'])
-	call unite#filters#matcher_default#use(['matcher_fuzzy'])
-	call unite#set_profile('files', 'context.smartcase', 1)
-	call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
-	imap <buffer> <C-j> <Plug>(unite_select_next_line)
-	imap <buffer> <C-k> <Plug>(unite_select_previous_line)
-	imap <buffer> <esc> <Plug>(unite_exit)
-	nmap <buffer> <esc> <Plug>(unite_exit)
-	imap <silent><buffer><expr> <C-x> unite#do_action('split')
-	imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-	imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
-endfunction
-"" }}}
-
 "" {{{ syntax checking
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_loc_list=1
@@ -345,54 +341,10 @@ let g:tmuxify_run={
 nnoremap <F5> :GundoToggle<CR>
 let g:gundo_right=1
 let g:gundo_width=60
-let g:gundo_preview_height=40
+let g:gundo_preview_height=20
 "" }}}
 
-"" {{{ searching
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-map n  <Plug>(incsearch-nohl-n)zvzz
-map N  <Plug>(incsearch-nohl-N)zvzz
-map *  <Plug>(incsearch-nohl-*)
-map #  <Plug>(incsearch-nohl-#)
-map g* <Plug>(incsearch-nohl-g*)
-map g# <Plug>(incsearch-nohl-g#)
-let g:incsearch#consistent_n_direction=1
-let g:incsearch#auto_nohlsearch=1
-let g:incsearch#magic='\v'
-
-let g:sneak#prompt='(sneak)» '
-map <silent> f <Plug>Sneak_f
-map <silent> F <Plug>Sneak_F
-map <silent> t <Plug>Sneak_t
-map <silent> T <Plug>Sneak_T
-map <silent> ; <Plug>SneakNext
-map <silent> , <Plug>SneakPrevious
-
-map <leader>f <Plug>CtrlSFPrompt
-
-function! Multiple_cursors_before()
-	if exists(':NeoCompleteLock')==2
-		exe 'NeoCompleteLock'
-	endif
-endfunction
-
-" Called once only when the multiple selection is canceled (default <Esc>)
-function! Multiple_cursors_after()
-	if exists(':NeoCompleteUnlock')==2
-		exe 'NeoCompleteUnlock'
-	endif
-endfunction
-
-augroup SneakPluginColors
-	autocmd!
-	autocmd ColorScheme * hi SneakPluginTarget guifg=black guibg=red ctermfg=black ctermbg=red
-	autocmd ColorScheme * hi SneakPluginScope  guifg=black guibg=yellow ctermfg=black ctermbg=yellow
-augroup END
-"" }}}
-
-"" {{{ fugitive shortcuts
+"" {{{ git integration
 nnoremap <leader>gs <Esc>:Gstatus<CR>
 nnoremap <leader>gd <Esc>:Gdiff<CR>
 nnoremap <leader>gc <Esc>:Gcommit<CR>
@@ -409,14 +361,17 @@ let g:airline#extensions#whitespace#enabled=0
 let g:airline#extensions#branch#enabled=1
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#fnamemod=':t'
+function! AirlineInit()
+	let g:airline_section_z=g:airline_section_y
+	let g:airline_section_y=g:airline_section_x
+	let g:airline_section_x=''
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()
 "" }}}
 
 "" {{{ misc plugins
 nmap <Leader>a <Plug>(EasyAlign)
 vmap <Leader>a <Plug>(EasyAlign)
-
-map + <Plug>(wildfire-fuel)
-map _ <Plug>(wildfire-water)
 
 let g:titlecase_map_keys=0
 nmap <silent> <leader>gt <Plug>Titlecase
@@ -434,6 +389,9 @@ let g:limelight_conceal_ctermfg='DarkGray'
 let g:pencil#wrapModeDefault='soft'
 let g:pencil#textwidth=80
 
+let g:filebeagle_suppress_keymaps = 1
+map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
+
 if has('nvim')
 	let g:startify_custom_header=[
 	\ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
@@ -448,3 +406,5 @@ else
 	\ '']
 endif
 "" }}}
+
+source ~/dotfiles/fzf.vim
