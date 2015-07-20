@@ -1,9 +1,9 @@
 #!/usr/bin/awk -f
 
 function unitConversion(num) {
-	split("B MB GB", unit);
+	split("K M G T", unit);
 	pointer=1;
-	while(num>=1024 && pointer < length(unit)) {
+	while(num>=1025 && pointer < length(unit)) {
 		num = num/1024; pointer++;
 	}
 	return sprintf("%0.1f%s", num, unit[pointer]) ;
@@ -11,13 +11,15 @@ function unitConversion(num) {
 
 BEGIN {
 	if(system("command -v quota 1> /dev/null") == 0) {
-		while(("quota -w" | getline) > 0) {
-			if(l++ < 2) continue
-			printf "You have %s remaining of %s\n", unitConversion($3-$2), unitConversion($3)
+		while(("quota -w | tail -n1" | getline) > 0) {
+			available=$3-$2
+			total=$3
 		}
 	} else {
-		while(("df --total | tail -n1" | getline) > 0) {
-			printf "You have %s remaining of %s\n", unitConversion($2-$3), unitConversion($2)
+		while(("df --total --output=source,used,size | tail -n1" | getline) > 0) {
+			available=$3-$2
+			total=$3
 		}
 	}
+	printf "You have %s remaining of %s\n", unitConversion(available), unitConversion(total)
 }
