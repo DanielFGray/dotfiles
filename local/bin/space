@@ -1,12 +1,12 @@
 #!/usr/bin/awk -f
 
 function unitConversion(num) {
-	split("B MiB GiB", unit);
+	split("B MB GB", unit);
 	pointer=1;
 	while(num>=1024 && pointer < length(unit)) {
 		num = num/1024; pointer++;
 	}
-	return sprintf("%0.2f%s", num, unit[pointer]) ;
+	return sprintf("%0.1f%s", num, unit[pointer]) ;
 }
 
 BEGIN {
