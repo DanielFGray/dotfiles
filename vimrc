@@ -54,6 +54,7 @@ Plug 'mhinz/vim-tmuxify'
 Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
 Plug 'mhinz/vim-sayonara'
+Plug 'sheerun/vim-polyglot'
 
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim',                         {'on': 'Gist'}
@@ -62,8 +63,6 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'noahfrederick/vim-noctu'
 Plug 'gosukiwi/vim-atom-dark'
-
-Plug 'tejr/vim-tmux',                          {'for': 'tmux'}
 
 Plug 'LaTeX-Box-Team/LaTeX-Box',               {'for': 'tex'}
 Plug 'xuhdev/vim-latex-live-preview',          {'for': 'tex'}
@@ -78,18 +77,14 @@ Plug 'hail2u/vim-css3-syntax',                 {'for': ['css', 'scss', 'sass']}
 Plug 'digitaltoad/vim-jade',                   {'for': 'jade'}
 
 Plug 'moll/vim-node',                          {'for': 'javascript'}
-Plug 'jelera/vim-javascript-syntax',           {'for': 'javascript'}
-Plug 'othree/yajs.vim',                        {'for': 'javascript'}
 Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
 Plug 'marijnh/tern_for_vim',                   {'for': 'javascript', 'do': 'npm install'}
-Plug 'sheerun/vim-polyglot',                   {'for': 'javascript'}
 Plug 'walm/jshint.vim',                        {'for': 'javascript'}
 Plug 'heavenshell/vim-jsdoc',                  {'for': 'javascript'}
 
 Plug 'raichoo/purescript-vim',                 {'for': 'purescript'}
 
 Plug 'lukerandall/haskellmode-vim',            {'for': 'haskell'}
-Plug 'raichoo/haskell-vim',                    {'for': 'haskell'}
 Plug 'eagletmt/ghcmod-vim',                    {'for': 'haskell'}
 Plug 'ujihisa/neco-ghc',                       {'for': 'haskell'}
 
