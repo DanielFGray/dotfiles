@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ~/.bash_utils
+
 player=''
 supported=( 'mpc' )
 
@@ -11,18 +13,22 @@ for x in "${supported[@]}"; do
 done
 
 if [[ -z "$player" ]]; then
-	printf 1>&2 'no supported music player found\n'
-	printf 1>&2 '    fzmp currently supports: %s\n' "${supported[*]}"
+	err 'no supported music player found'
+	err "    fzmp currently supports: ${supported[*]}"
 	exit 1
 fi
 
-if [[ ! -x $HOME/.fzf/fzf ]]; then
-	echo "command not found: $HOME/.fzf/fzf" 1>&2
+if ! has fzf; then
+	err 'fzf not found'
 	exit 1
 fi
 
 do_mpc() {
-	mapfile -t songs < <(mpc listall | sort -r | "$HOME/.fzf/fzf" --reverse -m -e +s)
+	if ! isRunning mpd; then
+		err 'mpd not running'
+		exit 1
+	fi
+	mapfile -t songs < <(mpc listall | sort -r | fzf --reverse -m -e +s)
 	if (( ${#songs[@]} > 0 )); then
 		printf '%s\n' "${songs[@]}" | mpc -q add
 		index=$(mpc playlist | wc -l)
