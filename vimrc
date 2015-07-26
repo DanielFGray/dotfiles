@@ -246,9 +246,6 @@ augroup SneakPluginColors
 	autocmd ColorScheme * hi SneakPluginTarget guifg=black guibg=red ctermfg=black ctermbg=red
 	autocmd ColorScheme * hi SneakPluginScope  guifg=black guibg=yellow ctermfg=black ctermbg=yellow
 augroup END
-
-map + <Plug>(wildfire-fuel)
-map _ <Plug>(wildfire-water)
 "" }}}
 
 "" {{{ searching
