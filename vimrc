@@ -160,10 +160,6 @@ endif
 ""}}}
 
 ""{{{ functions
-function! InsertNewLine()
-	execute "normal! i\<Return>"
-endfunction
-
 function! PromptQuit()
 	echo 'close current buffer?'
 	let char=nr2char(getchar())
