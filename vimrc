@@ -196,6 +196,10 @@ endfunction
 "}}}
 
 "{{{ autocmds
+
+function! AdjustWindowHeight(minheight, maxheight)
+	exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
+endfunction
 augroup VIM
 	autocmd!
 	autocmd BufRead,BufNewFile *.es6 setfiletype javascript
@@ -205,6 +209,7 @@ augroup VIM
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
 	autocmd FileType markdown,mkd call pencil#init()                 | setlocal nocursorline nocursorcolumn
 	autocmd FileType text         call pencil#init({'wrap': 'hard'}) | setlocal nocursorline nocursorcolumn
+	autocmd FileType qf call AdjustWindowHeight(3, 30)
 	autocmd FileType help wincmd L | vert resize 80
 	autocmd FileType vim nnore <silent><buffer> K <Esc>:help <C-R><C-W><CR>
 	autocmd FileType vim-plug setlocal nonu nornu nolist
