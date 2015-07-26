@@ -92,7 +92,7 @@ Plug 'junegunn/fzf',                           {'dir': '~/.fzf', 'do': 'yes \| .
 call plug#end()
 "" }}}
 
-"{{{ general settings
+""{{{ general settings
 syntax on
 filetype plugin indent on
 
@@ -157,9 +157,9 @@ if has("gui_running")
 else
 	colorscheme noctu
 endif
-"}}}
+""}}}
 
-"{{{ functions
+""{{{ functions
 function! InsertNewLine()
 	execute "normal! i\<Return>"
 endfunction
@@ -193,13 +193,14 @@ function! Togglegjgk()
 		echo 'normal j/k'
 	endif
 endfunction
-"}}}
 
-"{{{ autocmds
 
 function! AdjustWindowHeight(minheight, maxheight)
 	exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
 endfunction
+""}}}
+
+""{{{ autocmds
 augroup VIM
 	autocmd!
 	autocmd BufRead,BufNewFile *.es6 setfiletype javascript
@@ -217,9 +218,8 @@ augroup VIM
 		autocmd TermOpen * setlocal nolist nocursorline nocursorcolumn
 	endif
 augroup END
-"}}}
+""}}}
 
-"{{{ maps
 let g:mapleader="\<Space>"
 nnoremap Y y$
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
@@ -227,8 +227,11 @@ command! -bar -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
 nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
 nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
+""}}}
+
+""{{{ maps
 nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
-"}}}
+""}}}
 
 "" {{{ motions
 let g:sneak#prompt='(sneak)» '
