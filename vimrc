@@ -196,6 +196,32 @@ function! s:readurl(url)
 	normal ggdd
 endfunction
 
+function! s:get_visual_selection()
+	" http://stackoverflow.com/a/6271254/570760
+	let [lnum1, col1]=getpos("'<")[1:2]
+	let [lnum2, col2]=getpos("'>")[1:2]
+	let lines=getline(lnum1, lnum2)
+	let lines[-1]=lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+	let lines[0]=lines[0][col1 - 1:]
+	return join(lines, "\n")
+endfunction
+
+function! s:sprunge(line1, line2)
+	echo 'Uploading..'
+	let l:content=''
+	if(a:line1 == line("'<'") || a:line2 == line("'>'"))
+		let l:content=s:get_visual_selection()
+	else
+		let l:content=join(getline(a:line1, a:line2), "\n")
+	endif
+	let l:url = system('curl -sF "sprunge=<-" http://sprunge.us', l:content)[0:-2]
+	redraw
+	if(empty(l:url))
+		echomsg 'Failed'
+	else
+		echomsg l:url
+	endif
+endfunction
 
 function! AdjustWindowHeight(minheight, maxheight)
 	exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
@@ -227,6 +253,7 @@ command! -bar -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 command! -bar -nargs=1 R call s:readurl("<args>")
+command! -bar -nargs=0 -range=% Sprunge call s:sprunge(<line1>, <line2>)
 ""}}}
 
 ""{{{ maps
