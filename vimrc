@@ -190,6 +190,12 @@ function! Togglegjgk()
 	endif
 endfunction
 
+function! s:readurl(url)
+	enew
+	silent execute "read !curl -sL " . a:url
+	normal ggdd
+endfunction
+
 
 function! AdjustWindowHeight(minheight, maxheight)
 	exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
@@ -220,6 +226,7 @@ augroup END
 command! -bar -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+command! -bar -nargs=1 R call s:readurl("<args>")
 ""}}}
 
 ""{{{ maps
