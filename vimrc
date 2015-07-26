@@ -220,16 +220,16 @@ augroup VIM
 augroup END
 ""}}}
 
-let g:mapleader="\<Space>"
-nnoremap Y y$
-cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+""{{{ commands
 command! -bar -nargs=* -complete=help H :vert help <args>
 cabbrev w!! w !sudo tee >/dev/null "%"
-nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
-nnoremap <silent> <Return> <Esc>:call InsertNewLine()<CR>
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 ""}}}
 
 ""{{{ maps
+let g:mapleader="\<Space>"
+nnoremap Y y$
+nnoremap <silent> Q           <Esc>:call PromptQuit()<CR>
 nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
 ""}}}
 
