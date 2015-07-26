@@ -169,9 +169,9 @@ function! PromptQuit()
 	let char=nr2char(getchar())
 	echo char
 	if char=~'Y'
-		silent execute "normal \<esc>:Sayonara\<cr>"
+		Sayonara
 	elseif char=~'y'
-		silent execute "normal \<esc>:Sayonara!\<cr>"
+		Sayonara!
 	endif
 	silent! redraw!
 endfunction
