@@ -32,11 +32,7 @@ if ask 'symlink profile and bash_{aliases,utils}?'; then
 	backup_then_symlink 'profile' 'bash_aliases' 'bash_utils'
 fi
 
-if has 'vim' && ask 'install vim plugins?'; then
-	mkdir ${verbose:+-v} -p ${HOME}/.vim/{autoload,bundle,cache,undo,backups,swaps}
-	if [[ ! -f ${HOME}/.vim/autoload/plug.vim ]]; then
-		curl ${verbose:+-v} -fLo ${HOME}/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	fi
+if has 'vim' && ask 'install vimrc?'; then
 	backup_then_symlink 'vimrc'
 fi
 
