@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 cd "${BASH_SOURCE%/*}"
-thisdir="$PWD"
-verbose=false
+declare thisdir="$PWD"
+declare verbose
 
 source "${thisdir}/bash_utils"
 
@@ -63,7 +63,7 @@ if ask 'symlink gitconfig {gem,npm}rc?'; then
 	backup_then_symlink 'gitconfig' 'npmrc' 'gemrc'
 fi
 
-if hax 'X'; then
+if has 'X'; then
 	if has 'xmodmap' && ask 'symlink xmodmap?'; then
 		backup_then_symlink 'xmodmap'
 		xmodmap ~/.xmodmap
