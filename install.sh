@@ -59,6 +59,10 @@ if has 'tmux' && ask 'symlink tmux.conf and install plugins?'; then
 	fi
 fi
 
+if ask 'symlink gitconfig {gem,npm}rc?'; then
+	backup_then_symlink 'gitconfig' 'npmrc' 'gemrc'
+fi
+
 if hax 'X'; then
 	if has 'xmodmap' && ask 'symlink xmodmap?'; then
 		backup_then_symlink 'xmodmap'
