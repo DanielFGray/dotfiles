@@ -31,10 +31,8 @@ library() {
 	path="$2"
 	if [[ -d "${path}" ]]; then
 		if [[ -d "${path}/.git" ]]; then
-			cd "${path}"
-			[[ -n $verbose ]] && echo "cd ${path} && git pull"
-			git pull
-			cd "$thisdir"
+			echo "git -C "${path}" pull"
+			git -C "${path}" pull
 		else
 			ask "no .git found in ${path}, delete entire folder and clone repo?" && rm -fr "${path}"
 		fi
