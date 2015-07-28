@@ -51,6 +51,9 @@ startServer() {
 		fi &
 		exec vim --servername "$serv"  "$@"
 	else
+		if ! has gvim; then
+			die 'cannot start new vim server'
+		fi
 		exec gvim --servername "$serv"  "$@"
 	fi
 }
@@ -67,8 +70,7 @@ if [[ -n "$serv" ]]; then
 				x-terminal-emulator -e 'fv' '-c' 'v'
 			fi
 		else
-			err 'enter a file name or install fv'
-			exit 1
+			die 'enter a file name or install fv'
 		fi
 	else
 		while (( $# > 0 )); do

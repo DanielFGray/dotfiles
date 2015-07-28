@@ -13,20 +13,16 @@ for x in "${supported[@]}"; do
 done
 
 if [[ -z "$player" ]]; then
-	err 'no supported music player found'
-	err "    fzmp currently supports: ${supported[*]}"
-	exit 1
+	die "no supported music player found\n    fzmp currently supports: ${supported[*]}"
 fi
 
 if ! has fzf; then
-	err 'fzf not found'
-	exit 1
+	die 'fzf not found'
 fi
 
 do_mpc() {
 	if ! isRunning mpd; then
-		err 'mpd not running'
-		exit 1
+		die 'mpd not running'
 	fi
 	mapfile -t songs < <(mpc listall | sort -r | fzf --reverse -m -e +s)
 	if (( ${#songs[@]} > 0 )); then

@@ -43,8 +43,7 @@ getdimensions() {
 		dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
 	elif [[ "$region" == true ]]; then
 		if ! has xrectsel; then
-			err 'xrectsel required for -s'
-			exit 1
+			die 'xrectsel required for -s'
 		fi
 		echo -ne 'select a region\r'
 		#TODO: don't use eval
@@ -76,8 +75,7 @@ record() {
 				-b 1000k -threads 4 \
 				-f webm "$file" ;;
 		*)
-			err 'how did I get here?'
-			exit 1
+			die 'how did I get here?'
 	esac
 }
 
@@ -98,22 +96,19 @@ done
 case "$file" in
 	*gif)
 		if ! has byzanz-record; then
-			err 'need byzanz-record for recording gifs'
-			exit 1
+			die 'need byzanz-record for recording gifs'
 		fi
 		cmd='byzanz' ;;
 	*webm)
 		if ! has ffmpeg; then
-			err 'need ffmpeg for recording webms'
-			exit 1
+			die 'need ffmpeg for recording webms'
 		fi
 		cmd='ffmpeg' ;;
-	*) err 'unknown file type, must be gif or webm'
-		exit 1 ;;
+	*) die 'unknown file type, must be gif or webm' ;;
 esac
 
 if [[ -f "$file" && "$overwrite" == false ]] && ! prompt "overwrite ${file}? "; then
-	exit 1
+	die
 fi
 
 getdimensions
