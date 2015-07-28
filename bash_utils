@@ -25,7 +25,9 @@ err() {
 }
 
 die() {
-	err "$1"
+	if [[ -n "$1" ]]; then
+		err "$1"
+	fi
 	exit 1
 }
 
