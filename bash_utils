@@ -24,24 +24,9 @@ err() {
 	fi
 }
 
-prompt() {
-	if [[ -z $2 || ${2^} = Y* ]]; then
-		prompt='Y/n'
-		default='Y'
-	elif [[ ${2^} = N* ]]; then
-		prompt='y/N'
-		default='N'
-	fi
-	read -p "$1 [$prompt] " -N1 ans
-	echo -e
-	if [[ -z $ans ]]; then
-		ans=$default
-	fi
-	if [[ ${ans^} = Y* ]]; then
-		return 0
-	elif [[ ${ans^} = N* ]]; then
-		return 1
-	fi
+die() {
+	err "$1"
+	exit 1
 }
 
 has() {
