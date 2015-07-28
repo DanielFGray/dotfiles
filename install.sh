@@ -26,6 +26,25 @@ backup_then_symlink() {
 	done
 }
 
+library() {
+	url="$1"
+	path="$2"
+	if [[ -d "${path}" ]]; then
+		if [[ -d "${path}/.git" ]]; then
+			cd "${path}"
+			[[ -n $verbose ]] && echo "cd ${path} && git pull"
+			git pull
+			cd "$thisdir"
+		else
+			ask "no .git found in ${path}, delete entire folder and clone repo?" && rm -fr "${path}"
+		fi
+	fi
+	if [[ ! -d "$path" ]]; then
+		mkdir -p "${path%/}"
+		git clone "$url" "${path}"
+	fi
+}
+
 if ! has 'git' || ! has 'curl'; then
 	err 'git and curl both required'
 	exit 1
@@ -40,22 +59,13 @@ if has 'vim' && ask 'install vimrc?'; then
 fi
 
 if has 'zsh' && ask 'git clone oh-my-zsh and plugins?'; then
-	if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
-		git clone https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh"
-	fi
-	if [[ ! -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]]; then
-		mkdir -p "${HOME}/.oh-my-zsh/custom/plugins"
-		git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-	fi
-	backup_then_symlink 'zshrc' 'zprofile' 'zlogin'
+	library 'https://github.com/robbyrussell/oh-my-zsh.git' "${HOME}/.oh-my-zsh"
+	library 'https://github.com/zsh-users/zsh-syntax-highlighting.git' "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 fi
 
-if has 'tmux' && ask 'symlink tmux.conf and install plugins?'; then
+if has 'tmux' && ask 'symlink tmux.conf and tpm?'; then
 	backup_then_symlink 'tmux.conf'
-	if [[ ! -d "${HOME}/.tmux/plugins/tpm" ]]; then
-		mkdir ${verbose:+-v} -vp "${HOME}/.tmux/plugins"
-		git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
-	fi
+	library 'https://github.com/tmux-plugins/tpm' "${HOME}/.tmux/plugins/tpm"
 fi
 
 if ask 'symlink gitconfig {gem,npm}rc?'; then
@@ -76,13 +86,8 @@ if has 'X'; then
 	if has 'fc-cache' && ask 'install tewi?'; then
 		mkdir ${verbose:+-v} -p ~/build ~/.fonts
 		cd ~/build
-		if [[ ! -d "${HOME}/build/tewi-font" ]]; then
-			git clone https://github.com/lucy/tewi-font
-			cd ~/build/tewi-font
-		else
-			cd ~/build/tewi-font
-			git pull
-		fi
+		library 'https://github.com/lucy/tewi-font' "${HOME}/build/tewi-font"
+		cd ~/build/tewi-font
 		make
 		cp ${verbose:+-v} *.pcf ~/.fonts
 		mkfontdir ~/.fonts; xset +fp ~/.fonts ; xset fp rehash; fc-cache -f
