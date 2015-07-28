@@ -33,8 +33,8 @@ library() {
 		if [[ -d "${path}/.git" ]]; then
 			echo "git -C ${path} pull"
 			git -C "$path" pull
-		else
-			ask "no .git found in ${path}, delete entire folder and clone repo?" && rm -fr "${path}"
+		elif ask "no .git found in ${path}, delete entire folder and clone repo?"; then
+			rm -fr ${verbose:+-v} "$path"
 		fi
 	fi
 	if [[ ! -d "$path" ]]; then
