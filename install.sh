@@ -16,6 +16,9 @@ done
 
 backup_then_symlink() {
 	for f in "$@"; do
+		if [[ -L "${HOME}/.${f}" ]]; then
+			rm "${HOME}/.${f}"
+		fi
 		if [[ -f "${HOME}/.${f}" ]]; then
 			mv ${verbose:+-v} "${HOME}/.${f}" "${HOME}/old.${f}"
 		fi
