@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
-source ~/.bash_utils
+if [[ -e ${HOME}/.bash_utils ]]; then
+	source ${HOME}/.bash_utils
+else
+	echo -e "\e[31mbash_utils not found\e[0m" >&2
+	exit 1
+fi
 
 declare -a cmds
 
-if tmux ls; then
+if silent tmux ls; then
 	cmds=( 'tmux attach' )
 else
 	if has mux; then
@@ -14,5 +19,5 @@ else
 	fi
 fi
 
-
+xrdb -load ~/.Xresources
 x-terminal-emulator -e ${cmds[*]}

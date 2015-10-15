@@ -1,8 +1,10 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-pkill aplay &> /dev/null
-mpc clear &> /dev/null
-mpc random on &> /dev/null
-amixer sset Master 100\% &> /dev/null
-[[ $# > 0 ]] && mpc load $1 &> /dev/null || mpc load brutal &> /dev/null
-mpc play &> /dev/null
+{
+	pkill aplay
+	mpc clear
+	mpc random on
+	amixer sset Master 100\%
+	[[ $# > 0 ]] && mpc load $1 || mpc load brutal
+	mpc play
+} &> /dev/null

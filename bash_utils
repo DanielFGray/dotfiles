@@ -47,9 +47,8 @@ has() {
 
 ask() {
 	if inTerm; then
-		prompt='Y/n'
-		read -n1 -p "$* [$prompt] " ans
-		echo ''
+		read -n1 -p "$* " ans
+		echo
 		if [[ ${ans^} == Y* ]]; then
 			return 0
 		else

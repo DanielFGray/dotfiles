@@ -1,29 +1,55 @@
-export PAGER="/bin/sh -c \"col -b | vim -u NONE -S '/home/dan/dotfiles/less.vim' -S '~/.vim/bundle/vim-noctu/colors/noctu.vim' -c 'set ft=man' -\""
+if [[ -e $HOME/dotfiles/less.vim ]]; then
+	lessvim=" -S $HOME/dotfiles/less.vim"
+elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
+	lessvim=' -S /usr/local/share/vim/vim74/macros/less.vim'
+elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
+	lessvim=' -S /usr/share/vim/vim74/macros/less.vim'
+fi
+if [[ -e ${HOME}/.vim/bundle/vim-noctu/colors/noctu.vim ]]; then
+	vimcolor=" -S ${HOME}/.vim/bundle/vim-noctu/colors/noctu.vim"
+fi
+export PAGER="/bin/sh -c \"col -b | vim -u NONE $lessvim $vimcolor -c 'set ft=man' -\""
 export EDITOR='vim'
+export HISTFILESIZE=500000
+export HISTSIZE=100000
+unset GREP_OPTIONS
 
-source ~/.bash_utils
+if [[ -e ${HOME}/.bash_utils ]]; then
+	source ${HOME}/.bash_utils
+else
+	echo -e "\e[31mbash_utils not found\e[0m" >&2
+fi
 
 if [[ -f /etc/debian_version ]]; then
 	PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
 	[[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
-	alias canhaz="sudo apt-get install "
-	alias updupg="sudo apt-get update; sudo apt-get dist-upgrade"
+	for h in 'apt' 'aptitude' 'apt-get'; do
+		if has $h; then
+			alias canhaz="sudo $h install "
+			alias updupg="sudo $h upgrade "
+			pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
+			break;
+		fi
+	done
 	alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-	pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
 	pkgsearch() { apt-cache search "$@" | sort | less ;}
 elif [[ -f /etc/arch-release ]]; then
-	[[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
-	alias canhaz="pacaur -S "
-	alias updupg="pacaur -Syu "
-	alias pkgrm="sudo pacman -Rsu "
-	pkgsearch() { unbuffer pacaur -Ss "$@" | less ;}
+	for h in 'pacaur' 'yaourt' 'pacman'; do
+		if has $h; then
+			alias canhaz="sudo $h -S "
+			alias updupg="sudo $h -Syu "
+			alias pkgrm="sudo $h -Rsu "
+			pkgsearch() { unbuffer $h -Ss "$@" | less ;}
+			break;
+		fi
+	done
+	# [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
 elif [[ -f /etc/redhat-release ]]; then
 	alias yum="sudo yum "
 	alias canhaz="yum install "
 elif [[ -f /etc/gentoo-release ]]; then
 	alias canhaz="sudo emerge -av "
 fi
-
 
 alias cp="cp -v "
 alias mv="mv -v "
@@ -37,10 +63,9 @@ alias ls="ls -Fh --color --group-directories-first "
 alias l="ls -lgo "
 alias la="l -A "
 alias cdu="cdu -isdhD "
+alias grep="grep --exclude-dir=.cvs --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --color=auto -P "
 alias historygrep="history | grep -v 'history' | grep "
 alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
-alias grep="grep --color=auto --exclude-dir=.cvs --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --color=auto -P "
-unset GREP_OPTIONS
 
 cd() {
 	if [[ -z "$@" ]]; then
@@ -93,8 +118,7 @@ changeroot() {
 	sudo mount -t devpts pts "$1"/dev/pts/
 	sudo chroot "$1"/ /bin/bash
 	while true; do
-		printf "unmount $1? "
-		read unmount
+		read -n1 -p "unmount $1? " unmount
 		case $unmount in
 			[Yy]* )
 				sudo umount -l "$1"/
@@ -146,17 +170,12 @@ curltar() {
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
 ding() {
-	[ -n "$1" ] && notify-send -u critical "$@" &> /dev/null
-	paplay ~/downloads/ding.ogg &> /dev/null
+	[[ -n "$1" ]] && notify-send -u critical "$@" &> /dev/null
+	paplay ${HOME}/downloads/ding.ogg &> /dev/null
 }
-
-has fortune && fortune -as
 
 has fzf && has ag && export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
-if [[ ! -e "$HOME/.node_history" ]]; then
-	touch $HOME/.node_history
-fi
-export NODE_REPL_HISTORY_FILE="$HOME/.node_history"
+has fortune && fortune -as
 
 # vim:ft=sh:

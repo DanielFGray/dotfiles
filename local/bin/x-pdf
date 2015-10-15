@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-source ~/.bash_utils
+if [[ -e ${HOME}/.bash_utils ]]; then
+	source ${HOME}/.bash_utils
+else
+	echo -e "\e[31mbash_utils not found\e[0m" >&2
+	exit 1
+fi
 
-fav=( 'mupdf' 'zathura' 'apvlv' 'evince' )
-for x in "${fav[@]}"; do
+for x in 'mupdf' 'zathura' 'apvlv' 'evince'; do
 	if has "$x"; then
 		( exec "$x" "$@" ) &
 		break
