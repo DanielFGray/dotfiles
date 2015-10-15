@@ -1,0 +1,5 @@
+"\e[A":history-search-backward
+"\e[B":history-search-forward
+
+set editing-mode vi
+set keymap vi-command

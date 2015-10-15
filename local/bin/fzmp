@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 
-source ~/.bash_utils
+if [[ -e ${HOME}/.bash_utils ]]; then
+	source ${HOME}/.bash_utils
+declare -a cmds
 
-player=''
-supported=( 'mpc' )
+else
+	echo -e "\e[31mbash_utils not found\e[0m" >&2
+	exit 1
+fi
+
+declare player=''
+declare -a supported=( 'mpc' )
 
 for x in "${supported[@]}"; do
-	if command -v "$x" &> /dev/null; then
+	if has $x; then
 		player="$x"
 		break
 	fi

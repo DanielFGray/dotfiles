@@ -1,7 +1,9 @@
 #!/bin/bash
-xscreensaver-command --lock
+if has xscreensaver-command; then
+	screensaver-command --lock
+fi
 sleep 1
 xset dpms force off
-if [[ $1 == '--suspend' ]]; then
+if [[ "$1" == '--suspend' ]]; then
 	sudo pm-suspend
 fi
