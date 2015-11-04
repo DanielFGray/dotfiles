@@ -86,8 +86,8 @@ Plug 'scrooloose/syntastic' " {{{
 	endif
 " }}}
 Plug 'Raimondi/delimitMate' " {{{
-let delimitMate_expand_cr = 1
-let delimitMate_jump_expansion = 1
+let delimitMate_expand_cr=1
+let delimitMate_jump_expansion=1
 " }}}
 Plug 'christoomey/vim-titlecase' " {{{
 	let g:titlecase_map_keys=0
@@ -151,7 +151,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tommcdo/vim-exchange'
 
 Plug 'jeetsukumaran/vim-filebeagle' " {{{
-	let g:filebeagle_suppress_keymaps = 1
+	let g:filebeagle_suppress_keymaps=1
 	map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
 " }}}
 Plug 'bling/vim-airline' " {{{
@@ -339,7 +339,9 @@ function! PromptQuit() " {{{
 		Sayonara!
 	endif
 	silent! redraw!
-endfunction " }}}
+endfunction
+nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
+" }}}
 
 function! Togglegjgk() " {{{
 	if !exists("g:togglegjgk") || g:togglegjgk==0
@@ -358,6 +360,7 @@ function! Togglegjgk() " {{{
 		echo 'normal j/k'
 	endif
 endfunction
+nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
 " }}}
 
 function! s:readurl(url) " {{{
@@ -365,6 +368,7 @@ function! s:readurl(url) " {{{
 	silent execute "read !curl -sL " . a:url
 	normal ggdd
 endfunction
+command! -bar -nargs=1 R call s:readurl("<args>")
 " }}}
 
 function! s:get_visual_selection() " {{{
@@ -372,7 +376,7 @@ function! s:get_visual_selection() " {{{
 	let [lnum1, col1]=getpos("'<")[1:2]
 	let [lnum2, col2]=getpos("'>")[1:2]
 	let lines=getline(lnum1, lnum2)
-	let lines[-1]=lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+	let lines[-1]=lines[-1][: col2 - (&selection ==? 'inclusive' ? 1 : 2)]
 	let lines[0]=lines[0][col1 - 1:]
 	return join(lines, "\n")
 endfunction
@@ -381,12 +385,12 @@ endfunction
 function! s:sprunge(line1, line2) " {{{
 	echo 'Uploading..'
 	let l:content=''
-	if(a:line1 == line("'<'") || a:line2 == line("'>'"))
+	if(a:line1 ==? line("'<'") || a:line2 ==? line("'>'"))
 		let l:content=s:get_visual_selection()
 	else
 		let l:content=join(getline(a:line1, a:line2), "\n")
 	endif
-	let l:url = system('curl -sF "sprunge=<-" http://sprunge.us', l:content)[0:-2]
+	let l:url=system('curl -sF "sprunge=<-" http://sprunge.us', l:content)[0:-2]
 	redraw
 	if(empty(l:url))
 		echomsg 'Failed'
@@ -394,6 +398,7 @@ function! s:sprunge(line1, line2) " {{{
 	endif
 	echomsg l:url
 endfunction
+command! -bar -nargs=0 -range=% Sprunge call s:sprunge(<line1>, <line2>)
 " }}}
 
 function! AdjustWindowHeight(minheight, maxheight) " {{{
@@ -408,6 +413,7 @@ function! s:DiffWithSaved() " {{{
 	diffthis
 	exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
+command! DiffSaved call s:DiffWithSaved()
 " }}}
 
 " }}}
@@ -423,26 +429,23 @@ augroup VIM
 	autocmd FileType           markdown,mkd call pencil#init()                 | setlocal nocursorline nocursorcolumn
 	autocmd FileType           text         call pencil#init({'wrap': 'hard'}) | setlocal nocursorline nocursorcolumn
 	autocmd FileType           qf           call AdjustWindowHeight(3, 30)
-	autocmd FileType           help         nnoremap <buffer> q <esc>:Sayonara<cr>
+	autocmd FileType           *            if &buftype!='' | nnoremap <buffer><silent> q <esc>:Sayonara<cr> | endif
 	autocmd FileType           help         wincmd L | vert resize 80
-	autocmd BufEnter           *            if &filetype=='help' | execute 'normal 0' | vert resize 80 | endif
-	autocmd BufLeave           *            if &filetype=='help' | execute 'normal 0' | vert resize 10 | endif
+	autocmd BufEnter           *            if &filetype==?'help' | execute 'normal 0' | vert resize 80 | endif
+	autocmd BufLeave           *            if &filetype==?'help' | execute 'normal 0' | vert resize 10 | endif
 	autocmd FileType           vim          setlocal keywordprg=:help
 	autocmd FileType           vim-plug     setlocal nonu nornu nolist nocursorline nocursorcolumn
 	if exists('*termopen')
 		autocmd TermOpen * setlocal nolist nocursorline nocursorcolumn
-		autocmd BufEnter * if &buftype=='terminal' | startinsert | endif
+		autocmd BufEnter * if &buftype==?'terminal' | startinsert | endif
 	endif
 augroup END
 " }}}
 
 " {{{ commands and maps
 nnoremap Y y$
-nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
-nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
-cabbrev w!! w !sudo tee >/dev/null "%"
-command! -bar -nargs=1 R call s:readurl("<args>")
-command! -bar -nargs=0 -range=% Sprunge call s:sprunge(<line1>, <line2>)
-command! DiffSaved call s:DiffWithSaved()
+if ! has(':SudoWrite')
+	cabbrev w!! w !sudo tee >/dev/null "%"
+endif
 " }}}
