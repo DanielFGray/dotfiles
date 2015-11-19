@@ -1,67 +1,57 @@
 " TODO: more comments
 filetype plugin indent on
 let g:mapleader = "\<space>"
-set encoding=utf-8
 
 " {{{ plugins
-if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !mkdir -p ~/.vim/{autoload,bundle,cache,undo,backups,swaps}
-	silent !curl -fLo ~/.vim/autoload/plug.vim
-		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+let s:configdir = '.vim'
+if has('nvim')
+	let s:configdir = '.config/nvim'
+endif
+
+if empty(glob('~/' . s:configdir . '/autoload/plug.vim'))
+	execute 'silent !mkdir -p ~/' . path' . '/{autoload,bundle,cache,undo,backups,swaps}'
+	execute 'silent !curl -fLo ~/' . path . '/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	execute 'source  ~/' . path . '/autoload/plug.vim'
 	autocmd VimEnter * PlugInstall
 endif
 
 call plug#begin('~/.vim/bundle')
-" TODO: some sort of organizing? with comments?
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-speeddating'
-Plug 'vim-utils/vim-husk'
-Plug 'tpope/vim-sleuth'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'Shougo/echodoc'
-Plug 'Shougo/vimproc' " {{{
-\, {'do': 'make'}
-" }}}
-" Plug 'Shougo/neocomp(lete|lcache)' {{{
-
+" {{{ completion
 if has('nvim')
 	Plug 'Shougo/Deoplete.nvim'
 	Plug 'benekastah/neomake'
-elseif has('lua') && (version >= 704 || version == 703 && has('patch885'))
-	Plug 'Shougo/neocomplete.vim'
-	let g:completionEngine = 'neocomplete'
-elseif has('lua')
-	Plug 'Shougo/neocomplcache.vim'
-	let g:completionEngine = 'neocomplcache'
+	Plug 'kassio/neoterm'
+else
+	Plug 'Shougo/vimproc' " {{{
+	\, {'do': 'make'}
+	" }}}
+	if has('lua') && (version >= 704 || version == 703 && has('patch885'))
+		Plug 'Shougo/neocomplete.vim'
+		let g:completionEngine = 'neocomplete'
+	elseif has('lua')
+		Plug 'Shougo/neocomplcache.vim'
+		let g:completionEngine = 'neocomplcache'
+	endif
+	if exists('g:completionEngine') " {{{
+		let g:acp_enableAtStartup = 0
+		let g:{g:completionEngine}#enable_at_startup = 1
+		let g:{g:completionEngine}#enable_smart_case = 1
+		let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
+		let g:{g:completionEngine}#auto_completion_start_length = 3
+		let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
+		let g:{g:completionEngine}#sources#omni#input_patterns = {}
+		let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
+		let g:{g:completionEngine}#data_directory = '~/' . s:configdir . '/cache/neocompl'
+		inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
+		inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
+		inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
+		inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
+	endif " }}}
 endif
 
-if exists('g:completionEngine')
-	let g:acp_enableAtStartup = 0
-	let g:{g:completionEngine}#enable_at_startup = 1
-	let g:{g:completionEngine}#enable_smart_case = 1
-	let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-	let g:{g:completionEngine}#auto_completion_start_length = 3
-	let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
-	let g:{g:completionEngine}#sources#omni#input_patterns = {}
-	let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
-	let g:{g:completionEngine}#data_directory = '~/.vim/cache/neocomplete'
-
-	inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
-	inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
-	inoremap <expr><bs>      {g:completionEngine}#smart_close_popup()."\<C-H>"
-	inoremap <expr><tab>     pumvisible() ? "\<C-N>" : "\<tab>"
-endif
-" }}}
 Plug 'Shougo/neosnippet' " {{{
-Plug 'Shougo/neosnippet-snippets'
-
+	Plug 'Shougo/neosnippet-snippets'
 	let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
-
 	imap <C-K> <Plug>(neosnippet_expand_or_jump)
 	smap <C-K> <Plug>(neosnippet_expand_or_jump)
 	xmap <C-K> <Plug>(neosnippet_expand_target)
@@ -70,72 +60,41 @@ Plug 'Shougo/neosnippet-snippets'
 	\	: pumvisible() ? "\<C-N>" : "\<tab>"
 	smap <expr><tab> neosnippet#expandable_or_jumpable() ?
 	\	"\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
-
 	if has('conceal')
 		set conceallevel=2 concealcursor=i
 	endif
-
-" }}}
-Plug 'scrooloose/syntastic' " {{{
-
-	let g:syntastic_enable_signs = 1
-	let g:syntastic_auto_loc_list = 1
-	let g:syntastic_check_on_open = 1
-	let g:syntastic_error_symbol = '✗'
-	let g:syntastic_style_error_symbol = '✠'
-	let g:syntastic_warning_symbol = '∆'
-	let g:syntastic_style_warning_symbol = '≈'
-	let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
-	if(executable('eslint'))
-		let g:syntastic_javascript_checkers = ['eslint']
-	endif
-
 " }}}
 Plug 'Raimondi/delimitMate' " {{{
-let delimitMate_expand_cr=1
-let delimitMate_jump_expansion=1
-
 	let g:delimitMate_expand_cr = 1
 	let g:delimitMate_jump_expansion = 1
-
 " }}}
-Plug 'sjl/gundo.vim' " {{{
-
-	nnoremap <F5> :GundoToggle<CR>
-
-	let g:gundo_right = 1
-	let g:gundo_width = 60
-	let g:gundo_preview_height = 20
-
+Plug 'tpope/vim-endwise'
 " }}}
-Plug 'junegunn/fzf' " {{{
-\, {'dir': '~/.fzf', 'do': 'yes \| ./install'}
+" {{{ text objects
+Plug 'wellle/targets.vim'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-function'
+Plug 'reedes/vim-textobj-sentence'
+Plug 'thinca/vim-textobj-between'
 " }}}
-Plug 'junegunn/fzf.vim' " {{{
-
-	nnoremap <silent> <Leader><Leader> <Esc>:Maps<CR>
-	nnoremap <silent> <Leader>f <Esc>:Files<CR>
-	nnoremap <silent> <Leader>b <Esc>:Buffers<CR>
-	nnoremap <silent> <Leader>: <Esc>:Commands<CR>
-	nnoremap <silent> <Leader>' <Esc>:Marks<CR>
-	nnoremap <silent> <Leader>? <Esc>:History<CR>
-	nnoremap <silent> <Leader>/ <Esc>:execute 'Ag ' . input('Ag/')<CR>
-	nnoremap <silent> <Leader>gl <Esc>:Commits<CR>
-	nnoremap <silent> <Leader>ga <Esc>:BCommits<CR>
-
+" {{{ operators
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-repeat'
+Plug 'tommcdo/vim-exchange'
 " }}}
-
+" {{{ searching
 Plug 'justinmk/vim-sneak' " {{{
-
 	let g:sneak#prompt = '(sneak)» '
-
 	map <silent> f <Plug>Sneak_f
 	map <silent> F <Plug>Sneak_F
 	map <silent> t <Plug>Sneak_t
 	map <silent> T <Plug>Sneak_T
 	map <silent> ; <Plug>SneakNext
 	map <silent> , <Plug>SneakPrevious
-
 	augroup SneakPluginColors
 		autocmd!
 		autocmd ColorScheme * hi SneakPluginTarget
@@ -143,14 +102,11 @@ Plug 'justinmk/vim-sneak' " {{{
 		autocmd ColorScheme * hi SneakPluginScope
 			\ guifg=black guibg=yellow ctermfg=black ctermbg=yellow
 	augroup END
-
 " }}}
 Plug 'haya14busa/incsearch.vim' " {{{
-
 	let g:incsearch#consistent_n_direction = 1
 	let g:incsearch#auto_nohlsearch = 1
 	let g:incsearch#magic = '\v'
-
 	map /  <Plug>(incsearch-forward)
 	map ?  <Plug>(incsearch-backward)
 	map g/ <Plug>(incsearch-stay)
@@ -160,98 +116,74 @@ Plug 'haya14busa/incsearch.vim' " {{{
 	map #  <Plug>(incsearch-nohl-#)
 	map g* <Plug>(incsearch-nohl-g*)
 	map g# <Plug>(incsearch-nohl-g#)
-
 " }}}
 Plug 'haya14busa/incsearch-fuzzy.vim' " {{{
-
 	map z/ <Plug>(incsearch-fuzzy-/)
 	map z? <Plug>(incsearch-fuzzy-?)
 	map zg/ <Plug>(incsearch-fuzzy-stay)
-
 " }}}
 Plug 'osyo-manga/vim-over' " {{{
-
 	let g:over_command_line_prompt = ":"
 	let g:over_enable_cmd_window = 1
 	let g:over#command_line#search#enable_incsearch = 1
 	let g:over#command_line#search#enable_move_cursor = 1
-
 	nnoremap <silent> <Leader>s <Esc>:OverCommandLine %s///<CR>g<Left><Left>
 	xnoremap <silent> <Leader>s <Esc>:OverCommandLine '<,'>s///g<CR><Left><Left>
-
 " }}}
 Plug 'terryma/vim-multiple-cursors' " {{{
-
 	function! Multiple_cursors_before()
 		if exists(':NeoCompleteLock') == 2
 			NeoCompleteLock
 		endif
 	endfunction
-
 	function! Multiple_cursors_after()
 		if exists(':NeoCompleteUnlock') == 2
 			NeoCompleteUnlock
 		endif
 	endfunction
-
 " }}}
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-indent'
-Plug 'kana/vim-textobj-function'
-Plug 'reedes/vim-textobj-sentence'
-Plug 'thinca/vim-textobj-between'
-Plug 'wellle/targets.vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-Plug 'tommcdo/vim-exchange'
-
+" }}}
+" {{{ formatting
 Plug 'christoomey/vim-titlecase' " {{{
-
 	let g:titlecase_map_keys = 0
-
 	nmap <silent> <Leader>gt <Plug>Titlecase
 	vmap <silent> <Leader>gt <Plug>Titlecase
 	nmap <silent> <Leader>gT <Plug>TitlecaseLine
-
 " }}}
 Plug 'junegunn/vim-easy-align' " {{{
-
 	nmap <Leader>a <Plug>(EasyAlign)
 	vmap <Leader>a <Plug>(EasyAlign)
-
 " }}}
-Plug 'jeetsukumaran/vim-filebeagle' " {{{
-	let g:filebeagle_suppress_keymaps = 1
-	map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
-
 " }}}
+" {{{ appearance
+Plug 'noahfrederick/vim-noctu'
+Plug 'gosukiwi/vim-atom-dark'
 Plug 'bling/vim-airline' " {{{
-
 	let g:airline_theme = 'hybridline'
 	let g:airline_powerline_fonts = 1
 	let g:airline#extensions#whitespace#enabled = 0
 	let g:airline#extensions#branch#enabled = 1
 	let g:airline#extensions#tabline#enabled = 1
 	let g:airline#extensions#tabline#fnamemod = ':t'
-
 	function! AirlineInit()
 		let g:airline_section_z = g:airline_section_y
 		let g:airline_section_y = g:airline_section_x
 		let g:airline_section_x = '%{PencilMode()}'
 	endfunction
 	autocmd User AirlineAfterInit call AirlineInit()
-
+" }}}
+Plug 'nathanaelkane/vim-indent-guides' " {{{
+	let g:indent_guides_start_level = 2
+	let g:indent_guides_guide_size = 1
+	let g:indent_guides_space_guides = 1
+	nmap <silent> <Leader>I <Plug>IndentGuidesToggle
 " }}}
 Plug 'DanielFGray/DistractionFree.vim' " {{{
-
 	let g:distraction_free#toggle_tmux = 1
 	let g:distraction_free#toggle_limelight = 1
-
 	noremap <Leader>df <Esc>:DistractionsToggle<CR>
-
 " }}}
 Plug 'mhinz/vim-startify' " {{{
-
 	if has('nvim')
 		let g:startify_custom_header = [
 		\ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
@@ -265,10 +197,53 @@ Plug 'mhinz/vim-startify' " {{{
 		\ '        ┗┛ ╹╹ ╹',
 		\ '']
 	endif
-
+" }}}
+" }}}
+" {{{ misc/unorganized
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-eunuch'
+Plug 'vim-utils/vim-husk'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'sjl/gundo.vim' " {{{
+	nnoremap <F5> :GundoToggle<CR>
+	let g:gundo_right = 1
+	let g:gundo_width = 60
+	let g:gundo_preview_height = 20
+" }}}
+Plug 'reedes/vim-pencil' " {{{
+	let g:pencil#wrapModeDefault = 'soft'
+	let g:pencil#textwidth = 80
+" }}}
+Plug 'dahu/Insertlessly' " {{{
+	let g:insertlessly_cleanup_trailing_ws = 0
+	let g:insertlessly_cleanup_all_ws = 0
+	let g:insertlessly_insert_spaces = 0
+" }}}
+" Plug 'dahu/SearchParty'
+" Plug 'dahu/Nexus'
+Plug 'junegunn/fzf' " {{{
+\, {'dir': '~/.fzf', 'do': 'yes \| ./install'}
+" }}}
+Plug 'junegunn/fzf.vim' " {{{
+	nnoremap <silent> <Leader><Leader> <Esc>:Maps<CR>
+	nnoremap <silent> <Leader>f <Esc>:Files<CR>
+	nnoremap <silent> <Leader>b <Esc>:Buffers<CR>
+	nnoremap <silent> <Leader>: <Esc>:Commands<CR>
+	nnoremap <silent> <Leader>' <Esc>:Marks<CR>
+	nnoremap <silent> <Leader>? <Esc>:History<CR>
+	nnoremap <silent> <Leader>/ <Esc>:execute 'Ag ' . input('Ag/')<CR>
+	nnoremap <silent> <Leader>gl <Esc>:Commits<CR>
+	nnoremap <silent> <Leader>ga <Esc>:BCommits<CR>
+" }}}
+Plug 'chrisbra/NrrwRgn'
+Plug 'Shougo/echodoc'
+Plug 'jeetsukumaran/vim-filebeagle' " {{{
+	let g:filebeagle_suppress_keymaps = 1
+	map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
 " }}}
 Plug 'mhinz/vim-tmuxify' " {{{
-
 	let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
 	let g:tmuxify_global_maps = 1
 	let g:tmuxify_run = {
@@ -278,29 +253,12 @@ Plug 'mhinz/vim-tmuxify' " {{{
 		\ 'python':     ' python %',
 		\ 'javascript': ' node %'
 	\}
-
-" }}}
-Plug 'junegunn/limelight.vim' " {{{
-
-	let g:limelight_conceal_ctermfg = 'DarkGray'
-
-" }}}
-Plug 'reedes/vim-pencil' " {{{
-
-	let g:pencil#wrapModeDefault = 'soft'
-	let g:pencil#textwidth = 80
-
 " }}}
 Plug 'mhinz/vim-sayonara'
-Plug 'sheerun/vim-polyglot'
 Plug 'Shougo/neomru.vim'
-Plug 'chrisbra/NrrwRgn'
-
-Plug 'noahfrederick/vim-noctu'
-Plug 'gosukiwi/vim-atom-dark'
-
+" }}}
+" {{{ git
 Plug 'tpope/vim-fugitive' " {{{
-
 	nnoremap <Leader>gs <Esc>:Gstatus<CR>
 	nnoremap <Leader>gd <Esc>:Gdiff<CR>
 	nnoremap <Leader>gc <Esc>:Gcommit<CR>
@@ -308,25 +266,24 @@ Plug 'tpope/vim-fugitive' " {{{
 	nnoremap <Leader>gl <Esc>:Glog<CR>
 	nnoremap <Leader>gp <Esc>:Git push<CR>
 	nnoremap <Leader>gu <Esc>:Git pull<CR>
-
 " }}}
 Plug 'jreybert/vimagit' " {{{
 	
 " }}}
-" Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim'
-
+" }}}
+" {{{ latex
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'xuhdev/vim-latex-live-preview'
-
+" }}}
+" {{{ html/css
 Plug 'jaxbot/browserlink.vim' " {{{
 	\, {'for': ['html', 'javascript', 'css']}
 " }}}
 Plug 'suan/vim-instant-markdown' " {{{
-
 	let g:instant_markdown_autostart = 0
-
 " }}}
 Plug 'mattn/emmet-vim'
 Plug 'Valloric/MatchTagAlways'
@@ -335,10 +292,10 @@ Plug 'othree/html5.vim'
 Plug 'groenewege/vim-less'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'digitaltoad/vim-jade'
-Plug 'ap/vim-css-color'
 Plug 'tpope/vim-liquid'
 Plug 'tpope/vim-ragtag'
-
+" }}}
+" {{{ javascript
 Plug 'moll/vim-node'
 Plug 'elzr/vim-json'
 Plug 'othree/yajs.vim'
@@ -348,35 +305,18 @@ Plug 'marijnh/tern_for_vim' " {{{
 " }}}
 Plug 'walm/jshint.vim'
 Plug 'heavenshell/vim-jsdoc'
-
+" }}}
+" {{{ haskell
 Plug 'lukerandall/haskellmode-vim'
 Plug 'raichoo/purescript-vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'ujihisa/neco-ghc'
-
-Plug 'dahu/Insertlessly' " {{{
-
-	let g:insertlessly_cleanup_trailing_ws = 0
-	let g:insertlessly_cleanup_all_ws = 0
-	let g:insertlessly_insert_spaces = 0
-
 " }}}
-" Plug 'dahu/SearchParty'
-" Plug 'dahu/Nexus'
-
-Plug 'nathanaelkane/vim-indent-guides' " {{{
-
-	let g:indent_guides_start_level = 2
-	let g:indent_guides_guide_size = 1
-	let g:indent_guides_space_guides = 1
-
-	nmap <silent> <Leader>I <Plug>IndentGuidesToggle
-" }}}
-
 call plug#end()
 " }}}
 
 " {{{ general settings
+" TODO: more organizing
 syntax on
 
 set number
@@ -520,7 +460,6 @@ function! s:DiffUrl(url) " {{{
 	diffthis | diffupdate
 	redraw
 endfunction
-command! -bar -nargs=1 R call s:readurl("<args>")
 command! -bar -nargs=1 Rdiff call s:DiffUrl("<args>")
 " }}}
 
@@ -710,9 +649,6 @@ augroup VIM
 	autocmd FileType vim
 	\	setlocal keywordprg=:help |
 	\	vnoremap <buffer> <Leader>S y:@"<CR>
-
-	autocmd InsertLeave vim
-	\	call vimlint#vimlint(expand('%'))
 
 	autocmd FileType vim-plug,gundo,diff
 	\	setlocal nonu nornu nolist nocursorline nocursorcolumn
