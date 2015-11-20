@@ -9,9 +9,9 @@ if has('nvim')
 endif
 
 if empty(glob('~/' . s:configdir . '/autoload/plug.vim'))
-  execute 'silent !mkdir -p ~/' . path' . '/{autoload,bundle,cache,undo,backups,swaps}'
-  execute 'silent !curl -fLo ~/' . path . '/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  execute 'source  ~/' . path . '/autoload/plug.vim'
+  silent call system('mkdir -p ~/' . s:configdir . '/{autoload,bundle,cache,undo,backups,swaps}')
+  silent call system('curl -fLo ~/' . s:configdir . '/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+  execute 'source  ~/' . s:configdir . '/autoload/plug.vim'
   autocmd VimEnter * PlugInstall
 endif
 
