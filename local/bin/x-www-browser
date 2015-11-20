@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 if [[ -e ${HOME}/.bash_utils ]]; then
-	source ${HOME}/.bash_utils
+  source ${HOME}/.bash_utils
 else
-	echo -e "\e[31mbash_utils not found\e[0m" >&2
-	exit 1
+  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  exit 1
 fi
 
 for x in 'firefox' 'luakit'; do
-	if has "$x"; then
-		( exec "$x" "$@" ) &
-		break
-	fi
+  if has "$x"; then
+    ( exec "$x" "$@" ) &
+    break
+  fi
 done

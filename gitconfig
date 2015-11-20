@@ -1,8 +1,10 @@
 [github]
-	user = DanielFGray
-	email = DanielFGray@gmail.com
+  user = DanielFGray
+  email = DanielFGray@gmail.com
 [user]
-	name = DanielFGray
-	email = DanielFGray@gmail.com
+  name = DanielFGray
+  email = DanielFGray@gmail.com
 [push]
-	default = simple
+  default = simple
+[alias]
+  cl = clone
