@@ -1,25 +1,25 @@
 #!/usr/bin/awk -f
 
 function unitConversion(num) {
-	split("K M G T", unit);
-	pointer=1;
-	while(num>=1025 && pointer < length(unit)) {
-		num = num/1024; pointer++;
-	}
-	return sprintf("%0.1f%s", num, unit[pointer]) ;
+  split("K M G T", unit);
+  pointer=1;
+  while(num>=1025 && pointer < length(unit)) {
+    num = num/1024; pointer++;
+  }
+  return sprintf("%0.1f%s", num, unit[pointer]) ;
 }
 
 BEGIN {
-	if(system("command -v quota 1> /dev/null") == 0) {
-		while(("quota -w | tail -n1" | getline) > 0) {
-			available=$3-$2
-			total=$3
-		}
-	} else {
-		while(("df --total --output=source,used,size | tail -n1" | getline) > 0) {
-			available=$3-$2
-			total=$3
-		}
-	}
-	printf "You have %s remaining of %s\n", unitConversion(available), unitConversion(total)
+  if(system("command -v quota 1> /dev/null") == 0) {
+    while(("quota -w | tail -n1" | getline) > 0) {
+      available=$3-$2
+      total=$3
+    }
+  } else {
+    while(("df --total --output=source,used,size | tail -n1" | getline) > 0) {
+      available=$3-$2
+      total=$3
+    }
+  }
+  printf "You have %s remaining of %s\n", unitConversion(available), unitConversion(total)
 }

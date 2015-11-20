@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+source ~/.bash_utils
+
+declare -a history
+declare -r histfile="$HOME/.zsh_history"
+
+getHistory() {
+  if [[ ! -f "$histfile" ]]; then
+    touch "$histfile"
+  fi
+  mapfile history < "$histfile"
+}
+
+# getHistory
+
+# mapfile commands < <(compgen -A function -abck | sort -u)
+# choice=$(printf "${commands[@]}\n" | fzf)
+
+choice=$(compgen -A function -abck | sort -u | fzf)
+
+echo "$choice" >> "$histfile"

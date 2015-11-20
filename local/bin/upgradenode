@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+ask() {
+  read -p "$1 " -n1 ans
+  echo
+  [[ "${ans^}" == Y ]]
+}
+
+has(){
+  command -v $1 &>/dev/null
+}
+
+confirm-cmd() {
+  if ask "$*?"; then
+    $*
+  fi
+}
+
+check-hash() {
+  file="$1"
+  latest="$2"
+  remotehash=$(grep "${file##*/}" <<< "$latest")
+  remotehash=${remotehash%% *}
+  localhash=$(sha256sum "$file")
+  localhash=${localhash%% *}
+  if [[ "$remotehash" != "$localhash" ]]; then
+    err 'hash mismatch!';
+    die 1
+  fi
+}
+
+if ! has curl; then
+  echo 'install curl'
+  exit 1
+fi
+
+declare path="$HOME"
+if [[ -d $1 ]]; then
+  path=$1
+fi
+
+cputype=$(uname --machine)
+echo 'checking latest node version...'
+latest=$(curl -sL 'https://nodejs.org/dist/latest/SHASUMS256.txt')
+name=$(grep -m1 -o -P 'node-v[^-]+-linux-x'"${cputype:(-2)}" <<< "$latest")
+
+if has node; then
+  current=$(node --version)
+  newver=$(grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+' <<< "$name")
+  if [[ "${current}" == "${newver}" ]]; then
+    echo 'up-to-date'
+    exit 0
+  else
+    echo "${current} reported, ${newver} available"
+  fi
+fi
+
+declare file="${path}/${name}.tar.xz"
+if [[ ! -f "${file}" ]]; then
+  confirm-cmd curl -LO "https://nodejs.org/dist/latest/${name}.tar.xz" -o "$file"
+  [[ -f "$file" ]] && check-hash "$file" "$latest"
+fi
+
+if [[ ! -f "${file}" ]]; then
+  echo "$path"
+  if [[ -f "${path}/node*.tar.xz" ]]; then
+    file=$(realpath "${path}node*.tar.xz" | sort -h | head -n1)
+  fi
+  echo "$file"
+fi
+
+if [[ -f "$file" ]]; then
+  echo "installing $file"
+  mkdir -p ${HOME}/build
+  tar -x -f "$file" -C ${HOME}/build/ || exit 1
+  mv ${HOME}/build/node*/bin/* ${HOME}/.local/bin/
+  rm -fr ${HOME}/.local/{lib/node_modules,include/node}
+  cp -R ${HOME}/build/node*/{lib,share,include} ${HOME}/.local/
+  rm -fr "${HOME}/build/$name"
+fi

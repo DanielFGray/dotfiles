@@ -6,107 +6,114 @@ declare verbose
 
 source "${thisdir}/bash_utils"
 
-while true; do
-	case "$1" in
-		'-v'|'--verbose') verbose=true ;;
-		*) break ;;
-	esac
-	shift
-done
+echo-cmd() {
+  echo $*
+  $*
+}
 
 backup_then_symlink() {
-	for f in "$@"; do
-		if [[ -L "${HOME}/.${f}" ]]; then
-			rm "${HOME}/.${f}"
-		fi
-		if [[ -f "${HOME}/.${f}" ]]; then
-			mv ${verbose:+-v} "${HOME}/.${f}" "${HOME}/old.${f}"
-		fi
-		ln ${verbose:+-v} -s "${thisdir}/${f}" "${HOME}/.${f}"
-	done
+  for f in "$@"; do
+    src=$( realpath "${thisdir}/${f}" )
+    dest="${HOME}/.${f}"
+    if [[ ! -e "$src" ]]; then
+      err "$src does not exist"
+      break;
+    fi
+    if [[ -L "$dest" ]]; then
+      rm ${verbose:+-v} "$dest"
+    fi
+    if [[ -e "$dest" ]]; then
+      mv ${verbose:+-v} "$dest" "${dest%/*}/old-${dest##*/}"
+    fi
+    mkdir ${verbose:+-v} -p "${dest%/*}/" && ln ${verbose:+-v} -s "$src" "$dest"
+  done
 }
 
 library() {
-	url="$1"
-	path="$2"
-	if [[ -d "$path" ]]; then
-		if [[ -d "${path}/.git" ]]; then
-			echo "git -C ${path} pull"
-			git -C "$path" pull
-		elif ask "no .git found in ${path}, delete entire folder and clone repo?"; then
-			rm -fr ${verbose:+-v} "$path"
-		fi
-	fi
-	if [[ ! -d "$path" ]]; then
-		mkdir -p ${verbose:+-v} "${path%/*}"
-		git clone "$url" "$path"
-	fi
+  url="$1"
+  path="$2"
+  if [[ -d "$path" ]]; then
+    if [[ -d "${path}/.git" ]]; then
+      echo-cmd git -C "$path" pull
+    elif ask "no .git found in ${path}, delete entire folder and clone repo?"; then
+      rm -fr ${verbose:+-v} "$path"
+    fi
+  fi
+  if [[ ! -d "$path" ]]; then
+    mkdir -p ${verbose:+-v} "${path%/*}"
+    echo-cmd git clone "$url" "$path"
+  fi
 }
 
+while true; do
+  case "$1" in
+    '-v'|'--verbose') verbose=true ;;
+    *) break ;;
+  esac
+  shift
+done
+
 if ! has 'git' || ! has 'curl'; then
-	err 'git and curl both required'
-	exit 1
+  err 'git and curl both required'
+  exit 1
 fi
 
-if [[ ! -L ~/.bash_aliases ]] && ask 'symlink profile and bash_{aliases,utils}?'; then
-	backup_then_symlink profile bash_aliases bash_utils
-else
-	echo '~/.bash_aliases already symlinked'
+backup_then_symlink profile bash_aliases bash_utils inputrc
+
+if has git; then
+  backup_then_symlink gitconfig
 fi
 
-if [[ ! -L ~/.vimrc ]] && has vim && ask 'install vimrc?'; then
-	backup_then_symlink vimrc
-else
-	echo '~/.vimrc already symlinked'
+if has vim; then
+  backup_then_symlink vimrc
 fi
 
-if [[ ! -L ~/.zshrc ]] && has zsh && ask 'git clone oh-my-zsh and plugins?'; then
-	library https://github.com/robbyrussell/oh-my-zsh.git ${HOME}/.oh-my-zsh
-	library https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-	backup_then_symlink zshrc zprofile zlogin
-else
-	echo '~/.zshrc already symlinked'
+if has zsh; then
+  backup_then_symlink zshrc zprofile zlogin
+  library https://github.com/robbyrussell/oh-my-zsh.git ${HOME}/.oh-my-zsh
+  library https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 fi
 
-if [[ ! -L ~/.tmux.conf ]] && has tmux && ask 'symlink tmux.conf and tpm?'; then
-	backup_then_symlink tmux.conf
-	library https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
-else
-	echo '~/.tmux.conf already symlinked'
+if has tmux; then
+  backup_then_symlink tmux.conf
+  library https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 fi
 
-if [[ ! -L ~/.inputrc ]] && ask 'symlink inputrc gitconfig {gem,npm}rc?'; then
-	backup_then_symlink inputrc gitconfig npmrc gemrc
-else
-	echo '~/.inputrc already symlinked'
+if has node; then
+  backup_then_symlink npmrc
+fi
+
+if has gem; then
+  backup_then_symlink gemrc
 fi
 
 if has X; then
-	export DISPLAY=:0
+  if has startx; then
+    backup_then_symlink xinitrc
+  fi
 
-	if [[ ! -L ~/.xmodmap ]] && has xmodmap && ask 'install and run xmodmap?'; then
-		backup_then_symlink xmodmap
-		xmodmap ${HOME}/.xmodmap
-	else
-		echo '~/.xmodmap already symlinked'
-	fi
+  if has xmodmap; then
+    backup_then_symlink xmodmap
+    xmodmap ${HOME}/.xmodmap
+  fi
 
-	if [[ ! -L ~/.Xresources ]] && has xrdb && ask 'symlink Xresources?'; then
-		backup_then_symlink Xresources
-		xrdb -load ${HOME}/.Xresources
-	else
-		echo '~/.Xresources already symlinked'
-	fi
+  if has xrdb; then
+    backup_then_symlink Xresources
+    xrdb -load ${HOME}/.Xresources
+  fi
 
-	if [[ ! -f ~/.fonts/FantasqueSansMono-Regular.ttf  ]] && has fc-cache && ask 'install fonts?'; then
-		mkdir ${verbose:+-v} -p ${HOME}/{build,.fonts}
-		unzip ${thisdir}/../downloads/fantasque-sans-mono.zip '*.ttf' -d ~/.fonts
-		mkfontdir ${HOME}/.fonts
-		xset +fp ${HOME}/.fonts
-		xset fp rehash
-		fc-cache -f ${verbose:+-v}
-		cd "$thisdir"
-	fi
+  if [[ ! -f ~/.fonts/FantasqueSansMono-Regular.ttf  ]]; then
+    [[ ! -f ${thisdir}/../downloads/fantasque-sans-mono.zip ]] && curl 'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip' -L -o "${thisdir}/../downloads/fantasque-sans-mono.zip"
+    if [[ -f ${thisdir}/../downloads/fantasque-sans-mono.zip ]]; then
+      unzip ${thisdir}/../downloads/fantasque-sans-mono.zip '*.ttf' -d ~/.fonts
+      mkfontdir ${HOME}/.fonts
+      xset +fp ${HOME}/.fonts
+      xset fp rehash
+      fc-cache -f ${verbose:+-v}
+    fi
+  fi
 else
-	echo 'no X found'
+  echo 'no X found'
 fi
+
+info 'done. you should probably log out'

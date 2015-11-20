@@ -8,19 +8,19 @@ source $ZSH/oh-my-zsh.sh
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
 
 if command -v fzf &> /dev/null; then
-	unalias historygrep
-	function historygrep {
-		print -z $(fc -nl 1 | grep -v 'history' | fzf +s -e -q "$*")
-	}
-	function fzcmd {
-		print -z $(printf -rl $commands:t ${(k)functions} ${(k)aliases} | sort | uniq | fzf -e -q "$*")
-	}
+  unalias historygrep
+  function historygrep {
+    print -z $(fc -nl 1 | grep -v 'history' | fzf +s -e -q "$*")
+  }
+  function fzcmd {
+    print -z $(printf -rl $commands:t ${(k)functions} ${(k)aliases} | sort | uniq | fzf -e -q "$*")
+  }
 fi
 
 unfunction cd
 chpwd() {
-	emulate -L zsh
-	ls
+  emulate -L zsh
+  ls
 }
 
 autoload -U zmv

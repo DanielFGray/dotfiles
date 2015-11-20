@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 if [[ -e ${HOME}/.bash_utils ]]; then
-	source ${HOME}/.bash_utils
+  source ${HOME}/.bash_utils
 else
-	echo -e "\e[31mbash_utils not found\e[0m" >&2
-	exit 1
+  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  exit 1
 fi
 
 usage() {
-	more <<'HELP'
+  more <<'HELP'
 v [OPTIONS] [FILES]
 create a new vim server or interact with an existing one
 
@@ -19,82 +19,81 @@ create a new vim server or interact with an existing one
 HELP
 }
 
+selectPane() {
+  serv="$1"
+  if [[ -n "$TMUX" && "$noselect" != true ]]; then
+    pane=$(vim --servername "$serv" --remote-expr '$TMUX_PANE')
+    if [[ -n "$pane" ]]; then
+      tmux select-pane   -t "$pane"
+      tmux select-window -t "$pane"
+    fi
+  fi &
+}
+
+startServer() {
+  serv="V_$(date +%s)"
+  if inTerm; then
+    if [[ "$noselect" != true && -n "$TMUX" ]]; then
+      tmux rename-window -t "$TMUX_PANE" 'vim'
+      if ! tmux list-sessions -F '#S' | grep 'cmd' &> /dev/null; then
+        tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ${HOME}/dotfiles/tmux.alt.conf'
+      fi
+    fi &
+    exec vim --servername "$serv"  "$@"
+  else
+    if ! has gvim; then
+      die 'cannot start new vim server'
+    fi
+    exec gvim --servername "$serv"  "$@"
+  fi
+}
+
 declare noselect
 declare sendpane=false
 declare -a files
 declare -a vimopts
 
 while true; do
-	case "$1" in
-		'-h'|'--help') usage; exit 0 ;;
-		'-d') noselect=true; ;;
-		'-s') sendpane=true ;;
-		*) break ;;
-	esac
-	shift
+  case "$1" in
+    '-h'|'--help') usage; exit 0 ;;
+    '-d') noselect=true; ;;
+    '-s') sendpane=true ;;
+    *) break ;;
+  esac
+  shift
 done
-
-selectPane() {
-	serv="$1"
-	if [[ -n "$TMUX" && "$noselect" != true ]]; then
-		pane=$(vim --servername "$serv" --remote-expr '$TMUX_PANE')
-		if [[ -n "$pane" ]]; then
-			tmux select-pane   -t "$pane"
-			tmux select-window -t "$pane"
-		fi
-	fi &
-}
-
-startServer() {
-	serv="V_$(date +%s)"
-	if inTerm; then
-		if [[ "$noselect" != true && -n "$TMUX" ]]; then
-			tmux rename-window -t "$TMUX_PANE" 'vim'
-			if ! tmux list-sessions -F '#S' | silent grep 'cmd'; then
-				tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ${HOME}/dotfiles/tmux.alt.conf'
-			fi
-		fi &
-		exec vim --servername "$serv"  "$@"
-	else
-		if ! has gvim; then
-			die 'cannot start new vim server'
-		fi
-		exec gvim --servername "$serv"  "$@"
-	fi
-}
 
 serv=$(vim --serverlist | grep -P '^V_[0-9]+$')
 if [[ -n "$serv" ]]; then
-	vimopts=( "--servername $serv" )
-	if (( $# == 0 )); then
-		if has fv; then
-			if inTerm; then
-				fv -c "v ${noselect:+-d}"
-				exit 0
-			else
-				x-terminal-emulator -e 'fv' '-c' 'v'
-			fi
-		else
-			die 'enter a file name or install fv'
-		fi
-	else
-		while (( $# > 0 )); do
-			case "$1" in
-				:*) vim --servername "$serv" --remote-send "<esc>$1<cr>" ;;
-				!*) vim --servername "$serv" --remote-send "${1:1}" ;;
-				+*) vim --servername "$serv" --remote-expr "${1:1}" ;;
-				http://* | https://* ) vim --servername "$serv" --remote-send "<esc>:enew | r !command curl -sL $1<cr><esc>ggdd:set ft=" ;;
-				*) files+=("$1") ;;
-			esac
-			shift
-		done
-	fi
-	selectPane "$serv"
-	for f in "${files[@]}"; do
-		# err "found file $f"
-		vim --servername "$serv" --remote "$f"
-		sleep 0.1
-	done
+  vimopts=( "--servername $serv" )
+  if (( $# == 0 )); then
+    ! has fv && die 'enter a file name or install fv'
+    if inTerm; then
+      # fv -c "v ${noselect:+-d}"
+      exit 0
+    else
+      x-terminal-emulator -e 'fv' '-c' 'v'
+    fi
+  else
+    while (( $# > 0 )); do
+      case "$1" in
+        :*) vim ${vimopts[*]} --remote-send "<esc>$1<cr>" ;;
+        !*) vim ${vimopts[*]} --remote-send "${1:1}" ;;
+        +*) vim ${vimopts[*]} --remote-expr "${1:1}" ;;
+        http://* | https://* ) vim ${vimopts[*]} --remote-send "<esc>:enew | r !command curl -sL $1<cr><esc>ggdd:set ft=" ;;
+        *) files+=("$1") ;;
+      esac
+      shift
+    done
+  fi
+  selectPane "$serv"
+  for f in "${files[@]}"; do
+    if [[ -d "$f" ]]; then
+      f=$(ag -lk)
+    fi
+    vim ${vimopts[*]} --remote "$f"
+    sleep 0.2
+  done
 else
-	startServer "$@"
+  startServer "$@"
 fi

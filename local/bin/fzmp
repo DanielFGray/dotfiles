@@ -1,47 +1,47 @@
 #!/usr/bin/env bash
 
 if [[ -e ${HOME}/.bash_utils ]]; then
-	source ${HOME}/.bash_utils
+  source ${HOME}/.bash_utils
 declare -a cmds
 
 else
-	echo -e "\e[31mbash_utils not found\e[0m" >&2
-	exit 1
+  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  exit 1
 fi
 
 declare player=''
 declare -a supported=( 'mpc' )
 
 for x in "${supported[@]}"; do
-	if has $x; then
-		player="$x"
-		break
-	fi
+  if has $x; then
+    player="$x"
+    break
+  fi
 done
 
 if [[ -z "$player" ]]; then
-	die "no supported music player found\n    fzmp currently supports: ${supported[*]}"
+  die "no supported music player found\n    fzmp currently supports: ${supported[*]}"
 fi
 
 if ! has fzf; then
-	die 'fzf not found'
+  die 'fzf not found'
 fi
 
 do_mpc() {
-	if ! isRunning mpd; then
-		die 'mpd not running'
-	fi
-	mapfile -t songs < <(mpc listall | sort -r | fzf --reverse -m -e +s)
-	if (( ${#songs[@]} > 0 )); then
-		printf '%s\n' "${songs[@]}" | mpc -q add
-		index=$(mpc playlist | wc -l)
-		if (( ${#songs[@]} > 1 )); then
-			index=$(( $index - ${#songs[@]} + 1))
-		fi
-		mpc -q play "$index"
-	fi
+  if ! isRunning mpd; then
+    die 'mpd not running'
+  fi
+  mapfile -t songs < <(mpc listall | sort -r | fzf --reverse -m -e +s)
+  if (( ${#songs[@]} > 0 )); then
+    printf '%s\n' "${songs[@]}" | mpc -q add
+    index=$(mpc playlist | wc -l)
+    if (( ${#songs[@]} > 1 )); then
+      index=$(( $index - ${#songs[@]} + 1))
+    fi
+    mpc -q play "$index"
+  fi
 }
 
 case "$player" in
-	'mpc') do_mpc ;;
+  'mpc') do_mpc ;;
 esac

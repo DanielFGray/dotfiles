@@ -1,7 +1,7 @@
 #!/bin/bash
 [[ $( tmux attach -t ssh ) ]] || (
-	tmux new-session -d -s ssh
-	tmux new-window -t ssh:1 -n 'soupwhale' '/home/dan/.local/bin/moshsoup'
-	tmux new-window -t ssh:2 -n 'bagelbox'  '/home/dan/.local/bin/moshbagel'
-	tmux attach -t ssh
+  tmux new-session -d -s ssh
+  tmux new-window -t ssh:1 -n 'soupwhale' '/home/dan/.local/bin/moshsoup'
+  tmux new-window -t ssh:2 -n 'bagelbox'  '/home/dan/.local/bin/moshbagel'
+  tmux attach -t ssh
 )

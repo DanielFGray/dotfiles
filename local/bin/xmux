@@ -9,7 +9,7 @@ fi
 
 declare -a cmds
 
-if silent tmux ls; then
+if tmux ls; then
 	cmds=( 'tmux attach' )
 else
 	if has mux; then

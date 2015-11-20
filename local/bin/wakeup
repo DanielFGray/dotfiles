@@ -1,10 +1,14 @@
 #!/usr/bin/bash
 
 {
-	pkill aplay
-	mpc clear
-	mpc random on
-	amixer sset Master 100\%
-	[[ $# > 0 ]] && mpc load $1 || mpc load brutal
-	mpc play
+  pkill aplay
+  mpc clear
+  mpc random on
+  amixer sset Master 100\%
+  if [[ $# > 0 ]]; then
+    mpc load $1
+  else
+    mpc load brutal
+  fi
+  mpc play
 } &> /dev/null

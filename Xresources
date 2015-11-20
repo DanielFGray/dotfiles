@@ -7,20 +7,22 @@
 *Rxvt*inheritPixmap:   false
 *Rxvt*jumpScroll:      false
 *Rxvt*tintColor:       white
-*Rxvt*internalBorder:  2
+*Rxvt*internalBorder:  0
 *Rxvt*borderless:      true
 *Rxvt.perl-ext-common: default,matcher,font-size
 *Rxvt.url-launcher:    /usr/bin/firefox
 *Rxvt.matcher.button:  1
 *Rxvt.urgentOnBell:    True
+*Rxvt*letterSpace:     -2
 
 *Rxvt.keysym.C-Up:     perl:font-size:increase
 *Rxvt.keysym.C-Down:   perl:font-size:decrease
 *Rxvt.keysym.C-S-Up:   perl:font-size:incglobal
 *Rxvt.keysym.C-S-Down: perl:font-size:decglobal
 
-*font:       -lucy-tewi-medium-r-normal--11-90-75-75-p-58-iso10646-1
-*boldFont:   -lucy-tewi-medium-r-normal--11-90-75-75-p-58-iso10646-1
+*Rxvt*font:     xft:Fantasque\ Sans\ Mono:pixelsize=12
+*Rxvt*boldFont: xft:Fantasque\ Sans\ Mono:pixelsize=12
+
 *background: #292929
 *foreground: #dedede
 
