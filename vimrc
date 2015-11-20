@@ -16,6 +16,7 @@ if empty(glob('~/' . s:configdir . '/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/bundle')
+
 " {{{ completion
 if has('nvim')
 	Plug 'Shougo/Deoplete.nvim'
@@ -70,6 +71,7 @@ Plug 'Raimondi/delimitMate' " {{{
 " }}}
 Plug 'tpope/vim-endwise'
 " }}}
+
 " {{{ text objects
 Plug 'wellle/targets.vim'
 Plug 'kana/vim-textobj-user'
@@ -78,6 +80,7 @@ Plug 'kana/vim-textobj-function'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'thinca/vim-textobj-between'
 " }}}
+
 " {{{ operators
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
@@ -86,6 +89,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'tommcdo/vim-exchange'
 " }}}
+
 " {{{ searching
 Plug 'justinmk/vim-sneak' " {{{
 	let g:sneak#prompt = '(sneak)» '
@@ -143,6 +147,7 @@ Plug 'terryma/vim-multiple-cursors' " {{{
 	endfunction
 " }}}
 " }}}
+
 " {{{ formatting
 Plug 'christoomey/vim-titlecase' " {{{
 	let g:titlecase_map_keys = 0
@@ -155,6 +160,7 @@ Plug 'junegunn/vim-easy-align' " {{{
 	vmap <Leader>a <Plug>(EasyAlign)
 " }}}
 " }}}
+
 " {{{ appearance
 Plug 'noahfrederick/vim-noctu'
 Plug 'gosukiwi/vim-atom-dark'
@@ -199,6 +205,7 @@ Plug 'mhinz/vim-startify' " {{{
 	endif
 " }}}
 " }}}
+
 " {{{ misc/unorganized
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
@@ -213,6 +220,7 @@ Plug 'sjl/gundo.vim' " {{{
 	let g:gundo_preview_height = 20
 " }}}
 Plug 'reedes/vim-pencil' " {{{
+  let g:pencil#mode_indicators = { 'hard': 'pencil: hard', 'auto': 'pencil: auto', 'soft': 'pencil: soft', 'off': '' }
 	let g:pencil#wrapModeDefault = 'soft'
 	let g:pencil#textwidth = 80
 " }}}
@@ -257,6 +265,7 @@ Plug 'mhinz/vim-tmuxify' " {{{
 Plug 'mhinz/vim-sayonara'
 Plug 'Shougo/neomru.vim'
 " }}}
+
 " {{{ git
 Plug 'tpope/vim-fugitive' " {{{
 	nnoremap <Leader>gs <Esc>:Gstatus<CR>
@@ -267,17 +276,17 @@ Plug 'tpope/vim-fugitive' " {{{
 	nnoremap <Leader>gp <Esc>:Git push<CR>
 	nnoremap <Leader>gu <Esc>:Git pull<CR>
 " }}}
-Plug 'jreybert/vimagit' " {{{
-	
-" }}}
+Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim'
 " }}}
+
 " {{{ latex
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'xuhdev/vim-latex-live-preview'
 " }}}
+
 " {{{ html/css
 Plug 'jaxbot/browserlink.vim' " {{{
 	\, {'for': ['html', 'javascript', 'css']}
@@ -295,6 +304,7 @@ Plug 'digitaltoad/vim-jade'
 Plug 'tpope/vim-liquid'
 Plug 'tpope/vim-ragtag'
 " }}}
+
 " {{{ javascript
 Plug 'moll/vim-node'
 Plug 'elzr/vim-json'
@@ -306,12 +316,14 @@ Plug 'marijnh/tern_for_vim' " {{{
 Plug 'walm/jshint.vim'
 Plug 'heavenshell/vim-jsdoc'
 " }}}
+
 " {{{ haskell
 Plug 'lukerandall/haskellmode-vim'
 Plug 'raichoo/purescript-vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'ujihisa/neco-ghc'
 " }}}
+
 call plug#end()
 " }}}
 
@@ -333,7 +345,7 @@ set splitright
 set wildmenu wildcharm=<C-Z>
 set switchbuf=useopen,usetab
 set tabstop=2 shiftwidth=2 expandtab
-set foldmethod=marker foldtext=MyFoldText()
+set foldmethod=marker foldopen-=block foldtext=MyFoldText()
 set noruler rulerformat=%32(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set laststatus=2
 set showmode
@@ -605,7 +617,7 @@ augroup VIM
 	\	endif
 
 	autocmd FileType markdown
-	\	call pencil#init() |
+	\	call pencil#init({ 'wrap': 'soft' }) |
 	\	setlocal nocursorline nocursorcolumn
 
 	autocmd FileType text
