@@ -17,62 +17,6 @@ endif
 
 call plug#begin('~/.vim/bundle')
 
-" {{{ completion
-if has('nvim')
-  Plug 'Shougo/Deoplete.nvim'
-  Plug 'benekastah/neomake'
-  Plug 'kassio/neoterm'
-else
-  Plug 'Shougo/vimproc' " {{{
-  \, {'do': 'make'}
-  " }}}
-  if has('lua') && (version >= 704 || version == 703 && has('patch885'))
-    Plug 'Shougo/neocomplete.vim'
-    let g:completionEngine = 'neocomplete'
-  elseif has('lua')
-    Plug 'Shougo/neocomplcache.vim'
-    let g:completionEngine = 'neocomplcache'
-  endif
-  if exists('g:completionEngine') " {{{
-    let g:acp_enableAtStartup = 0
-    let g:{g:completionEngine}#enable_at_startup = 1
-    let g:{g:completionEngine}#enable_smart_case = 1
-    let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-    let g:{g:completionEngine}#auto_completion_start_length = 3
-    let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
-    let g:{g:completionEngine}#sources#omni#input_patterns = {}
-    let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
-    let g:{g:completionEngine}#data_directory = '~/' . s:configdir . '/cache/neocompl'
-    inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
-    inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
-    inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
-    inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
-  endif " }}}
-endif
-
-Plug 'Shougo/neosnippet' " {{{
-  Plug 'Shougo/neosnippet-snippets'
-  let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
-  imap <C-K> <Plug>(neosnippet_expand_or_jump)
-  smap <C-K> <Plug>(neosnippet_expand_or_jump)
-  xmap <C-K> <Plug>(neosnippet_expand_target)
-  imap <expr><tab> neosnippet#expandable_or_jumpable() ?
-  \  "\<Plug>(neosnippet_expand_or_jump)"
-  \  : pumvisible() ? "\<C-N>" : "\<tab>"
-  smap <expr><tab> neosnippet#expandable_or_jumpable() ?
-  \  "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
-  if has('conceal')
-    set conceallevel=2 concealcursor=i
-  endif
-" }}}
-Plug 'Raimondi/delimitMate' " {{{
-  let g:delimitMate_expand_cr = 1
-  let g:delimitMate_jump_expansion = 1
-" }}}
-Plug 'tpope/vim-endwise'
-Plug 'wellle/tmux-complete.vim'
-" }}}
-
 " {{{ text objects
 Plug 'wellle/targets.vim'
 Plug 'kana/vim-textobj-user'
@@ -149,6 +93,62 @@ Plug 'terryma/vim-multiple-cursors' " {{{
 " }}}
 " }}}
 
+" {{{ completion
+if has('nvim')
+  Plug 'Shougo/Deoplete.nvim'
+  Plug 'benekastah/neomake'
+  Plug 'kassio/neoterm'
+else
+  Plug 'Shougo/vimproc' " {{{
+  \, {'do': 'make'}
+  " }}}
+  if has('lua') && (version >= 704 || version == 703 && has('patch885'))
+    Plug 'Shougo/neocomplete.vim'
+    let g:completionEngine = 'neocomplete'
+  elseif has('lua')
+    Plug 'Shougo/neocomplcache.vim'
+    let g:completionEngine = 'neocomplcache'
+  endif
+  if exists('g:completionEngine') " {{{
+    let g:acp_enableAtStartup = 0
+    let g:{g:completionEngine}#enable_at_startup = 1
+    let g:{g:completionEngine}#enable_smart_case = 1
+    let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
+    let g:{g:completionEngine}#auto_completion_start_length = 3
+    let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
+    let g:{g:completionEngine}#sources#omni#input_patterns = {}
+    let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
+    let g:{g:completionEngine}#data_directory = '~/' . s:configdir . '/cache/neocompl'
+    inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
+    inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
+    inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
+    inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
+  endif " }}}
+endif
+
+Plug 'Shougo/neosnippet' " {{{
+  Plug 'Shougo/neosnippet-snippets'
+  let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
+  imap <C-K> <Plug>(neosnippet_expand_or_jump)
+  smap <C-K> <Plug>(neosnippet_expand_or_jump)
+  xmap <C-K> <Plug>(neosnippet_expand_target)
+  imap <expr><tab> neosnippet#expandable_or_jumpable() ?
+  \ "\<Plug>(neosnippet_expand_or_jump)"
+  \ : pumvisible() ? "\<C-N>" : "\<tab>"
+  smap <expr><tab> neosnippet#expandable_or_jumpable() ?
+  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+  if has('conceal')
+    set conceallevel=2 concealcursor=i
+  endif
+" }}}
+Plug 'Raimondi/delimitMate' " {{{
+  let g:delimitMate_expand_cr = 1
+  let g:delimitMate_jump_expansion = 1
+" }}}
+Plug 'tpope/vim-endwise'
+Plug 'wellle/tmux-complete.vim'
+" }}}
+
 " {{{ formatting
 Plug 'christoomey/vim-titlecase' " {{{
   let g:titlecase_map_keys = 0
@@ -160,6 +160,17 @@ Plug 'junegunn/vim-easy-align' " {{{
   nmap <Leader>a <Plug>(EasyAlign)
   vmap <Leader>a <Plug>(EasyAlign)
 " }}}
+Plug 'reedes/vim-pencil' " {{{
+  let g:pencil#wrapModeDefault = 'soft'
+  let g:pencil#textwidth = 80
+" }}}
+Plug 'dahu/Insertlessly' " {{{
+  let g:insertlessly_cleanup_trailing_ws = 0
+  let g:insertlessly_cleanup_all_ws = 0
+  let g:insertlessly_insert_spaces = 0
+" }}}
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-sleuth'
 " }}}
 
 " {{{ appearance
@@ -210,30 +221,18 @@ Plug 'mhinz/vim-startify' " {{{
 " {{{ misc/unorganized
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-eunuch'
 Plug 'vim-utils/vim-husk'
-Plug 'editorconfig/editorconfig-vim'
 Plug 'sjl/gundo.vim' " {{{
   nnoremap <F5> :GundoToggle<CR>
   let g:gundo_right = 1
   let g:gundo_width = 60
   let g:gundo_preview_height = 20
 " }}}
-Plug 'reedes/vim-pencil' " {{{
-  let g:pencil#mode_indicators = { 'hard': 'pencil: hard', 'auto': 'pencil: auto', 'soft': 'pencil: soft', 'off': '' }
-  let g:pencil#wrapModeDefault = 'soft'
-  let g:pencil#textwidth = 80
-" }}}
-Plug 'dahu/Insertlessly' " {{{
-  let g:insertlessly_cleanup_trailing_ws = 0
-  let g:insertlessly_cleanup_all_ws = 0
-  let g:insertlessly_insert_spaces = 0
-" }}}
 " Plug 'dahu/SearchParty'
 " Plug 'dahu/Nexus'
 Plug 'junegunn/fzf' " {{{
-\, {'dir': '~/.fzf', 'do': 'yes \| ./install'}
+  \, {'dir': '~/.fzf', 'do': 'yes \| ./install'}
 " }}}
 Plug 'junegunn/fzf.vim' " {{{
   nnoremap <silent> <Leader><Leader> <Esc>:Maps<CR>
@@ -312,7 +311,7 @@ Plug 'elzr/vim-json'
 Plug 'othree/yajs.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'marijnh/tern_for_vim' " {{{
-\, {'do': 'npm install'}
+  \, {'do': 'npm install'}
 " }}}
 Plug 'walm/jshint.vim'
 Plug 'heavenshell/vim-jsdoc'
@@ -335,26 +334,24 @@ syntax on
 set number
 try | set relativenumber | catch | endtry
 set colorcolumn=80
-set cursorcolumn cursorline
+set cursorline cursorcolumn
 set hlsearch incsearch
 set infercase
 set backspace=indent,eol,start
 set nowrap
 set showmatch
-set equalalways
-set splitright
+set equalalways splitright
 set wildmenu wildcharm=<C-Z>
 set switchbuf=useopen,usetab
 set tabstop=2 shiftwidth=2 expandtab
 set foldmethod=marker foldopen-=block foldtext=MyFoldText()
 set noruler rulerformat=%32(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set laststatus=2
-set showmode
+set showcmd noshowmode
 set hidden
 set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set listchars+=eol:↵
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\
-set showcmd noshowmode
 set nolazyredraw
 set autoread
 set report=0
@@ -371,13 +368,10 @@ try
 catch | endtry
 set sessionoptions-=options
 set diffopt=vertical
-set pastetoggle=<F6>
-set undodir=~/.vim/undo/
-set undofile
-set undoreload=10000
+set undofile undodir=~/.vim/undo/ undoreload=10000
+set undolevels=1000
 set backupdir=~/.vim/backups/
 set directory=~/.vim/swaps/
-set undolevels=1000
 
 if has("gui_running")
   colorscheme atom-dark-256
@@ -603,77 +597,78 @@ augroup VIM
   autocmd!
 
   autocmd BufWritePost *tmux.conf
-  \  if exists('$TMUX') |
-  \    call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') |
-  \  endif
+  \ if exists('$TMUX') |
+  \   call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') |
+  \ endif
 
   autocmd FileType javascript
-  \  nnoremap <Leader>jd <Plug>(jsdoc)
+  \ nnoremap <Leader>jd <Plug>(jsdoc)
+
   autocmd BufRead,BufNewFile *.es6
-  \  setfiletype javascript
+  \ setfiletype javascript
 
   autocmd BufReadPost *
-  \  if line("'\"") > 0 && line("'\"") <= line("$") |
-  \    execute 'normal! g`"zvzz' |
-  \  endif
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   execute 'normal! g`"zvzz' |
+  \ endif
 
   autocmd FileType markdown
-  \  call pencil#init({ 'wrap': 'soft' }) |
-  \  setlocal nocursorline nocursorcolumn
+  \ call pencil#init({ 'wrap': 'soft' }) |
+  \ setlocal nocursorline nocursorcolumn
 
   autocmd FileType text
-  \  call pencil#init({ 'wrap': 'hard', 'autoformat': 0 }) |
-  \  setlocal nocursorline nocursorcolumn
+  \ call pencil#init({ 'wrap': 'hard', 'autoformat': 0 }) |
+  \ setlocal nocursorline nocursorcolumn
 
   autocmd FileType *
-  \  if &buftype != '' |
-  \    nnoremap <silent><buffer> q <Esc>:<C-R>=&diff==1
-  \      ?'<bar>wincmd p<bar>diffoff<bar>wincmd p<bar>':''<CR>bd<CR> |
-  \  endif
+  \ if &buftype != '' |
+  \   nnoremap <silent><buffer> q <Esc>:<C-R>=&diff==1
+  \     ?'<bar>wincmd p<bar>diffoff<bar>wincmd p<bar>':''<CR>bd<CR> |
+  \ endif
 
   autocmd FileType help
-  \  wincmd L |
-  \  vert resize 80
+  \ wincmd L |
+  \ vert resize 80
 
   autocmd FileType qf
-  \  call AdjustWindowHeight(1, winheight(0)/2)
+  \ call AdjustWindowHeight(1, winheight(0)/2)
 
   autocmd BufEnter *
-  \  if &filetype ==? 'help' |
-  \    execute 'normal 0' |
-  \    vert resize 80 |
-  \  endif
+  \ if &filetype ==? 'help' |
+  \   execute 'normal 0' |
+  \   vert resize 80 |
+  \ endif
 
   autocmd BufLeave *
-  \  if &filetype ==? 'help' |
-  \    execute 'normal 0' |
-  \    vert resize 10 |
-  \  endif
+  \ if &filetype ==? 'help' |
+  \   execute 'normal 0' |
+  \   vert resize 10 |
+  \ endif
 
   autocmd VimResized help
-  \  vert resize 10
+  \ vert resize 10
 
   autocmd BufWritePost *vimrc
-  \  source ~/.vimrc |
-  \  if exists(':AirlineRefresh') |
-  \    AirlineRefresh |
-  \  endif
+  \ source ~/.vimrc |
+  \ if exists(':AirlineRefresh') |
+  \   AirlineRefresh |
+  \ endif
 
   autocmd FileType vim
-  \  setlocal keywordprg=:help |
-  \  vnoremap <buffer> <Leader>S y:@"<CR>
+  \ setlocal keywordprg=:help |
+  \ vnoremap <buffer> <Leader>S y:@"<CR>
 
   autocmd FileType vim-plug,gundo,diff
-  \  setlocal nonu nornu nolist nocursorline nocursorcolumn
+  \ setlocal nonu nornu nolist nocursorline nocursorcolumn
 
   if exists('*termopen')
     autocmd TermOpen *
-    \  setlocal nolist nocursorline nocursorcolumn
+    \ setlocal nolist nocursorline nocursorcolumn
 
     autocmd BufEnter *
-    \  if &buftype==?'terminal' |
-    \    startinsert |
-    \  endif
+    \ if &buftype==?'terminal' |
+    \   startinsert |
+    \ endif
   endif
 
 augroup END
@@ -684,6 +679,8 @@ nnoremap Y y$
 nnoremap g; g;zvzt
 nnoremap g, g,zvzt
 nnoremap <C-O> <C-O>zvzz
+nnoremap <F6> <Esc>:set paste!<CR>
+inoremap <F6> <C-O>:set paste!<CR>
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
 if exists(':SudoWrite')
   cabbrev w!! SudoWrite
