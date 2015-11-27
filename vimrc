@@ -1,6 +1,6 @@
 " TODO: more comments
 filetype plugin indent on
-let g:mapleader = "\<space>"
+let g:mapleader = "\<Space>"
 
 " {{{ plugins
 let s:configdir = '.vim'
@@ -91,6 +91,13 @@ Plug 'terryma/vim-multiple-cursors' " {{{
     endif
   endfunction
 " }}}
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
+  set grepformat=%f:%l:%C:%m
+elseif executable('ack')
+  set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
+  set grepformat=%f:%l:%c:%m
+endif
 " }}}
 
 " {{{ completion
@@ -431,7 +438,7 @@ function! Togglegjgk() " {{{
     echo 'normal j/k'
   endif
 endfunction
-nnoremap <silent> <leader>tgj <Esc>:call Togglegjgk()<CR>
+nnoremap <silent> <Leader>tgj <Esc>:call Togglegjgk()<CR>
 " }}}
 
 function! s:ReadUrl(url) " {{{
@@ -528,7 +535,7 @@ function! s:DiffU() " {{{
     echo 'no file on disk'
     return -1
   endif
-  " TODO: suck less
+  " TODO: get buffer without mangling newlines
   let l:changes = join(getline(1, '$'), "\n")."\n"
   let l:diff = system(printf('diff -u %s -', l:original), l:changes)
   if l:diff == ''
@@ -631,7 +638,7 @@ augroup VIM
   \ vert resize 80
 
   autocmd FileType qf
-  \ call AdjustWindowHeight(1, winheight(0)/2)
+  \ call AdjustWindowHeight(1, winheight(0) / 2)
 
   autocmd BufEnter *
   \ if &filetype ==? 'help' |
@@ -656,7 +663,7 @@ augroup VIM
 
   autocmd FileType vim
   \ setlocal keywordprg=:help |
-  \ vnoremap <buffer> <Leader>S y:@"<CR>
+  \ xnoremap <buffer> <Leader>S y:@"<CR>
 
   autocmd FileType vim-plug,gundo,diff
   \ setlocal nonu nornu nolist nocursorline nocursorcolumn
@@ -666,7 +673,7 @@ augroup VIM
     \ setlocal nolist nocursorline nocursorcolumn
 
     autocmd BufEnter *
-    \ if &buftype==?'terminal' |
+    \ if &buftype ==? 'terminal' |
     \   startinsert |
     \ endif
   endif
