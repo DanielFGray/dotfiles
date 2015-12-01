@@ -76,7 +76,7 @@ Plug 'osyo-manga/vim-over' " {{{
   let g:over_enable_cmd_window = 1
   let g:over#command_line#search#enable_incsearch = 1
   let g:over#command_line#search#enable_move_cursor = 1
-  nnoremap <silent> <Leader>s <Esc>:OverCommandLine %s///<CR>g<Left><Left>
+  nnoremap <silent> <Leader>s <Esc>:OverCommandLine %s///g<CR><Left><Left>
   xnoremap <silent> <Leader>s <Esc>:OverCommandLine '<,'>s///g<CR><Left><Left>
 " }}}
 Plug 'terryma/vim-multiple-cursors' " {{{
@@ -338,8 +338,7 @@ call plug#end()
 " TODO: more organizing
 syntax on
 
-set number
-try | set relativenumber | catch | endtry
+set number relativenumber
 set colorcolumn=80
 set cursorline cursorcolumn
 set hlsearch incsearch
@@ -375,12 +374,12 @@ try
 catch | endtry
 set sessionoptions-=options
 set diffopt=vertical
-set undofile undodir=~/.vim/undo/ undoreload=10000
+set undofile undodir=~/.vim/undo undoreload=10000
 set undolevels=1000
-set backupdir=~/.vim/backups/
-set directory=~/.vim/swaps/
+set backupdir=~/.vim/backups
+set directory=~/.vim/swaps
 
-if has("gui_running")
+if has('gui_running')
   colorscheme atom-dark-256
   set background=dark
   set guioptions-=L
@@ -388,7 +387,7 @@ if has("gui_running")
   set guioptions-=b
   set guioptions-=T
   set guioptions-=m
-  if has("gui_gtk2")
+  if has('gui_gtk2')
     set guifont=Fantasque\ Sans\ Mono\ 9
   endif
 else
@@ -445,7 +444,7 @@ function! s:ReadUrl(url) " {{{
   " opens a url in a new buffer, prompts for filetype
   if ! executable('curl')
     echo 'curl not found'
-    return
+    return 0
   endif
   enew | put =system('curl -sL ' . a:url)
   normal ggdd
@@ -461,9 +460,10 @@ command! -bar -nargs=1 R call s:ReadUrl("<args>")
 
 function! s:DiffUrl(url) " {{{
   " starts diffmode with the current buffer and a url
+  " TODO: could be it be any file or url?
   if ! executable('curl')
     echo 'curl not found'
-    return
+    return 0
   endif
   let l:difft = &ft
   diffthis
@@ -482,7 +482,7 @@ function! s:GetVisualSelection() " {{{
   let [lnum1, col1] = getpos("'<")[1:2]
   let [lnum2, col2] = getpos("'>")[1:2]
   let lines = getline(lnum1, lnum2)
-  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[-1] = lines[-1][: col2 - (&selection ==? 'inclusive' ? 1 : 2)]
   let lines[0] = lines[0][col1 - 1:]
   return join(lines, "\n")
 endfunction
@@ -504,7 +504,7 @@ function! s:Sprunge(line1, line2) " {{{
   let l:url = system('curl -sF "sprunge=<-" http://sprunge.us', l:content)[0:-2]
   redraw
   if(empty(l:url))
-    echomsg 'Failed'
+    echo 'Failed'
     return 0
   endif
   echomsg l:url
@@ -513,7 +513,7 @@ command! -bar -nargs=0 -range=% Sprunge call s:Sprunge(<line1>, <line2>)
 " }}}
 
 function! AdjustWindowHeight(minheight, maxheight) " {{{
-  exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
+  exe max([min([line('$'), a:maxheight]), a:minheight]) . 'wincmd _'
 endfunction
 " }}}
 
@@ -523,7 +523,7 @@ function! s:DiffOrig() " {{{
   diffthis
   vnew | r # | normal! 1Gdd
   diffthis
-  exe "setlocal bt=nofile bh=wipe nomod nobl noswf ro ft=" . filetype
+  exe 'setlocal bt=nofile bh=wipe nomod nobl noswf ro ft=' . filetype
 endfunction
 command! -bar -nargs=0 DiffOrig call s:DiffOrig()
 " }}}
@@ -543,7 +543,7 @@ function! s:DiffU() " {{{
     return 0
   endif
   new | 0put =l:diff
-  if getline('$') == ''
+  if empty(getline('$'))
     execute 'normal! Gdd'
   endif
   if winheight(0) / 2 + 5 < line('$')
