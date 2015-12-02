@@ -250,20 +250,6 @@ Plug 'sjl/gundo.vim' " {{{
 " }}}
 " Plug 'dahu/SearchParty'
 " Plug 'dahu/Nexus'
-Plug 'junegunn/fzf' " {{{
-  \, {'dir': '~/.fzf', 'do': 'yes \| ./install'}
-" }}}
-Plug 'junegunn/fzf.vim' " {{{
-  nnoremap <silent> <Leader><Leader> <Esc>:Maps<CR>
-  nnoremap <silent> <Leader>f <Esc>:Files<CR>
-  nnoremap <silent> <Leader>b <Esc>:Buffers<CR>
-  nnoremap <silent> <Leader>: <Esc>:Commands<CR>
-  nnoremap <silent> <Leader>' <Esc>:Marks<CR>
-  nnoremap <silent> <Leader>? <Esc>:History<CR>
-  nnoremap <silent> <Leader>/ <Esc>:execute 'Ag ' . input('Ag/')<CR>
-  nnoremap <silent> <Leader>gl <Esc>:Commits<CR>
-  nnoremap <silent> <Leader>ga <Esc>:BCommits<CR>
-" }}}
 Plug 'chrisbra/NrrwRgn'
 Plug 'Shougo/echodoc'
 Plug 'jeetsukumaran/vim-filebeagle' " {{{
@@ -284,6 +270,78 @@ Plug 'mhinz/vim-tmuxify' " {{{
 Plug 'mhinz/vim-sayonara'
 Plug 'Shougo/neomru.vim'
 " }}}
+
+if has('gui_running') || ! exists('$TMUX')
+  Plug 'Shougo/unite.vim' " {{{
+  Plug 'thinca/vim-unite-history'
+  Plug 'Shougo/unite-help'
+  Plug 'Shougo/unite-outline'
+  Plug 'Shougo/unite-session'
+  Plug 'Shougo/neomru.vim'
+  Plug 'tsukkee/unite-tag'
+  Plug 'osyo-manga/unite-filetype'
+  Plug 'Shougo/context_filetype.vim'
+
+  let g:unite_data_directory = '~/.vim/cache/unite'
+  let g:unite_prompt = '» '
+  let g:unite_source_history_yank_enable = 1
+  let g:unite_winheight = 10
+  let g:unite_split_rule = 'botright'
+  let g:unite_force_overwrite_statusline = 0
+  if executable('ag')
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
+    let g:unite_source_grep_recursive_opt = ''
+    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
+  elseif executable('ack')
+    let g:unite_source_grep_command = 'ack'
+    let g:unite_source_grep_default_opts = '--no-heading --no-color'
+    let g:unite_source_grep_recursive_opt = ''
+  endif
+
+  nnoremap <silent> <leader>r <Esc>:Unite register -buffer-name=register -auto-resize<CR>
+  nnoremap <silent> <leader>y <Esc>:Unite history/yank -buffer-name=yank<CR>
+  nnoremap <silent> <leader>b <Esc>:Unite buffer -buffer-name=buffer<CR>
+  nnoremap <silent> <leader>/ <Esc>:Unite grep -buffer-name=grep<CR>
+  nnoremap <silent> <leader>f <Esc>:Unite file_rec/async -buffer-name=files -toggle -auto-resize<CR>
+  nnoremap <silent> <leader>e <Esc>:Unite buffer file_mru bookmark file -buffer-name=files<CR>
+  nnoremap <silent> <leader>o <Esc>:Unite outline -buffer-name=outline -auto-resize<CR>
+  nnoremap <silent> <leader>h <Esc>:Unite help -buffer-name=help -auto-resize<CR>
+  nnoremap <silent> <leader>t <Esc>:Unite tag tag/file -buffer-name=tag -auto-resize<CR>
+
+  autocmd FileType unite call s:unite_settings()
+  function! s:unite_settings()
+    call unite#custom#profile('default', 'context', {'start_insert': 1})
+    call unite#filters#sorter_default#use(['sorter_rank'])
+    call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    call unite#set_profile('files', 'context.smartcase', 1)
+    call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
+    imap <buffer> <C-j> <Plug>(unite_select_next_line)
+    imap <buffer> <C-k> <Plug>(unite_select_previous_line)
+    imap <buffer> <esc> <Plug>(unite_exit)
+    nmap <buffer> <esc> <Plug>(unite_exit)
+    imap <silent><buffer><expr> <C-x> unite#do_action('split')
+    imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+    imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
+  endfunction
+
+  " }}}
+else
+  Plug 'junegunn/fzf' " {{{
+    \, {'dir': '~/.fzf', 'do': 'yes \| ./install'}
+  " }}}
+  Plug 'junegunn/fzf.vim' " {{{
+    nnoremap <silent> <Leader><Leader> <Esc>:Maps<CR>
+    nnoremap <silent> <Leader>f <Esc>:Files<CR>
+    nnoremap <silent> <Leader>b <Esc>:Buffers<CR>
+    nnoremap <silent> <Leader>: <Esc>:Commands<CR>
+    nnoremap <silent> <Leader>' <Esc>:Marks<CR>
+    nnoremap <silent> <Leader>? <Esc>:History<CR>
+    nnoremap <silent> <Leader>/ <Esc>:execute 'Ag ' . input('Ag/')<CR>
+    nnoremap <silent> <Leader>gl <Esc>:Commits<CR>
+    nnoremap <silent> <Leader>ga <Esc>:BCommits<CR>
+  " }}}
+endif
 
 " {{{ git
 Plug 'tpope/vim-fugitive' " {{{
