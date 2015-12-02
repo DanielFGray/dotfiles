@@ -268,11 +268,10 @@ Plug 'mhinz/vim-tmuxify' " {{{
   \}
 " }}}
 Plug 'mhinz/vim-sayonara'
-Plug 'Shougo/neomru.vim'
 " }}}
 
-if has('gui_running') || ! exists('$TMUX')
-  Plug 'Shougo/unite.vim' " {{{
+" {{{ unite settings
+  Plug 'Shougo/unite.vim'
   Plug 'thinca/vim-unite-history'
   Plug 'Shougo/unite-help'
   Plug 'Shougo/unite-outline'
@@ -299,9 +298,11 @@ if has('gui_running') || ! exists('$TMUX')
     let g:unite_source_grep_recursive_opt = ''
   endif
 
+  nnoremap <silent> <leader><leader> <Esc>:Unite mapping -buffer-name=mapping -auto-resize<CR>
   nnoremap <silent> <leader>r <Esc>:Unite register -buffer-name=register -auto-resize<CR>
   nnoremap <silent> <leader>y <Esc>:Unite history/yank -buffer-name=yank<CR>
   nnoremap <silent> <leader>b <Esc>:Unite buffer -buffer-name=buffer<CR>
+  nnoremap <silent> <leader>: <Esc>:Unite command -buffer-name=command<CR>
   nnoremap <silent> <leader>/ <Esc>:Unite grep -buffer-name=grep<CR>
   nnoremap <silent> <leader>f <Esc>:Unite file_rec/async -buffer-name=files -toggle -auto-resize<CR>
   nnoremap <silent> <leader>e <Esc>:Unite buffer file_mru bookmark file -buffer-name=files<CR>
@@ -324,24 +325,7 @@ if has('gui_running') || ! exists('$TMUX')
     imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
     imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
   endfunction
-
-  " }}}
-else
-  Plug 'junegunn/fzf' " {{{
-    \, {'dir': '~/.fzf', 'do': 'yes \| ./install'}
-  " }}}
-  Plug 'junegunn/fzf.vim' " {{{
-    nnoremap <silent> <Leader><Leader> <Esc>:Maps<CR>
-    nnoremap <silent> <Leader>f <Esc>:Files<CR>
-    nnoremap <silent> <Leader>b <Esc>:Buffers<CR>
-    nnoremap <silent> <Leader>: <Esc>:Commands<CR>
-    nnoremap <silent> <Leader>' <Esc>:Marks<CR>
-    nnoremap <silent> <Leader>? <Esc>:History<CR>
-    nnoremap <silent> <Leader>/ <Esc>:execute 'Ag ' . input('Ag/')<CR>
-    nnoremap <silent> <Leader>gl <Esc>:Commits<CR>
-    nnoremap <silent> <Leader>ga <Esc>:BCommits<CR>
-  " }}}
-endif
+" }}}
 
 " {{{ git
 Plug 'tpope/vim-fugitive' " {{{
