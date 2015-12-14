@@ -93,14 +93,14 @@ Plug 'terryma/vim-multiple-cursors' " {{{
 " }}}
 if executable('ag')
   set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
-  set grepformat=%f:%l:%C:%m
+  set grepformat=%f:%l:%c:%m
 elseif executable('ack')
   set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
   set grepformat=%f:%l:%c:%m
 endif
 " }}}
 
-" {{{ completion
+" {{{ completion/building
 if has('nvim')
   Plug 'Shougo/Deoplete.nvim'
   Plug 'benekastah/neomake'
@@ -132,7 +132,7 @@ else
     inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
   endif " }}}
 endif
-
+Plug 'scrooloose/syntastic/' " {{{
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -144,7 +144,7 @@ let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
 if(executable('eslint'))
   let g:syntastic_javascript_checkers = ['eslint']
 endif
-
+" }}}
 Plug 'Shougo/neosnippet' " {{{
   Plug 'Shougo/neosnippet-snippets'
   let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
@@ -165,7 +165,6 @@ Plug 'Raimondi/delimitMate' " {{{
   let g:delimitMate_jump_expansion = 1
 " }}}
 Plug 'tpope/vim-endwise'
-Plug 'wellle/tmux-complete.vim'
 " }}}
 
 " {{{ formatting
@@ -221,18 +220,16 @@ Plug 'DanielFGray/DistractionFree.vim' " {{{
   noremap <Leader>df <Esc>:DistractionsToggle<CR>
 " }}}
 Plug 'mhinz/vim-startify' " {{{
+  let g:startify_change_to_vcs_root = 1
+
+  function! s:filter_header(str) abort
+    return map(split(system('figlet -f future "'. a:str .'"'), '\n'), '"         ". v:val') + ['','']
+  endfunction
+
   if has('nvim')
-    let g:startify_custom_header = [
-    \ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
-    \ '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃',
-    \ '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹',
-    \ '']
+    let g:startify_custom_header = s:filter_header('NeoVim')
   else
-    let g:startify_custom_header = [
-    \ '        ╻ ╻╻┏┳┓',
-    \ '        ┃┏┛┃┃┃┃',
-    \ '        ┗┛ ╹╹ ╹',
-    \ '']
+    let g:startify_custom_header = s:filter_header('Vim')
   endif
 " }}}
 " }}}
@@ -256,30 +253,20 @@ Plug 'jeetsukumaran/vim-filebeagle' " {{{
   let g:filebeagle_suppress_keymaps = 1
   map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
 " }}}
-Plug 'mhinz/vim-tmuxify' " {{{
-  let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
-  let g:tmuxify_global_maps = 1
-  let g:tmuxify_run = {
-    \ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%%ly/pdf}"; done',
-    \ 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%%tex/pdf}"; done',
-    \ 'ruby':       ' ruby %',
-    \ 'python':     ' python %',
-    \ 'javascript': ' node %'
-  \}
-" }}}
 Plug 'mhinz/vim-sayonara'
 " }}}
 
 " {{{ unite settings
   Plug 'Shougo/unite.vim'
-  Plug 'thinca/vim-unite-history'
+  Plug 'Shougo/neoyank.vim'
   Plug 'Shougo/unite-help'
   Plug 'Shougo/unite-outline'
   Plug 'Shougo/unite-session'
   Plug 'Shougo/neomru.vim'
+  Plug 'Shougo/context_filetype.vim'
   Plug 'tsukkee/unite-tag'
   Plug 'osyo-manga/unite-filetype'
-  Plug 'Shougo/context_filetype.vim'
+  Plug 'thinca/vim-unite-history'
 
   let g:unite_data_directory = '~/.vim/cache/unite'
   let g:unite_prompt = '» '
@@ -337,10 +324,35 @@ Plug 'tpope/vim-fugitive' " {{{
   nnoremap <Leader>gp <Esc>:Git push<CR>
   nnoremap <Leader>gu <Esc>:Git pull<CR>
 " }}}
-Plug 'jreybert/vimagit'
-Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter' " {{{
+  let g:gitgutter_map_keys = 0
+  nnoremap [c <Plug>GitGutterPrevHunk
+  nnoremap ]c <Plug>GitGutterNextHunk
+  nnoremap <Leader>hs <Plug>GitGutterStageHunk
+  nnoremap <Leader>hr <Plug>GitGutterRevertHunk
+  nnoremap <Leader>hp <Plug>GitGutterPreviewHunk
+" }}}
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim'
+Plug 'kmnk/vim-unite-giti' " {{{
+  nnoremap <silent> <leader>g <Esc>:Unite giti -buffer-name=giti -auto-resize<CR>
+" }}}
+" }}}
+
+" {{{ tmux
+Plug 'tejr/vim-tmux'
+Plug 'wellle/tmux-complete.vim'
+Plug 'mhinz/vim-tmuxify' " {{{
+  let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
+  let g:tmuxify_global_maps = 1
+  let g:tmuxify_run = {
+    \ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%%ly/pdf}"; done',
+    \ 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%%tex/pdf}"; done',
+    \ 'ruby':       ' ruby %',
+    \ 'python':     ' python %',
+    \ 'javascript': ' node %'
+  \}
+" }}}
 " }}}
 
 " {{{ latex
@@ -452,7 +464,10 @@ endif
 " {{{ functions
 
 function! PromptQuit() " {{{
-  echo 'close current buffer?'
+  echo 'Y - kill buffer and current window'
+  echo 'y - kill buffer but preserve window'
+  echo 'c - kill window but preserve buffer'
+  echo 'close current buffer? '
   let char = nr2char(getchar())
   if char ==# 'Y'
     Sayonara
@@ -571,6 +586,17 @@ function! AdjustWindowHeight(minheight, maxheight) " {{{
 endfunction
 " }}}
 
+function! PushBelowOrLeft() " {{{
+  if winheight(0) / 2 + 5 < line('$')
+    wincmd H
+    vert resize 80
+  else
+    wincmd J
+    call AdjustWindowHeight(1, winheight(0) / 2)
+  endif
+endfunction
+" }}}
+
 function! s:DiffOrig() " {{{
   " vimdiff between disk and buffer
   let filetype = &ft
@@ -600,13 +626,7 @@ function! s:DiffU() " {{{
   if empty(getline('$'))
     execute 'normal! Gdd'
   endif
-  if winheight(0) / 2 + 5 < line('$')
-    wincmd H
-    vert resize 80
-  else
-    wincmd J
-    call AdjustWindowHeight(1, winheight(0) / 2)
-  endif
+  call PushBelowOrLeft()
   normal! gg
   nnoremap <silent><buffer> q <Esc>:q<CR>
   setlocal bt=nofile bh=wipe nomod nobl noswf ro foldmethod=diff ft=diff
