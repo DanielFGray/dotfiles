@@ -59,8 +59,8 @@ Plug 'haya14busa/incsearch.vim' " {{{
   map /  <Plug>(incsearch-forward)
   map ?  <Plug>(incsearch-backward)
   map g/ <Plug>(incsearch-stay)
-  map n  <Plug>(incsearch-nohl-n)zvzz
-  map N  <Plug>(incsearch-nohl-N)zvzz
+  map n  <Plug>(incsearch-nohl-n)<C-Z>
+  map N  <Plug>(incsearch-nohl-N)<C-Z>
   map *  <Plug>(incsearch-nohl-*)
   map #  <Plug>(incsearch-nohl-#)
   map g* <Plug>(incsearch-nohl-g*)
@@ -109,14 +109,14 @@ else
   Plug 'Shougo/vimproc' " {{{
   \, {'do': 'make'}
   " }}}
-  if has('lua') && (version >= 704 || version == 703 && has('patch885'))
+  if has('lua') && (version >= 704 || version == 703 && has('patch885')) " {{{
     Plug 'Shougo/neocomplete.vim'
     let g:completionEngine = 'neocomplete'
   elseif has('lua')
     Plug 'Shougo/neocomplcache.vim'
     let g:completionEngine = 'neocomplcache'
   endif
-  if exists('g:completionEngine') " {{{
+  if exists('g:completionEngine')
     let g:acp_enableAtStartup = 0
     let g:{g:completionEngine}#enable_at_startup = 1
     let g:{g:completionEngine}#enable_smart_case = 1
@@ -240,7 +240,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-eunuch'
 Plug 'vim-utils/vim-husk'
 Plug 'sjl/gundo.vim' " {{{
-  nnoremap <F5> :GundoToggle<CR>
+  nnoremap <Leader>u <Esc>:GundoToggle<CR>
   let g:gundo_right = 1
   let g:gundo_width = 60
   let g:gundo_preview_height = 20
@@ -248,12 +248,21 @@ Plug 'sjl/gundo.vim' " {{{
 " Plug 'dahu/SearchParty'
 " Plug 'dahu/Nexus'
 Plug 'chrisbra/NrrwRgn'
-Plug 'Shougo/echodoc'
+Plug 'Shougo/echodoc' " {{{
+let g:echodoc_enable_at_startup = 1
+" }}}
 Plug 'jeetsukumaran/vim-filebeagle' " {{{
   let g:filebeagle_suppress_keymaps = 1
   map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
 " }}}
 Plug 'mhinz/vim-sayonara'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'junegunn/fzf' " {{{
+\, { 'dir': '~/.fzf', 'do': './install --all' }
+" }}}
+Plug 'junegunn/fzf.vim'
+Plug 'shuber/vim-promiscuous'
 " }}}
 
 " {{{ unite settings
@@ -269,16 +278,14 @@ Plug 'mhinz/vim-sayonara'
   Plug 'thinca/vim-unite-history'
 
   let g:unite_data_directory = '~/.vim/cache/unite'
-  let g:unite_prompt = '» '
-  let g:unite_source_history_yank_enable = 1
-  let g:unite_winheight = 10
+  let g:unite_winheight = 15
   let g:unite_split_rule = 'botright'
-  let g:unite_force_overwrite_statusline = 0
+  let g:unite_enable_start_insert = 1
   if executable('ag')
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
     let g:unite_source_grep_recursive_opt = ''
-    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
+    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-l']
   elseif executable('ack')
     let g:unite_source_grep_command = 'ack'
     let g:unite_source_grep_default_opts = '--no-heading --no-color'
@@ -291,7 +298,7 @@ Plug 'mhinz/vim-sayonara'
   nnoremap <silent> <leader>b <Esc>:Unite buffer -buffer-name=buffer<CR>
   nnoremap <silent> <leader>: <Esc>:Unite command -buffer-name=command<CR>
   nnoremap <silent> <leader>/ <Esc>:Unite grep -buffer-name=grep<CR>
-  nnoremap <silent> <leader>f <Esc>:Unite file_rec/async -buffer-name=files -toggle -auto-resize<CR>
+  nnoremap <silent> <leader>f <Esc>:Unite file_rec/<C-R>=has('nvim')?'neovim':'async'<CR> -buffer-name=files -toggle -auto-resize<CR>
   nnoremap <silent> <leader>e <Esc>:Unite buffer file_mru bookmark file -buffer-name=files<CR>
   nnoremap <silent> <leader>o <Esc>:Unite outline -buffer-name=outline -auto-resize<CR>
   nnoremap <silent> <leader>h <Esc>:Unite help -buffer-name=help -auto-resize<CR>
@@ -304,6 +311,7 @@ Plug 'mhinz/vim-sayonara'
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
+    imap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
     imap <buffer> <C-j> <Plug>(unite_select_next_line)
     imap <buffer> <C-k> <Plug>(unite_select_previous_line)
     imap <buffer> <esc> <Plug>(unite_exit)
@@ -316,7 +324,7 @@ Plug 'mhinz/vim-sayonara'
 
 " {{{ git
 Plug 'tpope/vim-fugitive' " {{{
-  nnoremap <Leader>gs <Esc>:Gstatus<CR>
+  nnoremap <Leader>gs <Esc>:Gstatus<CR>:call PushBelowOrLeft()<CR><C-L>
   nnoremap <Leader>gd <Esc>:Gdiff<CR>
   nnoremap <Leader>gc <Esc>:Gcommit<CR>
   nnoremap <Leader>gb <Esc>:Gblame<CR>
@@ -388,6 +396,7 @@ Plug 'marijnh/tern_for_vim' " {{{
 " }}}
 Plug 'walm/jshint.vim'
 Plug 'heavenshell/vim-jsdoc'
+Plug 'mxw/vim-jsx'
 " }}}
 
 " {{{ haskell
@@ -416,7 +425,7 @@ set equalalways splitright
 set wildmenu wildcharm=<C-Z>
 set switchbuf=useopen,usetab
 set tabstop=2 shiftwidth=2 expandtab
-set foldmethod=marker foldopen-=block foldtext=MyFoldText()
+set foldmethod=marker foldopen-=block foldtext=getline(v:foldstart)
 set noruler rulerformat=%32(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set laststatus=2
 set showcmd noshowmode
@@ -656,21 +665,6 @@ command! -bar -nargs=0 W call DiffWrite()
 nnoremap <silent> <Leader>w <Esc>:W<CR>
 " }}}
 
-function! MyFoldText() " {{{
-  " Courtesy Steve Losch
-  let line = getline(v:foldstart)
-  let nucolwidth = &fdc + &number * &numberwidth
-  let windowwidth = winwidth(0) - nucolwidth - 3
-  let foldedlinecount = v:foldend - v:foldstart
-  let onetab = strpart('          ', 0, &tabstop)
-  let line = substitute(line, '\t', onetab, 'g')
-  let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-  let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-  return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
-endfunction
-command! DiffSaved call s:DiffWithSaved()
-" }}}
-
 " }}}
 
 " {{{ autocmds
@@ -701,10 +695,11 @@ augroup VIM
   \ call pencil#init({ 'wrap': 'hard', 'autoformat': 0 }) |
   \ setlocal nocursorline nocursorcolumn
 
-  autocmd FileType *
+  autocmd BufEnter *
   \ if &buftype != '' |
   \   nnoremap <silent><buffer> q <Esc>:<C-R>=&diff==1
-  \     ?'<bar>wincmd p<bar>diffoff<bar>wincmd p<bar>':''<CR>bd<CR> |
+  \     ?'wincmd p<Bar>diffoff<Bar>wincmd p<Bar>':''<CR>bd<CR> |
+  \   setlocal nocursorcolumn nocursorline colorcolumn=0 |
   \ endif
 
   autocmd FileType help
@@ -762,6 +757,8 @@ nnoremap g, g,zvzt
 nnoremap <C-O> <C-O>zvzz
 nnoremap <F6> <Esc>:set paste!<CR>
 inoremap <F6> <C-O>:set paste!<CR>
+nnoremap <C-Z> <esc>zMzvzt
+nnoremap <Leader> <Nop>
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
 if exists(':SudoWrite')
   cabbrev w!! SudoWrite
