@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]; then
+  printf 1>&2 'no file provided\n'
+  exit 1
+fi
+
+currentpdf="$1"
+filenoext="${currentpdf%.*}"
+tempfile="temp-${filenoext}.png"
+
+# crop and optimize for OCR
+convert "${currentpdf}" \
+  -normalize \
+  -density 150 \
+  -depth 8 \
+  -quality 100 \
+  -crop 100%x15%+0+0 \
+  "${tempfile}"
+# -resample 90 \
+# -sharpen 0x1.0 \
+# -threshold 75% \
+
+# convert image to string
+mapfile -t lines < <(tesseract "${tempfile}" - - | grep -v '^\s*$')
+printf '%s\n' "${lines[@]}"
+
+# tempfile unneeded now
+rm "${tempfile}"
+
+# grab first letter from first word of first line
+contractor=${lines[0]:0:1}
+# grab series of digits from second line  |  ticket=${lines[2]#"${lines[2]%%[0-9]*}"}
+ticket=$(sed 's/[^0-9]//g' <<< "${lines[1]}")
+
+# if ${contractor}${ticket} does not match /[A-Z][0-9]{6}/
+# add to list for manual interaction
+#   echo "${currentpdf}" >> unsure.txt)
+# else
+echo "mv ${currentpdf}" "$(dirname ${currentpdf})/${contractor}${ticket}.pdf"

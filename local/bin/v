@@ -55,9 +55,9 @@ declare -a vimopts
 
 while true; do
   case "$1" in
-    '-h'|'--help') usage; exit 0 ;;
-    '-d') noselect=true; ;;
-    '-s') sendpane=true ;;
+    -h|--help) usage; exit 0 ;;
+    -d) noselect=true; ;;
+    -s) sendpane=true ;;
     *) break ;;
   esac
   shift
@@ -69,7 +69,7 @@ if [[ -n "$serv" ]]; then
   if (( $# == 0 )); then
     ! has fv && die 'enter a file name or install fv'
     if inTerm; then
-      # fv -c "v ${noselect:+-d}"
+      fv -c "v ${noselect:+-d}"
       exit 0
     else
       x-terminal-emulator -e 'fv' '-c' 'v'

@@ -25,9 +25,6 @@ setCmd() {
   fi
 }
 
-if ! has 'fzf'; then
-  die 'requires fzf installed'
-fi
 
 cmd='vim'
 cmdopts=()
@@ -45,26 +42,23 @@ while getopts "hac:" opt; do
 done
 shift "$((OPTIND-1))"
 
-if [[ "$cmd" == 'vim' ]]; then
-  if [[ -n "$DISPLAY" ]] && has v; then
-    cmd='v'
-  elif has 'nvim'; then
-    cmd='nvim'
-  fi
+has 'fzf' || die 'requires fzf installed'
+
+if [[ "$cmd" == 'vim' && -n "$DISPLAY" ]] && has v; then
+  cmd='v'
 fi
 
-# for c in 'ag' 'ack' 'grep'; do
-for c in 'grep'; do
+for c in 'ag' 'ack' 'grep'; do
   if has "$c"; then
     searchcmd="$c"
     break
   fi
 done
 
-# if [[ $searchcmd  == 'grep' ]]; then
-#   err 'you should strongly consider installing ag or ack'
-#   sleep .5
-# fi
+if [[ $searchcmd  == 'grep' ]]; then
+  err 'grep is slow, you should strongly consider installing ag or ack'
+  sleep .5
+fi
 
 if [[ -n "$1" ]]; then
   if [[ -d "$1" ]]; then
@@ -78,14 +72,13 @@ fi
 case "$searchcmd" in
   'ag')
     searchopts+=( '--color' )
+    # searchopts+=( '-l' )
     if [[ "$allfiles" == true ]]; then
-      searchopts+=( '-a' '--hidden' )
-    # else
-    #   searchopts+=( '-t' )
+      searchopts+=( '-u' '--hidden' )
     fi
-    if [[ "$searchstr" == '' ]]; then
-      searchopts+=( '-g' '' )
-    fi
+    # if [[ "$searchstr" == '' ]]; then
+    #   searchopts+=( '-l' )
+    # fi
     ;;
   'ack')
     if [[ "$searchstr" == '' ]]; then
@@ -120,13 +113,17 @@ if [[ "$searchstr" != '' ]]; then
   searchopts+=( "$searchstr" )
 fi
 
-# err "$searchcmd ${searchopts[*]}" # verbose option?
-mapfile -t files < <(command "$searchcmd" "${searchopts[@]}" 2> /dev/null | fzf -e -m --reverse --ansi)
 
-if [[ ${#files[@]} == 0 ]]; then
-  # err 'no files selected, exiting' # verbose option?
-  exit 0
+
+choices=$($searchcmd "${searchopts[@]}" 2> /dev/null |
+  fzf --ansi --cycle --multi) || exit 1
+
+if [[ "$searchstr" != '' ]]; then
+  if [[ $searchcmd == 'ag' ]]; then
+    choices=$(cut -d: -f1 <<< "$choices")
+  fi
 fi
 
-# err "$cmd ${cmdopts[@]} ${files[*]}" # verbose option?
-exec $cmd "${cmdopts[@]}" "${files[@]}"
+mapfile -t choices <<< "$choices"
+
+$cmd ${cmdopts[@]} ${choices[@]}

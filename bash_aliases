@@ -1,24 +1,37 @@
-if [[ -e $HOME/dotfiles/less.vim ]]; then
-  lessvim=" -S $HOME/dotfiles/less.vim"
-elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
-  lessvim=' -S /usr/local/share/vim/vim74/macros/less.vim'
-elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
-  lessvim=' -S /usr/share/vim/vim74/macros/less.vim'
-fi
-if [[ -e ${HOME}/.vim/bundle/vim-noctu/colors/noctu.vim ]]; then
-  vimcolor=" -S ${HOME}/.vim/bundle/vim-noctu/colors/noctu.vim"
-fi
-export PAGER="/bin/sh -c \"col -b | vim -u NONE $lessvim $vimcolor -c 'set ft=man' -\""
+{
+  if [[ -e ~/dotfiles/less.vim ]]; then
+    lessvim="-S ${HOME}/dotfiles/less.vim"
+  elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
+    lessvim="-S /usr/local/share/vim/vim74/macros/less.vim"
+  elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
+    lessvim="-S /usr/share/vim/vim74/macros/less.vim"
+  fi
+  vimcolor="-S '$(find ~/.vim/**/colors/**/*.vim | grep noctu)'"
+  export PAGER="bash -c \"col -b | vim -u NONE $lessvim $vimcolor -c 'set ft=man' -\""
+} &> /dev/null
 export EDITOR='vim'
 export HISTFILESIZE=500000
 export HISTSIZE=100000
 unset GREP_OPTIONS
 
-if [[ -e ${HOME}/.bash_utils ]]; then
-  source ${HOME}/.bash_utils
-else
-  echo -e "\e[31mbash_utils not found\e[0m" >&2
-fi
+has() {
+  command -v $1 &> /dev/null
+}
+
+err() {
+  echo -e "\e[31m$1\e[0m" >&2
+}
+
+ask() {
+  read -n1 -p "$* " ans
+  echo
+  [[ ${ans^} == Y* ]]
+}
+
+tput_green=$(tput setaf 2)
+tput_red=$(tput setaf 1)
+tput_blue=$(tput setaf 4)
+tput_reset="\e[0m"
 
 if [[ -f /etc/debian_version ]]; then
   PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
@@ -28,19 +41,17 @@ if [[ -f /etc/debian_version ]]; then
       alias canhaz="sudo $h install "
       alias updupg="sudo $h upgrade "
       pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
-      break;
+      break
     fi
   done
   alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-  pkgsearch() { apt-cache search "$@" | sort | less ;}
 elif [[ -f /etc/arch-release ]]; then
   for h in 'pacaur' 'yaourt' 'pacman'; do
     if has $h; then
       alias canhaz="sudo $h -S "
       alias updupg="sudo $h -Syu "
       alias pkgrm="sudo $h -Rsu "
-      pkgsearch() { unbuffer $h -Ss "$@" | less ;}
-      break;
+      break
     fi
   done
   # [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
@@ -69,7 +80,7 @@ alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
 
 cd() {
   if [[ -z "$@" ]]; then
-    builtin cd "$HOME" && ls
+    builtin cd ~ && ls
   else
     local dir="$1"
     shift
@@ -95,7 +106,7 @@ txs() {
 
 sprunge() { command curl -sF 'sprunge=<-' http://sprunge.us ;}
 
-pgrep() { ps aux | grep "$1" | grep -v grep ;}
+pgrep() { ps aux | command grep -P "$@" | command grep -v grep ;}
 
 newImage() {
   convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:"$1" "$2" &&
@@ -116,14 +127,10 @@ changeroot() {
   sudo mount -o bind /dev "$1"/dev
   sudo mount -t devpts pts "$1"/dev/pts/
   sudo chroot "$1"/ /bin/bash
-  read -n1 -p "unmount $1? " unmount
-  case $unmount in
-    [Yy]* )
-      sudo umount -l "$1"/
-      sudo chroot /
-      break ;;
-    *) break ;;
-  esac
+  ask 'unmount $1? ' && (
+    sudo umount -l $1
+    sudo chroot /
+  )
 }
 
 extract() {
@@ -168,7 +175,7 @@ whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
 ding() {
   [[ -n "$1" ]] && notify-send -u critical "$@" &> /dev/null
-  paplay ${HOME}/downloads/ding.ogg &> /dev/null
+  paplay ~/downloads/ding.ogg &> /dev/null
 }
 
 if has synclient && has vipe; then

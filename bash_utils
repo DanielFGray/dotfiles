@@ -25,10 +25,7 @@ err() {
 }
 
 die() {
-  if [[ -n "$1" ]]; then
-    err "$1"
-  fi
-  # ! inTerm && exit 1
+  [[ -n "$1" ]] && err "$1"
   exit 1
 }
 
@@ -50,11 +47,7 @@ ask() {
   if inTerm; then
     read -n1 -p "$* " ans
     echo
-    if [[ ${ans^} == Y* ]]; then
-      return 0
-    else
-      return 1
-    fi
+    [[ ${ans^} == Y* ]]
   else
     zenity --question --text="$@"
   fi

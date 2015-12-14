@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -t 0 ]; then
+  echo 'hi'
+else
+  zenity --info --text="hi" 2> /dev/null
+fi

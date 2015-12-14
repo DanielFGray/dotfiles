@@ -1,0 +1,8 @@
+#!/usr/bin/env python2
+import sys
+from pyPdf import PdfFileWriter, PdfFileReader
+
+inputpdf = PdfFileReader(open(sys.argv[1], "rb"))
+
+if inputpdf.numPages > 1:
+    print(inputpdf.numPages)

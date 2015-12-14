@@ -1,0 +1,4 @@
+#! /bin/sh
+cd /home/dan/Downloads/pokemon
+exec ./PokeMMO.sh
+
