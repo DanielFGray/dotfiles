@@ -2,20 +2,29 @@ ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
 DEFAULT_USER="dan"
-plugins=(vi-mode git git-extras zsh-syntax-highlighting)
+plugins=( vi-mode git git-extras zsh-syntax-highlighting )
 source $ZSH/oh-my-zsh.sh
 
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 if command -v fzf &> /dev/null; then
   unalias historygrep
   function historygrep {
-    print -z $(fc -nl 1 | grep -v 'history' | fzf +s -e -q "$*")
-  }
-  function fzcmd {
-    print -z $(printf -rl $commands:t ${(k)functions} ${(k)aliases} | sort | uniq | fzf -e -q "$*")
+    print -z $(fc -nl 1 | grep -v '^history' | fzf --tac +s -e -q "$*")
   }
 fi
+
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
 
 unfunction cd
 chpwd() {
@@ -46,87 +55,94 @@ bindkey '^[[8~' end-of-line
 bindkey '^[[1~' beginning-of-line
 bindkey '^[[4~' end-of-line
 
-zle -N fancy-ctrl-z
-zle -N delete-in
-zle -N change-in
-zle -N delete-around
-zle -N change-around
-
-bindkey '^Z' fancy-ctrl-z
-bindkey -M vicmd 'ca' change-around
-bindkey -M vicmd 'ci' change-in
 bindkey -M vicmd 'cc' vi-change-whole-line
-bindkey -M vicmd 'da' delete-around
-bindkey -M vicmd 'di' delete-in
 bindkey -M vicmd 'dd' kill-whole-line
-
-fancy-ctrl-z() {
-	if [[ "$#BUFFER" == 0 ]]; then
-		bg
-		zle redisplay
-	else
-		zle push-input
-	fi
-}
+# bindkey -M vicmd 'Y' y$
 
 delete-in() {
-	local CHAR LCHAR RCHAR LSEARCH RSEARCH COUNT
-	read -k CHAR
-	if [[ "$CHAR" == 'w' ]]; then
-		zle vi-backward-word
-		LSEARCH=$CURSOR
-		zle vi-forward-word
-		RSEARCH=$CURSOR
-		RBUFFER="$BUFFER[$RSEARCH + 1, ${#BUFFER}]"
-		LBUFFER="$LBUFFER[1, $LSEARCH]"
-		return
-	elif [[ "$CHAR" == '(' ]] || [[ "$CHAR" == ')' ]] || [[ "$CHAR" == 'b' ]]; then
-		LCHAR="("
-		RCHAR=")"
-	elif [[ "$CHAR" == '[' ]] || [[ "$CHAR" == ']' ]]; then
-		LCHAR="["
-		RCHAR="]"
-	elif [[ $CHAR == '{' ]] || [[ $CHAR == '}' ]] || [[ "$CHAR" == 'B' ]]; then
-		LCHAR='{'
-		RCHAR='}'
-	else
-		LCHAR="$CHAR"
-		RCHAR="$CHAR"
-	fi
-	LSEARCH=${#LBUFFER}
-	while (( $LSEARCH > 0 )) && [[ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]]; do
-		LSEARCH=$(expr $LSEARCH - 1)
-	done
-	if [[ "$LBUFFER[$LSEARCH]" != "$LCHAR" ]]; then
-		return
-	fi
-	RSEARCH=0
-	while [[ "$RSEARCH" < $(expr ${#RBUFFER} + 1 ) ]] && [[ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]]; do
-		RSEARCH=$(expr $RSEARCH + 1)
-	done
-	if [[ "$RBUFFER[$RSEARCH]" != "$RCHAR" ]]; then
-		return
-	fi
-	RBUFFER="$RBUFFER[$RSEARCH, ${#RBUFFER}]"
-	LBUFFER="$LBUFFER[1, $LSEARCH]"
+  local CHAR LCHAR RCHAR LSEARCH RSEARCH COUNT
+  read -k CHAR
+  if [[ "$CHAR" == 'w' ]];then
+    zle vi-backward-word
+    LSEARCH="$CURSOR"
+    zle vi-forward-word
+    RSEARCH="$CURSOR"
+    RBUFFER="$BUFFER[$RSEARCH+1,${#BUFFER}]"
+    LBUFFER="$LBUFFER[1,$LSEARCH]"
+    return
+  elif [[ "$CHAR" == '(' || "$CHAR" == ')' ]];then
+    LCHAR='('
+    RCHAR=')'
+  elif [[ "$CHAR" == '[' || "$CHAR" == ']' ]];then
+    LCHAR='['
+    RCHAR=']'
+  elif [[ "$CHAR" == '{' || "$CHAR" == '}' ]];then
+    LCHAR='{'
+    RCHAR='}'
+  else
+    LSEARCH="${#LBUFFER}"
+    while (( LSEARCH > 0 )) && [[ "$LBUFFER[$LSEARCH]" != "$CHAR" ]]; do
+      (( LSEARCH-- ))
+    done
+    RSEARCH=0
+    while [[ $RSEARCH -lt (( ${#RBUFFER} + 1 )) ]] && [[ "$RBUFFER[$RSEARCH]" != "$CHAR" ]]; do
+      (( RSEARCH++ ))
+    done
+    RBUFFER="$RBUFFER[$RSEARCH,${#RBUFFER}]"
+    LBUFFER="$LBUFFER[1,$LSEARCH]"
+    return
+  fi
+  COUNT=1
+  LSEARCH="${#LBUFFER}"
+  while (( LSEARCH > 0 )) && (( COUNT > 0 )); do
+    (( LSEARCH-- ))
+    if [[ "$LBUFFER[$LSEARCH]" == "$RCHAR" ]];then
+      (( COUNT++ ))
+    fi
+    if [[ "$LBUFFER[$LSEARCH]" == "$LCHAR" ]];then
+      (( COUNT-- ))
+    fi
+  done
+  COUNT=1
+  RSEARCH=0
+  while (( "$RSEARCH" < ${#RBUFFER} + 1 )) && [[ "$COUNT" > 0 ]]; do
+    (( RSEARCH++ ))
+    if [[ $RBUFFER[$RSEARCH] == "$LCHAR" ]];then
+      (( COUNT++ ))
+    fi
+    if [[ $RBUFFER[$RSEARCH] == "$RCHAR" ]];then
+      (( COUNT-- ))
+    fi
+  done
+  RBUFFER="$RBUFFER[$RSEARCH,${#RBUFFER}]"
+  LBUFFER="$LBUFFER[1,$LSEARCH]"
 }
-
-change-in() {
-	zle delete-in
-	zle vi-insert
-}
+zle -N delete-in
+bindkey -M vicmd 'di' delete-in
 
 delete-around() {
-	zle delete-in
-	zle vi-backward-char
-	zle vi-delete-char
-	zle vi-delete-char
+  zle delete-in
+  zle vi-backward-char
+  zle vi-delete-char
+  zle vi-delete-char
 }
+zle -N delete-around
+bindkey -M vicmd 'da' delete-around
+
+change-in() {
+  zle delete-in
+  zle vi-insert
+}
+zle -N change-in
+bindkey -M vicmd 'ci' change-in
 
 change-around() {
-	zle delete-in
-	zle vi-backward-char
-	zle vi-delete-char
-	zle vi-delete-char
-	zle vi-insert
+  zle delete-in
+  zle vi-backward-char
+  zle vi-delete-char
+  zle vi-delete-char
+  zle vi-insert
 }
+zle -N change-around
+bindkey -M vicmd 'ca' change-around
+

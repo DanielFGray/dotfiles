@@ -44,12 +44,12 @@ Plug 'justinmk/vim-sneak' " {{{
   map <silent> T <Plug>Sneak_T
   map <silent> ; <Plug>SneakNext
   map <silent> , <Plug>SneakPrevious
-  augroup SneakPluginColors
+  augroup SneakPlugincolors
     autocmd!
     autocmd ColorScheme * hi SneakPluginTarget
-      \ guifg=black guibg=red ctermfg=black ctermbg=red
+    \ guifg=black guibg=red ctermfg=black ctermbg=red
     autocmd ColorScheme * hi SneakPluginScope
-      \ guifg=black guibg=yellow ctermfg=black ctermbg=yellow
+    \ guifg=black guibg=yellow ctermfg=black ctermbg=yellow
   augroup END
 " }}}
 Plug 'haya14busa/incsearch.vim' " {{{
@@ -245,8 +245,6 @@ Plug 'sjl/gundo.vim' " {{{
   let g:gundo_width = 60
   let g:gundo_preview_height = 20
 " }}}
-" Plug 'dahu/SearchParty'
-" Plug 'dahu/Nexus'
 Plug 'chrisbra/NrrwRgn'
 Plug 'Shougo/echodoc' " {{{
 let g:echodoc_enable_at_startup = 1
@@ -303,6 +301,7 @@ Plug 'shuber/vim-promiscuous'
   nnoremap <silent> <leader>o <Esc>:Unite outline -buffer-name=outline -auto-resize<CR>
   nnoremap <silent> <leader>h <Esc>:Unite help -buffer-name=help -auto-resize<CR>
   nnoremap <silent> <leader>t <Esc>:Unite tag tag/file -buffer-name=tag -auto-resize<CR>
+  " nnoremap <silent> q: <Esc>:Unite history/command -buffer-name=history/command -auto-resize<CR>
 
   autocmd FileType unite call s:unite_settings()
   function! s:unite_settings()
@@ -328,7 +327,6 @@ Plug 'tpope/vim-fugitive' " {{{
   nnoremap <Leader>gd <Esc>:Gdiff<CR>
   nnoremap <Leader>gc <Esc>:Gcommit<CR>
   nnoremap <Leader>gb <Esc>:Gblame<CR>
-  nnoremap <Leader>gl <Esc>:Glog<CR>
   nnoremap <Leader>gp <Esc>:Git push<CR>
   nnoremap <Leader>gu <Esc>:Git pull<CR>
 " }}}
@@ -431,9 +429,9 @@ set laststatus=2
 set showcmd noshowmode
 set hidden
 set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
-" set listchars+=eol:↵
+" set listchars+=eol:¬
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\
-set nolazyredraw
+" set nolazyredraw
 set autoread
 set report=0
 set confirm
@@ -701,6 +699,9 @@ augroup VIM
   \     ?'wincmd p<Bar>diffoff<Bar>wincmd p<Bar>':''<CR>bd<CR> |
   \   setlocal nocursorcolumn nocursorline colorcolumn=0 |
   \ endif
+
+  " autocmd InsertLeave * hi CursorLine ctermbg=0
+  " autocmd InsertEnter * hi CursorLine ctermbg=7
 
   autocmd FileType help
   \ wincmd L |

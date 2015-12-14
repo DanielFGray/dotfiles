@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+declare installer
+
+has() {
+  command -v $1 &> /dev/null
+}
+
+fzf() {
+  $(which fzf) -e --multi --toggle-sort=\` --cycle --ansi --header='press ctrl-x to get more info on a package, use ` to toggle sort' "$@"
+}
+
+tput_green=$(tput setaf 2)
+tput_red=$(tput setaf 1)
+tput_blue=$(tput setaf 4)
+tput_reset=$(tput sgr0)
+
+if [[ -f /etc/debian_version ]]; then
+  for installer in 'apt' 'apt-get'; do
+    if has $installer; then
+      o=$(
+        apt-cache search '' |
+        sed -r "s|^([^ ]+)|${tput_green}\1${tput_reset}|" |
+        fzf --bind='ctrl-x:execute( echo {} | less )' --query="$@"
+        # fzf --bind="ctrl-x:execute: apt-cache show $(echo {} | tr -cd '\12\15\40-\176' | awk '{print $1}') | less" --query="$@"
+      )
+      o=$(awk '{print $1}' <<< "$o" | tr -cd '\12\15\40-\176')
+      o=${o//$'\n'/ }
+      [[ $o == '' ]] && exit
+      sudo $installer -S "$o"
+      break
+    fi
+  done
+elif [[ -f /etc/arch-release ]]; then
+  for installer in 'pacaur' 'yaourt' 'packer' 'pacman'; do
+    if has $installer; then
+      o=$(
+        $installer -Ss |
+        sed -rn "/^[^ ]/{s/$/ -/; x; s|^([^/]+)/([^ ]+)|[${tput_blue}\1${tput_reset}] ${tput_green}\2${tput_reset}|; p;}; /^ /{s/^ */ /; x; G; s/\n//; x}" |
+        fzf --bind="ctrl-x:execute( bash -c \"pacman -Qi $(tr -cd '\12\15\40-\176' <<< {} | awk '{print $2}')\" ) | less" --query="$@"
+      )
+      [[ $o == '' ]] && exit
+      o=$(awk '{print $2}' <<< "$o" | tr -cd '\12\15\40-\176')
+      sudo apt-get install ${o//$'\n'/ }
+      break
+    fi
+  done
+fi

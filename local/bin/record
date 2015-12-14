@@ -40,6 +40,7 @@ delay() {
 
 getdimensions() {
   if [[ "$window" == true ]]; then
+    local xwininfo x y w h
     echo -ne 'click a window\r'
     xwininfo=$(xwininfo)
     read x y w h < <(awk -F':' '/Absolute upper-left X/ { x=$2 }
@@ -62,9 +63,9 @@ getdimensions() {
 }
 
 record-byzanz() {
-  #TODO: maybe remove byzanz altogether in favor of plain ffmpeg?
+  #TODO: remove byzanz altogether in favor of plain ffmpeg
   byzanz-record \
-    --duration="$duration"\
+    --duration="${duration:-10}"\
     --x="${dimensions['x']}"\
     --y="${dimensions['y']}"\
     --width="${dimensions['w']}"\
@@ -74,14 +75,12 @@ record-byzanz() {
 }
 
 record-ffmpeg() {
-  if [[ -z $verbose ]]; then
-    loglevel='panic'
-  else
-    loglevel='info'
-  fi
+  local loglevel size offset
+  loglevel='panic'
+  [[ -n $verbose ]] && loglevel='panic'
   size="${dimensions['w']}x${dimensions['h']}"
   offset="${DISPLAY}.0+${dimensions['x']},${dimensions['y']}"
-  ffmpeg -y -loglevel "${loglevel}" -f x11grab -s "$size" -i "$offset" -t "$duration" \
+  ffmpeg -y -loglevel "$loglevel" -f x11grab -s "$size" -i "$offset" ${duration:+-t $duration} \
     -c:v libvpx -crf 12 -s "$size" -b:v 1200k \
     -preset veryslow \
     -b 1000k -threads 4 \
@@ -113,17 +112,18 @@ if [[ -f "$file" && "$overwrite" == false ]] && ! ask "overwrite ${file}? "; the
 fi
 
 getdimensions
-delay
 case "$file" in
   *gif)
     if ! has byzanz-record; then
       die 'need byzanz-record for recording gifs'
     fi
+    delay
     record-byzanz ;;
   *webm)
     if ! has ffmpeg; then
       die 'need ffmpeg for recording webms'
     fi
+    delay
     record-ffmpeg ;;
   *) die 'unknown file type, must be gif or webm' ;;
 esac

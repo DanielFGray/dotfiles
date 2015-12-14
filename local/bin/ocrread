@@ -1,0 +1,6 @@
+#!/usr/bin/env python2
+import sys
+from tesseract import *
+im = Image.open(sys.argv[1])
+text = image_to_string(im)
+print(text)
