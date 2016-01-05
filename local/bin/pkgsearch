@@ -20,13 +20,13 @@ tput_blue="${esc}[34m"
 if [[ -f /etc/debian_version ]]; then
   for installer in 'apt' 'apt-get'; do
     if has $installer; then
-      o=$(
+      mapfile -t pkgs < <(
         apt-cache search '' |
         sed -r "s|^([^ ]+)|${tput_green}\1${tput_reset}|" |
         fzf --query="$*" |
-        awk 'NR==1{printf "%s", $2; next} {printf " %s", $2}'
+        awk '{print $1}'
       )
-      [[ -z "$o" ]] && exit
+      (( ${#pkgs} > 0 )) || exit
       sudo $installer install $o
       break
     fi
@@ -36,14 +36,14 @@ elif [[ -f /etc/arch-release ]]; then
     if has "$installer"; then
       search="$installer"
       (( $# < 1)) && search='pacman'
-      o=$(
+      mapfile -t pkgs < <(
         $search -Ss "$@" |
         sed -rn "/^[^ ]/{s/$/ -/; x; s|^([^/]+)/([^ ]+)|[${tput_blue}\1${tput_reset}] ${tput_green}\2${tput_reset}|; p;}; /^ /{s/^ */ /; x; G; s/\n//; x}" |
         fzf --header-lines=1 |
-        awk 'NR==1{printf "%s", $2; next} {printf " %s", $2}'
+        awk '{print $2}'
       )
-      [[ -z "$o" ]] && exit
-      ${installer/pacman/sudo pacman} -S $o
+      (( ${#pkgs} > 0 )) || exit
+      ${installer/pacman/sudo pacman} -S "${pkgs[@]}"
       break
     fi
   done
