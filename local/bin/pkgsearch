@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 
 declare installer
+declare search
 
 has() {
   command -v $1 &> /dev/null
 }
 
 fzf() {
-  $(which fzf) -e --multi --toggle-sort=\` --cycle --ansi --header='press ctrl-x to get more info on a package, use ` to toggle sort' "$@"
+  $(which fzf) -e --tac --multi --cycle --ansi "$@"
 }
 
-tput_green=$(tput setaf 2)
-tput_red=$(tput setaf 1)
-tput_blue=$(tput setaf 4)
-tput_reset=$(tput sgr0)
+esc=$(printf '\033')
+tput_reset="${esc}[0m"
+tput_red="${esc}[31m"
+tput_green="${esc}[32m"
+tput_blue="${esc}[34m"
 
 if [[ -f /etc/debian_version ]]; then
   for installer in 'apt' 'apt-get'; do
@@ -21,27 +23,27 @@ if [[ -f /etc/debian_version ]]; then
       o=$(
         apt-cache search '' |
         sed -r "s|^([^ ]+)|${tput_green}\1${tput_reset}|" |
-        fzf --bind='ctrl-x:execute( echo {} | less )' --query="$@"
-        # fzf --bind="ctrl-x:execute: apt-cache show $(echo {} | tr -cd '\12\15\40-\176' | awk '{print $1}') | less" --query="$@"
+        fzf --query="$*" |
+        awk 'NR==1{printf "%s", $2; next} {printf " %s", $2}'
       )
-      o=$(awk '{print $1}' <<< "$o" | tr -cd '\12\15\40-\176')
-      o=${o//$'\n'/ }
-      [[ $o == '' ]] && exit
-      sudo $installer -S "$o"
+      [[ -z "$o" ]] && exit
+      sudo $installer install $o
       break
     fi
   done
 elif [[ -f /etc/arch-release ]]; then
   for installer in 'pacaur' 'yaourt' 'packer' 'pacman'; do
-    if has $installer; then
+    if has "$installer"; then
+      search="$installer"
+      (( $# < 1)) && search='pacman'
       o=$(
-        $installer -Ss |
+        $search -Ss "$@" |
         sed -rn "/^[^ ]/{s/$/ -/; x; s|^([^/]+)/([^ ]+)|[${tput_blue}\1${tput_reset}] ${tput_green}\2${tput_reset}|; p;}; /^ /{s/^ */ /; x; G; s/\n//; x}" |
-        fzf --bind="ctrl-x:execute( bash -c \"pacman -Qi $(tr -cd '\12\15\40-\176' <<< {} | awk '{print $2}')\" ) | less" --query="$@"
+        fzf --header-lines=1 |
+        awk 'NR==1{printf "%s", $2; next} {printf " %s", $2}'
       )
-      [[ $o == '' ]] && exit
-      o=$(awk '{print $2}' <<< "$o" | tr -cd '\12\15\40-\176')
-      sudo apt-get install ${o//$'\n'/ }
+      [[ -z "$o" ]] && exit
+      ${installer/pacman/sudo pacman} -S $o
       break
     fi
   done
