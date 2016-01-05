@@ -27,7 +27,7 @@ if [[ -f /etc/debian_version ]]; then
         awk '{print $1}'
       )
       (( ${#pkgs} > 0 )) || exit
-      sudo $installer install $o
+      sudo $installer install "${pkgs[@]}"
       break
     fi
   done
