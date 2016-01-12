@@ -170,9 +170,9 @@ Plug 'tpope/vim-endwise'
 " {{{ formatting
 Plug 'christoomey/vim-titlecase' " {{{
   let g:titlecase_map_keys = 0
-  nmap <silent> <Leader>gt <Plug>Titlecase
-  vmap <silent> <Leader>gt <Plug>Titlecase
-  nmap <silent> <Leader>gT <Plug>TitlecaseLine
+  nmap <Leader>gt <Plug>Titlecase
+  vmap <Leader>gt <Plug>Titlecase
+  nmap <Leader>gT <Plug>TitlecaseLine
 " }}}
 Plug 'junegunn/vim-easy-align' " {{{
   nmap <Leader>a <Plug>(EasyAlign)
@@ -181,6 +181,14 @@ Plug 'junegunn/vim-easy-align' " {{{
 Plug 'reedes/vim-pencil' " {{{
   let g:pencil#wrapModeDefault = 'soft'
   let g:pencil#textwidth = 80
+  let g:pencil#mode_indicators = {'hard': 'H', 'auto': 'A', 'soft': 'S', 'off': '',}
+
+  augroup Pencil
+    autocmd FileType markdown,liquid
+    \ call pencil#init({ 'wrap': 'soft' })
+    autocmd FileType text
+    \ call pencil#init({ 'wrap': 'hard', 'autoformat': 0 })
+  augroup END
 " }}}
 Plug 'dahu/Insertlessly' " {{{
   let g:insertlessly_cleanup_trailing_ws = 0
@@ -192,8 +200,6 @@ Plug 'tpope/vim-sleuth'
 " }}}
 
 " {{{ appearance
-Plug 'noahfrederick/vim-noctu'
-Plug 'gosukiwi/vim-atom-dark'
 Plug 'bling/vim-airline' " {{{
   let g:airline_theme = 'hybridline'
   let g:airline_powerline_fonts = 1
@@ -201,6 +207,7 @@ Plug 'bling/vim-airline' " {{{
   let g:airline#extensions#branch#enabled = 1
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#fnamemod = ':t'
+  let g:airline_extensions = ['branch', 'tabline', 'nrrwrgn', 'syntastic', 'hunks']
   function! AirlineInit()
     let g:airline_section_z = g:airline_section_y
     let g:airline_section_y = g:airline_section_x
@@ -214,10 +221,8 @@ Plug 'nathanaelkane/vim-indent-guides' " {{{
   let g:indent_guides_space_guides = 1
   nmap <silent> <Leader>I <Plug>IndentGuidesToggle
 " }}}
-Plug 'DanielFGray/DistractionFree.vim' " {{{
-  let g:distraction_free#toggle_tmux = 1
-  let g:distraction_free#toggle_limelight = 1
-  noremap <Leader>df <Esc>:DistractionsToggle<CR>
+Plug 'junegunn/limelight.vim' " {{{
+  let g:limelight_conceal_ctermfg = 'black'
 " }}}
 Plug 'mhinz/vim-startify' " {{{
   let g:startify_change_to_vcs_root = 1
@@ -232,6 +237,27 @@ Plug 'mhinz/vim-startify' " {{{
     let g:startify_custom_header = s:filter_header('Vim')
   endif
 " }}}
+Plug 'reedes/vim-thematic' " {{{
+  let g:thematic#defaults = {
+  \ 'background': 'dark'
+  \ }
+  let g:thematic#themes = {
+  \ 'gui': {
+  \   'colorscheme': 'atom-dark-256',
+    \ 'airline': 'noctu'
+  \ },
+  \ 'term': {
+    \ 'colorscheme': 'noctu',
+    \ 'airline': 'hybridline'
+  \ }
+  \ }
+  let g:thematic#theme_name = 'term'
+  if has('gui_running')
+    let g:thematic#theme_name = 'gui'
+  endif
+" }}}
+Plug 'noahfrederick/vim-noctu'
+Plug 'gosukiwi/vim-atom-dark'
 " }}}
 
 " {{{ misc/unorganized
@@ -247,7 +273,7 @@ Plug 'sjl/gundo.vim' " {{{
 " }}}
 Plug 'chrisbra/NrrwRgn'
 Plug 'Shougo/echodoc' " {{{
-let g:echodoc_enable_at_startup = 1
+  let g:echodoc_enable_at_startup = 1
 " }}}
 Plug 'jeetsukumaran/vim-filebeagle' " {{{
   let g:filebeagle_suppress_keymaps = 1
@@ -260,21 +286,37 @@ Plug 'junegunn/fzf' " {{{
 \, { 'dir': '~/.fzf', 'do': './install --all' }
 " }}}
 Plug 'junegunn/fzf.vim'
-Plug 'shuber/vim-promiscuous'
+" Plug 'shuber/vim-promiscuous'
+Plug 'reedes/vim-lexical' " {{{
+  augroup Lexical
+    autocmd!
+    autocmd FileType markdown,text,liquid
+    \ call lexical#init()
+  augroup END
+" }}}
+Plug 'reedes/vim-wordy' " {{{
+  augroup Wordy
+    autocmd!
+    autocmd FileType markdown,text,liquid
+    \ nnoremap <buffer> [w <Esc>:PrevWordy<CR>
+    autocmd FileType markdown,text,liquid
+    \ nnoremap <buffer> ]w <Esc>:NextWordy<CR>
+  augroup END
+" }}}
 " }}}
 
-" {{{ unite settings
-  Plug 'Shougo/unite.vim'
-  Plug 'Shougo/neoyank.vim'
-  Plug 'Shougo/unite-help'
-  Plug 'Shougo/unite-outline'
-  Plug 'Shougo/unite-session'
-  Plug 'Shougo/neomru.vim'
-  Plug 'Shougo/context_filetype.vim'
-  Plug 'tsukkee/unite-tag'
-  Plug 'osyo-manga/unite-filetype'
-  Plug 'thinca/vim-unite-history'
-
+" {{{ unite.vim
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/neoyank.vim'
+Plug 'Shougo/unite-help'
+Plug 'Shougo/unite-outline'
+Plug 'Shougo/unite-session'
+Plug 'Shougo/neomru.vim'
+Plug 'Shougo/context_filetype.vim'
+Plug 'tsukkee/unite-tag'
+Plug 'osyo-manga/unite-filetype'
+Plug 'thinca/vim-unite-history'
+" {{{ settings
   let g:unite_data_directory = '~/.vim/cache/unite'
   let g:unite_winheight = 15
   let g:unite_split_rule = 'botright'
@@ -310,15 +352,17 @@ Plug 'shuber/vim-promiscuous'
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
-    imap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
-    imap <buffer> <C-j> <Plug>(unite_select_next_line)
-    imap <buffer> <C-k> <Plug>(unite_select_previous_line)
-    imap <buffer> <esc> <Plug>(unite_exit)
-    nmap <buffer> <esc> <Plug>(unite_exit)
-    imap <silent><buffer><expr> <C-x> unite#do_action('split')
-    imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-    imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
+
+    imap <buffer>               <Esc> <Plug>(unite_exit)
+    nmap <buffer>               <Esc> <Plug>(unite_exit)
+    imap <buffer>               <C-R> <Plug>(unite_narrowing_input_history)
+    imap <buffer>               <C-J> <Plug>(unite_select_next_line)
+    imap <buffer>               <C-K> <Plug>(unite_select_previous_line)
+    imap <silent><buffer><expr> <C-X> unite#do_action('split')
+    imap <silent><buffer><expr> <C-V> unite#do_action('vsplit')
+    imap <silent><buffer><expr> <C-T> unite#do_action('tabopen')
   endfunction
+" }}}
 " }}}
 
 " {{{ git
@@ -371,9 +415,12 @@ Plug 'jaxbot/browserlink.vim' " {{{
   \, {'for': ['html', 'javascript', 'css']}
 " }}}
 Plug 'suan/vim-instant-markdown' " {{{
+  \, {'for': 'markdown'}
   let g:instant_markdown_autostart = 0
 " }}}
-Plug 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim' " {{{
+  \, { 'for': ['html', 'javascript.jsx'] }
+" }}}
 Plug 'Valloric/MatchTagAlways'
 Plug 'tmhedberg/matchit'
 Plug 'othree/html5.vim'
@@ -381,7 +428,9 @@ Plug 'groenewege/vim-less'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'digitaltoad/vim-jade'
 Plug 'tpope/vim-liquid'
-Plug 'tpope/vim-ragtag'
+Plug 'tpope/vim-ragtag' " {{{
+  let g:ragtag_global_maps = 1
+" }}}
 " }}}
 
 " {{{ javascript
@@ -389,11 +438,18 @@ Plug 'moll/vim-node'
 Plug 'elzr/vim-json'
 Plug 'othree/yajs.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'othree/jspc.vim'
 Plug 'marijnh/tern_for_vim' " {{{
-  \, {'do': 'npm install'}
+  \, { 'do': 'npm install' }
 " }}}
-Plug 'walm/jshint.vim'
-Plug 'heavenshell/vim-jsdoc'
+" Plug 'walm/jshint.vim'
+Plug 'heavenshell/vim-jsdoc' " {{{
+  let g:jsdoc_enable_es6 = 1
+  augroup JsDoc
+    autocmd FileType javascript
+    \ nnoremap <buffer> <Leader>jd <Plug>(jsdoc)
+  augroup END
+" }}}
 Plug 'mxw/vim-jsx'
 " }}}
 
@@ -453,18 +509,7 @@ set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 
 if has('gui_running')
-  colorscheme atom-dark-256
-  set background=dark
-  set guioptions-=L
-  set guioptions-=r
-  set guioptions-=b
-  set guioptions-=T
-  set guioptions-=m
-  if has('gui_gtk2')
-    set guifont=Fantasque\ Sans\ Mono\ 9
-  endif
-else
-  colorscheme noctu
+  set guioptions-=LrbTm
 endif
 " }}}
 
@@ -594,7 +639,7 @@ endfunction
 " }}}
 
 function! PushBelowOrLeft() " {{{
-  if winheight(0) / 2 + 5 < line('$')
+  if winheight(0) / 2 < line('$')
     wincmd H
     vert resize 80
   else
@@ -674,9 +719,6 @@ augroup VIM
   \   call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') |
   \ endif
 
-  autocmd FileType javascript
-  \ nnoremap <Leader>jd <Plug>(jsdoc)
-
   autocmd BufRead,BufNewFile *.es6
   \ setfiletype javascript
 
@@ -685,19 +727,14 @@ augroup VIM
   \   execute 'normal! g`"zvzz' |
   \ endif
 
-  autocmd FileType markdown
-  \ call pencil#init({ 'wrap': 'soft' }) |
-  \ setlocal nocursorline nocursorcolumn
-
-  autocmd FileType text
-  \ call pencil#init({ 'wrap': 'hard', 'autoformat': 0 }) |
+  autocmd FileType markdown,text,liquid
   \ setlocal nocursorline nocursorcolumn
 
   autocmd BufEnter *
   \ if &buftype != '' |
+  \   setlocal nocursorcolumn nocursorline colorcolumn=0 |
   \   nnoremap <silent><buffer> q <Esc>:<C-R>=&diff==1
   \     ?'wincmd p<Bar>diffoff<Bar>wincmd p<Bar>':''<CR>bd<CR> |
-  \   setlocal nocursorcolumn nocursorline colorcolumn=0 |
   \ endif
 
   " autocmd InsertLeave * hi CursorLine ctermbg=0
