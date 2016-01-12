@@ -135,18 +135,18 @@ else
     inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
   endif " }}}
 endif
-Plug 'scrooloose/syntastic/' " {{{
-let g:syntastic_enable_signs = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_style_error_symbol = '✠'
-let g:syntastic_warning_symbol = '∆'
-let g:syntastic_style_warning_symbol = '≈'
-let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
-if(executable('eslint'))
-  let g:syntastic_javascript_checkers = ['eslint']
-endif
+Plug 'scrooloose/syntastic' " {{{
+  let g:syntastic_enable_signs = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_open = 1
+  let g:syntastic_error_symbol = '✗'
+  let g:syntastic_style_error_symbol = '✠'
+  let g:syntastic_warning_symbol = '∆'
+  let g:syntastic_style_warning_symbol = '≈'
+  let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
+  if(executable('eslint'))
+    let g:syntastic_javascript_checkers = ['eslint']
+  endif
 " }}}
 Plug 'Shougo/neosnippet' " {{{
   Plug 'Shougo/neosnippet-snippets'
