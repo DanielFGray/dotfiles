@@ -15,7 +15,7 @@ if empty(glob('~/' . s:configdir . '/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall
 endif
 
-call plug#begin('~/.vim/bundle')
+call plug#begin('~/' . s:configdir . '/bundle')
 
 " {{{ text objects
 Plug 'wellle/targets.vim'
@@ -102,7 +102,10 @@ endif
 
 " {{{ completion/building
 if has('nvim')
-  Plug 'Shougo/Deoplete.nvim'
+  Plug 'Shougo/Deoplete.nvim' " {{{
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#auto_completion_start_length = 3
+  " }}}
   Plug 'benekastah/neomake'
   Plug 'kassio/neoterm'
 else
@@ -224,6 +227,31 @@ Plug 'nathanaelkane/vim-indent-guides' " {{{
 Plug 'junegunn/limelight.vim' " {{{
   let g:limelight_conceal_ctermfg = 'black'
 " }}}
+Plug 'junegunn/goyo.vim' " {{{
+  function! s:goyo_enter()
+    set showmode
+    set scrolloff=999
+    if exists('$TMUX')
+      silent !tmux set status off
+    endif
+    if exists(':Limelight')
+      Limelight
+    endif
+  endfunction
+  function! s:goyo_leave()
+    set noshowmode
+    set scrolloff=5
+    if exists('$TMUX')
+      silent !tmux set status on
+    endif
+    if exists(':Limelight')
+      Limelight!
+    endif
+  endfunction
+  autocmd! User GoyoEnter nested call <SID>goyo_enter()
+  autocmd! User GoyoLeave nested call <SID>goyo_leave()
+  nnoremap <Leader>df <Esc>:Goyo<CR>
+" }}}
 Plug 'mhinz/vim-startify' " {{{
   let g:startify_change_to_vcs_root = 1
 
@@ -316,34 +344,35 @@ Plug 'Shougo/context_filetype.vim'
 Plug 'tsukkee/unite-tag'
 Plug 'osyo-manga/unite-filetype'
 Plug 'thinca/vim-unite-history'
+
 " {{{ settings
   let g:unite_data_directory = '~/.vim/cache/unite'
-  let g:unite_winheight = 15
+  let g:unite_winheight = 100
   let g:unite_split_rule = 'botright'
   let g:unite_enable_start_insert = 1
   if executable('ag')
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
     let g:unite_source_grep_recursive_opt = ''
-    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-l']
+    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-l', '']
   elseif executable('ack')
     let g:unite_source_grep_command = 'ack'
     let g:unite_source_grep_default_opts = '--no-heading --no-color'
     let g:unite_source_grep_recursive_opt = ''
+    let g:unite_source_rec_async_command = ['ack', '-f', '--nofilter']
   endif
 
   nnoremap <silent> <leader><leader> <Esc>:Unite mapping -buffer-name=mapping -auto-resize<CR>
-  nnoremap <silent> <leader>r <Esc>:Unite register -buffer-name=register -auto-resize<CR>
-  nnoremap <silent> <leader>y <Esc>:Unite history/yank -buffer-name=yank<CR>
-  nnoremap <silent> <leader>b <Esc>:Unite buffer -buffer-name=buffer<CR>
-  nnoremap <silent> <leader>: <Esc>:Unite command -buffer-name=command<CR>
-  nnoremap <silent> <leader>/ <Esc>:Unite grep -buffer-name=grep<CR>
-  nnoremap <silent> <leader>f <Esc>:Unite file_rec/<C-R>=has('nvim')?'neovim':'async'<CR> -buffer-name=files -toggle -auto-resize<CR>
-  nnoremap <silent> <leader>e <Esc>:Unite buffer file_mru bookmark file -buffer-name=files<CR>
-  nnoremap <silent> <leader>o <Esc>:Unite outline -buffer-name=outline -auto-resize<CR>
-  nnoremap <silent> <leader>h <Esc>:Unite help -buffer-name=help -auto-resize<CR>
-  nnoremap <silent> <leader>t <Esc>:Unite tag tag/file -buffer-name=tag -auto-resize<CR>
-  " nnoremap <silent> q: <Esc>:Unite history/command -buffer-name=history/command -auto-resize<CR>
+  nnoremap <silent> <leader>r <Esc>:Unite -buffer-name=register -auto-resize register<CR>
+  nnoremap <silent> <leader>y <Esc>:Unite -buffer-name=yank     -auto-resize history/yank<CR>
+  nnoremap <silent> <leader>b <Esc>:Unite -buffer-name=buffer   -auto-resize buffer<CR>
+  nnoremap <silent> <leader>: <Esc>:Unite -buffer-name=command  -auto-resize command history/command<CR>
+  nnoremap <silent> <leader>o <Esc>:Unite -buffer-name=outline  -auto-resize outline<CR>
+  nnoremap <silent> <leader>h <Esc>:Unite -buffer-name=help     -auto-resize help<CR>
+  nnoremap <silent> <leader>/ <Esc>:Unite -buffer-name=grep     -auto-resize grep<CR>
+  nnoremap <silent> <leader>t <Esc>:Unite -buffer-name=tag      -auto-resize tag tag/file<CR>
+  nnoremap <silent> <leader>e <Esc>:Unite -buffer-name=files    -auto-resize buffer file_mru bookmark file<CR>
+  nnoremap <silent> <leader>f <Esc>:Unite -buffer-name=files    -auto-resize file_rec/<C-R>=has('nvim')?'neovim':'async'<CR><CR>
 
   autocmd FileType unite call s:unite_settings()
   function! s:unite_settings()
@@ -363,6 +392,7 @@ Plug 'thinca/vim-unite-history'
     imap <silent><buffer><expr> <C-T> unite#do_action('tabopen')
   endfunction
 " }}}
+
 " }}}
 
 " {{{ git
@@ -479,7 +509,7 @@ set equalalways splitright
 set wildmenu wildcharm=<C-Z>
 set switchbuf=useopen,usetab
 set tabstop=2 shiftwidth=2 expandtab
-set foldmethod=marker foldopen-=block foldtext=getline(v:foldstart)
+set foldmethod=marker foldopen-=block foldtext=MyFoldText()
 set noruler rulerformat=%32(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set laststatus=2
 set showcmd noshowmode
@@ -708,6 +738,20 @@ command! -bar -nargs=0 W call DiffWrite()
 nnoremap <silent> <Leader>w <Esc>:W<CR>
 " }}}
 
+function! MyFoldText() " {{{
+  " courtesy Steve Losch
+  let line = getline(v:foldstart)
+  let nucolwidth = &fdc + &number * &numberwidth
+  let windowwidth = winwidth(0) - nucolwidth - 3
+  let foldedlinecount = v:foldend - v:foldstart
+  let onetab = strpart('          ', 0, &tabstop)
+  let line = substitute(line, '\t', onetab, 'g')
+  let line = strpart(line, 0, windowwidth - 2 - len(foldedlinecount))
+  let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - 2
+  return line . ' ' . repeat(' ', fillcharcount)  . ' '. foldedlinecount
+endfunction
+" }}}
+
 " }}}
 
 " {{{ autocmds
@@ -769,7 +813,8 @@ augroup VIM
   \ endif
 
   autocmd FileType vim
-  \ setlocal keywordprg=:help |
+  \ nnoremap <buffer> K <Esc>:UniteWithCursorWord -buffer-name=help -auto-resize help<CR>
+  autocmd FileType vim
   \ xnoremap <buffer> <Leader>S y:@"<CR>
 
   autocmd FileType vim-plug,gundo,diff
@@ -805,4 +850,14 @@ else
 endif
 highlight diffAdded ctermfg=darkgreen
 highlight diffRemoved ctermfg=darkred
+highlight Folded ctermfg=14
+
+" FIXME: Use a blinking upright bar cursor in Insert mode, a blinking block in normal
+if exists('$TMUX')
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+elseif &term == 'xterm-256color' || &term == 'screen-256color'
+  let &t_SI = "\<Esc>[5 q"
+  let &t_EI = "\<Esc>[2 q"
+endif
 " }}}
