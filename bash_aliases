@@ -1,14 +1,12 @@
-{
-  if [[ -e ~/dotfiles/less.vim ]]; then
-    lessvim="-S ${HOME}/dotfiles/less.vim"
-  elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
-    lessvim="-S /usr/local/share/vim/vim74/macros/less.vim"
-  elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
-    lessvim="-S /usr/share/vim/vim74/macros/less.vim"
-  fi
-  vimcolor="-S '$(find ~/.vim/**/colors/**/*.vim | grep noctu)'"
-  export PAGER="bash -c \"col -b | vim -u NONE $lessvim $vimcolor -c 'set ft=man' -\""
-} &> /dev/null
+if [[ -e ~/dotfiles/less.vim ]]; then
+  lessvim='~/dotfiles/less.vim'
+elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
+  lessvim='/usr/local/share/vim/vim74/macros/less.vim'
+elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
+  lessvim='/usr/share/vim/vim74/macros/less.vim'
+fi
+vimcolor='~/.vim/bundle/vim-noctu/colors/noctu.vim'
+export PAGER="bash -c \"col -b | vim -u NONE ${lessvim:+-S "$lessvim"} ${vimcolor:+-S "$vimcolor"} -c 'set ft=man' -\""
 export EDITOR='vim'
 export HISTFILESIZE=500000
 export HISTSIZE=100000
@@ -48,9 +46,10 @@ if [[ -f /etc/debian_version ]]; then
 elif [[ -f /etc/arch-release ]]; then
   for h in 'pacaur' 'yaourt' 'pacman'; do
     if has $h; then
-      alias canhaz="sudo $h -S "
-      alias updupg="sudo $h -Syu "
-      alias pkgrm="sudo $h -Rsu "
+      h="${h/pacman/sudo pacman}"
+      alias canhaz="$h -S "
+      alias updupg="$h -Syu "
+      alias pkgrm="$h -Rsu "
       break
     fi
   done
