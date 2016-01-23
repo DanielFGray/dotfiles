@@ -5,7 +5,7 @@ inTerm() {
 }
 
 isRunning() {
-  pgrep $1
+  pgrep $1 &> /dev/null
 }
 
 info() {
