@@ -7,9 +7,6 @@ else
   exit 1
 fi
 
-for x in 'urxvtcd' 'urxvtc' 'urxvt' 'xterm'; do
-  if has "$x"; then
-    ( exec "$x" "$@" ) &
-    break
-  fi
-done
+favs=('urxvtcd' 'urxvtc' 'urxvt' 'xterm')
+cmd=$(getCommandFallbacks ${favs[*]})
+( exec $cmd "$@" ) &

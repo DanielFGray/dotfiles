@@ -7,9 +7,6 @@ else
   exit 1
 fi
 
-for x in 'firefox' 'luakit'; do
-  if has "$x"; then
-    ( exec "$x" "$@" ) &
-    break
-  fi
-done
+favs=('firefox' 'luakit')
+cmd=$(getCommandFallbacks ${favs[*]}) || die "no browser found in (${favs[*]})"
+(exec $cmd $*) &

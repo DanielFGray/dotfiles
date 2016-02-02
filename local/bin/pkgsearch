@@ -1,50 +1,42 @@
 #!/usr/bin/env bash
 
+if [[ -e ${HOME}/.bash_utils ]]; then
+  source ${HOME}/.bash_utils
+else
+  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  exit 1
+fi
+
 declare installer
 declare search
 
-has() {
-  command -v $1 &> /dev/null
-}
+has -v fzf || die
 
 fzf() {
-  $(which fzf) -e --tac --multi --cycle --ansi "$@"
+  command fzf -e +s --multi --cycle --ansi --no-hscroll "$@"
 }
 
-esc=$(printf '\033')
-tput_reset="${esc}[0m"
-tput_red="${esc}[31m"
-tput_green="${esc}[32m"
-tput_blue="${esc}[34m"
-
 if [[ -f /etc/debian_version ]]; then
-  for installer in 'apt' 'apt-get'; do
-    if has $installer; then
-      mapfile -t pkgs < <(
-        apt-cache search '' |
-        sed -r "s|^([^ ]+)|${tput_green}\1${tput_reset}|" |
-        fzf --query="$*" |
-        awk '{print $1}'
-      )
-      (( ${#pkgs} > 0 )) || exit
-      sudo $installer install "${pkgs[@]}"
-      break
-    fi
-  done
+  mapfile -t pkgs < <(
+    apt-cache search '' |
+    sed -u -r "s|^([^ ]+)|${c_green}\1${c_reset}|" |
+    fzf --query="$*" |
+    awk '{print $1}'
+  )
+  (( ${#pkgs} > 0 )) || exit
+  sudo $(getCommandFallbacks 'apt' 'apt-get') install "${pkgs[@]}"
 elif [[ -f /etc/arch-release ]]; then
-  for installer in 'pacaur' 'yaourt' 'packer' 'pacman'; do
-    if has "$installer"; then
-      search="$installer"
-      (( $# < 1)) && search='pacman'
-      mapfile -t pkgs < <(
-        $search -Ss "$@" |
-        sed -rn "/^[^ ]/{s/$/ -/; x; s|^([^/]+)/([^ ]+)|[${tput_blue}\1${tput_reset}] ${tput_green}\2${tput_reset}|; p;}; /^ /{s/^ */ /; x; G; s/\n//; x}" |
-        fzf --header-lines=1 |
-        awk '{print $2}'
-      )
-      (( ${#pkgs} > 0 )) || exit
-      ${installer/pacman/sudo pacman} -S "${pkgs[@]}"
-      break
-    fi
-  done
+  if (( $# > 0)); then
+    search=$(getCommandFallbacks 'pacaur' 'yaourt' 'packer' 'apacman' 'pacman')
+  else
+    search='pacman'
+  fi
+  mapfile -t pkgs < <(
+    $search -Ss "$@" |
+    sed -u -r -n "/^[^ ]/{s/$/ -/; x; s|^([^/]+)/([^ ]+)|[${c_blue}\1${c_reset}] ${c_green}\2${c_reset}|; p;}; /^ /{s/^ */ /; x; G; s/\n//; x}" |
+    fzf --header-lines=1 |
+    awk '{print $2}'
+  )
+  (( ${#pkgs} > 0 )) || exit
+  ${search/pacman/sudo pacman} -S "${pkgs[@]}"
 fi

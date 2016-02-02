@@ -7,9 +7,6 @@ else
 	exit 1
 fi
 
-for x in 'dolphin' 'nemo' 'nautilus' 'thunar'; do
-	if has "$x"; then
-		( exec "$x" "$@" ) &
-		break
-	fi
-done
+favs=('dolphin' 'nemo' 'nautilus' 'thunar')
+cmd=$(getCommandFallbacks ${favs[*]})
+( exec $cmd "$@" ) &

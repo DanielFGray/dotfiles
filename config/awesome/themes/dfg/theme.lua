@@ -1,11 +1,12 @@
 theme                = {}
-theme.font           = 'Tewi 8'
+-- theme.font           = 'Tewi 8'
+theme.font           = 'Fantasque Sans Mono 9'
 -- theme.font           = 'DejaVu Sans Mono Book 8'
 -- theme.taglist_font   = 'DejaVu Sans Mono Bold 8'
 -- theme.tasklist_font  = 'DejaVu Sans Mono Bold 8'
 theme.colors         = {}
 theme.colors.base3   = '#292929e6'
---theme.colors.base3   = '#292929'
+-- theme.colors.base3   = '#292929'
 theme.colors.base2   = '#363636'
 theme.colors.base1   = '#586e75'
 theme.colors.base0   = '#657b83'
@@ -32,6 +33,11 @@ theme.fg_urgent  = theme.colors.base03
 theme.bg_urgent  = theme.colors.red
 
 theme.bg_systray = theme.bg_normal
+
+theme.tasklist_bg_focus  = theme.colors.base3
+theme.tasklist_bg_normal = theme.colors.base3
+theme.tasklist_fg_focus  = theme.colors.base02
+theme.tasklist_fg_normal = theme.colors.base1
 
 theme.border_normal = theme.bg_normal
 theme.border_focus  = theme.bg_focus
@@ -62,6 +68,7 @@ theme.taglist_squares_unsel = beautifultheme .. 'taglist/squareza.png'
 theme.wallpaper_cmd         = { 'nitrogen --restore' }
 theme.taglist_squares       = 'true'
 theme.titlebar_close_button = 'true'
+theme.awful_widget_height   = '14'
 theme.menu_height           = '16'
 theme.menu_width            = '170'
 
@@ -87,4 +94,18 @@ theme.titlebar_maximized_button_normal_inactive = beautifultheme .. 'titlebar/ma
 theme.titlebar_maximized_button_focus_inactive =  beautifultheme .. 'titlebar/maximized_focus_inactive.png'
 theme.titlebar_maximized_button_normal_active =   beautifultheme .. 'titlebar/maximized_normal_active.png'
 theme.titlebar_maximized_button_focus_active =    beautifultheme .. 'titlebar/maximized_focus_active.png'
+
+theme.widget_cpu     = beautifultheme .. 'icons/cpu.png'
+theme.widget_mem     = beautifultheme .. 'icons/mem.png'
+theme.widget_music   = beautifultheme .. 'icons/music.png'
+theme.widget_clock   = beautifultheme .. 'icons/clock.png'
+theme.widget_temp    = beautifultheme .. 'icons/temp.png'
+theme.widget_battery = beautifultheme .. 'icons/bat.png'
+theme.widget_hdd     = beautifultheme .. 'icons/17.png'
+theme.widget_netup     = beautifultheme .. 'icons/up.png'
+theme.widget_netdown     = beautifultheme .. 'icons/down.png'
+
+theme.useless_gap_width = 0
+theme.g0obal_border_width = 0
+
 return theme
