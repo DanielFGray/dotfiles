@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+usage() {
+  LESS=-EXR less <<-HELP
+Usage: diffsed [OPTION]... <EXPR> <FILE>
+show a diff before a file transformed with sed
+
+OPTIONS:
+  -i          prompt to save changes
+  -r          use extended regex with sed
+  -h, --help  show this help
+HELP
+}
+
+ask() {
+  read -n1 -p "$* " ans
+  echo
+  [[ ${ans^} == Y* ]]
+}
+
+declare sexpr
+declare file
+declare sedopts=()
+declare diffopts=( -u )
+declare i
+
+while true; do
+  case "$1" in
+    -i) i=true          ; shift ;;
+    -r) sedopts+=( -r ) ; shift ;;
+    -h|--help) usage    ; exit  ;;
+    *) break
+  esac
+done
+
+sexpr="$1"
+file="$2"
+
+sed "${sedopts[@]}" "$sexpr" "$file" |
+  diff "${diffopts[@]}" "$file" - |
+  sed 's/^-/\x1b[31m-/; s/^+/\x1b[32m+/; s/^@/\x1b[34m@/; s/$/\x1b[0m/' |
+  LESS=-EXR less
+
+if [[ -n "$i" ]]; then
+  ask 'save changes?' &&
+    sed "${sedopts[@]}" -i "$sexpr" "$file"
+fi
