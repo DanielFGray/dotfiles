@@ -7,12 +7,11 @@ else
   exit 1
 fi
 
-for x in 'v' 'gvim' 'vim'; do
-  if has "$x"; then
-    cmds=( "$x" "$@" )
-    break
-  fi
-done
-
-x-terminal-emulator -e ${cmds[*]}
-
+favs=('v' 'gvim' 'vim' 'emacs' 'vi' 'nano')
+cmd=$(getCommandFallbacks ${favs[*]}) || die "no editor found in ( ${favs[*]} )"
+editor=($cmd $*)
+if inTerm; then
+  exec ${editor[*]}
+else
+  ( exec x-terminal-emulator -e bash ${editor[*]}) &
+fi

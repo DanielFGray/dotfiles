@@ -76,9 +76,9 @@ case "$searchcmd" in
     if [[ "$allfiles" == true ]]; then
       searchopts+=( '-u' '--hidden' )
     fi
-    # if [[ "$searchstr" == '' ]]; then
-    #   searchopts+=( '-l' )
-    # fi
+    if [[ "$searchstr" == '' ]]; then
+      searchopts+=( '-l' )
+    fi
     ;;
   'ack')
     if [[ "$searchstr" == '' ]]; then

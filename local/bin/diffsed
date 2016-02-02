@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
+LESS=-EXR
 usage() {
-  LESS=-EXR less <<-HELP
+  less <<'HELP'
 Usage: diffsed [OPTION]... <EXPR> <FILE>
 show a diff before a file transformed with sed
 
@@ -13,7 +14,7 @@ HELP
 }
 
 ask() {
-  read -n1 -p "$* " ans
+  read -N1 -p "$* " ans
   echo
   [[ ${ans^} == Y* ]]
 }
@@ -22,6 +23,7 @@ declare sexpr
 declare file
 declare sedopts=()
 declare diffopts=( -u )
+declare diffprg='diff'
 declare i
 
 while true; do
@@ -36,10 +38,18 @@ done
 sexpr="$1"
 file="$2"
 
-sed "${sedopts[@]}" "$sexpr" "$file" |
-  diff "${diffopts[@]}" "$file" - |
-  sed 's/^-/\x1b[31m-/; s/^+/\x1b[32m+/; s/^@/\x1b[34m@/; s/$/\x1b[0m/' |
-  LESS=-EXR less
+if command -v colordiff &> /dev/null; then
+  diffprg='colordiff'
+fi
+
+patch=$($diffprg "${diffopts[@]}" "$file" <(sed "${sedopts[@]}" "$sexpr" "$file"))
+
+if [[ "$diffprg" == 'diff' ]] && [[ -t 0 || -p /dev/stdin ]]; then
+  # TODO: use ${parameter/pattern/string} + `tput` instead of sed
+  patch=$(sed 's/^-/\x1b[31m-/; s/^+/\x1b[32m+/; s/^@/\x1b[34m@/; s/$/\x1b[0m/' <<< "$patch")
+fi
+
+less <<< "$patch"
 
 if [[ -n "$i" ]]; then
   ask 'save changes?' &&

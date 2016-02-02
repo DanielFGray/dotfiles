@@ -42,15 +42,15 @@ local layouts = {
 	lain.layout.uselessfair,
 	awful.layout.suit.max
 }
---}}}
+-- }}}
 
---{{{ Variables
+-- {{{ Variables
 modkey         = "Mod4"
 exec           = awful.util.spawn
 sexec          = awful.util.spawn_with_shell
 configdir      = awful.util.getdir("config") .. "/"
 homedir        = os.getenv("HOME") .. "/"
-beautifultheme = configdir .. "themes/darkness/"
+beautifultheme = configdir .. "themes/dfg/"
 terminal       = "x-terminal-emulator"
 browser        = "x-www-browser"
 filemanager    = "x-file-manager"
@@ -73,10 +73,12 @@ exec("nitrogen --restore")
 run_once("urxvtd -q -f")
 run_once("compton --config ~/.compton.conf")
 run_once("mpd")
+run_once("keepassx")
 run_once("clipit")
 run_once("nm-applet")
 run_once("pnmixer")
 run_once("xfce4-power-manager")
+run_once(mpdclient)
 run_once("redshift-gtk lat=29.27 lon=-94.87")
 
 shifty.config.tags = {
@@ -93,14 +95,11 @@ shifty.config.tags = {
 		slave     = false,
 		spawn     = browser,
 	},
-	android = {
-		layout    = lain.layout.uselesstile,
-		position  = 3,
-	},
 	audio = {
 		layout    = lain.layout.uselesstile,
 		position  = 3,
 		exclusive = false,
+		spawn     = 'pavucontrol'
 	},
 }
 
@@ -186,16 +185,11 @@ shifty.config.apps = {
 			terminal,
 			".*term.*",
 			"urxvt.*",
+			"xterm",
 			"konsole",
 		},
 		tag = "term",
 		slave = true,
-	}, {
-		match = {
-			"android.*",
-			"Android.*"
-		},
-		tag = "android",
 	}, {
 		match = { "" },
 		honorsizehints = false,
@@ -252,13 +246,14 @@ mpdwidget = lain.widgets.mpd({
 		widget:set_markup(artist .. title)
 	end
 })
+
 mpdwidget:buttons(awful.util.table.join(
 	awful.button({ }, 3, function()
 		sexec("mpc -q toggle")
 		mpdwidget.update()
 	end),
 	awful.button({ }, 1, function()
-		sexec(musicplr)
+		sexec(mpdclient)
 	end)
 ))
 mpdwidgetbg = wibox.widget.background(mpdwidget)
@@ -534,15 +529,15 @@ globalkeys = awful.util.table.join(
 		awful.util.eval, nil,
 		awful.util.getdir("cache") .. "/history_eval")
 	end),
-	awful.key({ }, "XF86AudioRaiseVolume", function()
-		exec("amixer -q sset Master 1%+")
-	end),
-	awful.key({ }, "XF86AudioLowerVolume", function()
-		exec("amixer -q sset Master 1%-")
-	end),
-	awful.key({ }, "XF86AudioMute", function()
-		exec("amixer -q sset Master toggle")
-	end),
+	-- awful.key({ }, "XF86AudioRaiseVolume", function()
+	-- 	exec("amixer -q sset Master 1%+")
+	-- end),
+	-- awful.key({ }, "XF86AudioLowerVolume", function()
+	-- 	exec("amixer -q sset Master 1%-")
+	-- end),
+	-- awful.key({ }, "XF86AudioMute", function()
+	-- 	exec("amixer -q sset Master toggle")
+	-- end),
 	awful.key({ modkey, "Shift" }, "d", function()
 		lain.util.remove_tag()
 	end),
@@ -575,7 +570,7 @@ globalkeys = awful.util.table.join(
 			return true
 		end)
 	end),
-    awful.key({ modkey }, "r", function()
+	awful.key({ modkey }, "r", function()
 		menubar.show()
 	end),
 	awful.key({ modkey, "Shift" }, "d", shifty.del),
@@ -634,6 +629,10 @@ modal_music = {
 	end,
 	p = function()
 		sexec("mpc -q prev")
+		mpdwidget.update()
+	end,
+	f = function()
+		exec(terminal .. " -e fzmp")
 		mpdwidget.update()
 	end,
 }

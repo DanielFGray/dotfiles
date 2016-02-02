@@ -1,12 +1,12 @@
 if [[ -e ~/dotfiles/less.vim ]]; then
-  lessvim='~/dotfiles/less.vim'
+  lessvim="-S $HOME/dotfiles/less.vim"
 elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
-  lessvim='/usr/local/share/vim/vim74/macros/less.vim'
+  lessvim='-S /usr/local/share/vim/vim74/macros/less.vim'
 elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
-  lessvim='/usr/share/vim/vim74/macros/less.vim'
+  lessvim='-S /usr/share/vim/vim74/macros/less.vim'
 fi
-vimcolor='~/.vim/bundle/vim-noctu/colors/noctu.vim'
-export PAGER="bash -c \"col -b | vim -u NONE ${lessvim:+-S "$lessvim"} ${vimcolor:+-S "$vimcolor"} -c 'set ft=man' -\""
+vimcolor="-S $HOME/.vim/bundle/vim-noctu/colors/noctu.vim"
+export MANPAGER="bash -c \"col -b | vim -u NONE ${lessvim:+$lessvim} ${vimcolor:+$vimcolor} -c 'setf man' -\""
 export EDITOR='vim'
 export HISTFILESIZE=500000
 export HISTSIZE=100000
@@ -26,10 +26,11 @@ ask() {
   [[ ${ans^} == Y* ]]
 }
 
-tput_green=$(tput setaf 2)
-tput_red=$(tput setaf 1)
-tput_blue=$(tput setaf 4)
-tput_reset="\e[0m"
+esc=$(printf '\033')
+tput_reset="${esc}[0m"
+tput_red="${esc}[31m"
+tput_green="${esc}[32m"
+tput_blue="${esc}[34m"
 
 if [[ -f /etc/debian_version ]]; then
   PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
@@ -53,7 +54,11 @@ elif [[ -f /etc/arch-release ]]; then
       break
     fi
   done
-  # [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]] && export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+  if [[ -d $(cope_path) ]]; then
+    export PATH="$(cope_path):$PATH"
+  elif [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
+    export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
+  fi
 elif [[ -f /etc/redhat-release ]]; then
   alias yum="sudo yum "
   alias canhaz="yum install "
@@ -88,6 +93,8 @@ cd() {
 }
 
 mkd() { mkdir -p "$@" && cd "$1" ;}
+
+trash() { for arg in "$@"; do [[ "$arg" == -* ]] && shift; done; mkdir -p ~/.trash; mv -t ~/.trash "$@" ;}
 
 wget() { man curl ;}
 cat() { (( $# > 1 )) && /bin/cat "$@" ;}

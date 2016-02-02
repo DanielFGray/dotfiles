@@ -7,11 +7,11 @@ else
   exit 1
 fi
 
-file="$(date +%F-%s).webm"
-window=false
-region=false
-duration=10
-delay=0
+declare file="$(date +%F-%s).webm"
+declare window=false
+declare region=false
+declare duration
+declare delay=0
 declare verbose
 declare -A dimensions
 

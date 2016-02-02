@@ -11,7 +11,7 @@ has -v fzf || die
 has -v mpc || die
 isRunning mpd || die 'mpd not running'
 
-mapfile -t songs < <(mpc listall | sort -r | fzf --reverse -m -e +s)
+mapfile -t songs < <(mpc listall | sort -r | fzf --reverse --tac -m -e +s)
 if (( ${#songs[@]} > 0 )); then
   printf '%s\n' "${songs[@]}" | mpc -q add
   index=$(mpc playlist | wc -l)
