@@ -185,6 +185,21 @@ ding() {
 }
 
 if has synclient && has vipe; then
+  synclient() {
+    if command synclient -l &> /dev/null; then
+      if (( $# > 0 )); then
+        command synclient $*
+      else
+        command synclient $(command synclient | vipe | sed '1d;s/ //g')
+      fi
+    else
+      command synclient
+    fi
+  }
+fi
+
+if has fzf; then
+  has ag && export FZF_DEFAULT_COMMAND='ag -l -g ""'
   synclient() { command synclient $(command synclient | vipe | sed '1d;s/ //g') ;}
 fi
 
