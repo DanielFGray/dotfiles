@@ -21,22 +21,6 @@ die() {
   exit 1
 }
 
-mime() {
-  case $(file -ib "$1") in
-    image*)
-      out='image';;
-    text*)
-      out='text';;
-    video*)
-      out='video';;
-    application*)
-      out='application';;
-    *)
-      out='';
-  esac
-  echo "${out}"
-}
-
 usage() {
   LESS=-EXR less <<-'HELP'
 Usage: tekup [OPTIONS]
@@ -58,9 +42,13 @@ shift "$((OPTIND-1))"
 
 (( $# < 1 )) && die 'No files to upload.'
 
-for (( i=1; i <= $#; i++ )); do
+for (( i=0; i <= $#; i++ )); do
   file="$1" && shift
-  mime=$(mime "$file")
+
+  [[ -e "$file" ]] || die "$file does not exist"
+
+  mime=$(file -ib "$file")
+  mime="${mime%%/*}"
 
   if [[ $mime == 'text' ]]; then
     post=$(curl -s --data "title=${file##*/}" --data-urlencode "code=$(< "${file}")" https://api.teknik.io/v1/Paste)
@@ -70,7 +58,7 @@ for (( i=1; i <= $#; i++ )); do
 
   (( verbose > 0 )) && info "response: ${c_reset}${post}"
 
-  [[ -z "$post" || "$post" != *'http'* || "${post}" =~ 'error' ]] && die "error uploading $file"
+  [[ -z "$post" || "$post" != *'http'* || "$post" =~ 'error' ]] && die "error uploading ${file}"}
 
   url=$(grep -oP 'https://[[:alnum:]?=%/_.:,;~@!#$&()*+-]+' <<< "$post")
   echo "${file}: ${url}"
