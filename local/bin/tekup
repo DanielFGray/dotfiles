@@ -58,7 +58,7 @@ for (( i=0; i <= $#; i++ )); do
 
   (( verbose > 0 )) && info "response: ${c_reset}${post}"
 
-  [[ -z "$post" || "$post" != *'http'* || "$post" =~ 'error' ]] && die "error uploading ${file}"}
+  [[ -z "$post" || "$post" != *'http'* || "$post" =~ 'error' ]] && die "error uploading ${file}"
 
   url=$(grep -oP 'https://[[:alnum:]?=%/_.:,;~@!#$&()*+-]+' <<< "$post")
   echo "${file}: ${url}"
