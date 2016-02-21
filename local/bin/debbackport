@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+ask() {
+  read -r -n1 -p "$1 " ans
+  echo
+  [[ ${ans^} == Y* ]]
+}
+
+declare pkg
+declare version
+declare versions
+declare builddir='/tmp/backport-build/'
+
+pkg="$*"
+
+if [[ -z $pkg ]]; then
+  echo 'nothing to search for';
+  exit 1
+fi
+
+set -e
+
+mapfile -t versions < <(apt-cache showsrc "$pkg" | awk '/^Version/{ print $2 }' | sort -uh)
+echo "$pkg has the following versions available:"
+PS3="choose a number between 1 and ${#versions[@]}: "
+select v in "${versions[@]}"; do
+  version="$v";
+  break
+done
+
+[[ -z $version ]] && exit
+
+builddir+="$pkg"
+mkdir -p "$builddir" && cd "$builddir"
+
+sudo apt-get build-dep "$pkg"
+apt-get source "${pkg}=${version}"
+
+cd "${pkg}-${version%-*}"
+
+[[ -e debian/rules ]] && ask 'edit debian/rules?' && vim debian/rules
+
+dpkg-buildpackage -uc -us -tc
+
+sudo dpkg -i ../"${pkg}"_"${version%-*}"-*.deb
