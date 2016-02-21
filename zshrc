@@ -2,11 +2,13 @@ ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
 DEFAULT_USER="dan"
-plugins=( vi-mode git git-extras zsh-syntax-highlighting )
+plugins=( vi-mode git git-extras zsh-syntax-highlighting zsh-autosuggestions )
 source $ZSH/oh-my-zsh.sh
 
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
+bindkey '^ ' autosuggest-accept
 
 if command -v fzf &> /dev/null; then
   unalias historygrep
@@ -145,4 +147,3 @@ change-around() {
 }
 zle -N change-around
 bindkey -M vicmd 'ca' change-around
-
