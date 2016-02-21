@@ -273,16 +273,25 @@ Plug 'reedes/vim-thematic' " {{{
   let g:thematic#themes = {
   \ 'gui': {
   \   'colorscheme': 'atom-dark-256',
-    \ 'airline': 'noctu'
+  \   'airline': 'noctu',
+  \   'typeface': 'Fantasque Sans Mono',
+  \   'font-size': 10,
   \ },
   \ 'term': {
     \ 'colorscheme': 'noctu',
     \ 'airline': 'hybridline'
   \ }
   \ }
-  let g:thematic#theme_name = 'term'
   if has('gui_running')
     let g:thematic#theme_name = 'gui'
+    set guioptions-=l
+    set guioptions-=L
+    set guioptions-=r
+    set guioptions-=T
+    set guioptions-=m
+    set guioptions+=c
+  else
+    let g:thematic#theme_name = 'term'
   endif
 " }}}
 Plug 'noahfrederick/vim-noctu'
