@@ -68,7 +68,7 @@ theme.taglist_squares_unsel = beautifultheme .. 'taglist/squareza.png'
 theme.wallpaper_cmd         = { 'nitrogen --restore' }
 theme.taglist_squares       = 'true'
 theme.titlebar_close_button = 'true'
-theme.awful_widget_height   = '14'
+theme.awful_widget_height   = '12'
 theme.menu_height           = '16'
 theme.menu_width            = '170'
 

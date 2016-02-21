@@ -14,6 +14,7 @@
 *Rxvt.matcher.button:  1
 *Rxvt.urgentOnBell:    True
 *Rxvt*letterSpace:     -2
+URxvt.font-size.step:  2
 
 *Rxvt.keysym.C-Up:     perl:font-size:increase
 *Rxvt.keysym.C-Down:   perl:font-size:decrease

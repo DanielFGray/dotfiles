@@ -8,5 +8,5 @@ else
 fi
 
 favs=('mupdf' 'zathura' 'apvlv' 'evince')
-cmd=$(getCommandFallbacks ${favs[*]}) || die "no pdf viewer found in (${favs[*]})"
-( exec $cmd "$@" ) &
+cmd=$(getCommandFallbacks "${favs[@]}") || die "no pdf viewer found in ( ${favs[*]} )"
+( exec $cmd $* ) &

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-esc=$(printf '\033')
-c_reset="${esc}[0m"
-c_red="${esc}[31m"
-c_green="${esc}[32m"
-c_blue="${esc}[34m"
+declare esc=$(printf '\033')
+declare c_reset="${esc}[0m"
+declare c_red="${esc}[31m"
+declare c_green="${esc}[32m"
+declare c_blue="${esc}[34m"
 
 inTerm() {
   [[ -t 0 || -p /dev/stdin ]]
@@ -36,40 +36,41 @@ die() {
 }
 
 has() {
-  verbose=false
+  local verbose=false
   if [[ $1 == '-v' ]]; then
     verbose=true
     shift
   fi
-  if command -v $1 &> /dev/null; then
-    return 0
-  else
-    [[ "$verbose" == true ]] && err "$1 not found"
-    return 1
-  fi
+  for c in "$@"; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
+      [[ "$verbose" == true ]] && err "$c not found"
+      return 1
+    fi
+  done
 }
 
 ask() {
   if inTerm; then
-    read -n1 -p "$* " ans
+    read -r -n1 -p "$* " ans
     echo
     [[ ${ans^} == Y* ]]
   else
-    zenity --question --text="$@"
+    zenity --question --text="$*"
   fi
 }
 
 prompt() {
-  local opts=()
+  local opts=() one
   if [[ "$1" == '-1' ]]; then
     opts+=( '-n1' )
+    one=1
     shift
   fi
   if [[ "$1" == '-s' ]]; then
     opts+=( '-s' )
     shift
   fi
-  read -e -r ${opts[*]} -p "$@ " ans
+  read -e -r ${opts[*]} -p "$* " ans
   if [[ $one == '1' ]]; then
     echo
     [[ ${ans,} == y ]]
@@ -79,8 +80,8 @@ prompt() {
 }
 
 getCommandFallbacks() {
-  for arg in "$@"; do
-    if has $arg; then
+  for arg in "$@"; do arg="${arg%% *}"
+    if has "$arg"; then
       echo "$arg"
       return 0
     fi

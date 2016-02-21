@@ -72,7 +72,7 @@ if [[ -n "$serv" ]]; then
       fv -c "v ${noselect:+-d}"
       exit 0
     else
-      x-terminal-emulator -e 'fv' '-c' 'v'
+      x-terminal-emulator -e fv -c v
     fi
   else
     while (( $# > 0 )); do

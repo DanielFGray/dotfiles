@@ -7,14 +7,14 @@ else
   exit 1
 fi
 
-has fzf || die 'no fzf'
+has -v fzf || die
 
 fzf() {
   command fzf --cycle "$@"
 }
 
 pick_files() {
-  local files fzpick prettyfiles
+  local files fzpick
   mapfile -t files < <(find . -maxdepth 1 2> /dev/null | sort | sed '1d; s|^\./||')
   fzpick=$( for f in "${files[@]}"; do
     if [[ -d "$f" ]]; then
@@ -39,17 +39,17 @@ pick_destination() {
       sort)
     mapfile -t browseinfo < <(
       fzf --print-query \
-      --history=${HOME}/.cache/fzmv_history \
+      --history="${HOME}/.cache/fzmv_history" \
       --header="${errors:-move files here}" <<< "$dirs")
     query=${browseinfo[0]}
     browsedir=${browseinfo[1]}
     [[ -d "$query" ]] && browsedir="$query"
     [[ ! -d "$browsedir" ]] && return 1
-    if [[ "$browsedir" == '.' && $(realpath $browsedir) != $cwd ]]; then
+    if [[ "$browsedir" == '.' && $(realpath "$browsedir") != "$cwd" ]]; then
       realpath "$browsedir"
       break
     else
-      cd "$browsedir"
+      cd "$browsedir" || die
       continue
     fi
   done
@@ -63,6 +63,6 @@ while (( $# > 0 )); do
 done
 
 mapfile -t files < <(pick_files)
-[[ ${#files[@]} > 0 ]] || exit 1
+(( ${#files[@]} > 0 )) || exit 1
 destination=$(pick_destination) || exit 1
 ${dryrun:+echo} mv -t "$destination" "${files[@]}"

@@ -1,8 +1,4 @@
-if [[ -z "$SSH_CONNECTION" ]]; then
-  if [[ -z "$DISPLAY" &&  $(tty) == '/dev/tty1' ]] ; then
-    exec startx
-  fi
-else
+if [[ -n "$SSH_CONNECTION" ]]; then
   if tmux ls &> /dev/null; then
     tmux attach
   else
@@ -11,5 +7,9 @@ else
     else
       tmux
     fi
+  fi
+else
+  if [[ -z "$DISPLAY" &&  $(tty) == '/dev/tty1' ]] ; then
+    exec startx
   fi
 fi

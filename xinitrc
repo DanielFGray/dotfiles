@@ -2,23 +2,28 @@
 
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 
-synclient TapButton1=1
-synclient VertTwoFingerScroll=1
-synclient HorizTwoFingerScroll=1
-
-(sleep 1 && (
+(sleep 0.5 && (
   xmodmap ~/.xmodmap
+  xset +fp ~/.fonts
+  xset fp rehash
+  xsetroot -cursor_name left_ptr
   xrdb -load ~/.Xresources
-  xset +fp ~/.fonts; xset fp rehash;
+
+  setxkbmap -option "grp:switch,grp:shifts_toggle,grp_led:scroll" \
+    -layout "us,us(dvorak)"
+
   syndaemon -t -k -i 2 -d &
-  redshift lat=29.27 lon=-94.87 &
+  synclient TapButton1=1 \
+            VertTwoFingerScroll=1 \
+            HorizTwoFingerScroll=1\
+            PalmDetect=1
 )) &
 
 if [[ -d /etc/X11/xinit/xinitrc.d ]]; then
   for f in /etc/X11/xinit/xinitrc.d/*; do
-    [[ -x "$f" ]] && . "$f"
+    [[ -x "$f" ]] && source "$f"
   done
   unset f
 fi
 
-exec xterm
+exec awesome

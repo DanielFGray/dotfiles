@@ -27,10 +27,10 @@ ask() {
 }
 
 esc=$(printf '\033')
-tput_reset="${esc}[0m"
-tput_red="${esc}[31m"
-tput_green="${esc}[32m"
-tput_blue="${esc}[34m"
+c_reset="${esc}[0m"
+c_red="${esc}[31m"
+c_green="${esc}[32m"
+c_blue="${esc}[34m"
 
 if [[ -f /etc/debian_version ]]; then
   PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
@@ -115,7 +115,7 @@ sprunge() { command curl -sF 'sprunge=<-' http://sprunge.us ;}
 pgrep() { ps aux | command grep -P "$@" | command grep -v grep ;}
 
 newImage() {
-  convert -background transparent white -fill black -size 400x400 -gravity Center -font Ubuntu-Regular caption:"$1" "$2" &&
+  convert -background white -fill black -size 500x500 -gravity Center -font Droid-Sans-Regular caption:"$1" "$2" &&
   optipng "$2" &&
   qiv "$2"
 }
@@ -199,12 +199,45 @@ if has synclient && has vipe; then
 fi
 
 if has fzf; then
-  has ag && export FZF_DEFAULT_COMMAND='ag -l -g ""'
-  synclient() { command synclient $(command synclient | vipe | sed '1d;s/ //g') ;}
+  has ag && export FZF_DEFAULT_COMMAND='ag -l'
+  umnt() {
+    device=$(mount | awk '/sshfs|\/dev\/sd/{print $1, $3, $5, $6}' | column -t | fzf | awk '{print $2}')
+    [[ -n "$device" ]] && sudo umount -l "$device"
+  }
+
+  loadnvm() {
+    [[ -s "/home/dan/.nvm/nvm.sh" ]] && source "/home/dan/.nvm/nvm.sh"
+    nvm use stable
+  }
+
+  nvmuse() {
+    version=$(nvm ls | fzf --ansi | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
+    [[ -n $version ]] && nvm use "$version"
+  }
+
+  nvminstall() {
+    version=$(nvm ls-remote | fzf --ansi --tac | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
+    [[ -n $version ]] && nvm install "$version"
+  }
+
+  npmsearch() {
+    local args=()
+    while true; do
+      case "$1" in
+        -*) args+=( "$1" ) ; shift ;;
+        *) break
+      esac
+    done
+    package=$(npm search "$*" | fzf --multi --ansi --header-lines=1 | awk '{print $1}')
+    [[ -n $package ]] && npm i "${args[@]}" "$package"
+  }
+
+  loadperlbrew() {
+    source ~/perl5/perlbrew/etc/bashrc
+    perlbrew
+  }
 fi
 
-has fzf && has ag && export FZF_DEFAULT_COMMAND='ag -l -g ""'
-
-has fortune && fortune -as
+has fortune && fortune -ea
 
 # vim:ft=sh:

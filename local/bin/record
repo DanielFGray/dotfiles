@@ -43,19 +43,17 @@ getdimensions() {
     local xwininfo x y w h
     echo -ne 'click a window\r'
     xwininfo=$(xwininfo)
-    read x y w h < <(awk -F':' '/Absolute upper-left X/ { x=$2 }
-    /Absolute upper-left Y/ { y=$2 }
-    /Width/ { w=$2 }
-    /Height/ { h=$2 }
-    END { print x, y, w, h }' <<< "$xwininfo")
+    read -r x y w h < <(awk '/Absolute upper-left X/ { x=$2 }
+      /Absolute upper-left Y/ { y=$2 }
+      /Width/ { w=$2 }
+      /Height/ { h=$2 }
+      END { print x, y, w, h }' -F':' <<< "$xwininfo")
     dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
   elif [[ "$region" == true ]]; then
-    if ! has xrectsel; then
-      die 'xrectsel required for -s'
-    fi
+    has xrectsel || die 'xrectsel required for -s'
     echo -ne 'select a region\r'
     #TODO: don't use eval
-    eval dimensions=( $(xrectsel "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )
+    eval "dimensions=( $(xrectsel "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )"
   else
     scrsize=$(xdpyinfo | awk '/dimensions/{print $2}')
     dimensions=( ['x']='0' ['y']='0' ['w']="${scrsize%%x*}" ['h']="${scrsize#*x}" )
@@ -103,9 +101,7 @@ while getopts "f:F:d:D:swh" opt; do
   esac
 done
 
-if [[ -z "$DISPLAY" ]]; then
-  die 'could not grab $DISPLAY'
-fi
+[[ -z "$DISPLAY" ]] && die 'could not grab DISPLAY'
 
 if [[ -f "$file" && "$overwrite" == false ]] && ! ask "overwrite ${file}? "; then
   die
