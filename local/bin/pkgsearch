@@ -7,36 +7,37 @@ else
   exit 1
 fi
 
-declare installer
 declare search
 
 has -v fzf || die
 
 fzf() {
-  command fzf -e +s --multi --cycle --ansi --no-hscroll "$@"
+  command fzf -e +s --multi --cycle --ansi --no-hscroll --inline-info "$@"
 }
 
 if [[ -f /etc/debian_version ]]; then
-  mapfile -t pkgs < <(
-    apt-cache search '' |
-    sed -u -r "s|^([^ ]+)|${c_green}\1${c_reset}|" |
-    fzf --query="$*" |
-    awk '{print $1}'
-  )
+  out=$(fzf --query="$*" < <( \
+      apt-cache search '' |
+      sed -u -r "s|^([^ ]+)|${c_green}\1${c_reset}|" ) )
+  mapfile -t pkgs < <( awk '{print $1}' <<< "$out" )
   (( ${#pkgs} > 0 )) || exit
   sudo $(getCommandFallbacks 'apt' 'apt-get') install "${pkgs[@]}"
 elif [[ -f /etc/arch-release ]]; then
-  if (( $# > 0)); then
-    search=$(getCommandFallbacks 'pacaur' 'yaourt' 'packer' 'apacman' 'pacman')
-  else
-    search='pacman'
-  fi
-  mapfile -t pkgs < <(
-    $search -Ss "$@" |
-    sed -u -r -n "/^[^ ]/{s/$/ -/; x; s|^([^/]+)/([^ ]+)|[${c_blue}\1${c_reset}] ${c_green}\2${c_reset}|; p;}; /^ /{s/^ */ /; x; G; s/\n//; x}" |
-    fzf --header-lines=1 |
-    awk '{print $2}'
+  search='pacman'
+  (( $# > 0)) && search=$(getCommandFallbacks 'pacaur' 'yaourt' 'packer' 'apacman' 'pacman')
+  out=$(fzf < <( $search -Ss "$@" |
+      awk '{
+        getline descr
+        sub(/ */,"", descr)
+        repo = "[" blue gensub(/\/.*/, "", 1) reset "]"
+        name = green gensub(/.*\//, "", 1, $1) reset
+        info = gensub(/[^ ]* /, "", 1)
+        print repo, name, info, descr
+      }' blue="$c_blue" green="$c_green" reset="$c_reset" yellow="$c_yellow"
+    )
   )
+  mapfile -t pkgs < <(awk '{print $2}' <<< "$out")
   (( ${#pkgs} > 0 )) || exit
+  echo "installing ${pkgs[*]}"
   ${search/pacman/sudo pacman} -S "${pkgs[@]}"
 fi

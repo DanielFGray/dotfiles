@@ -14,7 +14,7 @@ HELP
 }
 
 ask() {
-  read -N1 -p "$* " ans
+  read -r -N1 -p "$* " ans
   echo
   [[ ${ans^} == Y* ]]
 }

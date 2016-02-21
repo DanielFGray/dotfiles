@@ -8,10 +8,10 @@ else
 fi
 
 favs=('v' 'gvim' 'vim' 'emacs' 'vi' 'nano')
-cmd=$(getCommandFallbacks ${favs[*]}) || die "no editor found in ( ${favs[*]} )"
-editor=($cmd $*)
+cmd=$(getCommandFallbacks "${favs[@]}") || die "no editor found in ( ${favs[*]} )"
+editor="$cmd $*"
 if inTerm; then
-  exec ${editor[*]}
+  exec $editor
 else
-  ( exec x-terminal-emulator -e bash ${editor[*]}) &
+  ( exec x-terminal-emulator -e bash $editor) &
 fi

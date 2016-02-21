@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 declare verbose=0
-declare deletionKey
-declare expire
+# declare deletionKey
+# declare expire
 declare esc=$(printf '\033')
 declare c_reset="${esc}[0m"
 declare c_red="${esc}[31m"
@@ -22,25 +22,31 @@ die() {
 }
 
 usage() {
-  LESS=-EXR less <<-'HELP'
-Usage: tekup [OPTIONS]
-  -h  print this help
-  -v  use verbose output
+  # LESS=-EXRm~ less <<-'HELP'
+  more <<-'HELP'
+Usage: tekup [OPTIONS] [FILES..]
+  -h          print this help
+  -v          print verbose output. there are two levels of verbosity
+              (because this thing is over-engineered), the first will print
+              the JSON response from teknik, the second will also pass the
+              -v option to curl
 HELP
 }
 
 OPTERR=0
 while getopts "hv" opt; do
   case "$opt" in
-    h) usage; exit 0 ;;
-    v) (( verbose++ )) ;;
+    h) usage; exit 0    ;;
+    v) (( verbose++ ))  ;;
     # d) deletionKey=true ;;
     # e) expireDate=true ;;
   esac
 done
 shift "$((OPTIND-1))"
 
-(( $# < 1 )) && die 'No files to upload.'
+if (( $# < 1 )); then
+  die 'No files to upload.'
+fi
 
 for (( i=0; i <= $#; i++ )); do
   file="$1" && shift
@@ -50,10 +56,18 @@ for (( i=0; i <= $#; i++ )); do
   mime=$(file -ib "$file")
   mime="${mime%%/*}"
 
-  if [[ $mime == 'text' ]]; then
-    post=$(curl -s --data "title=${file##*/}" --data-urlencode "code=$(< "${file}")" https://api.teknik.io/v1/Paste)
+  if (( verbose < 1 )); then
+    curl_verbosity='-s'
+  elif (( verbose == 1)); then
+    curl_verbosity=''
   else
-    post=$(curl -s -F "contentType=${mime}" -F "file=@${file}" https://api.teknik.io/v1/Upload)
+    curl_verbosity='-v'
+  fi
+
+  if [[ $mime == 'text' ]]; then
+    post=$(command curl ${curl_verbosity} --data "title=${file##*/}" --data-urlencode "code=$(< "${file}")" https://api.teknik.io/v1/Paste)
+  else
+    post=$(command curl ${curl_verbosity} -F "contentType=${mime}" -F "file=@${file}" https://api.teknik.io/v1/Upload)
   fi
 
   (( verbose > 0 )) && info "response: ${c_reset}${post}"

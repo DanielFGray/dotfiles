@@ -25,7 +25,6 @@ setCmd() {
   fi
 }
 
-
 cmd='vim'
 cmdopts=()
 searchstr=''
@@ -42,7 +41,7 @@ while getopts "hac:" opt; do
 done
 shift "$((OPTIND-1))"
 
-has 'fzf' || die 'requires fzf installed'
+has -v 'fzf' || die
 
 if [[ "$cmd" == 'vim' && -n "$DISPLAY" ]] && has v; then
   cmd='v'
@@ -113,8 +112,6 @@ if [[ "$searchstr" != '' ]]; then
   searchopts+=( "$searchstr" )
 fi
 
-
-
 choices=$($searchcmd "${searchopts[@]}" 2> /dev/null |
   fzf --ansi --cycle --multi) || exit 1
 
@@ -126,4 +123,4 @@ fi
 
 mapfile -t choices <<< "$choices"
 
-$cmd ${cmdopts[@]} ${choices[@]}
+$cmd ${cmdopts[*]} "${choices[@]}"

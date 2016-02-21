@@ -8,5 +8,5 @@ else
 fi
 
 favs=('firefox' 'luakit')
-cmd=$(getCommandFallbacks ${favs[*]}) || die "no browser found in (${favs[*]})"
+cmd=$(getCommandFallbacks "${favs[@]}") || die "no browser found in (${favs[*]})"
 (exec $cmd $*) &
