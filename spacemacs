@@ -28,23 +28,27 @@ values."
      emacs-lisp
      evil-cleverparens
      evil-commentary
-     evil-snipe
-     git
+     (evil-snipe :variables
+                 evil-snipe-scope 'whole-buffer
+                 evil-snipe-repeat-scope 'whole-buffer
+                 evil-snipe-override-evil-repeat-keys t)
+     ;; git
      javascript
      markdown
      org
      php
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+     (ranger :variables
+             ranger-max-preview-size 10
+             ranger-show-preview t)
      react
-     shell
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
      spell-checking
      syntax-checking
      themes-megapack
      unimpaired
-     ;; version-control
-     vinegar
+     version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -118,7 +122,7 @@ values."
                                :size 12
                                :weight normal
                                :width normal
-                               :powerline-scale 1.5)
+                               :powerline-scale 1.2)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -157,7 +161,7 @@ values."
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
    dotspacemacs-use-ido nil
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
-   dotspacemacs-helm-resize nil
+   dotspacemacs-helm-resize t
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
    dotspacemacs-helm-no-header nil
@@ -192,13 +196,13 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 90
+   dotspacemacs-active-transparency 100
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 66
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
@@ -206,7 +210,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'relative
+   dotspacemacs-line-numbers nil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -242,7 +246,10 @@ user code here.  The exception is org related code, which should be placed in
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  (setq powerline-default-separator nil)
+  (evil-define-key 'visual evil-surround-mode-map "s" 'evil-substitute)
+  (evil-define-key 'visual evil-surround-mode-map "S" 'evil-surround-region)
+
+  (setq powerline-default-separator 'arrow)
 
   (setq dired-listing-switches "-lhgoBF --group-directories-first")
 
