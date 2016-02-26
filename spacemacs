@@ -32,7 +32,7 @@ values."
                  evil-snipe-scope 'whole-buffer
                  evil-snipe-repeat-scope 'whole-buffer
                  evil-snipe-override-evil-repeat-keys t)
-     ;; git
+     git
      javascript
      markdown
      org
@@ -255,15 +255,8 @@ layers configuration. You are free to put any user code."
 
   (setq vc-follow-symlinks t)
 
-  (setq linum-format (lambda (str) (propertize (format "%s " str) 'face 'linum)))
-
   (golden-ratio-mode 1)
 
-  (indent-guide-global-mode 1)
-
-  ;; Show 80-column marker
-  (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
-  (global-fci-mode 1)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
