@@ -28,14 +28,16 @@ rawurlencode() {
 
 has -v curl jq fzf || die
 
-# declare -a opts
-# while true; do
-#   case $1 in
-#     -*) opts+="$1"
-#   esac
-# done
-
-command curl -sfL "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=5&q=$(rawurlencode "$*")" |
-  jq -c '.["responseData"]["results"] | map("\(.unescapedUrl) | \(.title) | \(.content)") | .[]' |
+url=$(command curl -sfL "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=8&q=$(rawurlencode "$*")" |
+  jq -c '.["responseData"]["results"] | map("\(.unescapedUrl) \(.title) | \(.content)") | .[]' |
   sed -r 's/<[^>]*>//g; s/\\n//g; s/^\s*"//; s/",?$//' |
-  fzf -e --ansi --cycle --inline-info | awk '{print $1}' | xargs -I% w3m %
+  fzf -e --ansi --cycle --inline-info | awk '{print $1}')
+
+if [[ -n "$url" ]]; then
+  case "$url" in
+    *youtube.com*|*youtu.be*)
+      mpv "$url" ;;
+    *)
+      w3m "$url" ;;
+  esac
+fi
