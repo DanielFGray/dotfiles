@@ -9,6 +9,8 @@ export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
   xsetroot -cursor_name left_ptr
   xrdb -load ~/.Xresources
 
+  setxkbmap -option 'caps:ctrl_modifier'
+  xcape -e 'Caps_Lock=Escape'
   setxkbmap -option "grp:switch,grp:shifts_toggle,grp_led:scroll" \
     -layout "us,us(dvorak)"
 
