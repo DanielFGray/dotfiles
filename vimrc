@@ -258,9 +258,19 @@ Plug 'mhinz/vim-startify' " {{{
   endfunction
 
   if has('nvim')
-    let g:startify_custom_header = s:filter_header('NeoVim')
+    " let g:startify_custom_header = s:filter_header('NeoVim')
+    let g:startify_custom_header = [
+    \ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
+    \ '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃',
+    \ '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹',
+    \ '']
   else
-    let g:startify_custom_header = s:filter_header('Vim')
+    " let g:startify_custom_header = s:filter_header('Vim')
+    let g:startify_custom_header = [
+    \ '        ╻ ╻╻┏┳┓',
+    \ '        ┃┏┛┃┃┃┃',
+    \ '        ┗┛ ╹╹ ╹',
+    \ '']
   endif
 " }}}
 Plug 'reedes/vim-thematic' " {{{
