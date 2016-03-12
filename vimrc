@@ -348,6 +348,9 @@ Plug 'reedes/vim-wordy' " {{{
     \ nnoremap <buffer> ]w <Esc>:NextWordy<CR>
   augroup END
 " }}}
+Plug 'chilicuil/vim-sprunge' " {{{
+  let g:sprunge_cmd = 'curl -s -F "f:1=<-" http://ix.io'
+" }}}
 " }}}
 
 " {{{ unite.vim
