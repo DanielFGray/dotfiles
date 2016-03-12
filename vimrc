@@ -476,11 +476,11 @@ Plug 'tpope/vim-fugitive' " {{{
 " }}}
 Plug 'airblade/vim-gitgutter' " {{{
   let g:gitgutter_map_keys = 0
-  nnoremap [c <Plug>GitGutterPrevHunk
-  nnoremap ]c <Plug>GitGutterNextHunk
-  nnoremap <Leader>hs <Plug>GitGutterStageHunk
-  nnoremap <Leader>hr <Plug>GitGutterRevertHunk
-  nnoremap <Leader>hp <Plug>GitGutterPreviewHunk
+  nnoremap <silent> [c <Esc>:GitGutterPrevHunk<CR>zMzvzz
+  nnoremap <silent> ]c <Esc>:GitGutterNextHunk<CR>zMzvzz
+  nnoremap <silent> <Leader>hs <Plug>GitGutterStageHunk
+  nnoremap <silent> <Leader>hr <Plug>GitGutterRevertHunk
+  nnoremap <silent> <Leader>hp <Plug>GitGutterPreviewHunk
 " }}}
 Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim'
