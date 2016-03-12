@@ -538,6 +538,7 @@ Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'othree/jspc.vim'
 Plug 'marijnh/tern_for_vim' " {{{
   \, { 'do': 'npm install' }
+  let g:tern_show_signature_in_pum = 1
 " }}}
 " Plug 'walm/jshint.vim'
 Plug 'heavenshell/vim-jsdoc' " {{{
@@ -583,7 +584,7 @@ set showcmd noshowmode
 set hidden
 set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set listchars+=eol:¬
-set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\
+set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\ 
 " set nolazyredraw
 set autoread
 set report=0
@@ -612,7 +613,105 @@ endif
 
 " {{{ functions
 
-function! PromptQuit() " {{{
+function! PlugAdd() abort " {{{ TODO
+  " check clipboard for 'https://github.com/' or user arg
+  " substitute above match with 'Plug '
+  " surround remainder with quotes
+  " add to current line
+endfunction
+command! -nargs=* PlugAdd call PlugAdd()
+" }}}
+
+function! s:DiffU() abort " {{{
+  " shows a split with a diff of the current buffer
+  let l:original = expand('%:p')
+  if strlen(l:original) < 1
+    echo 'no file on disk'
+    return -1
+  endif
+  " TODO: get buffer without mangling newlines
+  let l:changes = join(getline(1, '$'), "\n")."\n"
+  let l:diff = system(printf('diff -u %s -', l:original), l:changes)
+  if l:diff == ''
+    echo 'no changes'
+    return 0
+  endif
+  new | 0put =l:diff
+  if empty(getline('$'))
+    execute 'normal! Gddgg'
+  endif
+  call PushBelowOrLeft()
+  nnoremap <silent><buffer> q <Esc>:q<CR>
+  nnoremap <silent><buffer> <Esc> <Esc>:q<CR>
+  setlocal bt=nofile bh=wipe nomod nobl noswf ro foldmethod=diff ft=diff
+  return 1
+endfunction
+command! -bar -nargs=0 DiffU call s:DiffU()
+nnoremap <silent> <Leader>d <Esc>:DiffU<CR>
+" }}}
+
+function! DiffWrite() abort " {{{
+  " show split from DiffU() and prompt to save
+  " TODO: suck less
+  if s:DiffU() < 1
+    return
+  endif
+  redraw!
+  echo 'Save changes? '
+  let l:char = nr2char(getchar())
+  if l:char ==? 'y'
+    bd | write
+  elseif l:char ==? 'q'
+    bd
+  endif
+  redraw!
+endfunction
+command! -bar -nargs=0 W call DiffWrite()
+nnoremap <silent> <Leader>w <Esc>:W<CR>
+" }}}
+
+function! s:ReadUrl(url) abort " {{{
+  " opens a url in a new buffer, prompts for filetype
+  if ! executable('curl')
+    echo 'curl not found'
+    return 0
+  endif
+  enew | put =system('curl -sL ' . a:url)
+  if empty(getline('$'))
+    execute 'normal! Gddgg'
+  endif
+  redraw!
+  let newft = input('filetype? ')
+  if strlen(newft) > 0
+    execute 'set filetype=' . newft
+  endif
+  redraw!
+endfunction
+command! -bar -nargs=1 R call s:ReadUrl("<args>")
+" }}}
+
+function! s:DiffUrl(url) abort " {{{
+  " starts diffmode with the current buffer and a url
+  " TODO: could be it beee any file
+  if ! executable('curl')
+    echo 'curl not found'
+    return 0
+  endif
+  let l:difft = &ft
+  diffthis
+  vnew | put =system('curl -sL ' . a:url)
+  execute 'set ft=' . l:difft
+  if empty(getline('$'))
+    execute 'normal! Gddgg'
+  endif
+  redraw!
+  diffthis | diffupdate
+  redraw
+endfunction
+command! -bar -nargs=1 Rdiff call s:DiffUrl("<args>")
+" }}}
+
+function! PromptQuit() abort " {{{
   echo 'Y - kill buffer and current window'
   echo 'y - kill buffer but preserve window'
   echo 'c - kill window but preserve buffer'
@@ -624,20 +723,13 @@ function! PromptQuit() " {{{
     execute 'Sayonara!'
   elseif char ==? 'c'
     wincmd q
-  elseif char ==? 'h'
-    echo 'Y - kill buffer and current window'
-    echo 'y - kill buffer but preserve window'
-    echo 'c - kill window but preserve buffer'
-    " TODO: do I need recursion?
-    call PromptQuit()
-    return
   endif
   silent! redraw!
 endfunction
 nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
 " }}}
 
-function! Togglegjgk() " {{{
+function! Togglegjgk() abort " {{{
   " TODO: stop replying on state
   if ! exists("g:togglegjgk") || g:togglegjgk == 0
     let g:togglegjgk = 1
@@ -658,44 +750,7 @@ endfunction
 nnoremap <silent> <Leader>tgj <Esc>:call Togglegjgk()<CR>
 " }}}
 
-function! s:ReadUrl(url) " {{{
-  " opens a url in a new buffer, prompts for filetype
-  if ! executable('curl')
-    echo 'curl not found'
-    return 0
-  endif
-  enew | put =system('curl -sL ' . a:url)
-  normal ggdd
-  redraw!
-  let newft = input('filetype? ')
-  if strlen(newft) > 0
-    execute 'set filetype=' . newft
-  endif
-  redraw!
-endfunction
-command! -bar -nargs=1 R call s:ReadUrl("<args>")
-" }}}
-
-function! s:DiffUrl(url) " {{{
-  " starts diffmode with the current buffer and a url
-  " TODO: could be it be any file or url?
-  if ! executable('curl')
-    echo 'curl not found'
-    return 0
-  endif
-  let l:difft = &ft
-  diffthis
-  vnew | put =system('curl -sL ' . a:url)
-  execute 'set ft=' . l:difft
-  normal ggdd
-  redraw!
-  diffthis | diffupdate
-  redraw
-endfunction
-command! -bar -nargs=1 Rdiff call s:DiffUrl("<args>")
-" }}}
-
-function! s:GetVisualSelection() " {{{
+function! s:GetVisualSelection() abort " {{{
   " http://stackoverflow.com/a/6271254/570760
   let [lnum1, col1] = getpos("'<")[1:2]
   let [lnum2, col2] = getpos("'>")[1:2]
@@ -706,36 +761,12 @@ function! s:GetVisualSelection() " {{{
 endfunction
 " }}}
 
-function! s:Sprunge(line1, line2) " {{{
-  " paste selection or buffer to sprunge
-  if ! executable('curl')
-    echo 'curl not found'
-    return 0
-  endif
-  let l:content = ''
-  if(a:line1 ==? line("'<'") || a:line2 ==? line("'>'"))
-    let l:content = s:GetVisualSelection()
-  else
-    let l:content = join(getline(a:line1, a:line2), "\n")
-  endif
-  echo 'Uploading..'
-  let l:url = system('curl -sF "sprunge=<-" http://sprunge.us', l:content)[0:-2]
-  redraw
-  if(empty(l:url))
-    echo 'Failed'
-    return 0
-  endif
-  echomsg l:url
-endfunction
-command! -bar -nargs=0 -range=% Sprunge call s:Sprunge(<line1>, <line2>)
-" }}}
-
-function! AdjustWindowHeight(minheight, maxheight) " {{{
+function! AdjustWindowHeight(minheight, maxheight) abort " {{{
   exe max([min([line('$'), a:maxheight]), a:minheight]) . 'wincmd _'
 endfunction
 " }}}
 
-function! PushBelowOrLeft() " {{{
+function! PushBelowOrLeft() abort " {{{
   if winheight(0) / 2 < line('$')
     wincmd H
     vert resize 80
@@ -746,66 +777,7 @@ function! PushBelowOrLeft() " {{{
 endfunction
 " }}}
 
-function! s:DiffOrig() " {{{
-  " vimdiff between disk and buffer
-  let filetype = &ft
-  diffthis
-  vnew | r # | normal! 1Gdd
-  diffthis
-  exe 'setlocal bt=nofile bh=wipe nomod nobl noswf ro ft=' . filetype
-endfunction
-command! -bar -nargs=0 DiffOrig call s:DiffOrig()
-" }}}
-
-function! s:DiffU() " {{{
-  " shows a split with a diff of the current buffer
-  let l:original = expand('%:p')
-  if strlen(l:original) < 1
-    echo 'no file on disk'
-    return -1
-  endif
-  " TODO: get buffer without mangling newlines
-  let l:changes = join(getline(1, '$'), "\n")."\n"
-  let l:diff = system(printf('diff -u %s -', l:original), l:changes)
-  if l:diff == ''
-    echo 'no changes'
-    return 0
-  endif
-  new | 0put =l:diff
-  if empty(getline('$'))
-    execute 'normal! Gdd'
-  endif
-  call PushBelowOrLeft()
-  normal! gg
-  nnoremap <silent><buffer> q <Esc>:q<CR>
-  setlocal bt=nofile bh=wipe nomod nobl noswf ro foldmethod=diff ft=diff
-  return 1
-endfunction
-command! -bar -nargs=0 DiffU call s:DiffU()
-nnoremap <silent> <Leader>d <Esc>:DiffU<CR>
-" }}}
-
-function! DiffWrite() " {{{
-  " show split from DiffU() and prompt to save
-  " TODO: suck less
-  if s:DiffU() < 1
-    return
-  endif
-  redraw!
-  echo 'Save changes? '
-  let l:char = nr2char(getchar())
-  if l:char ==? 'y'
-    bd | write
-  elseif l:char ==? 'q'
-    bd
-  endif
-  redraw!
-endfunction
-command! -bar -nargs=0 W call DiffWrite()
-nnoremap <silent> <Leader>w <Esc>:W<CR>
-" }}}
-
-function! MyFoldText() " {{{
+function! MyFoldText() abort " {{{
   " courtesy Steve Losch
   let line = getline(v:foldstart)
   let nucolwidth = &fdc + &number * &numberwidth
@@ -817,6 +789,13 @@ function! MyFoldText() " {{{
   let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - 2
   return line . ' ' . repeat(' ', fillcharcount)  . ' '. foldedlinecount
 endfunction
+" }}}
+
+function! ExecuteMacroOverVisualRange() abort " {{{
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 " }}}
 
 " }}}
@@ -902,12 +881,11 @@ augroup END
 
 " {{{ misc commands and maps
 nnoremap Y y$
-nnoremap g; g;zvzt
-nnoremap g, g,zvzt
-nnoremap <C-O> <C-O>zvzz
+nnoremap g; g;zvzz
+nnoremap g, g,zvzz
 nnoremap <F6> <Esc>:set paste!<CR>
 inoremap <F6> <C-O>:set paste!<CR>
-nnoremap <C-Z> <esc>zMzvzt
+nnoremap <C-Z> <Esc>zMzvzz
 nnoremap <Leader> <Nop>
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
 if exists(':SudoWrite')
