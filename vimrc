@@ -238,18 +238,12 @@ Plug 'junegunn/goyo.vim' " {{{
     if exists('$TMUX')
       silent !tmux set status off
     endif
-    if exists(':Limelight')
-      Limelight
-    endif
   endfunction
   function! s:goyo_leave()
     set noshowmode
     set scrolloff=5
     if exists('$TMUX')
       silent !tmux set status on
-    endif
-    if exists(':Limelight')
-      Limelight!
     endif
   endfunction
   autocmd! User GoyoEnter nested call <SID>goyo_enter()
