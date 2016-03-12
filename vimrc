@@ -361,6 +361,7 @@ Plug 'Shougo/context_filetype.vim'
 Plug 'tsukkee/unite-tag'
 Plug 'osyo-manga/unite-filetype'
 Plug 'thinca/vim-unite-history'
+Plug 'kopischke/unite-spell-suggest'
 
 " {{{ settings
   let g:unite_data_directory = '~/.vim/cache/unite'
@@ -379,35 +380,84 @@ Plug 'thinca/vim-unite-history'
     let g:unite_source_rec_async_command = ['ack', '-f', '--nofilter']
   endif
 
+  " from docs
+  " nnoremap <silent> <leader>c  :<C-u>UniteWithCurrentDir -buffer-name=files buffer bookmark file<CR>
+  " nnoremap <silent> <leader>b  :<C-u>UniteWithBufferDir -buffer-name=files buffer bookmark file<CR>
+  " nnoremap <silent> <leader>r  :<C-u>Unite -buffer-name=register register<CR>
+  " nnoremap <silent> <leader>f  :<C-u>Unite -buffer-name=resume resume<CR>
+  " nnoremap <silent> <leader>o  :<C-u>Unite outline<CR>
+  " nnoremap <silent> <leader>ma :<C-u>Unite mapping<CR>
+  " nnoremap <silent> <leader>me :<C-u>Unite output:message<CR>
+  " nnoremap <silent> <leader>f  :<C-u>Unite source<CR>
+  " nnoremap <silent> <leader>s :<C-u>Unite -buffer-name=files -no-split jump_point file_point buffer_tab file_rec:! file file/new<CR>
+
   nnoremap <silent> <leader><leader> <Esc>:Unite mapping -buffer-name=mapping -auto-resize<CR>
   nnoremap <silent> <leader>r <Esc>:Unite -buffer-name=register -auto-resize register<CR>
   nnoremap <silent> <leader>y <Esc>:Unite -buffer-name=yank     -auto-resize history/yank<CR>
-  nnoremap <silent> <leader>b <Esc>:Unite -buffer-name=buffer   -auto-resize buffer<CR>
   nnoremap <silent> <leader>: <Esc>:Unite -buffer-name=command  -auto-resize command history/command<CR>
   nnoremap <silent> <leader>o <Esc>:Unite -buffer-name=outline  -auto-resize outline<CR>
   nnoremap <silent> <leader>h <Esc>:Unite -buffer-name=help     -auto-resize help<CR>
   nnoremap <silent> <leader>/ <Esc>:Unite -buffer-name=grep     -auto-resize grep<CR>
   nnoremap <silent> <leader>t <Esc>:Unite -buffer-name=tag      -auto-resize tag tag/file<CR>
-  nnoremap <silent> <leader>e <Esc>:Unite -buffer-name=files    -auto-resize buffer file_mru bookmark file<CR>
-  nnoremap <silent> <leader>f <Esc>:Unite -buffer-name=files    -auto-resize file_rec/<C-R>=has('nvim')?'neovim':'async'<CR><CR>
+  nnoremap <silent> <leader>b <Esc>:Unite -buffer-name=files    -auto-resize buffer file file_mru bookmark<CR>
+  nnoremap <silent> z=        <Esc>:Unite -buffer-name=spell    -auto-resize spell_suggest<CR>
 
-  autocmd FileType unite call s:unite_settings()
-  function! s:unite_settings()
-    call unite#custom#profile('default', 'context', {'start_insert': 1})
+  autocmd FileType unite call s:unite_my_settings()
+  function! s:unite_my_settings() " {{{
+"   call unite#custom#profile('default', 'context', {'start_insert': 1})
     call unite#filters#sorter_default#use(['sorter_rank'])
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
+"
+"   imap <buffer>               <Esc> <Plug>(unite_exit)
+"   nmap <buffer>               <Esc> <Plug>(unite_exit)
+"   imap <buffer>               <C-R> <Plug>(unite_narrowing_input_history)
+"   imap <buffer>               <C-J> <Plug>(unite_select_next_line)
+"   imap <buffer>               <C-K> <Plug>(unite_select_previous_line)
+"   imap <silent><buffer><expr> <C-X> unite#do_action('split')
+"   imap <silent><buffer><expr> <C-V> unite#do_action('vsplit')
+"   imap <silent><buffer><expr> <C-T> unite#do_action('tabopen')
 
-    imap <buffer>               <Esc> <Plug>(unite_exit)
+    call unite#custom#profile('default', 'context', {
+    \   'start_insert': 1,
+    \   'direction': 'botright',
+    \ })
+
+    imap <buffer> jj      <Plug>(unite_insert_leave)
+    "imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
+
+    " imap <buffer>               <Esc> <Plug>(unite_exit)
     nmap <buffer>               <Esc> <Plug>(unite_exit)
-    imap <buffer>               <C-R> <Plug>(unite_narrowing_input_history)
-    imap <buffer>               <C-J> <Plug>(unite_select_next_line)
-    imap <buffer>               <C-K> <Plug>(unite_select_previous_line)
-    imap <silent><buffer><expr> <C-X> unite#do_action('split')
-    imap <silent><buffer><expr> <C-V> unite#do_action('vsplit')
-    imap <silent><buffer><expr> <C-T> unite#do_action('tabopen')
+    nnoremap <silent><buffer><expr> l unite#smart_map('l', unite#do_action('default'))
+    imap <buffer><expr> j   unite#smart_map('j', '')
+    imap <buffer><expr> x   unite#smart_map('x', "\<Plug>(unite_quick_match_jump)")
+    imap <buffer> <TAB>     <Plug>(unite_select_next_line)
+    imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
+    imap <buffer> '         <Plug>(unite_quick_match_default_action)
+    nmap <buffer> '         <Plug>(unite_quick_match_default_action)
+    nmap <buffer> x         <Plug>(unite_quick_match_jump)
+    nmap <buffer> <C-z>     <Plug>(unite_toggle_transpose_window)
+    imap <buffer> <C-z>     <Plug>(unite_toggle_transpose_window)
+    nmap <buffer> <C-j>     <Plug>(unite_toggle_auto_preview)
+    nmap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
+    imap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
+
+    let unite = unite#get_current_unite()
+    if unite.profile_name ==# 'search'
+      nnoremap <silent><buffer><expr> r     unite#do_action('replace')
+    else
+      nnoremap <silent><buffer><expr> r     unite#do_action('rename')
+    endif
+
+    nnoremap <silent><buffer><expr> cd     unite#do_action('lcd')
+    nnoremap <buffer><expr> S      unite#mappings#set_current_sorters( empty(unite#mappings#get_current_sorters()) ? ['sorter_reverse'] : [])
+
+    " Runs "split" action by <C-s>.
+    imap <silent><buffer><expr> <C-s>     unite#do_action('split')
   endfunction
+" }}}
+
 " }}}
 
 " }}}
