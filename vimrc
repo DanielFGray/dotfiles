@@ -311,9 +311,9 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-eunuch'
 Plug 'vim-utils/vim-husk'
 Plug 'sjl/gundo.vim' " {{{
-  nnoremap <Leader>u <Esc>:GundoToggle<CR>
+  nnoremap <silent> <Leader>u <Esc>:GundoToggle<CR>
   let g:gundo_right = 1
-  let g:gundo_width = 60
+  let g:gundo_width = 80
   let g:gundo_preview_height = 20
 " }}}
 Plug 'chrisbra/NrrwRgn'
