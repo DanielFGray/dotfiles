@@ -2,7 +2,7 @@ ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
 DEFAULT_USER="dan"
-plugins=( vi-mode git git-extras zsh-syntax-highlighting zsh-autosuggestions )
+plugins=( vi-mode zsh-syntax-highlighting zsh-autosuggestions )
 source $ZSH/oh-my-zsh.sh
 
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
@@ -42,7 +42,7 @@ alias zmv='noglob zmv '
 
 alias -g L='| less'
 alias -g S='| sort'
-alias -g SU='| sort | uniq | sort'
+alias -g SU='| sort -u'
 alias -g SUC='| sort | uniq -c | sort -n'
 alias -g V='| vim -'
 alias -g DN='&> /dev/null'
