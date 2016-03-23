@@ -13,7 +13,7 @@ export HISTSIZE=100000
 unset GREP_OPTIONS
 
 has() {
-  command -v $1 &> /dev/null
+  command -v "${1%% *}" &> /dev/null
 }
 
 err() {
@@ -21,16 +21,16 @@ err() {
 }
 
 ask() {
-  read -n1 -p "$* " ans
+  read -r -n1 -p "$* " ans
   echo
   [[ ${ans^} == Y* ]]
 }
 
-esc=$(printf '\033')
-c_reset="${esc}[0m"
-c_red="${esc}[31m"
-c_green="${esc}[32m"
-c_blue="${esc}[34m"
+export esc=$(printf '\033')
+export c_reset="${esc}[0m"
+export c_red="${esc}[31m"
+export c_green="${esc}[32m"
+export c_blue="${esc}[34m"
 
 if [[ -f /etc/debian_version ]]; then
   PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
@@ -60,27 +60,34 @@ elif [[ -f /etc/arch-release ]]; then
     export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
   fi
 elif [[ -f /etc/redhat-release ]]; then
-  alias yum="sudo yum "
-  alias canhaz="yum install "
+  alias yum='sudo yum '
+  alias canhaz='yum install '
 elif [[ -f /etc/gentoo-release ]]; then
-  alias canhaz="sudo emerge -av "
+  alias canhaz='sudo emerge -av '
 fi
 
-alias cp="cp -v "
-alias mv="mv -v "
-alias rm="rm -v "
-alias ln="ln -v "
-alias curl="curl -v "
-alias chown="chown -v "
-alias chmod="chmod -v "
-alias rename="rename -v "
-alias ls="ls -Fh --color --group-directories-first "
-alias l="ls -lgo "
-alias la="l -A "
-alias cdu="cdu -isdhD "
-alias grep="grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P "
-alias historygrep="history | grep -v 'history' | grep "
+alias cp='cp -v '
+alias mv='mv -v '
+alias rm='rm -v '
+alias ln='ln -v '
+alias curl='curl -v '
+alias chown='chown -v '
+alias chmod='chmod -v '
+alias rename='rename -v '
+alias ls='ls -Fh --color --group-directories-first '
+alias l='ls -lgo '
+alias la='l -A '
+alias cdu='cdu -isdhD '
+alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P '
+alias historygrep='history | grep -v "history" | grep '
 alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
+
+alias gl='git pull '
+alias gc='git commit '
+alias gcmsg='git commit -m '
+alias ga='git add '
+alias gap='git add -p '
+alias gp='git push '
 
 cd() {
   if [[ -z "$@" ]]; then
