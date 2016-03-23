@@ -7,6 +7,16 @@ else
   exit 1
 fi
 
+openurl() {
+  local url="$1"
+  case "$url" in
+    *youtube.com*|*youtu.be*|*vimeo.com*)
+      mpv "$url" ;;
+    *)
+      w3m "$url" ;;
+  esac
+}
+
 # http://stackoverflow.com/a/10660730
 rawurlencode() {
   local string="$*"
@@ -28,16 +38,12 @@ rawurlencode() {
 
 has -v curl jq fzf || die
 
-url=$(command curl -sfL "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=8&q=$(rawurlencode "$*")" |
-  jq -c '.["responseData"]["results"] | map("\(.unescapedUrl) \(.title) | \(.content)") | .[]' |
-  sed -r 's/<[^>]*>//g; s/\\n//g; s/^\s*"//; s/",?$//' |
-  fzf -e --ansi --cycle --inline-info | awk '{print $1}')
+response=$( curl -sfL "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=8&q=$(rawurlencode "$*")" ) || die 'error connecting to google, check connection'
+json=$( jq -c '.["responseData"]["results"] | map("\(.unescapedUrl) \(.title) | \(.content)") | .[]' <<< "$response" ) || die 'error parsing results :('
+url=$( fzf -e --ansi --cycle --inline-info <\
+  <( sed -r 's/<[^>]*>//g; s/\\n//g; s/^\s*"//; s/",?$//' <<< "$json" ) |
+  cut -d' ' -f1 )
 
 if [[ -n "$url" ]]; then
-  case "$url" in
-    *youtube.com*|*youtu.be*)
-      mpv "$url" ;;
-    *)
-      w3m "$url" ;;
-  esac
+  openurl "$url"
 fi
