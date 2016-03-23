@@ -101,15 +101,20 @@ cd() {
 
 mkd() { mkdir -p "$@" && cd "$1" ;}
 
-trash() { for arg in "$@"; do [[ "$arg" == -* ]] && shift; done; mkdir -p ~/.trash; mv -t ~/.trash "$@" ;}
+trash() {
+  for arg in "$@"; do
+    [[ "$arg" == -* ]] && shift
+  done
+  mkdir -p ~/.trash
+  mv -t ~/.trash "$@"
+}
 
-wget() { man curl ;}
 cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 
-help() { bash -c "help $@" ;}
+help() { bash -c "help $*" ;}
 
 txs() {
-  if [[ "$1" = "-v" ]]; then
+  if [[ "$1" = '-v' ]]; then
     shift
     tmux split-window -vd "$@"
   else
@@ -119,7 +124,7 @@ txs() {
 
 sprunge() { command curl -sF 'sprunge=<-' http://sprunge.us ;}
 
-pgrep() { ps aux | command grep -P "$@" | command grep -v grep ;}
+pgrep() { ps aux | command grep -iP "$*" | command grep -iv grep ;}
 
 newImage() {
   convert -background white -fill black -size 500x500 -gravity Center -font Droid-Sans-Regular caption:"$1" "$2" &&
@@ -186,16 +191,11 @@ curltar() {
 
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
-ding() {
-  [[ -n "$1" ]] && notify-send -u critical "$@" &> /dev/null
-  paplay ~/downloads/ding.ogg &> /dev/null
-}
-
 if has synclient && has vipe; then
   synclient() {
     if command synclient -l &> /dev/null; then
       if (( $# > 0 )); then
-        command synclient $*
+        command synclient "$@"
       else
         command synclient $(command synclient | vipe | sed '1d;s/ //g')
       fi
