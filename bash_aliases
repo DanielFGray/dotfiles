@@ -81,7 +81,7 @@ alias cdu='cdu -isdhD '
 alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P '
 alias historygrep='history | grep -v "history" | grep '
 alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
-
+alias shuf1='shuf | head -n1'
 alias gl='git pull '
 alias gc='git commit '
 alias gcmsg='git commit -m '
