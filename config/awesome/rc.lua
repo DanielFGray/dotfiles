@@ -34,17 +34,23 @@ do
 end
 -- }}}
 
--- {{{ Layouts
+-- {{{ Variables
+
 local layouts = {
   awful.layout.suit.floating,
+  awful.layout.suit.max,
   lain.layout.uselesstile,
-  lain.layout.centerwork,
   lain.layout.uselessfair,
-  awful.layout.suit.max
+  lain.layout.uselesspiral,
+  lain.layout.termfair,
+  lain.layout.centerfair,
+  lain.layout.cascade,
+  lain.layout.cascadetile,
+  lain.layout.centerwork,
+  lain.layout.centerhwork,
+  lain.layout.centerworkd,
 }
--- }}}
 
--- {{{ Variables
 modkey         = "Mod4"
 exec           = awful.util.spawn
 sexec          = awful.util.spawn_with_shell
@@ -52,11 +58,12 @@ configdir      = awful.util.getdir("config") .. "/"
 homedir        = os.getenv("HOME") .. "/"
 beautifultheme = configdir .. "themes/dfg/"
 terminal       = "x-terminal-emulator"
+term_cmd       = terminal .. " -e "
 browser        = "x-www-browser"
 filemanager    = "x-file-manager"
-mpdclient      = "sonata --visible"
-editor         = os.getenv("EDITOR") or "vim" or "nano"
-editor_cmd     = terminal .. " -e " .. editor
+mpdclient      = term_cmd .. "ncmpcpp"
+editor_prg     = os.getenv("EDITOR") or "vim" or "nano"
+editor         = term_cmd .. editor_prg
 
 beautiful.init(beautifultheme .. "theme.lua")
 
@@ -131,6 +138,8 @@ shifty.config.apps = {
       "luakit",
       "Nightly",
       "uzbl",
+      "dwb",
+      "qutebrowser"
     },
     tag = "web",
   }, {
@@ -223,7 +232,7 @@ shifty.config.defaults = {
 menu_items = freedesktop.menu.new()
 mymainmenu = awful.menu.new({ items = menu_items, width = 150 })
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon, menu = mymainmenu })
-freedesktop.utils.icon_theme = 'oxygen'
+freedesktop.utils.icon_theme = 'Faenza-CrunchBang-Dark'
 
 markup = lain.util.markup
 spr = wibox.widget.textbox(" ")
@@ -642,6 +651,10 @@ modal_exec = {
 }
 
 modal_music = {
+  m = function()
+    sexec(mpdclient)
+    mpdwidget.update()
+  end,
   t = function()
     sexec("mpc -q toggle")
     mpdwidget.update()
@@ -704,7 +717,7 @@ clientkeys = awful.util.table.join(
     c:swap(awful.client.getmaster())
   end),
   awful.key({ modkey, "Mod1" }, "o", awful.client.movetoscreen),
-  awful.key({ modkey }, "c", function(c)
+  awful.key({ modkey }, "z", function(c)
     keygrabber.run(function(mod, key, event)
       if event == "release" then
         return true
