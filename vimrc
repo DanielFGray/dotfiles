@@ -146,9 +146,7 @@ Plug 'scrooloose/syntastic' " {{{
   let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
   let g:syntastic_check_on_wq = 0
   let g:syntastic_auto_jump = 3
-  if(executable('eslint'))
-    let g:syntastic_javascript_checkers = ['eslint']
-  endif
+  let g:syntastic_javascript_checkers = ['eslint']
   nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
 " }}}
 Plug 'Shougo/neosnippet' " {{{
@@ -552,6 +550,7 @@ Plug 'heavenshell/vim-jsdoc' " {{{
   augroup END
 " }}}
 Plug 'mxw/vim-jsx'
+Plug 'mtscout6/syntastic-local-eslint.vim'
 " }}}
 
 " {{{ haskell
