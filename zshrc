@@ -34,6 +34,14 @@ chpwd() {
   ls
 }
 
+unfunction ask
+ask() {
+  echo -n "$* "
+  read -r -k 1 ans
+  echo
+  [[ ${ans:u} == Y* ]]
+}
+
 autoload -U zmv
 
 alias zcp='noglob zmv -C '
