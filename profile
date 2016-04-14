@@ -23,6 +23,7 @@ dirs=(
   "$HOME/.local/bin"
 )
 
+export PATH=''
 for d in "${dirs[@]}"; do
   if [[ -d "$d" ]]; then
     PATH="$d:$PATH"
