@@ -373,12 +373,12 @@ Plug 'kopischke/unite-spell-suggest'
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
     let g:unite_source_grep_recursive_opt = ''
-    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-l', '']
+    let g:unite_source_rec_async_command = [ 'ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-l', '' ]
   elseif executable('ack')
     let g:unite_source_grep_command = 'ack'
     let g:unite_source_grep_default_opts = '--no-heading --no-color'
     let g:unite_source_grep_recursive_opt = ''
-    let g:unite_source_rec_async_command = ['ack', '-f', '--nofilter']
+    let g:unite_source_rec_async_command = [ 'ack', '-f', '--nofilter' ]
   endif
 
   " from docs
@@ -395,12 +395,12 @@ Plug 'kopischke/unite-spell-suggest'
   nnoremap <silent> <leader><leader> <Esc>:Unite mapping -buffer-name=mapping -auto-resize<CR>
   nnoremap <silent> <leader>r <Esc>:Unite -buffer-name=register -auto-resize register<CR>
   nnoremap <silent> <leader>y <Esc>:Unite -buffer-name=yank     -auto-resize history/yank<CR>
-  nnoremap <silent> <leader>: <Esc>:Unite -buffer-name=command  -auto-resize command history/command<CR>
+  nnoremap <silent> <leader>; <Esc>:Unite -buffer-name=command  -auto-resize command history/command<CR>
   nnoremap <silent> <leader>o <Esc>:Unite -buffer-name=outline  -auto-resize outline<CR>
   nnoremap <silent> <leader>h <Esc>:Unite -buffer-name=help     -auto-resize help<CR>
   nnoremap <silent> <leader>/ <Esc>:Unite -buffer-name=grep     -auto-resize grep<CR>
   nnoremap <silent> <leader>t <Esc>:Unite -buffer-name=tag      -auto-resize tag tag/file<CR>
-  nnoremap <silent> <leader>b <Esc>:Unite -buffer-name=files    -auto-resize buffer file file_mru bookmark<CR>
+  nnoremap <silent> <leader>b <Esc>:Unite -buffer-name=files    -auto-resize buffer file neomru/file<CR>
   nnoremap <silent> z=        <Esc>:Unite -buffer-name=spell    -auto-resize spell_suggest<CR>
 
   autocmd FileType unite call s:unite_my_settings()
@@ -533,7 +533,9 @@ Plug 'tpope/vim-ragtag' " {{{
 
 " {{{ javascript
 Plug 'moll/vim-node'
-Plug 'elzr/vim-json'
+Plug 'elzr/vim-json' " {{{
+  let g:vim_json_syntax_conceal = 0
+" }}}
 Plug 'othree/yajs.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'othree/jspc.vim'
@@ -603,8 +605,7 @@ try
 catch | endtry
 set sessionoptions-=options
 set diffopt=vertical
-set undofile undodir=~/.vim/undo undoreload=10000
-set undolevels=1000
+set undofile undodir=~/.vim/undo undoreload=10000 undolevels=1000
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 
@@ -662,7 +663,7 @@ function! DiffWrite() abort " {{{
   echo 'Save changes? '
   let l:char = nr2char(getchar())
   if l:char ==? 'y'
-    bd | write
+    bd | write!
   elseif l:char ==? 'q'
     bd
   endif
@@ -815,7 +816,7 @@ augroup VIM
   \ setfiletype javascript
 
   autocmd BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
   \   execute 'normal! g`"zvzz' |
   \ endif
 
@@ -825,9 +826,12 @@ augroup VIM
   autocmd BufEnter *
   \ if &buftype != '' |
   \   setlocal nocursorcolumn nocursorline colorcolumn=0 |
-  \   nnoremap <silent><buffer> q <Esc>:<C-R>=&diff==1
-  \     ?'wincmd p<Bar>diffoff<Bar>wincmd p<Bar>':''<CR>bd<CR> |
+  \   nnoremap <silent><buffer> q <Esc>:bd<CR> |
   \ endif
+
+  au FileType gitcommit
+  \ setlocal spell textwidth=72 |
+  \ startinsert
 
   " autocmd InsertLeave * hi CursorLine ctermbg=0
   " autocmd InsertEnter * hi CursorLine ctermbg=7
@@ -885,6 +889,7 @@ augroup END
 nnoremap Y y$
 nnoremap g; g;zvzz
 nnoremap g, g,zvzz
+nnoremap gV `[v`]
 nnoremap <F6> <Esc>:set paste!<CR>
 inoremap <F6> <C-O>:set paste!<CR>
 nnoremap <C-Z> <Esc>zMzvzz
