@@ -13,7 +13,17 @@ export HISTSIZE=100000
 unset GREP_OPTIONS
 
 has() {
-  command -v "${1%% *}" &> /dev/null
+  local verbose=false
+  if [[ $1 == '-v' ]]; then
+    verbose=true
+    shift
+  fi
+  for c in "$@"; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
+      [[ "$verbose" == true ]] && err "$c not found"
+      return 1
+    fi
+  done
 }
 
 err() {
@@ -88,6 +98,8 @@ alias gcmsg='git commit -m '
 alias ga='git add '
 alias gap='git add -p '
 alias gp='git push '
+alias gco='git checkout '
+alias wttr='command curl http://wttr.in/galveston'
 
 cd() {
   if [[ -z "$@" ]]; then
@@ -114,26 +126,32 @@ cat() { (( $# > 1 )) && /bin/cat "$@" ;}
 help() { bash -c "help $*" ;}
 
 txs() {
-  if [[ "$1" = '-v' ]]; then
-    shift
-    tmux split-window -vd "$@"
-  else
-    tmux split-window -hd "$@"
+  local nested opts=( -d )
+  for a in "$@"; do
+    case $a in
+      -N) nested=1 ; shift ;;
+      -*)  opts+=( "$1" ) ; shift ;;
+    esac
+  done
+  cmd="$*"
+  if [[ -n "$nested" ]]; then
+    cmd="TMUX='' tmux new \; source ~/dotfiles/tmux.alt.conf \; send-keys '$cmd' C-m"
   fi
+  tmux split-window ${opts[*]} "$cmd"
 }
 
 sprunge() { command curl -sF 'sprunge=<-' http://sprunge.us ;}
 
-pgrep() { ps aux | command grep -iP "$*" | command grep -iv grep ;}
+pgrep() { ps aux | command grep -iP "$*" | command grep -ivF grep ;}
 
-newImage() {
+textImage() {
   convert -background white -fill black -size 500x500 -gravity Center -font Droid-Sans-Regular caption:"$1" "$2" &&
   optipng "$2" &&
   qiv "$2"
 }
 
 burnusb() {
-  sudo dd if="$1" of="$2" bs=4M conv=sync
+  sudo dd if="$1" of="$2" bs=4M conv=sync status=progress
   sync
   ding 'burnusb' 'done'
 }
@@ -191,7 +209,19 @@ curltar() {
 
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
-if has synclient && has vipe; then
+if has node rlwrap; then
+  node() {
+    local nodepath=$(command which node)
+    local nodeopts=( $($nodepath --v8-options | awk '/harm/{printf "%s ", $1}') )
+    if (( $# > 0 )); then
+      $nodepath ${nodeopts[*]} "$@"
+    else
+      rlwrap $nodepath $nodeopts
+    fi
+  }
+fi
+
+if has synclient vipe; then
   synclient() {
     if command synclient -l &> /dev/null; then
       if (( $# > 0 )); then
