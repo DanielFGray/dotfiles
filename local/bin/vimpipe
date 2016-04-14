@@ -1,0 +1,50 @@
+#! /usr/bin/env bash
+
+if [[ -e "${HOME}/.bash_utils" ]]; then
+  source "${HOME}/.bash_utils"
+else
+  echo -e "\e[31m~/.bash_utils does not exist\e[0m" >&2
+  exit 1
+fi
+
+declare -a args
+declare file
+declare inplace
+
+OPTERR=0
+while getopts ":n:" opt; do
+  case "$opt" in
+    n) args+=(-c "norm $OPTARG") ;;
+    \?) die "Invalid option: -$OPTARG" ;;
+    :) die "Option -$OPTARG requires an argument." ;;
+  esac
+done
+shift $((OPTIND-1))
+
+for a in "$@"; do
+  if [[ -f "$a" ]]; then
+    file="$a"
+    shift
+  elif [[ -e "$a" ]]; then
+    die "$a is not a regular file"
+  else
+    args+=(-c "$a")
+    shift
+  fi
+done
+
+# if [[ -z "$file" && -n "$inplace" ]]; then
+#   die 'cannot save to file descriptor'
+# elif [[ -n "$file" && -n "$inplace" ]]; then
+#   # save original contents
+#   args+=(-c 'wq!')
+# else
+ args+=(-c 'w! /dev/fd/3 | q!')
+# fi
+
+( (vim ${file:--} -esnb -c 'norm gg0' "${args[@]}" >/dev/null 2>&1) 3>&1)
+
+# if [[ -n "$file" && -n "$inplace" ]]; then
+#   diff -u orig new
+#   prompt "save changes?"
+# fi
