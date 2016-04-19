@@ -43,11 +43,11 @@ getdimensions() {
     local xwininfo x y w h
     echo -ne 'click a window\r'
     xwininfo=$(xwininfo)
-    read -r x y w h < <(awk '/Absolute upper-left X/ { x=$2 }
+    read -r x y w h < <(awk -F':' '/Absolute upper-left X/ { x=$2 }
       /Absolute upper-left Y/ { y=$2 }
       /Width/ { w=$2 }
       /Height/ { h=$2 }
-      END { print x, y, w, h }' -F':' <<< "$xwininfo")
+      END { print x, y, w, h }' <<< "$xwininfo")
     dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
   elif [[ "$region" == true ]]; then
     has xrectsel || die 'xrectsel required for -s'
@@ -75,13 +75,20 @@ record-byzanz() {
 record-ffmpeg() {
   local loglevel size offset
   loglevel='panic'
-  [[ -n $verbose ]] && loglevel='panic'
+  [[ -n $verbose ]] && loglevel='info'
   size="${dimensions['w']}x${dimensions['h']}"
   offset="${DISPLAY}.0+${dimensions['x']},${dimensions['y']}"
-  ffmpeg -y -loglevel "$loglevel" -f x11grab -s "$size" -i "$offset" ${duration:+-t $duration} \
-    -c:v libvpx -crf 12 -s "$size" -b:v 1200k \
+  ffmpeg -y -loglevel "$loglevel" \
+    -f x11grab \
+    -s "$size" \
+    -i "$offset" \
+    ${duration:+-t $duration} \
+    -c:v libvpx \
+    -b:v 2400k \
     -preset veryslow \
-    -b 1000k -threads 4 \
+    -r 60 \
+    -threads 4 \
+    -pix_fmt yuv444p \
     -f webm "$file" &&
   echo "saved as $file"
 }

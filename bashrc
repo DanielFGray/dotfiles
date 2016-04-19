@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 case $- in
     *i*) ;;
       *) return;;
@@ -7,9 +8,9 @@ HISTSIZE=10000
 HISTFILESIZE=20000
 HISTCONTROL=ignoreboth
 shopt -s histappend
-
+shopt -s histverify
 shopt -s checkwinsize
 shopt -s globstar
 shopt -s extglob
 
-[[ -f ~/agnoster.bash ]] && source ~/agnoster.bash
+[[ -f ~/.bash_aliases ]] && source ~/.bash_aliases

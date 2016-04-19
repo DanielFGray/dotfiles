@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 ask() {
-  read -p "$1 " -n1 ans
+  read -r -p "$1 " -n1 ans
   echo
   [[ "${ans^}" == Y ]]
 }
 
 has(){
-  command -v $1 &>/dev/null
+  command -v "${1%% *}" &>/dev/null
 }
 
 confirm-cmd() {
@@ -71,10 +71,10 @@ fi
 
 if [[ -f "$file" ]]; then
   echo "installing $file"
-  mkdir -p ${HOME}/build
-  tar -x -f "$file" -C ${HOME}/build/ || exit 1
-  mv ${HOME}/build/node*/bin/* ${HOME}/.local/bin/
+  mkdir -p "${HOME}/build"
+  tar -x -f "$file" -C "${HOME}/build/" || exit 1
+  mv "${HOME}/build/node*/bin/*" "${HOME}/.local/bin/"
   rm -fr ${HOME}/.local/{lib/node_modules,include/node}
   cp -R ${HOME}/build/node*/{lib,share,include} ${HOME}/.local/
-  rm -fr "${HOME}/build/$name"
+  rm -fr "${HOME}/build/${name}"
 fi

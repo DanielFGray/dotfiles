@@ -14,6 +14,7 @@ fuzzy file filtering and command executing
 
 -c    command to execute [defaults to vim]
 -a    search all dirs and hidden files (still quirky)
+-d    detach from terminal via nohup
 HELP
 }
 
@@ -30,13 +31,16 @@ cmdopts=()
 searchstr=''
 searchcmd=''
 searchopts=()
-allfiles=false
+allfiles=0
+detach=0
 
-while getopts "hac:" opt; do
+while getopts "hadlc:" opt; do
   case "$opt" in
-    h) usage; exit 0    ;;
-    a) allfiles=true     ;;
-    c) setCmd "$OPTARG" ;;
+    h) usage; exit 0        ;;
+    a) allfiles=1           ;;
+    c) setCmd "$OPTARG"     ;;
+    d) unset detach         ;;
+    l) searchopts+=( '-l' ) ;;
   esac
 done
 shift "$((OPTIND-1))"
@@ -71,8 +75,7 @@ fi
 case "$searchcmd" in
   'ag')
     searchopts+=( '--color' )
-    # searchopts+=( '-l' )
-    if [[ "$allfiles" == true ]]; then
+    if [[ "$allfiles" == 1 ]]; then
       searchopts+=( '-u' '--hidden' )
     fi
     if [[ "$searchstr" == '' ]]; then
@@ -81,7 +84,7 @@ case "$searchcmd" in
     ;;
   'ack')
     if [[ "$searchstr" == '' ]]; then
-      if [[ "$allfiles" == false ]]; then
+      if [[ "$allfiles" == 0 ]]; then
         searchopts+=( '-g' '^[^\.]' )
       else
         searchopts+=( '-f' )
@@ -92,8 +95,8 @@ case "$searchcmd" in
     fi
     ;;
   'grep')
-    searchopts+=( '-l' '-r' '-I' )
-    if [[ "$allfiles" == false ]]; then
+    searchopts+=( '-r' '-I' )
+    if [[ "$allfiles" == 0 ]]; then
       searchopts+=( '--exclude-dir=bower_components' )
       searchopts+=( '--exclude-dir=node_modules' )
       searchopts+=( '--exclude-dir=jspm_packages' )

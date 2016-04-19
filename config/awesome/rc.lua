@@ -73,19 +73,18 @@ function run_once(cmd)
   if firstspace then
     findme = cmd:sub(0, firstspace - 1)
   end
-  sexec("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
+  sexec("pgrep -u $USER -i -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 
 exec("nitrogen --restore")
 run_once("urxvtd -q -f")
-run_once("compton --config ~/.compton.conf")
+-- run_once("compton --config ~/.compton.conf")
 run_once("mpd")
-run_once("keepassx")
+-- run_once("keepass")
 run_once("clipit")
 run_once("nm-applet")
 run_once("pnmixer")
 run_once("xfce4-power-manager")
-run_once(mpdclient)
 run_once("redshift-gtk lat=29.27 lon=-94.87")
 
 shifty.config.tags = {
@@ -118,7 +117,8 @@ shifty.config.apps = {
       "xfrun4",
       "krunner",
       "pnmixer",
-      ".*notify.*"
+      ".*notify.*",
+      "albert",
     },
     slave = false,
     intrusive = true,
@@ -126,7 +126,7 @@ shifty.config.apps = {
     skip_taskbar = true,
     float = true,
     sticky = true,
-    ontop = true
+    ontop = true,
   }, {
     match = {
       "Firefox",

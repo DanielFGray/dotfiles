@@ -7,16 +7,43 @@ else
   exit 1
 fi
 
+fzf() {
+  command fzf -e --reverse --cycle --multi +s $*
+}
+
+filterAll() {
+  mpc listall
+}
+
+filterByArtist() {
+  local artist
+  artist=$(mpc list artist | fzf)
+  mpc search artist "$artist"
+}
+
+filterByPlayist() {
+  mpc playlist -f '%file%'
+}
+
+declare filter='filterAll'
+while true; do
+  case "$1" in
+    -a|--artist)   filter='filterByArtist'  ; shift ;;
+    -p|--playlist) filter='filterByPlayist' ; shift ;;
+    *) break
+  esac
+done
+
 has -v fzf || die
 has -v mpc || die
 isRunning mpd || die 'mpd not running'
 
-mapfile -t songs < <(mpc listall | sort -r | fzf --reverse --tac -m -e +s)
+mapfile -t songs < <($filter | fzf)
 if (( ${#songs[@]} > 0 )); then
   printf '%s\n' "${songs[@]}" | mpc -q add
   index=$(mpc playlist | wc -l)
   if (( ${#songs[@]} > 1 )); then
-    index=$(( $index - ${#songs[@]} + 1))
+    index=$(( index - ${#songs[@]} + 1))
   fi
   mpc -q play "$index"
 fi

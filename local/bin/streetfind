@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 lookup() {
-  read -e -p 'enter street name: ' streetname
+  read -r -e -p 'enter street name: ' streetname
   checkroad "$streetname"
   lookup
 }
@@ -14,12 +14,11 @@ checkroad() {
       # printf '%s: ' "$trimmed"
       echo "$trimmed"
       road=$(command curl -s 'http://206.74.144.9/streetfinder/StreetNames.aspx' -d "cmd=streetnames&county=2&street=${trimmed}")
-      if grep 'multiple road names' <<< "$road" &> /dev/null ; then
+      if grep -q 'multiple road names' <<< "$road"; then
         multiples=$(command curl -s 'http://206.74.144.9/streetfinder/StreetNames.aspx' -d "cmd=streetnamesex&county=2&street=${trimmed}" | awk 'BEGIN {RS="|"} {print}' | grep "${trimmed}")
         echo "$multiples"
       else
-        printf "$road"
-        echo
+        echo "$road"
       fi
     done
   else

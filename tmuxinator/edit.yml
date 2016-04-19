@@ -22,7 +22,6 @@ windows:
   - zsh:
       panes:
         - vim:
-            - tmux set status-position top
-            - tmux set status-right ''
+            - tmux set status-position top \; set status-right '' \; set status-left '' \; set prefix C-s \; unbind C-a \; bind C-s last-window
             - clear
             - vim --servername VIM

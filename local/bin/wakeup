@@ -1,14 +1,15 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-{
-  pkill aplay
-  mpc clear
+(
+  # pkill aplay
+  # mpc clear
   mpc random on
-  amixer sset Master 100\%
-  if [[ $# > 0 ]]; then
-    mpc load $1
-  else
-    mpc load brutal
-  fi
+  mpc next
+  amixer sset Master 80\%
+  # if (( $# > 0 )); then
+  #   mpc load "$1"
+  # else
+  #   mpc load brutal
+  # fi
   mpc play
-} &> /dev/null
+) &> /dev/null

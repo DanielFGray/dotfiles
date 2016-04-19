@@ -7,6 +7,6 @@ else
 	exit 1
 fi
 
-favs=('dolphin' 'nemo' 'nautilus' 'thunar')
-cmd=$(getCommandFallbacks "${favs[*]}") || die "no file manager found in ( ${favs[*]} )"
+favs=('dolphin' 'nemo' 'nautilus' 'pcmanfm' 'thunar')
+cmd=$(getCommandFallbacks "${favs[@]}") || die "no file manager found in ( ${favs[*]} )"
 ( exec $cmd $* ) &

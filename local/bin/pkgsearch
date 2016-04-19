@@ -12,7 +12,7 @@ declare search
 has -v fzf || die
 
 fzf() {
-  command fzf -e +s --multi --cycle --ansi --no-hscroll --inline-info "$@"
+  command fzf -e +s --multi --cycle --ansi --no-hscroll --inline-info --reverse "$@"
 }
 
 if [[ -f /etc/debian_version ]]; then
@@ -27,13 +27,13 @@ elif [[ -f /etc/arch-release ]]; then
   (( $# > 0)) && search=$(getCommandFallbacks 'pacaur' 'yaourt' 'packer' 'apacman' 'pacman')
   out=$(fzf < <( $search -Ss "$@" |
       awk '{
-        getline descr
-        sub(/ */,"", descr)
-        repo = "[" blue gensub(/\/.*/, "", 1) reset "]"
-        name = green gensub(/.*\//, "", 1, $1) reset
-        info = gensub(/[^ ]* /, "", 1)
-        print repo, name, info, descr
-      }' blue="$c_blue" green="$c_green" reset="$c_reset" yellow="$c_yellow"
+        getline descr;
+        sub(/ */,"", descr);
+        repo = "[" blue gensub(/\/.*/, "", 1) reset "]";
+        name = green gensub(/.*\//, "", 1, $1) reset;
+        info = gensub(/[^ ]* /, "", 1);
+        print repo, name, info, descr;
+      }' blue="$c_blue" green="$c_green" reset="$c_reset"
     )
   )
   mapfile -t pkgs < <(awk '{print $2}' <<< "$out")

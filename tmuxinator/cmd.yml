@@ -22,7 +22,4 @@ windows:
   - zsh:
       panes:
         - zsh:
-            - tmux set status-position top
-            - tmux set status-right ''
-            - function vim() {; serv=$(command vim --serverlist); if [[ "$serv" != '' ]]; then; command vim --servername  "$serv" --remote-silent "$@"; tmux selectp -t main:dev.1; else; command vim "$@"; fi; }
-            - clear
+            - tmux set status-position top \; set status-justify centre \; set status-right '' \; set status-left '' \; set prefix C-s \; unbind C-a \; bind C-s last-window
