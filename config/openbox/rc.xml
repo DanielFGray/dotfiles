@@ -975,5 +975,8 @@
         <y>center</y>
       </position>
     </application>
+    <application name="*">
+      <decor>no</decor>
+    </application>
   </applications>
 </openbox_config>

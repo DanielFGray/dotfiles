@@ -33,13 +33,16 @@ values."
                  evil-snipe-repeat-scope 'whole-buffer
                  evil-snipe-override-evil-repeat-keys t)
      git
+     github
      javascript
+     haskell
      markdown
      org
      php
-     (ranger :variables
-             ranger-max-preview-size 10
-             ranger-show-preview t)
+     python
+     ;; (ranger :variables
+     ;;         ranger-max-preview-size 10
+     ;;         ranger-show-preview t)
      react
      (shell :variables
             shell-default-height 30
@@ -47,8 +50,9 @@ values."
      spell-checking
      syntax-checking
      themes-megapack
-     unimpaired
+     ;; unimpaired
      version-control
+     vinegar
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -57,16 +61,21 @@ values."
    dotspacemacs-additional-packages
    '(
      evil-indent-textobject
-     evil-exchange
+     evil-exchange ;; is this enabled by default?
      evil-jumper
      ;; evil-mc ;; needs a configuration-layer
-     evil-visualstar
+     evil-vimish-fold
+     evil-visualstar ;; is this enabled by default?
      gist
      vimish-fold
-     evil-vimish-fold
+     dired+
+     dtrt-indent
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages
+   '(
+     evil-magit
+     )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -249,9 +258,18 @@ layers configuration. You are free to put any user code."
   (evil-define-key 'visual evil-surround-mode-map "s" 'evil-substitute)
   (evil-define-key 'visual evil-surround-mode-map "S" 'evil-surround-region)
 
+  (define-key evil-normal-state-map "j" 'evil-next-visual-line)
+  (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
+  (define-key evil-normal-state-map "gj" 'evil-next-line)
+  (define-key evil-normal-state-map "gk" 'evil-previous-line)
+
   (setq powerline-default-separator 'arrow)
 
+  (setq paradox-github-token "3d0c5cde7ec2f82edb1397d44c9256ad4ba12306")
+
   (setq dired-listing-switches "-lhgoBF --group-directories-first")
+  (setq diredp-toggle-find-file-reuse-dir t)
+  ;; (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
 
   (setq vc-follow-symlinks t)
 

@@ -22,6 +22,9 @@ Plug 'wellle/targets.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-function'
+Plug 'kentaro/vim-textobj-function-php'
+Plug 'thinca/vim-textobj-function-javascript'
+Plug 'glts/vim-textobj-comment'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'thinca/vim-textobj-between'
 " }}}
@@ -33,6 +36,12 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'tommcdo/vim-exchange'
+Plug 'kana/vim-operator-user'
+Plug 'haya14busa/vim-operator-flashy' " {{{
+  map y <Plug>(operator-flashy)
+  nmap Y <Plug>(operator-flashy)$
+  let g:operator#flashy#group = 'Search'
+" }}}
 " }}}
 
 " {{{ searching
@@ -91,6 +100,7 @@ Plug 'terryma/vim-multiple-cursors' " {{{
     endif
   endfunction
 " }}}
+Plug 'bronson/vim-visual-star-search'
 if executable('ag')
   set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
   set grepformat=%f:%l:%c:%m
@@ -301,6 +311,7 @@ Plug 'reedes/vim-thematic' " {{{
 " }}}
 Plug 'noahfrederick/vim-noctu'
 Plug 'gosukiwi/vim-atom-dark'
+Plug 'DanielFGray/DistractionFree.vim'
 " }}}
 
 " {{{ misc/unorganized
@@ -347,8 +358,9 @@ Plug 'reedes/vim-wordy' " {{{
   augroup END
 " }}}
 Plug 'chilicuil/vim-sprunge' " {{{
-  let g:sprunge_cmd = 'curl -s -F "f:1=<-" http://ix.io'
+  let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
 " }}}
+Plug 'mickaobrien/vim-stackoverflow'
 " }}}
 
 " {{{ unite.vim
@@ -422,7 +434,11 @@ Plug 'kopischke/unite-spell-suggest'
 
     call unite#custom#profile('default', 'context', {
     \   'start_insert': 1,
-    \   'direction': 'botright',
+    \   'direction':    'botright',
+    \   'prompt':       ' ',
+    \   'prompt_focus': 1,
+    \   'force_redraw': 1,
+    \   'no_empty':     1,
     \ })
 
     imap <buffer> jj      <Plug>(unite_insert_leave)
@@ -476,15 +492,16 @@ Plug 'airblade/vim-gitgutter' " {{{
   let g:gitgutter_map_keys = 0
   nnoremap <silent> [c <Esc>:GitGutterPrevHunk<CR>zMzvzz
   nnoremap <silent> ]c <Esc>:GitGutterNextHunk<CR>zMzvzz
-  nnoremap <silent> <Leader>hs <Plug>GitGutterStageHunk
-  nnoremap <silent> <Leader>hr <Plug>GitGutterRevertHunk
-  nnoremap <silent> <Leader>hp <Plug>GitGutterPreviewHunk
+  nnoremap <silent> <Leader>hs <Esc>:GitGutterStageHunk<CR>
+  nnoremap <silent> <Leader>hr <Esc>:GitGutterRevertHunk<CR>
+  nnoremap <silent> <Leader>hp <Esc>:GitGutterPreviewHunk<CR>
 " }}}
 Plug 'lambdalisue/vim-gista'
 Plug 'lambdalisue/vim-gista-unite'
 Plug 'kmnk/vim-unite-giti' " {{{
   nnoremap <silent> <leader>g <Esc>:Unite giti -buffer-name=giti -auto-resize<CR>
 " }}}
+Plug 'junegunn/gv.vim'
 " }}}
 
 " {{{ tmux

@@ -1,9 +1,9 @@
 #!/bin/bash
-[[ $( tmux attach -t main ) ]] || (
-	tmux new-session -d -s main
-	tmux new-window -t main:1 -n 'htop'     'htop'
-	tmux new-window -t main:2 -n 'dotfiles' 'dotfiles'
-	tmux new-window -t main:3 -n 'ncmpcpp'  'ncmpcpp'
-	tmux new-window -t main:4 -n 'mutt'     'mutt'
-	tmux attach -t main
+tmux attach -t main || (
+  tmux new-session -d -s main
+  tmux new-window -t main:1 -n 'htop'     'htop'
+  tmux new-window -t main:2 -n 'dotfiles' 'dotfiles'
+  tmux new-window -t main:3 -n 'ncmpcpp'  'ncmpcpp'
+  tmux new-window -t main:4 -n 'mutt'     'mutt'
+  tmux attach -t main
 )

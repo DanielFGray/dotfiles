@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if [[ -e ~/dotfiles/less.vim ]]; then
   lessvim="-S $HOME/dotfiles/less.vim"
 elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
@@ -157,16 +159,18 @@ burnusb() {
 }
 
 changeroot() {
+  emulate -L bash
   sudo cp -L /etc/resolv.conf "$1"/etc/resolv.conf
   sudo mount -t proc proc "$1"/proc
   sudo mount -t sysfs sys "$1"/sys
-  sudo mount -o bind /dev "$1"/dev
-  sudo mount -t devpts pts "$1"/dev/pts/
+  # sudo mount -o bind /dev "$1"/dev
+  # sudo mount -t devpts pts "$1"/dev/pts/
   sudo chroot "$1"/ /bin/bash
-  ask 'unmount $1? ' && (
-    sudo umount -l $1
+  ask "unmount $1? " && (
+    sudo umount -l "$1"
     sudo chroot /
   )
+  emulate -L zsh
 }
 
 extract() {

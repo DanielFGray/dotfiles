@@ -31,6 +31,16 @@ Usage: tekup [OPTIONS] [FILES..]
               the JSON response from teknik, the second will also pass the
               -v option to curl
 HELP
+# TODO:
+# -r          for text pastes, return the raw url string
+# -x          copy the url to the clipboard (requires xclip)
+# -d          define a key to delete a non-text file
+# -e 'str'    define an expiration for text pastes, specified in the
+#             form of '1 view' or '3 days'. must be a string, containing first
+#             a number, and one of the following:
+#             [ view, minute, hour, day, month, year ]
+#             the letter s is stripped from the end, so it's optional and only
+#             allowed for grammatical purposes
 }
 
 OPTERR=0
@@ -39,7 +49,9 @@ while getopts "hv" opt; do
     h) usage; exit 0    ;;
     v) (( verbose++ ))  ;;
     # d) deletionKey=true ;;
-    # e) expireDate=true ;;
+    # e) expire="$OPTARG" ;;
+    # r) raw=true         ;;
+    # x) clipboard=true   ;;
   esac
 done
 shift "$((OPTIND-1))"
@@ -75,5 +87,6 @@ for (( i=0; i <= $#; i++ )); do
   [[ -z "$post" || "$post" != *'http'* || "$post" =~ 'error' ]] && die "error uploading ${file}"
 
   url=$(grep -oP 'https://[[:alnum:]?=%/_.:,;~@!#$&()*+-]+' <<< "$post")
+  # [[ $raw == true ]] && substitute last / with /Raw
   echo "${file}: ${url}"
 done
