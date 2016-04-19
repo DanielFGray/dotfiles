@@ -480,8 +480,8 @@ Plug 'airblade/vim-gitgutter' " {{{
   nnoremap <silent> <Leader>hr <Plug>GitGutterRevertHunk
   nnoremap <silent> <Leader>hp <Plug>GitGutterPreviewHunk
 " }}}
-Plug 'mattn/webapi-vim'
-Plug 'mattn/gist-vim'
+Plug 'lambdalisue/vim-gista'
+Plug 'lambdalisue/vim-gista-unite'
 Plug 'kmnk/vim-unite-giti' " {{{
   nnoremap <silent> <leader>g <Esc>:Unite giti -buffer-name=giti -auto-resize<CR>
 " }}}
