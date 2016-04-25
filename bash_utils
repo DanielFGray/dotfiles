@@ -79,10 +79,19 @@ prompt() {
   fi
 }
 
-getCommandFallbacks() {
-  for arg in "$@"; do arg="${arg%% *}"
-    if has "$arg"; then
-      echo "$arg"
+select-from() {
+  local cmd='command -v'
+  for a in "$@"; do
+    case "$a" in
+      -c)
+        cmd="$2"
+        shift 2
+        ;;
+    esac
+  done
+  for c in "$@"; do
+    if $cmd $c &> /dev/null; then
+      echo "$c"
       return 0
     fi
   done

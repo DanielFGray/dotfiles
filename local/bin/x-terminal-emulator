@@ -8,5 +8,5 @@ else
 fi
 
 favs=('urxvtcd' 'urxvtc' 'urxvt' 'xterm')
-cmd=$(getCommandFallbacks "${favs[@]}") || die "no term in ( ${favs[*]} )"
+cmd=$(select-from "${favs[@]}") || die "no term in ( ${favs[*]} )"
 ( exec $cmd $* ) &
