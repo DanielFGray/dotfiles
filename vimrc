@@ -818,6 +818,12 @@ endfunction
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 " }}}
 
+function! LessInitFunc() abort " {{{
+  AirlineToggle
+  setlocal nonu nornu nolist laststatus=0
+endfunction
+" }}}
+
 " }}}
 
 " {{{ autocmds
@@ -911,6 +917,7 @@ nnoremap <F6> <Esc>:set paste!<CR>
 inoremap <F6> <C-O>:set paste!<CR>
 nnoremap <C-Z> <Esc>zMzvzz
 nnoremap <Leader> <Nop>
+nnoremap <silent><expr> K (&keywordprg == 'man' && exists('$TMUX')) ? printf(':!tmux split-window -h "man %s"<CR>:redraw<CR>', expand('<cword>')) : 'K'
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
 if exists(':SudoWrite')
   cabbrev w!! SudoWrite

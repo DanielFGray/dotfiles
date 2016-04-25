@@ -8,7 +8,7 @@ elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
   lessvim='-S /usr/share/vim/vim74/macros/less.vim'
 fi
 vimcolor="-S $HOME/.vim/bundle/vim-noctu/colors/noctu.vim"
-export MANPAGER="bash -c \"col -b | vim -u NONE ${lessvim:+$lessvim} ${vimcolor:+$vimcolor} -c 'setf man' -\""
+export MANPAGER="bash -c \"col -b | vim -Nu NONE -c 'runtime macros/less.vim' -c 'setf man' -\""
 export EDITOR='vim'
 export HISTFILESIZE=500000
 export HISTSIZE=100000
@@ -91,9 +91,12 @@ alias l='ls -lgo '
 alias la='l -A '
 alias cdu='cdu -isdhD '
 alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P '
-alias historygrep='history | grep -v "history" | grep '
+alias historygrep='history | grep -vF "history" | grep '
 alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
-alias shuf1='shuf | head -n1'
+alias shuf1='shuf -n1'
+alias wttr='command curl http://wttr.in/galveston'
+alias rsync='rsync -v --progress --stats '
+
 alias gl='git pull '
 alias gc='git commit '
 alias gcmsg='git commit -m '
@@ -101,7 +104,6 @@ alias ga='git add '
 alias gap='git add -p '
 alias gp='git push '
 alias gco='git checkout '
-alias wttr='command curl http://wttr.in/galveston'
 
 cd() {
   if [[ -z "$@" ]]; then
@@ -215,12 +217,11 @@ whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
 if has node rlwrap; then
   node() {
-    local nodepath=$(command which node)
-    local nodeopts=( $($nodepath --v8-options | awk '/harm/{printf "%s ", $1}') )
+    local nodeopts=( $(node --v8-options | awk '/harm/{printf "%s", $1}') )
     if (( $# > 0 )); then
-      $nodepath ${nodeopts[*]} "$@"
+      node ${nodeopts[*]} "$@"
     else
-      rlwrap $nodepath $nodeopts
+      rlwrap node $nodeopts
     fi
   }
 fi

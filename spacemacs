@@ -36,8 +36,11 @@ values."
      github
      javascript
      haskell
+     html
+     lua
      markdown
      org
+     perl
      php
      python
      ;; (ranger :variables
@@ -60,16 +63,16 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
    '(
-     evil-indent-textobject
+     dired+
+     dtrt-indent
      evil-exchange ;; is this enabled by default?
+     evil-indent-textobject
      evil-jumper
      ;; evil-mc ;; needs a configuration-layer
      evil-vimish-fold
-     evil-visualstar ;; is this enabled by default?
+     evil-visualstar
      gist
      vimish-fold
-     dired+
-     dtrt-indent
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages
@@ -131,7 +134,7 @@ values."
                                :size 12
                                :weight normal
                                :width normal
-                               :powerline-scale 1.2)
+                               :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -255,23 +258,49 @@ user code here.  The exception is org related code, which should be placed in
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  (evil-define-key 'visual evil-surround-mode-map "s" 'evil-substitute)
-  (evil-define-key 'visual evil-surround-mode-map "S" 'evil-surround-region)
+  (setq vc-follow-symlinks t)
 
   (define-key evil-normal-state-map "j" 'evil-next-visual-line)
   (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
   (define-key evil-normal-state-map "gj" 'evil-next-line)
   (define-key evil-normal-state-map "gk" 'evil-previous-line)
 
+  (evil-define-key 'visual evil-surround-mode-map "s" 'evil-substitute)
+  (evil-define-key 'visual evil-surround-mode-map "S" 'evil-surround-region)
+
   (setq powerline-default-separator 'arrow)
 
   (setq paradox-github-token "3d0c5cde7ec2f82edb1397d44c9256ad4ba12306")
 
+  ;; dired
   (setq dired-listing-switches "-lhgoBF --group-directories-first")
   (setq diredp-toggle-find-file-reuse-dir t)
   ;; (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
 
-  (setq vc-follow-symlinks t)
+  ;; (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
+  ;; (evil-define-key 'normal dired-mode-map "l" 'dired-find-alternate-file)
+  ;; (evil-define-key 'normal dired-mode-map "o" 'dired-sort-toggle-or-edit)
+  ;; (evil-define-key 'normal dired-mode-map "v" 'dired-toggle-marks)
+  ;; (evil-define-key 'normal dired-mode-map "m" 'dired-mark)
+  ;; (evil-define-key 'normal dired-mode-map "u" 'dired-unmark)
+  ;; (evil-define-key 'normal dired-mode-map "U" 'dired-unmark-all-marks)
+  ;; (evil-define-key 'normal dired-mode-map "c" 'dired-create-directory)
+  ;; (evil-define-key 'normal dired-mode-map "n" 'evil-search-next)
+  ;; (evil-define-key 'normal dired-mode-map "N" 'evil-search-previous)
+  ;; (evil-define-key 'normal dired-mode-map "q" 'kill-this-buffer)
+
+  (defadvice dired-advertised-find-file (around dired-subst-directory activate)
+    "Replace current buffer if file is a directory."
+    (interactive)
+    (let ((orig (current-buffer))
+          (filename (dired-get-filename)))
+      ad-do-it
+      (when (and (file-directory-p filename)
+                 (not (eq (current-buffer) orig)))
+        (kill-buffer orig))))
+
+  ;; appearance
+  (setq powerline-default-separator 'arrow)
 
   (golden-ratio-mode 1)
 
