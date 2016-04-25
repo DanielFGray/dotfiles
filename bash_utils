@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# if [[ -e "${HOME}/.bash_utils" ]]; then
+#   source "${HOME}/.bash_utils"
+# else
+#   echo -e "\e[31m~/.bash_utils does not exist\e[0m" >&2
+#   exit 1
+# fi
+
 declare esc=$(printf '\033')
 declare c_reset="${esc}[0m"
 declare c_red="${esc}[31m"

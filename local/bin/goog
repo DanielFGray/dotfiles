@@ -44,6 +44,10 @@ rawurlencode() {
 
 has -v curl jq fzf || die
 
+if [[ -z "$*" ]]; then
+  die 'nothing to search for'
+fi
+
 response=$( curl -sfL "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=8&q=$(rawurlencode "$*")" ) || die 'error connecting to google, check connection'
 json=$( jq -c '.["responseData"]["results"] | map("\(.unescapedUrl) \(.title) | \(.content)") | .[]' <<< "$response" ) || die 'error parsing results :('
 url=$( fzf -e --ansi --cycle --inline-info <\

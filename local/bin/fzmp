@@ -34,8 +34,7 @@ while true; do
   esac
 done
 
-has -v fzf || die
-has -v mpc || die
+has -v fzf mpc || die
 isRunning mpd || die 'mpd not running'
 
 mapfile -t songs < <($filter | fzf)

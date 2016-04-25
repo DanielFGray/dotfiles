@@ -13,7 +13,7 @@
 *Rxvt.url-launcher:    /usr/bin/firefox
 *Rxvt.matcher.button:  1
 *Rxvt.urgentOnBell:    True
-*Rxvt*letterSpace:     -2
+*Rxvt*letterSpace:     -1
 URxvt.font-size.step:  2
 
 *Rxvt.keysym.C-Up:     perl:font-size:increase
@@ -33,6 +33,9 @@ URxvt.font-size.step:  2
 
 *background:           #131313
 *foreground:           #dedede
+
+*background: #161616
+*foreground: #dedede
 
 !black
 *color0:               #262626

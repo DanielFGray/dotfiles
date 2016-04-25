@@ -81,6 +81,13 @@ if has zsh; then
   library https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
 fi
 
+library https://github.com/junegunn/fzf.git "${HOME}/.fzf"
+yes | ~/.fzf/install
+
+if [[ ! -L ~/.local/bin ]]; then
+  ln -sf ~/dotfiles/local/bin ~/.local/bin
+fi
+
 if has tmux; then
   backup_then_symlink tmux.conf
   library https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
