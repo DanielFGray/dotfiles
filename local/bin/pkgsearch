@@ -21,10 +21,10 @@ if [[ -f /etc/debian_version ]]; then
       sed -u -r "s|^([^ ]+)|${c_green}\1${c_reset}|" ) )
   mapfile -t pkgs < <( awk '{print $1}' <<< "$out" )
   (( ${#pkgs} > 0 )) || exit
-  sudo $(getCommandFallbacks 'apt' 'apt-get') install "${pkgs[@]}"
+  sudo $(select-from 'apt' 'apt-get') install "${pkgs[@]}"
 elif [[ -f /etc/arch-release ]]; then
   search='pacman'
-  (( $# > 0)) && search=$(getCommandFallbacks 'pacaur' 'yaourt' 'packer' 'apacman' 'pacman')
+  (( $# > 0)) && search=$(select-from 'pacaur' 'yaourt' 'packer' 'apacman' 'pacman')
   out=$(fzf < <( $search -Ss "$@" |
       awk '{
         getline descr;

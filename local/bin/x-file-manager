@@ -8,5 +8,5 @@ else
 fi
 
 favs=('dolphin' 'nemo' 'nautilus' 'pcmanfm' 'thunar')
-cmd=$(getCommandFallbacks "${favs[@]}") || die "no file manager found in ( ${favs[*]} )"
+cmd=$(select-from "${favs[@]}") || die "no file manager found in ( ${favs[*]} )"
 ( exec $cmd $* ) &
