@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ -e ${HOME}/.bash_utils ]]; then
-  source ${HOME}/.bash_utils
-else
-  echo -e "\e[31mbash_utils not found\e[0m" >&2
-  exit 1
-fi
-
 declare file="$(date +%F-%s).webm"
 declare window=false
 declare region=false
@@ -14,6 +7,9 @@ declare duration
 declare delay=0
 declare verbose
 declare -A dimensions
+declare esc=$(printf '\033')
+declare c_reset="${esc}[0m"
+declare c_red="${esc}[31m"
 
 usage() {
   more <<'HELP'
@@ -30,8 +26,53 @@ usage() {
 HELP
 }
 
+err() {
+  echo -e "${c_red}$1${c_reset}" >&2
+}
+
+die() {
+  [[ -n "$1" ]] && err "$1"
+  exit 1
+}
+
+has() {
+  local verbose=false
+  if [[ $1 == '-v' ]]; then
+    verbose=true
+    shift
+  fi
+  for c in "$@"; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
+      [[ "$verbose" == true ]] && err "$c not found"
+      return 1
+    fi
+  done
+}
+
+select-from() {
+  local cmd='command -v'
+  for a in "$@"; do
+    case "$a" in
+      -c) cmd="$2"; shift 2 ;;
+    esac
+  done
+  for c in "$@"; do
+    if $cmd "${c%% *}" &> /dev/null; then
+      echo "$c"
+      return 0
+    fi
+  done
+  return 1
+}
+
+ask() {
+  read -r -n1 -p "$* " ans
+  echo
+  [[ ${ans^} == Y* ]]
+}
+
 delay() {
-  for (( i=delay; i>0; --i )) ; do
+  for (( i=delay; i>0; --i )); do
     echo -ne "$i..                     \r"
     sleep 1
   done
@@ -40,7 +81,7 @@ delay() {
 
 getdimensions() {
   if [[ "$window" == true ]]; then
-    local xwininfo x y w h
+    local xwininfo x y w h seltool
     echo -ne 'click a window\r'
     xwininfo=$(xwininfo)
     read -r x y w h < <(awk -F':' '/Absolute upper-left X/ { x=$2 }
@@ -50,10 +91,9 @@ getdimensions() {
       END { print x, y, w, h }' <<< "$xwininfo")
     dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
   elif [[ "$region" == true ]]; then
-    has xrectsel || die 'xrectsel required for -s'
+    seltool=$(select-from 'slop -f' xrectsel) || die 'xrectsel or slop required for -s'
     echo -ne 'select a region\r'
-    #TODO: don't use eval
-    eval "dimensions=( $(xrectsel "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )"
+    eval "dimensions=( $($seltool "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )"
   else
     scrsize=$(xdpyinfo | awk '/dimensions/{print $2}')
     dimensions=( ['x']='0' ['y']='0' ['w']="${scrsize%%x*}" ['h']="${scrsize#*x}" )
@@ -63,11 +103,11 @@ getdimensions() {
 record-byzanz() {
   #TODO: remove byzanz altogether in favor of plain ffmpeg
   byzanz-record \
-    --duration="${duration:-10}"\
-    --x="${dimensions['x']}"\
-    --y="${dimensions['y']}"\
-    --width="${dimensions['w']}"\
-    --height="${dimensions['h']}"\
+    --duration="${duration:-10}" \
+    --x="${dimensions['x']}" \
+    --y="${dimensions['y']}" \
+    --width="${dimensions['w']}" \
+    --height="${dimensions['h']}" \
     "$file" &&
   echo "saved as $file"
 }
@@ -117,15 +157,11 @@ fi
 getdimensions
 case "$file" in
   *gif)
-    if ! has byzanz-record; then
-      die 'need byzanz-record for recording gifs'
-    fi
+    has byzanz-record || die 'need byzanz-record for recording gifs'
     delay
     record-byzanz ;;
   *webm)
-    if ! has ffmpeg; then
-      die 'need ffmpeg for recording webms'
-    fi
+    has ffmpeg || die 'need ffmpeg for recording webms'
     delay
     record-ffmpeg ;;
   *) die 'unknown file type, must be gif or webm' ;;

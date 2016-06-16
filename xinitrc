@@ -31,10 +31,10 @@ export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
   xsetroot -cursor_name left_ptr
   xrdb -load ~/.Xresources
 
-  xmodmap ~/.xmodmap
-  setxkbmap -option 'caps:ctrl_modifier'
-  xcape -e 'Caps_Lock=Escape'
-  xmodmap -e 'keycode 37 ='
+  # xmodmap ~/.xmodmap
+  # setxkbmap -option 'caps:ctrl_modifier'
+  # xcape -e 'Caps_Lock=Escape'
+  # xmodmap -e 'keycode 37 ='
   setxkbmap -option 'grp:switch,grp:shifts_toggle,grp_led:scroll' \
     -layout 'us,us(dvorak)'
 

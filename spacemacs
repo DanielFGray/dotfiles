@@ -16,8 +16,7 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers
-   '(
+   dotspacemacs-configuration-layers '(
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -40,7 +39,7 @@ values."
      lua
      markdown
      org
-     perl
+     ;; perl
      php
      python
      ;; (ranger :variables
@@ -61,13 +60,12 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages
-   '(
+   dotspacemacs-additional-packages '(
      dired+
      dtrt-indent
      evil-exchange ;; is this enabled by default?
      evil-indent-textobject
-     evil-jumper
+     ;; evil-jumper
      ;; evil-mc ;; needs a configuration-layer
      evil-vimish-fold
      evil-visualstar
@@ -75,8 +73,7 @@ values."
      vimish-fold
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages
-   '(
+   dotspacemacs-excluded-packages '(
      evil-magit
      )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -222,7 +219,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -268,26 +265,22 @@ layers configuration. You are free to put any user code."
   (evil-define-key 'visual evil-surround-mode-map "s" 'evil-substitute)
   (evil-define-key 'visual evil-surround-mode-map "S" 'evil-surround-region)
 
-  (setq powerline-default-separator 'arrow)
-
   (setq paradox-github-token "3d0c5cde7ec2f82edb1397d44c9256ad4ba12306")
 
   ;; dired
   (setq dired-listing-switches "-lhgoBF --group-directories-first")
   (setq diredp-toggle-find-file-reuse-dir t)
-  ;; (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
-
-  ;; (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
-  ;; (evil-define-key 'normal dired-mode-map "l" 'dired-find-alternate-file)
-  ;; (evil-define-key 'normal dired-mode-map "o" 'dired-sort-toggle-or-edit)
-  ;; (evil-define-key 'normal dired-mode-map "v" 'dired-toggle-marks)
-  ;; (evil-define-key 'normal dired-mode-map "m" 'dired-mark)
-  ;; (evil-define-key 'normal dired-mode-map "u" 'dired-unmark)
-  ;; (evil-define-key 'normal dired-mode-map "U" 'dired-unmark-all-marks)
-  ;; (evil-define-key 'normal dired-mode-map "c" 'dired-create-directory)
-  ;; (evil-define-key 'normal dired-mode-map "n" 'evil-search-next)
-  ;; (evil-define-key 'normal dired-mode-map "N" 'evil-search-previous)
-  ;; (evil-define-key 'normal dired-mode-map "q" 'kill-this-buffer)
+  (eval-after-load "dired" '(progn
+    (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
+    (define-key dired-mode-map (kbd "h") 'dired-up-directory)
+    (define-key dired-mode-map (kbd "l") 'dired-find-alternate-file)
+    (define-key dired-mode-map (kbd "o") 'dired-sort-toggle-or-edit)
+    (define-key dired-mode-map (kbd "v") 'dired-toggle-marks)
+    (define-key dired-mode-map (kbd "m") 'dired-mark)
+    (define-key dired-mode-map (kbd "u") 'dired-unmark)
+    (define-key dired-mode-map (kbd "U") 'dired-unmark-all-marks)
+    (define-key dired-mode-map (kbd "c") 'dired-create-directory)
+  ))
 
   (defadvice dired-advertised-find-file (around dired-subst-directory activate)
     "Replace current buffer if file is a directory."

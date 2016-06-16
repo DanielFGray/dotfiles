@@ -156,7 +156,15 @@ Plug 'scrooloose/syntastic' " {{{
   let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
   let g:syntastic_check_on_wq = 0
   let g:syntastic_auto_jump = 3
+
   let g:syntastic_javascript_checkers = ['eslint']
+  let g:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
+  let g:syntastic_javascript_eslint_exec = substitute(g:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+
+  let g:syntastic_css_checkers = ['stylelint']
+  let g:stylelint_path = system('PATH=$(npm bin):$PATH && which stylelint')
+  let g:syntastic_css_stylelint_exec = substitute(g:stylelint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+
   nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
 " }}}
 Plug 'Shougo/neosnippet' " {{{
@@ -340,7 +348,6 @@ Plug 'junegunn/fzf' " {{{
 \, { 'dir': '~/.fzf', 'do': './install --all' }
 " }}}
 Plug 'junegunn/fzf.vim'
-" Plug 'shuber/vim-promiscuous'
 Plug 'reedes/vim-lexical' " {{{
   augroup Lexical
     autocmd!
@@ -360,7 +367,6 @@ Plug 'reedes/vim-wordy' " {{{
 Plug 'chilicuil/vim-sprunge' " {{{
   let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
 " }}}
-Plug 'mickaobrien/vim-stackoverflow'
 " }}}
 
 " {{{ unite.vim
@@ -407,7 +413,7 @@ Plug 'kopischke/unite-spell-suggest'
   nnoremap <silent> <leader><leader> <Esc>:Unite mapping -buffer-name=mapping -auto-resize<CR>
   nnoremap <silent> <leader>r <Esc>:Unite -buffer-name=register -auto-resize register<CR>
   nnoremap <silent> <leader>y <Esc>:Unite -buffer-name=yank     -auto-resize history/yank<CR>
-  nnoremap <silent> <leader>; <Esc>:Unite -buffer-name=command  -auto-resize command history/command<CR>
+  nnoremap <silent> <leader>; <Esc>:Unite -buffer-name=command  -auto-resize history/command command<CR>
   nnoremap <silent> <leader>o <Esc>:Unite -buffer-name=outline  -auto-resize outline<CR>
   nnoremap <silent> <leader>h <Esc>:Unite -buffer-name=help     -auto-resize help<CR>
   nnoremap <silent> <leader>/ <Esc>:Unite -buffer-name=grep     -auto-resize grep<CR>
@@ -508,6 +514,7 @@ Plug 'junegunn/gv.vim'
 Plug 'tejr/vim-tmux'
 Plug 'wellle/tmux-complete.vim'
 Plug 'mhinz/vim-tmuxify' " {{{
+  let g:tmuxify_map_prefix = '<leader>m'
   let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
   let g:tmuxify_global_maps = 1
   let g:tmuxify_run = {
@@ -526,9 +533,9 @@ Plug 'xuhdev/vim-latex-live-preview'
 " }}}
 
 " {{{ html/css
-Plug 'jaxbot/browserlink.vim' " {{{
-  \, {'for': ['html', 'javascript', 'css']}
-" }}}
+" Plug 'jaxbot/browserlink.vim' " {{{
+"   \, {'for': ['html', 'javascript', 'css']}
+" " }}}
 Plug 'suan/vim-instant-markdown' " {{{
   \, {'for': 'markdown'}
   let g:instant_markdown_autostart = 0
@@ -536,7 +543,7 @@ Plug 'suan/vim-instant-markdown' " {{{
 Plug 'mattn/emmet-vim' " {{{
   \, { 'for': ['html', 'javascript.jsx'] }
 " }}}
-Plug 'Valloric/MatchTagAlways'
+" Plug 'Valloric/MatchTagAlways'
 Plug 'tmhedberg/matchit'
 Plug 'othree/html5.vim'
 Plug 'groenewege/vim-less'
@@ -546,6 +553,7 @@ Plug 'tpope/vim-liquid'
 Plug 'tpope/vim-ragtag' " {{{
   let g:ragtag_global_maps = 1
 " }}}
+
 " }}}
 
 " {{{ javascript
@@ -569,7 +577,7 @@ Plug 'heavenshell/vim-jsdoc' " {{{
   augroup END
 " }}}
 Plug 'mxw/vim-jsx'
-Plug 'mtscout6/syntastic-local-eslint.vim'
+" Plug 'mtscout6/syntastic-local-eslint.vim'
 " }}}
 
 " {{{ haskell
@@ -603,7 +611,8 @@ set noruler rulerformat=%32(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set laststatus=2
 set showcmd noshowmode
 set hidden
-set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
+set list listchars=tab:\|\ ,trail:★,extends:»,precedes:«,nbsp:•
+" set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set listchars+=eol:¬
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\ 
 " set nolazyredraw
@@ -835,8 +844,8 @@ augroup VIM
   \   call system('tmux source-file ~/.tmux.conf && tmux display-message "Sourced .tmux.conf"') |
   \ endif
 
-  autocmd BufRead,BufNewFile *.es6
-  \ setfiletype javascript
+  " autocmd BufRead,BufNewFile *.es6
+  " \ setfiletype javascript
 
   autocmd BufReadPost *
   \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
@@ -845,6 +854,7 @@ augroup VIM
 
   autocmd FileType markdown,text,liquid
   \ setlocal nocursorline nocursorcolumn
+  \ call textobj#sentence#init()
 
   autocmd BufEnter *
   \ if &buftype != '' |
@@ -909,21 +919,31 @@ augroup END
 " }}}
 
 " {{{ misc commands and maps
+nnoremap <leader>evim <Esc>:vs ~/dotfiles/vimrc<CR>
+
 nnoremap Y y$
+
 nnoremap g; g;zvzz
 nnoremap g, g,zvzz
+nnoremap <C-Z> <Esc>zMzvzz
+
 nnoremap gV `[v`]
+
 nnoremap <F6> <Esc>:set paste!<CR>
 inoremap <F6> <C-O>:set paste!<CR>
-nnoremap <C-Z> <Esc>zMzvzz
+
 nnoremap <Leader> <Nop>
+
 nnoremap <silent><expr> K (&keywordprg == 'man' && exists('$TMUX')) ? printf(':!tmux split-window -h "man %s"<CR>:redraw<CR>', expand('<cword>')) : 'K'
+
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
+
 if exists(':SudoWrite')
   cabbrev w!! SudoWrite
 else
   cabbrev w!! w !sudo tee >/dev/null "%"
 endif
+
 highlight diffAdded ctermfg=darkgreen
 highlight diffRemoved ctermfg=darkred
 highlight Folded ctermfg=14

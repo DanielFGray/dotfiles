@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ -e ~/dotfiles/less.vim ]]; then
-  lessvim="-S $HOME/dotfiles/less.vim"
-elif [[ -e /usr/local/share/vim/vim74/macros/less.vim ]]; then
-  lessvim='-S /usr/local/share/vim/vim74/macros/less.vim'
-elif [[ -e /usr/share/vim/vim74/macros/less.vim ]]; then
-  lessvim='-S /usr/share/vim/vim74/macros/less.vim'
-fi
-vimcolor="-S $HOME/.vim/bundle/vim-noctu/colors/noctu.vim"
 export MANPAGER="bash -c \"col -b | vim -Nu NONE -c 'runtime macros/less.vim' -c 'setf man' -\""
 export EDITOR='vim'
 export HISTFILESIZE=500000
@@ -66,7 +58,7 @@ elif [[ -f /etc/arch-release ]]; then
       break
     fi
   done
-  if [[ -d $(cope_path) ]]; then
+  if has cope_path && [[ -d $(cope_path) ]]; then
     export PATH="$(cope_path):$PATH"
   elif [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
     export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
@@ -104,6 +96,12 @@ alias ga='git add '
 alias gap='git add -p '
 alias gp='git push '
 alias gco='git checkout '
+alias gcl='git clone '
+gclgh() {
+  local repo="$1"
+  shift
+  git clone "https://github.com/${repo}" "$@"
+}
 
 cd() {
   if [[ -z "$@" ]]; then
@@ -141,7 +139,7 @@ txs() {
   if [[ -n "$nested" ]]; then
     cmd="TMUX='' tmux new \; source ~/dotfiles/tmux.alt.conf \; send-keys '$cmd' C-m"
   fi
-  tmux split-window ${opts[*]} "$cmd"
+  tmux split-window "${opts[@]}" "$cmd"
 }
 
 sprunge() { command curl -sF 'sprunge=<-' http://sprunge.us ;}
@@ -217,11 +215,21 @@ whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
 if has node rlwrap; then
   node() {
-    local nodeopts=( $(node --v8-options | awk '/harm/{printf "%s", $1}') )
+    local nodeopts=( $(command node --v8-options | awk '/harm/{printf "%s ", $1}') )
     if (( $# > 0 )); then
-      node ${nodeopts[*]} "$@"
+      command node "${nodeopts[@]}" "$@"
     else
-      rlwrap node $nodeopts
+      rlwrap node "${nodeopts[@]}"
+    fi
+  }
+fi
+
+if has guile rlwrap; then
+  guile() {
+    if (( $# > 0 )); then
+      command guile "$@"
+    else
+      rlwrap guile
     fi
   }
 fi
@@ -243,7 +251,7 @@ fi
 if has fzf; then
   has ag && export FZF_DEFAULT_COMMAND='ag -l'
   umnt() {
-    device=$(mount | awk '/sshfs|\/dev\/sd/{print $1, $3, $5, $6}' | column -t | fzf | awk '{print $2}')
+    device=$(mount -l | awk '$5 !~ /gvfsd|debugfs|hugetlbfs|mqueue|tracefs|devpts|securityfs|pstore|sysfs|proc|autofs|cgroup|fusect|tmpfs/{print $1, $3, $5, $6}' | column -t | fzf | awk '{print $2}')
     [[ -n "$device" ]] && sudo umount -l "$device"
   }
 

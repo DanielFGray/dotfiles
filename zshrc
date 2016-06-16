@@ -4,7 +4,7 @@ ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 COMPLETION_WAITING_DOTS="true"
 DEFAULT_USER="dan"
-plugins=( vi-mode zsh-syntax-highlighting zsh-autosuggestions )
+plugins=( vi-mode zsh-autosuggestions zsh-syntax-highlighting )
 source $ZSH/oh-my-zsh.sh
 
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
@@ -157,3 +157,12 @@ change-around() {
 }
 zle -N change-around
 bindkey -M vicmd 'ca' change-around
+
+export NVM_DIR="/home/dan/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"  # This loads nvm
+
+PATH="/home/dan/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/dan/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/dan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/dan/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/dan/perl5"; export PERL_MM_OPT;

@@ -34,9 +34,6 @@ URxvt.font-size.step:  2
 *background:           #131313
 *foreground:           #dedede
 
-*background: #161616
-*foreground: #dedede
-
 !black
 *color0:               #262626
 *color8:               #828282
