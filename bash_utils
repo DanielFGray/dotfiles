@@ -97,7 +97,7 @@ select-from() {
     esac
   done
   for c in "$@"; do
-    if $cmd $c &> /dev/null; then
+    if $cmd "${c%% *}" &> /dev/null; then
       echo "$c"
       return 0
     fi

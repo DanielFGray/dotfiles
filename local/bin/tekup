@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 declare verbose=0
-# declare deletionKey
-# declare expire
 declare esc=$(printf '\033')
 declare c_reset="${esc}[0m"
 declare c_red="${esc}[31m"
@@ -22,7 +20,6 @@ die() {
 }
 
 usage() {
-  # LESS=-EXRm~ less <<-'HELP'
   more <<-'HELP'
 Usage: tekup [OPTIONS] [FILES..]
   -h          print this help
@@ -31,39 +28,17 @@ Usage: tekup [OPTIONS] [FILES..]
               the JSON response from teknik, the second will also pass the
               -v option to curl
 HELP
-# TODO:
-# -r          for text pastes, return the raw url string
-# -x          copy the url to the clipboard (requires xclip)
-# -d          define a key to delete a non-text file
-# -e 'str'    define an expiration for text pastes, specified in the
-#             form of '1 view' or '3 days'. must be a string, containing first
-#             a number, and one of the following:
-#             [ view, minute, hour, day, month, year ]
-#             the letter s is stripped from the end, so it's optional and only
-#             allowed for grammatical purposes
 }
 
-OPTERR=0
-while getopts "hv" opt; do
-  case "$opt" in
-    h) usage; exit 0    ;;
-    v) (( verbose++ ))  ;;
-    # d) deletionKey=true ;;
-    # e) expire="$OPTARG" ;;
-    # r) raw=true         ;;
-    # x) clipboard=true   ;;
-  esac
-done
-shift "$((OPTIND-1))"
 
-if (( $# < 1 )); then
-  die 'No files to upload.'
-fi
+upload() {
+  local file mime url post curl_verbosity
+  file="$1"
 
-for (( i=0; i <= $#; i++ )); do
-  file="$1" && shift
-
-  [[ -e "$file" ]] || die "$file does not exist"
+  if [[ ! -e "$file" ]]; then
+    err "$file does not exist"
+    return 1
+  fi
 
   mime=$(file -ib "$file")
   mime="${mime%%/*}"
@@ -84,9 +59,27 @@ for (( i=0; i <= $#; i++ )); do
 
   (( verbose > 0 )) && info "response: ${c_reset}${post}"
 
-  [[ -z "$post" || "$post" != *'http'* || "$post" =~ 'error' ]] && die "error uploading ${file}"
+  [[ -z "$post" || "$post" != *'http'* || "$post" == *'error'* ]] && die "error uploading ${file}"
 
   url=$(grep -oP 'https://[[:alnum:]?=%/_.:,;~@!#$&()*+-]+' <<< "$post")
-  # [[ $raw == true ]] && substitute last / with /Raw
   echo "${file}: ${url}"
+}
+
+if ! command -v curl &> /dev/null; then
+  die 'curl not found'
+fi
+
+OPTERR=0
+while getopts "hv" opt; do
+  case "$opt" in
+    h) usage; exit 0    ;;
+    v) (( verbose++ ))  ;;
+  esac
+done
+shift "$((OPTIND-1))"
+
+(( $# > 0 )) || die 'No files to upload.'
+
+for f in "$@"; do
+  upload "$f"
 done
