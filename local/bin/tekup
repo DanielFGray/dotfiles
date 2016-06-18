@@ -5,19 +5,23 @@ declare esc=$(printf '\033')
 declare c_reset="${esc}[0m"
 declare c_red="${esc}[31m"
 declare c_blue="${esc}[34m"
+declare processes=1
 
 info() {
   echo -e "${c_blue}$1${c_reset}" >&2
 }
+export -f info
 
 err() {
   echo -e "${c_red}$1${c_reset}" >&2
 }
+export -f err
 
 die() {
   [[ -n "$1" ]] && err "$1"
   exit 1
 }
+export -f err
 
 usage() {
   more <<-'HELP'
@@ -29,7 +33,6 @@ Usage: tekup [OPTIONS] [FILES..]
               -v option to curl
 HELP
 }
-
 
 upload() {
   local file mime url post curl_verbosity
@@ -64,22 +67,20 @@ upload() {
   url=$(grep -oP 'https://[[:alnum:]?=%/_.:,;~@!#$&()*+-]+' <<< "$post")
   echo "${file}: ${url}"
 }
+export -f upload
 
-if ! command -v curl &> /dev/null; then
-  die 'curl not found'
-fi
+command -v curl &> /dev/null || die 'curl not found'
 
 OPTERR=0
-while getopts "hv" opt; do
+while getopts "hvp:" opt; do
   case "$opt" in
-    h) usage; exit 0    ;;
-    v) (( verbose++ ))  ;;
+    h) usage; exit 0 ;;
+    v) (( verbose++ )) ;;
+    p) processes="$OPTARG" ;;
   esac
 done
 shift "$((OPTIND-1))"
 
 (( $# > 0 )) || die 'No files to upload.'
 
-for f in "$@"; do
-  upload "$f"
-done
+printf '%s\n' "$@" | xargs -P"$processes" -I% bash -c 'upload %'
