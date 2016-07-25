@@ -853,7 +853,7 @@ augroup VIM
   \ endif
 
   autocmd FileType markdown,text,liquid
-  \ setlocal nocursorline nocursorcolumn
+  \ setlocal nocursorline nocursorcolumn |
   \ call textobj#sentence#init()
 
   autocmd BufEnter *
@@ -923,6 +923,9 @@ nnoremap <leader>evim <Esc>:vs ~/dotfiles/vimrc<CR>
 
 nnoremap Y y$
 
+nnoremap ' `
+nnoremap ` '
+
 nnoremap g; g;zvzz
 nnoremap g, g,zvzz
 nnoremap <C-Z> <Esc>zMzvzz
@@ -943,6 +946,9 @@ if exists(':SudoWrite')
 else
   cabbrev w!! w !sudo tee >/dev/null "%"
 endif
+
+command! Qa qa
+command! Wa wa
 
 highlight diffAdded ctermfg=darkgreen
 highlight diffRemoved ctermfg=darkred
