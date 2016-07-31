@@ -18,8 +18,9 @@ weelog [options] [string]
   -c  specify a channel to search, eg: freenode.#freenode
       can specify multiple channels with multiple -c flags
   -n  specify a nick to filter for. can specify multiple nicks with multiple -n flags
-  -f  define a date to start from. this is passed directly to \`date -d\`  -F
-  -t  define a date to end at. this is passed directly to \`date -d\`  -F
+  -F  filter join/part messages and mode changes (ignored when -n is present)
+  -f  define a date to start from. this is passed directly to \`date -d\`
+  -t  define a date to end at. this is passed directly to \`date -d\`
   -h  show this help
 
   example:
@@ -32,13 +33,12 @@ HELP
 }
 
 join() {
-  local delimiter output
-  delimiter="$1"
-  shift
-  for a in "$@"; do
-    output+="${a}${delimiter}"
+  local delim="$1" output="$2" s
+  shift 2
+  for s do
+    output+="$delim$s"
   done
-  echo -n "${output%${delimiter}}"
+  printf '%s' "$output"
 }
 
 err() {
