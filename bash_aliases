@@ -89,18 +89,25 @@ alias shuf1='shuf -n1'
 alias wttr='command curl http://wttr.in/galveston'
 alias rsync='rsync -v --progress --stats '
 
-alias gl='git pull '
-alias gc='git commit '
-alias gcmsg='git commit -m '
+alias g='git '
 alias ga='git add '
 alias gap='git add -p '
-alias gp='git push '
+alias gc='git commit -v '
+alias gcm='git commit -m '
 alias gco='git checkout '
-alias gcl='git clone '
-gclgh() {
-  local repo="$1"
-  shift
-  git clone "https://github.com/${repo}" "$@"
+alias gl='git pull '
+alias gp='git push '
+alias gst='git status '
+gcl() {
+  if [[ -n "$1" ]]; then
+    case "$1" in
+      http*|https*|git*|ssh*)
+        repo="$1";;
+      *) repo="https://github.com/$1"
+    esac
+    shift
+  fi
+  git clone "$repo" "$@"
 }
 
 cd() {
