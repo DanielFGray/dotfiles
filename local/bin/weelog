@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+# FIXME: rewrite this garbage in perl
+# TODO: allow globs/wildcards in channels
+
+declare from to joinpart_filter nick cmd
+declare -a awkcmds
+declare -a channels
+declare -a nicks
+declare esc=$(printf '\033')
+declare c_reset="${esc}[0m"
+declare c_red="${esc}[31m"
+
+usage() {
+  LESS=-EXR less <<-HELP
+weelog [options] [string]
+
+  -c  specify a channel to search, eg: freenode.#freenode
+      can specify multiple channels with multiple -c flags
+  -n  specify a nick to filter for. can specify multiple nicks with multiple -n flags
+  -f  define a date to start from. this is passed directly to \`date -d\`  -F
+  -t  define a date to end at. this is passed directly to \`date -d\`  -F
+  -h  show this help
+
+  example:
+    weelog -n DANtheBEASTman -c freenode.#bash -c freenode.#awk -f '3 days ago' -t '1 day ago' 'help'
+
+    this would search for all posts by DANtheBEASTman on the channels
+    #bash and #awk on the freenode network, from 3 days ago til 1 day ago
+    for all lines matching 'help'
+HELP
+}
+
+join() {
+  local delimiter output
+  delimiter="$1"
+  shift
+  for a in "$@"; do
+    output+="${a}${delimiter}"
+  done
+  echo -n "${output%${delimiter}}"
+}
+
+err() {
+  echo -e "${c_red}$1${c_reset}" >&2
+}
+
+die() {
+  [[ -n "$1" ]] && err "$1"
+  exit 1
+}
+
+while getopts "hFt:f:n::c:" opt; do
+  case "$opt" in
+    h) usage; exit 0 ;;
+    F) joinpart_filter=1 ;;
+    f) from="$OPTARG" ;;
+    t) to="$OPTARG" ;;
+    n) nicks+=( "$OPTARG" ) ;;
+    c) channels+=( "$OPTARG" ) ;;
+  esac
+done
+shift "$((OPTIND-1))"
+
+(( ${#channels[@]} > 0 )) || die 'please specify a channel'
+
+if [[ -n "$from" ]]; then
+  awkcmds+=( "\$1 >= \"$(date -d "$from" +'%F %T')\"" )
+fi
+
+if [[ -n "$to" ]]; then
+  awkcmds+=( "\$1 <= \"$(date -d "$to" +'%F %T')\"" )
+fi
+
+if (( ${#nicks[@]} > 0 )); then
+  for nick in "${nicks[@]}"; do
+    awkcmds+=( "\$2 ~ /$nick/" )
+  done
+elif [[ -n "$joinpart_filter" ]]; then
+  awkcmds+=( "\$2 !~ /(--|<--|-->)/" )
+fi
+
+if (( $# > 0 )); then
+  awkcmds+=( "\$0 ~ /$*/" )
+fi
+
+cmd=$(join ' && ' "${awkcmds[@]}")
+
+for channel in "${channels[@]}"; do
+  file="${HOME}/.weechat/logs/irc.${channel}.weechatlog"
+  if [[ -e "$file" ]]; then
+    awk -F '\t' "$cmd { print \"$channel\", \$0 }" "$file"
+  else
+    err "can't find a weechatlog file for ${channel}"
+  fi
+done
