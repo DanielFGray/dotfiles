@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-LESS=-EXR
+
 usage() {
-  less <<'HELP'
+  LESS=-FEXR less <<'HELP'
 Usage: diffsed [OPTION]... <EXPR> <FILE>
 show a diff before a file transformed with sed
 
@@ -15,7 +15,7 @@ HELP
 
 ask() {
   read -r -N1 -p "$* " ans
-  echo
+  printf '\n'
   [[ ${ans^} == Y* ]]
 }
 

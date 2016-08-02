@@ -3,7 +3,7 @@
 # if [[ -e "${HOME}/.bash_utils" ]]; then
 #   source "${HOME}/.bash_utils"
 # else
-#   echo -e "\e[31m~/.bash_utils does not exist\e[0m" >&2
+#   printf '\e[31m~/.bash_utils does not exist\e[0m\n' >&2
 #   exit 1
 # fi
 
@@ -18,12 +18,12 @@ inTerm() {
 }
 
 isRunning() {
-  pgrep $1 &> /dev/null
+  pgrep "$1" &> /dev/null
 }
 
 info() {
   if inTerm; then
-    echo -e "${c_blue}$1${c_reset}" >&2
+    printf "${c_blue}%s${c_reset}\n" "$*" >&2
   else
     zenity --info --text="$*"
   fi
@@ -31,7 +31,7 @@ info() {
 
 err() {
   if inTerm; then
-    echo -e "${c_red}$1${c_reset}" >&2
+    printf "${c_red}%s${c_reset}\n" "$*" >&2
   else
     zenity --error --text="$*"
   fi
@@ -59,7 +59,7 @@ has() {
 ask() {
   if inTerm; then
     read -r -n1 -p "$* " ans
-    echo
+    printf '\n'
     [[ ${ans^} == Y* ]]
   else
     zenity --question --text="$*"
@@ -79,10 +79,10 @@ prompt() {
   fi
   read -e -r ${opts[*]} -p "$* " ans
   if [[ $one == '1' ]]; then
-    echo
+    printf '\n'
     [[ ${ans,} == y ]]
   else
-    echo "$ans"
+    printf '%s\n' "$ans"
   fi
 }
 
@@ -98,7 +98,7 @@ select-from() {
   done
   for c in "$@"; do
     if $cmd "${c%% *}" &> /dev/null; then
-      echo "$c"
+      printf '%s' "$c"
       return 0
     fi
   done

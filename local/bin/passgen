@@ -3,7 +3,7 @@
 if [[ -e "${HOME}/.bash_utils" ]]; then
   source "${HOME}/.bash_utils"
 else
-  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  printf '\e[31mbash_utils not found\e[0m\n' >&2
   exit 1
 fi
 
@@ -17,10 +17,10 @@ declare charrange='[a-zA-Z0-9]'
 OPTERR=0
 while getopts "w:c:m:r:" opt; do
   case "$opt" in
-    w) words="$(printf '%d' "$OPTARG")" ;;
-    c) chars="$(printf '%d' "$OPTARG")" ;;
-    m) maxlength="$(printf '%d' "$OPTARG")" ;;
-    r) charrange="$(printf '%s' "$OPTARG")" ;;
+    w) words=$(printf '%d' "$OPTARG") ;;
+    c) chars=$(printf '%d' "$OPTARG") ;;
+    m) maxlength=$(printf '%d' "$OPTARG") ;;
+    r) charrange=$(printf '%s' "$OPTARG") ;;
   esac
 done
 shift "$((OPTIND-1))"
@@ -35,12 +35,12 @@ words() {
   else
     str=$(shuf /usr/share/cracklib/cracklib-small | head -n "$1")
   fi
-  str=$(sed -r "s/'\w\b//g; s/\b(.)/\u\1/g" <<< "$str" | tr -d '\n ')
-  echo "$str"
+  str=$(sed -r "s/'(\w)\b/\1/g; s/\b(.)/\u\1/g; s/ //g" <<< "$str")
+  printf '%s\n' "$str"
 }
 
 chars() {
-  echo "$(grep -a -oP "$charrange" < /dev/urandom | tr -d '\n' | head -c "$1")"
+  printf '%s\n' "$(grep -a -oP "$charrange" < /dev/urandom | tr -d '\n' | head -c "$1")"
 }
 
 if (( words > 0)); then

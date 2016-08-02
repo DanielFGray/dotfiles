@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-if [[ -e ${HOME}/.bash_utils ]]; then
-  source ${HOME}/.bash_utils
+if [[ -e "${HOME}/.bash_utils" ]]; then
+  source "${HOME}/.bash_utils"
 else
-  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  printf '\e[31mbash_utils not found\e[0m\n' >&2
   exit 1
 fi
 
 favs=('urxvtcd' 'urxvtc' 'urxvt' 'xterm')
 cmd=$(select-from "${favs[@]}") || die "no term in ( ${favs[*]} )"
-( exec $cmd $* ) &
+( exec $cmd "$@" &)

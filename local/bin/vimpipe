@@ -3,13 +3,12 @@
 if [[ -e "${HOME}/.bash_utils" ]]; then
   source "${HOME}/.bash_utils"
 else
-  echo -e "\e[31m~/.bash_utils does not exist\e[0m" >&2
+  printf '\e[31mbash_utils not found\e[0m\n' >&2
   exit 1
 fi
 
 declare -a args
 declare file
-declare inplace
 
 OPTERR=0
 while getopts ":n:" opt; do
@@ -42,7 +41,7 @@ done
  args+=(-c 'w! /dev/fd/3 | q!')
 # fi
 
-( (vim ${file:--} -esnb -c 'norm gg0' "${args[@]}" >/dev/null 2>&1) 3>&1)
+( (vim "${file:--}" -esnb -c 'norm gg0' "${args[@]}" >/dev/null 2>&1) 3>&1)
 
 # if [[ -n "$file" && -n "$inplace" ]]; then
 #   diff -u orig new

@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-lines=()
-while read line; do
-  lines+=( "$line\n" )
-done < /dev/stdin
-
-echo -e "${lines[@]}"

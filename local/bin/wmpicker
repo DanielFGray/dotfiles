@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+has() {
+  command -v "$1" &> /dev/null
+}
+
+picker() {
+  known_wms=( awesome openbox-session bspwm xmonad dwm startkde startxfce4 xterm )
+  avail_wms=()
+  for wm in "${known_wms[@]}"; do
+    has "$wm" && avail_wms+=( "$wm" )
+  done
+  if has fzf; then
+    fzf --reverse --inline-info --cycle < <(printf '%s\n' "${avail_wms[@]}")
+  else
+    PS3="choose a number between 1 and ${#avail_wms[@]}: "
+    select v in "${avail_wms[@]}"; do
+      echo "$v"
+      break
+    done
+  fi
+}
+
+startx "$(picker)"

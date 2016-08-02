@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-if [[ -e ${HOME}/.bash_utils ]]; then
-  source ${HOME}/.bash_utils
+if [[ -e "${HOME}/.bash_utils" ]]; then
+  source "${HOME}/.bash_utils"
 else
-  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  printf '\e[31mbash_utils not found\e[0m\n' >&2
   exit 1
 fi
 
@@ -49,7 +49,6 @@ startServer() {
 }
 
 declare noselect
-declare sendpane=false
 declare -a files
 declare -a vimopts
 
@@ -57,15 +56,14 @@ while true; do
   case "$1" in
     -h|--help) usage; exit 0 ;;
     -d) noselect=true; ;;
-    -s) sendpane=true ;;
     *) break ;;
   esac
   shift
 done
 
-serv=$(vim --serverlist | grep -P '^V_[0-9]+$')
+serv=$(vim --serverlist | grep -oP '^V_\d+$')
 if [[ -n "$serv" ]]; then
-  vimopts=( "--servername $serv" )
+  vimopts=( '--servername' "$serv" )
   if (( $# == 0 )); then
     ! has fv && die 'enter a file name or install fv'
     if inTerm; then
@@ -77,10 +75,10 @@ if [[ -n "$serv" ]]; then
   else
     while (( $# > 0 )); do
       case "$1" in
-        :*) vim ${vimopts[*]} --remote-send "<esc>$1<cr>" ;;
-        !*) vim ${vimopts[*]} --remote-send "${1:1}" ;;
-        +*) vim ${vimopts[*]} --remote-expr "${1:1}" ;;
-        http://* | https://* ) vim ${vimopts[*]} --remote-send "<esc>:enew | r !command curl -sL $1<cr><esc>ggdd:set ft=" ;;
+        :*) vim "${vimopts[@]}" --remote-send "<esc>$1<cr>" ;;
+        !*) vim "${vimopts[@]}" --remote-send "${1:1}" ;;
+        +*) vim "${vimopts[@]}" --remote-expr "${1:1}" ;;
+        http://* | https://* ) vim "${vimopts[@]}" --remote-send "<esc>:enew | r !command curl -sL $1<cr><esc>ggdd:set ft=" ;;
         *) files+=("$1") ;;
       esac
       shift
@@ -91,7 +89,7 @@ if [[ -n "$serv" ]]; then
     if [[ -d "$f" ]]; then
       f=$(ag -lk)
     fi
-    vim ${vimopts[*]} --remote "$f"
+    vim "${vimopts[@]}" --remote "$f"
     sleep 0.2
   done
 else
