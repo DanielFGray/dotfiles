@@ -92,6 +92,7 @@ alias rsync='rsync -v --progress --stats '
 alias g='git '
 alias ga='git add '
 alias gap='git add -p '
+alias gb='git branch '
 alias gc='git commit -v '
 alias gcm='git commit -m '
 alias gco='git checkout '
@@ -106,8 +107,8 @@ gcl() {
       *) repo="https://github.com/$1"
     esac
     shift
+    git clone "$repo" "$@"
   fi
-  git clone "$repo" "$@"
 }
 
 cd() {
@@ -220,27 +221,6 @@ curltar() {
 
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
-if has node rlwrap; then
-  node() {
-    local nodeopts=( $(command node --v8-options | awk '/harm/{printf "%s ", $1}') )
-    if (( $# > 0 )); then
-      command node "${nodeopts[@]}" "$@"
-    else
-      rlwrap node "${nodeopts[@]}"
-    fi
-  }
-fi
-
-if has guile rlwrap; then
-  guile() {
-    if (( $# > 0 )); then
-      command guile "$@"
-    else
-      rlwrap guile
-    fi
-  }
-fi
-
 if has synclient vipe; then
   synclient() {
     if command synclient -l &> /dev/null; then
@@ -295,6 +275,43 @@ if has fzf; then
   }
 fi
 
-has fortune && fortune -ea
+if has rlwrap; then
+  if has node; then
+    node() {
+      if (( $# > 0 )); then
+        command node "$@"
+      else
+        if has babel-node; then
+          rlwrap babel-node
+        else
+          rlwrap node
+        fi
+      fi
+    }
+  fi
+
+  if has guile; then
+    guile() {
+      if (( $# > 0 )); then
+        command guile "$@"
+      else
+        rlwrap guile
+      fi
+    }
+  fi
+fi
+
+
+if [[ -e /opt/clojure-1.8.0/clojure-1.8.0.jar ]]; then
+  clojure() {
+    rlwrap java -cp /opt/clojure-1.8.0/clojure-1.8.0.jar clojure.main
+  }
+fi
+
+if [[ -e /opt/closure/compiler.jar ]]; then
+  closure() {
+    java -jar /opt/closure/compiler.jar "$@"
+  }
+fi
 
 # vim:ft=sh:
