@@ -8,12 +8,12 @@ declare c_blue="${esc}[34m"
 declare processes=1
 
 info() {
-  echo -e "${c_blue}$1${c_reset}" >&2
+  printf "${c_blue}%s${c_reset}\n" "$1" >&2
 }
 export -f info
 
 err() {
-  echo -e "${c_red}$1${c_reset}" >&2
+  printf "${c_red}%s${c_reset}\n" "$1" >&2
 }
 export -f err
 
@@ -67,7 +67,7 @@ upload() {
   [[ -z "$post" || "$post" != *'http'* || "$post" == *'error'* ]] && die "error uploading ${file}"
 
   url=$(grep -oP 'https://[[:alnum:]?=%/_.:,;~@!#$&()*+-]+' <<< "$post")
-  echo "${file}: ${url}"
+  printf '%s: %s\n' "$file" "$url"
 }
 export -f upload
 

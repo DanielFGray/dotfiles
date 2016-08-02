@@ -27,7 +27,7 @@ HELP
 }
 
 err() {
-  echo -e "${c_red}$1${c_reset}" >&2
+  printf "${c_red}%s${c_reset}\n" "$*" >&2
 }
 
 die() {
@@ -58,7 +58,7 @@ select-from() {
   done
   for c in "$@"; do
     if $cmd "${c%% *}" &> /dev/null; then
-      echo "$c"
+      printf '%s' "$c"
       return 0
     fi
   done
@@ -67,22 +67,22 @@ select-from() {
 
 ask() {
   read -r -n1 -p "$* " ans
-  echo
+  printf '\n'
   [[ ${ans^} == Y* ]]
 }
 
 delay() {
   for (( i=delay; i>0; --i )); do
-    echo -ne "$i..                     \r"
+    printf '%s..                     \r' "$i"
     sleep 1
   done
-  echo -ne "recording                \r"
+  printf 'recording                \r'
 }
 
 getdimensions() {
   if [[ "$window" == true ]]; then
     local xwininfo x y w h seltool
-    echo -ne 'click a window\r'
+    printf 'click a window\r'
     xwininfo=$(xwininfo)
     read -r x y w h < <(awk -F':' '/Absolute upper-left X/ { x=$2 }
       /Absolute upper-left Y/ { y=$2 }
@@ -91,8 +91,8 @@ getdimensions() {
       END { print x, y, w, h }' <<< "$xwininfo")
     dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
   elif [[ "$region" == true ]]; then
-    seltool=$(select-from 'slop -f' xrectsel) || die 'xrectsel or slop required for -s'
-    echo -ne 'select a region\r'
+    seltool=$(select-from 'slop -b 1 -f' xrectsel) || die 'xrectsel or slop required for -s'
+    printf 'select a region\r'
     eval "dimensions=( $($seltool "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )"
   else
     scrsize=$(xdpyinfo | awk '/dimensions/{print $2}')
@@ -109,7 +109,7 @@ record-byzanz() {
     --width="${dimensions['w']}" \
     --height="${dimensions['h']}" \
     "$file" &&
-  echo "saved as $file"
+  printf 'saved as %s\n' "$file"
 }
 
 record-ffmpeg() {
@@ -130,7 +130,7 @@ record-ffmpeg() {
     -threads 4 \
     -pix_fmt yuv444p \
     -f webm "$file" &&
-  echo "saved as $file"
+  printf 'saved as %s\n' "$file"
 }
 
 OPTERR=0

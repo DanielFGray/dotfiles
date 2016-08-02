@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-if [[ -e ${HOME}/.bash_utils ]]; then
-  source ${HOME}/.bash_utils
+if [[ -e "${HOME}/.bash_utils" ]]; then
+  source "${HOME}/.bash_utils"
 else
-  echo -e "\e[31mbash_utils not found\e[0m" >&2
+  printf '\e[31mbash_utils not found\e[0m\n' >&2
   exit 1
 fi
 
@@ -21,7 +21,7 @@ fi
 
 xrdb -load ~/.Xresources
 if inTerm; then
-  exec ${cmds[*]}
+  exec "${cmds[@]}"
 else
   exec x-terminal-emulator -e ${cmds[*]}
 fi

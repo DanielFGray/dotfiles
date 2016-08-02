@@ -2,24 +2,24 @@
 
 ask() {
   read -r -n1 -p "$1 " ans
-  echo
+  printf '\n'
   [[ ${ans^} == Y* ]]
 }
 
 declare pkg="$*"
 declare version
-declare versions -a
+declare -a versions
 declare builddir='/tmp/backport-build/'
 
 if [[ -z $pkg ]]; then
-  echo 'nothing to search for';
+  printf 'nothing to search for\n'
   exit 1
 fi
 
 set -e
 
 mapfile -t versions < <(apt-cache showsrc "$pkg" | awk '/^Version/{ print $2 }' | sort -uh)
-echo "$pkg has the following versions available:"
+printf '%s has the following versions available:' "$pkg"
 PS3="choose a number between 1 and ${#versions[@]}: "
 select v in "${versions[@]}"; do
   version="$v";

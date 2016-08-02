@@ -39,7 +39,7 @@ Plug 'tommcdo/vim-exchange'
 Plug 'kana/vim-operator-user'
 Plug 'haya14busa/vim-operator-flashy' " {{{
   map y <Plug>(operator-flashy)
-  nmap Y <Plug>(operator-flashy)$
+  map Y <Plug>(operator-flashy)$
   let g:operator#flashy#group = 'Search'
 " }}}
 " }}}
@@ -81,7 +81,7 @@ Plug 'haya14busa/incsearch-fuzzy.vim' " {{{
   map zg/ <Plug>(incsearch-fuzzy-stay)
 " }}}
 Plug 'osyo-manga/vim-over' " {{{
-  let g:over_command_line_prompt = ":"
+  let g:over_command_line_prompt = ':'
   let g:over_enable_cmd_window = 1
   let g:over#command_line#search#enable_incsearch = 1
   let g:over#command_line#search#enable_move_cursor = 1
@@ -158,12 +158,12 @@ Plug 'scrooloose/syntastic' " {{{
   let g:syntastic_auto_jump = 3
 
   let g:syntastic_javascript_checkers = ['eslint']
-  let g:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
-  let g:syntastic_javascript_eslint_exec = substitute(g:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+  let g:syntastic_javascript_eslint_exec =
+  \ substitute(system('PATH=$(npm bin):$PATH && which eslint'), '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 
   let g:syntastic_css_checkers = ['stylelint']
-  let g:stylelint_path = system('PATH=$(npm bin):$PATH && which stylelint')
-  let g:syntastic_css_stylelint_exec = substitute(g:stylelint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+  let g:syntastic_css_stylelint_exec =
+  \ substitute(system('PATH=$(npm bin):$PATH && which stylelint'), '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 
   nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
 " }}}
@@ -175,9 +175,9 @@ Plug 'Shougo/neosnippet' " {{{
   xmap <C-K> <Plug>(neosnippet_expand_target)
   imap <expr><tab> neosnippet#expandable_or_jumpable() ?
   \ "\<Plug>(neosnippet_expand_or_jump)"
-  \ : pumvisible() ? "\<C-N>" : "\<tab>"
+  \ : pumvisible() ? "\<C-N>" : "\<Tab>"
   smap <expr><tab> neosnippet#expandable_or_jumpable() ?
-  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
   if has('conceal')
     set conceallevel=2 concealcursor=i
   endif
@@ -254,6 +254,10 @@ Plug 'junegunn/goyo.vim' " {{{
     if exists('$TMUX')
       silent !tmux set status off
     endif
+    augroup Distractions
+      autocmd!
+      autocmd VimLeavePre * silent! !tmux set -q status on
+    augroup END
   endfunction
   function! s:goyo_leave()
     set noshowmode
@@ -261,6 +265,9 @@ Plug 'junegunn/goyo.vim' " {{{
     if exists('$TMUX')
       silent !tmux set status on
     endif
+    augroup Distractions
+      autocmd!
+    augroup END
   endfunction
   autocmd! User GoyoEnter nested call <SID>goyo_enter()
   autocmd! User GoyoLeave nested call <SID>goyo_leave()
@@ -322,33 +329,17 @@ Plug 'gosukiwi/vim-atom-dark'
 Plug 'DanielFGray/DistractionFree.vim'
 " }}}
 
-" {{{ misc/unorganized
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-eunuch'
-Plug 'vim-utils/vim-husk'
-Plug 'sjl/gundo.vim' " {{{
-  nnoremap <silent> <Leader>u <Esc>:GundoToggle<CR>
-  let g:gundo_right = 1
-  let g:gundo_width = 80
-  let g:gundo_preview_height = 20
+" {{{ prose
+Plug 'reedes/vim-litecorrect' " {{{
+  augroup litecorrect
+    autocmd!
+    autocmd FileType markdown,text,liquid
+    \ call litecorrect#init()
+  augroup END
 " }}}
-Plug 'chrisbra/NrrwRgn'
-Plug 'Shougo/echodoc' " {{{
-  let g:echodoc_enable_at_startup = 1
-" }}}
-Plug 'jeetsukumaran/vim-filebeagle' " {{{
-  let g:filebeagle_suppress_keymaps = 1
-  map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
-" }}}
-Plug 'mhinz/vim-sayonara'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'sheerun/vim-polyglot'
-Plug 'junegunn/fzf' " {{{
-\, { 'dir': '~/.fzf', 'do': './install --all' }
-" }}}
-Plug 'junegunn/fzf.vim'
 Plug 'reedes/vim-lexical' " {{{
+  " curl -L http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt --create-dirs
+  let g:lexical#dictionary = ['/usr/share/dict/cracklib-small']
   augroup Lexical
     autocmd!
     autocmd FileType markdown,text,liquid
@@ -364,8 +355,59 @@ Plug 'reedes/vim-wordy' " {{{
     \ nnoremap <buffer> ]w <Esc>:NextWordy<CR>
   augroup END
 " }}}
+" Plug 'danielbmarques/vim-ditto' " {{{
+"   augroup Ditto
+"     autocmd!
+"     autocmd FileType markdown,text,liquid
+"     \ DittoOn
+"     nnoremap <Leader>di <Plug>ToggleDitto
+"     nnoremap =d <Plug>DittoNext
+"     nnoremap -d <Plug>DittoPrev
+"     nnoremap +d <Plug>DittoGood
+"     nnoremap _d <Plug>DittoBad
+"     nnoremap ]d <Plug>DittoMore
+"     nnoremap [d <Plug>DittoLess
+"   augroup END
+" " }}}
+" }}}
+
+" {{{ misc/unorganized
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-eunuch'
+Plug 'vim-utils/vim-husk'
+" Plug 'sjl/gundo.vim' " {{{
+"   nnoremap <silent> <Leader>u <Esc>:GundoToggle<CR>
+"   let g:gundo_right = 1
+"   let g:gundo_width = 80
+"   let g:gundo_preview_height = 20
+" " }}}
+Plug 'chrisbra/NrrwRgn'
+Plug 'Shougo/echodoc' " {{{
+  let g:echodoc_enable_at_startup = 1
+" }}}
+Plug 'jeetsukumaran/vim-filebeagle' " {{{
+  let g:filebeagle_suppress_keymaps = 1
+  map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
+" }}}
+Plug 'mhinz/vim-sayonara'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'junegunn/fzf' " {{{
+\, { 'dir': '~/.fzf', 'do': './install --all' }
+" }}}
+Plug 'junegunn/fzf.vim'
 Plug 'chilicuil/vim-sprunge' " {{{
   let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
+" }}}
+Plug 'mbbill/undotree' " {{{
+  let g:undotree_WindowLayout=4
+  let g:undotree_SetFocusWhenToggle=1
+  nnoremap <silent> <Leader>u <Esc>:UndotreeToggle<CR>
+  function! g:Undotree_CustomMap()
+      nmap <buffer> k <plug>UndotreeGoNextState
+      nmap <buffer> j <plug>UndotreeGoPreviousState
+  endfunc
 " }}}
 " }}}
 
@@ -391,12 +433,12 @@ Plug 'kopischke/unite-spell-suggest'
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
     let g:unite_source_grep_recursive_opt = ''
-    let g:unite_source_rec_async_command = [ 'ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-l', '' ]
+    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-l', '']
   elseif executable('ack')
     let g:unite_source_grep_command = 'ack'
     let g:unite_source_grep_default_opts = '--no-heading --no-color'
     let g:unite_source_grep_recursive_opt = ''
-    let g:unite_source_rec_async_command = [ 'ack', '-f', '--nofilter' ]
+    let g:unite_source_rec_async_command = ['ack', '-f', '--nofilter']
   endif
 
   " from docs
@@ -421,22 +463,15 @@ Plug 'kopischke/unite-spell-suggest'
   nnoremap <silent> <leader>b <Esc>:Unite -buffer-name=files    -auto-resize buffer file neomru/file<CR>
   nnoremap <silent> z=        <Esc>:Unite -buffer-name=spell    -auto-resize spell_suggest<CR>
 
-  autocmd FileType unite call s:unite_my_settings()
+  augroup Unite
+    autocmd!
+    autocmd FileType unite call s:unite_my_settings()
+  augroup END
   function! s:unite_my_settings() " {{{
-"   call unite#custom#profile('default', 'context', {'start_insert': 1})
     call unite#filters#sorter_default#use(['sorter_rank'])
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
-"
-"   imap <buffer>               <Esc> <Plug>(unite_exit)
-"   nmap <buffer>               <Esc> <Plug>(unite_exit)
-"   imap <buffer>               <C-R> <Plug>(unite_narrowing_input_history)
-"   imap <buffer>               <C-J> <Plug>(unite_select_next_line)
-"   imap <buffer>               <C-K> <Plug>(unite_select_previous_line)
-"   imap <silent><buffer><expr> <C-X> unite#do_action('split')
-"   imap <silent><buffer><expr> <C-V> unite#do_action('vsplit')
-"   imap <silent><buffer><expr> <C-T> unite#do_action('tabopen')
 
     call unite#custom#profile('default', 'context', {
     \   'start_insert': 1,
@@ -447,10 +482,7 @@ Plug 'kopischke/unite-spell-suggest'
     \   'no_empty':     1,
     \ })
 
-    imap <buffer> jj      <Plug>(unite_insert_leave)
-    "imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
-
-    " imap <buffer>               <Esc> <Plug>(unite_exit)
+  " imap <buffer>               <Esc> <Plug>(unite_exit)
     nmap <buffer>               <Esc> <Plug>(unite_exit)
     nnoremap <silent><buffer><expr> l unite#smart_map('l', unite#do_action('default'))
     imap <buffer><expr> j   unite#smart_map('j', '')
@@ -614,7 +646,7 @@ set hidden
 set list listchars=tab:\|\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set listchars+=eol:¬
-set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\ 
+set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\
 " set nolazyredraw
 set autoread
 set report=0
@@ -760,7 +792,7 @@ nnoremap <silent> Q <Esc>:call PromptQuit()<CR>
 
 function! Togglegjgk() abort " {{{
   " TODO: stop replying on state
-  if ! exists("g:togglegjgk") || g:togglegjgk == 0
+  if ! exists('g:togglegjgk') || g:togglegjgk == 0
     let g:togglegjgk = 1
     nnoremap j gj
     nnoremap k gk
@@ -821,7 +853,7 @@ endfunction
 " }}}
 
 function! ExecuteMacroOverVisualRange() abort " {{{
-  echo "@".getcmdline()
+  echo '@'.getcmdline()
   execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
@@ -848,7 +880,7 @@ augroup VIM
   " \ setfiletype javascript
 
   autocmd BufReadPost *
-  \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+  \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line('$') |
   \   execute 'normal! g`"zvzz' |
   \ endif
 
@@ -921,8 +953,6 @@ augroup END
 " {{{ misc commands and maps
 nnoremap <leader>evim <Esc>:vs ~/dotfiles/vimrc<CR>
 
-nnoremap Y y$
-
 nnoremap ' `
 nnoremap ` '
 
@@ -947,8 +977,9 @@ else
   cabbrev w!! w !sudo tee >/dev/null "%"
 endif
 
-command! Qa qa
-command! Wa wa
+command! -bang Qa qa<bang>
+command! -bang Wa wa<bang>
+command! -bang Wqa wqa<bang>
 
 highlight diffAdded ctermfg=darkgreen
 highlight diffRemoved ctermfg=darkred

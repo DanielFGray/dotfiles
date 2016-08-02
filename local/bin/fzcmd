@@ -1,22 +1,8 @@
 #!/usr/bin/env bash
 
-source ~/.bash_utils
-
 declare -a history
 declare -r histfile="$HOME/.zsh_history"
 
-getHistory() {
-  if [[ ! -f "$histfile" ]]; then
-    touch "$histfile"
-  fi
-  mapfile history < "$histfile"
-}
+mapfile -t history < <(cut -d';' -f2- < "$histfile" | tac)
 
-# getHistory
-
-# mapfile commands < <(compgen -A function -abck | sort -u)
-# choice=$(printf "${commands[@]}\n" | fzf)
-
-choice=$(compgen -A function -abck | sort -u | fzf)
-
-echo "$choice" >> "$histfile"
+fzf --bind='tab:jump-accept' --print-query < <(printf '%s\n' "${history[@]}")
