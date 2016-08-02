@@ -206,6 +206,7 @@ Plug 'reedes/vim-pencil' " {{{
   let g:pencil#mode_indicators = {'hard': 'H', 'auto': 'A', 'soft': 'S', 'off': '',}
 
   augroup Pencil
+    autocmd!
     autocmd FileType markdown,liquid
     \ call pencil#init({ 'wrap': 'soft' })
     autocmd FileType text
@@ -234,7 +235,7 @@ Plug 'vim-airline/vim-airline' " {{{
   function! AirlineInit()
     let g:airline_section_z = g:airline_section_y
     let g:airline_section_y = g:airline_section_x
-    let g:airline_section_x = '%{PencilMode()}'
+    let g:airline_section_x = '%{PencilMode()} %{gutentags#statusline("[Generating ctags...]")}'
   endfunction
   autocmd User AirlineAfterInit call AirlineInit()
 " }}}
@@ -409,6 +410,10 @@ Plug 'mbbill/undotree' " {{{
       nmap <buffer> j <plug>UndotreeGoPreviousState
   endfunc
 " }}}
+Plug 'chilicuil/vim-sprunge' " {{{
+  let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
+" }}}
+Plug 'ludovicchabant/vim-gutentags'
 " }}}
 
 " {{{ unite.vim
@@ -604,6 +609,7 @@ Plug 'marijnh/tern_for_vim' " {{{
 Plug 'heavenshell/vim-jsdoc' " {{{
   let g:jsdoc_enable_es6 = 1
   augroup JsDoc
+    autocmd!
     autocmd FileType javascript
     \ nnoremap <buffer> <Leader>jd <Plug>(jsdoc)
   augroup END
@@ -971,19 +977,29 @@ nnoremap <silent><expr> K (&keywordprg == 'man' && exists('$TMUX')) ? printf(':!
 
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
 
+command! -bang Qa qa<bang>
+command! -bang Wa wa<bang>
+command! -bang Wqa wqa<bang>
+
 if exists(':SudoWrite')
   cabbrev w!! SudoWrite
 else
   cabbrev w!! w !sudo tee >/dev/null "%"
 endif
 
-command! -bang Qa qa<bang>
-command! -bang Wa wa<bang>
-command! -bang Wqa wqa<bang>
-
 highlight diffAdded ctermfg=darkgreen
 highlight diffRemoved ctermfg=darkred
 highlight Folded ctermfg=14
+
+"           +--Disable hlsearch while loading viminfo
+"           | +--Remember marks for last 500 files
+"           | |    +--Remember up to 10000 lines in each register
+"           | |    |      +--Remember up to 1MB in each register
+"           | |    |      |     +--Remember last 1000 search patterns
+"           | |    |      |     |     +---Remember last 1000 commands
+"           | |    |      |     |     |
+"           v v    v      v     v     v
+set viminfo=h,'500,<10000,s1000,/1000,:1000
 
 " FIXME: Use a blinking upright bar cursor in Insert mode, a blinking block in normal
 if exists('$TMUX')

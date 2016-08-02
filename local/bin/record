@@ -58,7 +58,7 @@ select-from() {
   done
   for c in "$@"; do
     if $cmd "${c%% *}" &> /dev/null; then
-      printf '%s' "$c"
+      echo "$c"
       return 0
     fi
   done
