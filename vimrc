@@ -457,16 +457,17 @@ Plug 'kopischke/unite-spell-suggest'
   " nnoremap <silent> <leader>f  :<C-u>Unite source<CR>
   " nnoremap <silent> <leader>s :<C-u>Unite -buffer-name=files -no-split jump_point file_point buffer_tab file_rec:! file file/new<CR>
 
-  nnoremap <silent> <leader><leader> <Esc>:Unite mapping -buffer-name=mapping -auto-resize<CR>
-  nnoremap <silent> <leader>r <Esc>:Unite -buffer-name=register -auto-resize register<CR>
-  nnoremap <silent> <leader>y <Esc>:Unite -buffer-name=yank     -auto-resize history/yank<CR>
-  nnoremap <silent> <leader>; <Esc>:Unite -buffer-name=command  -auto-resize history/command command<CR>
-  nnoremap <silent> <leader>o <Esc>:Unite -buffer-name=outline  -auto-resize outline<CR>
-  nnoremap <silent> <leader>h <Esc>:Unite -buffer-name=help     -auto-resize help<CR>
-  nnoremap <silent> <leader>/ <Esc>:Unite -buffer-name=grep     -auto-resize grep<CR>
-  nnoremap <silent> <leader>t <Esc>:Unite -buffer-name=tag      -auto-resize tag tag/file<CR>
-  nnoremap <silent> <leader>b <Esc>:Unite -buffer-name=files    -auto-resize buffer file neomru/file<CR>
-  nnoremap <silent> z=        <Esc>:Unite -buffer-name=spell    -auto-resize spell_suggest<CR>
+  nnoremap <silent> <leader><leader> <Esc>:Unite -buffer-name=mapping  mapping<CR>
+  nnoremap <silent> <leader>r        <Esc>:Unite -buffer-name=register register<CR>
+  nnoremap <silent> <leader>y        <Esc>:Unite -buffer-name=yank     history/yank<CR>
+  nnoremap <silent> <leader>;        <Esc>:Unite -buffer-name=command  history/command command<CR>
+  nnoremap <silent> <leader>o        <Esc>:Unite -buffer-name=outline  outline<CR>
+  nnoremap <silent> <leader>h        <Esc>:Unite -buffer-name=help     help<CR>
+  nnoremap <silent> <leader>/        <Esc>:Unite -buffer-name=grep     grep<CR>
+  nnoremap <silent> <leader>t        <Esc>:Unite -buffer-name=tag      tag tag/file<CR>
+  nnoremap <silent> <leader>b        <Esc>:Unite -buffer-name=files    buffer file neomru/file file/new<CR>
+  nnoremap <silent> <leader>f        <Esc>:Unite -buffer-name=files    file_rec/async neomru/file file/new<CR>
+  nnoremap <silent> z=               <Esc>:Unite -buffer-name=spell    spell_suggest<CR>
 
   augroup Unite
     autocmd!
@@ -480,11 +481,12 @@ Plug 'kopischke/unite-spell-suggest'
 
     call unite#custom#profile('default', 'context', {
     \   'start_insert': 1,
-    \   'direction':    'botright',
-    \   'prompt':       ' ',
+    \   'prompt_direction': 'top',
+    \   'prompt': ' ',
     \   'prompt_focus': 1,
     \   'force_redraw': 1,
-    \   'no_empty':     1,
+    \   'no_empty': 1,
+    \   'no_split': 1
     \ })
 
   " imap <buffer>               <Esc> <Plug>(unite_exit)
