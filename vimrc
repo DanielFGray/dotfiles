@@ -416,6 +416,14 @@ Plug 'chilicuil/vim-sprunge' " {{{
   let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
 " }}}
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'metakirby5/codi.vim' " {{{
+nnoremap <leader>C <Esc>:Codi!!<CR>
+  let g:codi#rightalign = 0
+  let g:codi#rightsplit = 0
+  let g:codi#aliases =
+  \ { 'javascript.jsx': 'javascript'
+  \ }
+" }}}
 " }}}
 
 " {{{ unite.vim
