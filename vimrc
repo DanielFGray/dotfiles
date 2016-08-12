@@ -402,12 +402,14 @@ Plug 'chilicuil/vim-sprunge' " {{{
   let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
 " }}}
 Plug 'mbbill/undotree' " {{{
-  let g:undotree_WindowLayout=4
-  let g:undotree_SetFocusWhenToggle=1
+  let g:undotree_WindowLayout = 4
+  let g:undotree_SetFocusWhenToggle = 1
+  let g:undotree_SplitWidth = 60
   nnoremap <silent> <Leader>u <Esc>:UndotreeToggle<CR>
   function! g:Undotree_CustomMap()
       nmap <buffer> k <plug>UndotreeGoNextState
       nmap <buffer> j <plug>UndotreeGoPreviousState
+      nmap <buffer> <Esc> <plug>UndotreeClose
   endfunc
 " }}}
 Plug 'chilicuil/vim-sprunge' " {{{
