@@ -111,12 +111,15 @@ endif
 " }}}
 
 " {{{ completion/building
+Plug 'jaawerth/nrun.vim'
 if has('nvim')
   Plug 'Shougo/Deoplete.nvim' " {{{
     let g:deoplete#enable_at_startup = 1
     let g:deoplete#auto_completion_start_length = 3
   " }}}
-  Plug 'benekastah/neomake'
+  Plug 'benekastah/neomake' " {{{
+    let g:neomake_open_list = 2
+  " }}}
   Plug 'kassio/neoterm'
 else
   Plug 'Shougo/vimproc' " {{{
@@ -144,29 +147,25 @@ else
     inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
     inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
   endif " }}}
+  Plug 'scrooloose/syntastic' " {{{
+    let g:syntastic_enable_signs = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_error_symbol = '✗'
+    let g:syntastic_style_error_symbol = '✠'
+    let g:syntastic_warning_symbol = '∆'
+    let g:syntastic_style_warning_symbol = '≈'
+    let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
+    let g:syntastic_check_on_wq = 0
+    let g:syntastic_auto_jump = 3
+
+    let g:syntastic_javascript_checkers = ['eslint']
+
+    let g:syntastic_css_checkers = ['stylelint']
+
+    nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
+  " }}}
 endif
-Plug 'scrooloose/syntastic' " {{{
-  let g:syntastic_enable_signs = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_open = 1
-  let g:syntastic_error_symbol = '✗'
-  let g:syntastic_style_error_symbol = '✠'
-  let g:syntastic_warning_symbol = '∆'
-  let g:syntastic_style_warning_symbol = '≈'
-  let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_auto_jump = 3
-
-  let g:syntastic_javascript_checkers = ['eslint']
-  let g:syntastic_javascript_eslint_exec =
-  \ substitute(system('PATH=$(npm bin):$PATH && which eslint'), '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
-
-  let g:syntastic_css_checkers = ['stylelint']
-  let g:syntastic_css_stylelint_exec =
-  \ substitute(system('PATH=$(npm bin):$PATH && which stylelint'), '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
-
-  nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
-" }}}
 Plug 'Shougo/neosnippet' " {{{
   Plug 'Shougo/neosnippet-snippets'
   let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
@@ -629,6 +628,14 @@ Plug 'ujihisa/neco-ghc'
 " }}}
 
 call plug#end()
+
+if exists('*nrun#Which')
+  let g:syntastic_javascript_eslint_exec = nrun#Which('eslint')
+  let g:syntastic_css_stylelint_exec = nrun#Which('stylelint')
+  let g:neomake_javascript_eslint_exe = nrun#Which('eslint')
+  let g:neomake_javascript_enabled_makers = ['eslint']
+endif
+
 " }}}
 
 " {{{ general settings
