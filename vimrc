@@ -158,9 +158,7 @@ else
     let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
     let g:syntastic_check_on_wq = 0
     let g:syntastic_auto_jump = 3
-
     let g:syntastic_javascript_checkers = ['eslint']
-
     let g:syntastic_css_checkers = ['stylelint']
 
     nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
@@ -230,7 +228,7 @@ Plug 'vim-airline/vim-airline' " {{{
   let g:airline#extensions#branch#enabled = 1
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#fnamemod = ':t'
-  let g:airline_extensions = ['branch', 'tabline', 'nrrwrgn', 'syntastic', 'hunks']
+  let g:airline_extensions = [ 'branch', 'tabline', 'nrrwrgn', 'syntastic', 'hunks' ]
   function! AirlineInit()
     let g:airline_section_z = g:airline_section_y
     let g:airline_section_y = g:airline_section_x
@@ -277,7 +275,7 @@ Plug 'mhinz/vim-startify' " {{{
   let g:startify_change_to_vcs_root = 1
 
   function! s:filter_header(str) abort
-    return map(split(system('figlet -f future "'. a:str .'"'), '\n'), '"         ". v:val') + ['','']
+    return map(split(system('figlet -f future "'. a:str .'"'), '\n'), '"         ". v:val') + [ '', '' ]
   endfunction
 
   if has('nvim')
@@ -286,14 +284,14 @@ Plug 'mhinz/vim-startify' " {{{
     \ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
     \ '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃',
     \ '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹',
-    \ '']
+    \ '' ]
   else
     " let g:startify_custom_header = s:filter_header('Vim')
     let g:startify_custom_header = [
     \ '        ╻ ╻╻┏┳┓',
     \ '        ┃┏┛┃┃┃┃',
     \ '        ┗┛ ╹╹ ╹',
-    \ '']
+    \ '' ]
   endif
 " }}}
 Plug 'reedes/vim-thematic' " {{{
@@ -339,7 +337,7 @@ Plug 'reedes/vim-litecorrect' " {{{
 " }}}
 Plug 'reedes/vim-lexical' " {{{
   " curl -L http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt --create-dirs
-  let g:lexical#dictionary = ['/usr/share/dict/cracklib-small']
+  let g:lexical#dictionary = [ '/usr/share/dict/cracklib-small' ]
   augroup Lexical
     autocmd!
     autocmd FileType markdown,text,liquid
@@ -451,7 +449,7 @@ Plug 'kopischke/unite-spell-suggest'
     let g:unite_source_grep_command = 'ack'
     let g:unite_source_grep_default_opts = '--no-heading --no-color'
     let g:unite_source_grep_recursive_opt = ''
-    let g:unite_source_rec_async_command = ['ack', '-f', '--nofilter']
+    let g:unite_source_rec_async_command = [ 'ack', '-f', '--nofilter' ]
   endif
 
   nnoremap <silent> <leader><leader> <Esc>:Unite -buffer-name=mapping  mapping<CR>
@@ -470,9 +468,10 @@ Plug 'kopischke/unite-spell-suggest'
     autocmd!
     autocmd FileType unite call s:unite_my_settings()
   augroup END
+
   function! s:unite_my_settings() " {{{
-    call unite#filters#sorter_default#use(['sorter_rank'])
-    call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    call unite#filters#sorter_default#use([ 'sorter_rank' ])
+    call unite#filters#matcher_default#use([ 'matcher_fuzzy' ])
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
 
@@ -507,16 +506,17 @@ Plug 'kopischke/unite-spell-suggest'
 
     let unite = unite#get_current_unite()
     if unite.profile_name ==# 'search'
-      nnoremap <silent><buffer><expr> r     unite#do_action('replace')
+      nnoremap <silent><buffer><expr> r unite#do_action('replace')
     else
-      nnoremap <silent><buffer><expr> r     unite#do_action('rename')
+      nnoremap <silent><buffer><expr> r unite#do_action('rename')
     endif
 
-    nnoremap <silent><buffer><expr> cd     unite#do_action('lcd')
-    nnoremap <buffer><expr> S      unite#mappings#set_current_sorters( empty(unite#mappings#get_current_sorters()) ? ['sorter_reverse'] : [])
+    nnoremap <silent><buffer><expr> cd unite#do_action('lcd')
+    nnoremap <buffer><expr> S unite#mappings#set_current_sorters( empty(unite#mappings#get_current_sorters()) ? [ 'sorter_reverse' ] : [])
 
     " Runs "split" action by <C-s>.
-    imap <silent><buffer><expr> <C-s>     unite#do_action('split')
+    imap <silent><buffer><expr> <C-s> unite#do_action('split')
+    imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
   endfunction
 " }}}
 
@@ -551,7 +551,7 @@ Plug 'kmnk/vim-unite-giti' " {{{
 " }}}
 
 " {{{ tmux
-Plug 'tejr/vim-tmux'
+" Plug 'tejr/vim-tmux'
 Plug 'wellle/tmux-complete.vim'
 Plug 'mhinz/vim-tmuxify' " {{{
   let g:tmuxify_map_prefix = '<leader>m'
@@ -574,14 +574,14 @@ Plug 'xuhdev/vim-latex-live-preview'
 
 " {{{ html/css
 " Plug 'jaxbot/browserlink.vim' " {{{
-"   \, {'for': ['html', 'javascript', 'css']}
+"   \, {'for': [ 'html', 'javascript', 'css' ]}
 " " }}}
 Plug 'suan/vim-instant-markdown' " {{{
   \, {'for': 'markdown'}
   let g:instant_markdown_autostart = 0
 " }}}
 Plug 'mattn/emmet-vim' " {{{
-  \, { 'for': ['html', 'javascript.jsx'] }
+  \, { 'for': [ 'html', 'javascript.jsx' ] }
 " }}}
 " Plug 'Valloric/MatchTagAlways'
 Plug 'tmhedberg/matchit'
@@ -664,13 +664,13 @@ set list listchars=tab:\|\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set list listchars=tab:\›\ ,trail:★,extends:»,precedes:«,nbsp:•
 " set listchars+=eol:¬
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\
-" set nolazyredraw
+set lazyredraw
 set autoread
 set report=0
 set confirm
 set modeline modelines=2
 set scrolloff=5
-" set t_Co=16
+set t_Co=256
 set shortmess+=I
 set ttimeoutlen=25
 set background=dark
@@ -830,8 +830,8 @@ nnoremap <silent> <Leader>tgj <Esc>:call Togglegjgk()<CR>
 
 function! s:GetVisualSelection() abort " {{{
   " http://stackoverflow.com/a/6271254/570760
-  let [lnum1, col1] = getpos("'<")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
+  let [ lnum1, col1] = getpos("'<")[1:2]
+  let [ lnum2, col2 ] = getpos("'>")[1:2]
   let lines = getline(lnum1, lnum2)
   let lines[-1] = lines[-1][: col2 - (&selection ==? 'inclusive' ? 1 : 2)]
   let lines[0] = lines[0][col1 - 1:]
@@ -840,7 +840,7 @@ endfunction
 " }}}
 
 function! AdjustWindowHeight(minheight, maxheight) abort " {{{
-  exe max([min([line('$'), a:maxheight]), a:minheight]) . 'wincmd _'
+  exe max([ min([ line('$'), a:maxheight ]), a:minheight ]) . 'wincmd _'
 endfunction
 " }}}
 
@@ -877,8 +877,10 @@ xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 " }}}
 
 function! LessInitFunc() abort " {{{
-  AirlineToggle
   setlocal nonu nornu nolist laststatus=0
+  if exists(':AirlineToggle')
+    AirlineToggle
+  endif
 endfunction
 " }}}
 
