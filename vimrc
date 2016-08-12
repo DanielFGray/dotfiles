@@ -441,9 +441,7 @@ Plug 'kopischke/unite-spell-suggest'
 
 " {{{ settings
   let g:unite_data_directory = '~/.vim/cache/unite'
-  let g:unite_winheight = 100
-  let g:unite_split_rule = 'botright'
-  let g:unite_enable_start_insert = 1
+  let g:unite_force_overwrite_statusline = 0
   if executable('ag')
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
@@ -456,17 +454,6 @@ Plug 'kopischke/unite-spell-suggest'
     let g:unite_source_rec_async_command = ['ack', '-f', '--nofilter']
   endif
 
-  " from docs
-  " nnoremap <silent> <leader>c  :<C-u>UniteWithCurrentDir -buffer-name=files buffer bookmark file<CR>
-  " nnoremap <silent> <leader>b  :<C-u>UniteWithBufferDir -buffer-name=files buffer bookmark file<CR>
-  " nnoremap <silent> <leader>r  :<C-u>Unite -buffer-name=register register<CR>
-  " nnoremap <silent> <leader>f  :<C-u>Unite -buffer-name=resume resume<CR>
-  " nnoremap <silent> <leader>o  :<C-u>Unite outline<CR>
-  " nnoremap <silent> <leader>ma :<C-u>Unite mapping<CR>
-  " nnoremap <silent> <leader>me :<C-u>Unite output:message<CR>
-  " nnoremap <silent> <leader>f  :<C-u>Unite source<CR>
-  " nnoremap <silent> <leader>s :<C-u>Unite -buffer-name=files -no-split jump_point file_point buffer_tab file_rec:! file file/new<CR>
-
   nnoremap <silent> <leader><leader> <Esc>:Unite -buffer-name=mapping  mapping<CR>
   nnoremap <silent> <leader>r        <Esc>:Unite -buffer-name=register register<CR>
   nnoremap <silent> <leader>y        <Esc>:Unite -buffer-name=yank     history/yank<CR>
@@ -475,9 +462,9 @@ Plug 'kopischke/unite-spell-suggest'
   nnoremap <silent> <leader>h        <Esc>:Unite -buffer-name=help     help<CR>
   nnoremap <silent> <leader>/        <Esc>:Unite -buffer-name=grep     grep<CR>
   nnoremap <silent> <leader>t        <Esc>:Unite -buffer-name=tag      tag tag/file<CR>
-  nnoremap <silent> <leader>b        <Esc>:Unite -buffer-name=files    buffer file neomru/file file/new<CR>
-  nnoremap <silent> <leader>f        <Esc>:Unite -buffer-name=files    file neomru/file jump_point file_point file/new<CR>
-  nnoremap <silent> z=               <Esc>:Unite -buffer-name=spell    spell_suggest<CR>
+  nnoremap <silent> <leader>b        <Esc>:Unite -buffer-name=files    buffer neomru/file file file/new<CR>
+  nnoremap <silent> <leader>f        <Esc>:Unite -buffer-name=files    jump_point file_point file neomru/file file/new<CR>
+  nnoremap <silent> z=               <Esc>:Unite -buffer-name=spell    spell_suggest -complete<CR>
 
   augroup Unite
     autocmd!
@@ -491,13 +478,16 @@ Plug 'kopischke/unite-spell-suggest'
 
     call unite#custom#profile('default', 'context', {
     \   'start_insert': 1,
-    \   'prompt_direction': 'top',
-    \   'prompt': ' ',
+    \   'prompt_direction': 'below',
     \   'prompt_focus': 1,
     \   'force_redraw': 1,
     \   'no_empty': 1,
+    \   'winheight': 100,
+    \   'direction': 'dynamicbottom',
+    \   'enable_start_insert': 1,
     \   'no_split': 1
     \ })
+    " \   'prompt': ' ',
 
   " imap <buffer>               <Esc> <Plug>(unite_exit)
     nmap <buffer>               <Esc> <Plug>(unite_exit)
@@ -536,7 +526,7 @@ Plug 'kopischke/unite-spell-suggest'
 
 " {{{ git
 Plug 'tpope/vim-fugitive' " {{{
-  nnoremap <Leader>gs <Esc>:Gstatus<CR>:call PushBelowOrLeft()<CR><C-L>
+  nnoremap <Leader>gs <Esc>:Gstatus<CR><Esc>:call PushBelowOrLeft()<CR><C-L>
   nnoremap <Leader>gd <Esc>:Gdiff<CR>
   nnoremap <Leader>gc <Esc>:Gcommit<CR>
   nnoremap <Leader>gb <Esc>:Gblame<CR>
@@ -552,11 +542,12 @@ Plug 'airblade/vim-gitgutter' " {{{
   nnoremap <silent> <Leader>hp <Esc>:GitGutterPreviewHunk<CR>
 " }}}
 Plug 'lambdalisue/vim-gista'
-Plug 'lambdalisue/vim-gista-unite'
-Plug 'kmnk/vim-unite-giti' " {{{
-  nnoremap <silent> <leader>g <Esc>:Unite giti -buffer-name=giti -auto-resize<CR>
+Plug 'lambdalisue/vim-gista-unite' " {{{
+  nnoremap <silent> <leader>gi <Esc>:Unite gista -buffer-name=gista<CR>
 " }}}
-Plug 'junegunn/gv.vim'
+Plug 'kmnk/vim-unite-giti' " {{{
+  nnoremap <silent> <leader>gg <Esc>:Unite giti -buffer-name=giti<CR>
+" }}}
 " }}}
 
 " {{{ tmux
