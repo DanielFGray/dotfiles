@@ -7,15 +7,15 @@ has() {
 }
 
 unitConversion() {
-  local num units pointer
-  num="$1"
-  units=( K M G T )
-  pointer=0
-  while (( $(bc <<< "$num > 1024") && pointer < "${#units[@]}" )); do
-    num=$(bc <<< "scale=1; $num/1024") && (( pointer++ ))
-  done
-  [[ $num == *.0 ]] && num="${num%%.*}"
-  printf '%s%s' "$num" "${units[$pointer]}"
+  awk 'function unitConversion(num) {
+    split("K M G T", unit);
+    pointer=1;
+    while(num>=1025 && pointer < length(unit)) {
+      num = num/1024; pointer++;
+    }
+    return sprintf("%0.1f%s", num, unit[pointer]);
+  }
+  { print unitConversion($0); }' <<< "$1"
 }
 
 getSpaceAvailable() {
@@ -31,4 +31,8 @@ getSpaceAvailable() {
 
 getSpaceAvailable
 
-printf "You have %s remaining of %s\n" "$(unitConversion "$available")" "$(unitConversion "$total")"
+if [[ $1 == -s ]]; then
+  printf "%s/%s\n" "$(unitConversion "$available")" "$(unitConversion "$total")"
+else
+  printf "You have %s remaining of %s\n" "$(unitConversion "$available")" "$(unitConversion "$total")"
+fi
