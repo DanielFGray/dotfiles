@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 declare available=0
 declare total=0
+declare percent=0
 
 has() {
   command -v "$1" &> /dev/null
@@ -10,29 +11,29 @@ unitConversion() {
   awk 'function unitConversion(num) {
     split("K M G T", unit);
     pointer=1;
-    while(num>=1025 && pointer < length(unit)) {
+    while(num>=1025 && pointer < 4) {
       num = num/1024; pointer++;
     }
     return sprintf("%0.1f%s", num, unit[pointer]);
   }
-  { print unitConversion($0); }' <<< "$1"
+  { for(i = 1; i <= NF; i++) printf "%s\n", unitConversion($i); }' <<< "$@"
 }
 
 getSpaceAvailable() {
   local used _
   if has quota && quota &> /dev/null; then
     read -r _ used total _ < <(quota -w | tail -n1)
-    available=$(( total - used ))
   else
     read -r used total < <(df --total --output=used,size | tail -n1)
-    available=$(( total - used ))
   fi
+  available=$(( total - used ))
+  percent=$(( available * 100 / total ))
 }
 
 getSpaceAvailable
 
 if [[ $1 == -s ]]; then
-  printf "%s/%s\n" "$(unitConversion "$available")" "$(unitConversion "$total")"
+  printf "%s/%s\n" $(unitConversion "$available" "$total")
 else
-  printf "You have %s remaining of %s\n" "$(unitConversion "$available")" "$(unitConversion "$total")"
+  printf "You have %s remaining of %s [%d%%]\n" $(unitConversion "$available" "$total") "$percent"
 fi
