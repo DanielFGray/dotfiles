@@ -86,7 +86,6 @@ alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_compon
 alias historygrep='history | grep -vF "history" | grep '
 alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
 alias shuf1='shuf -n1'
-alias wttr='command curl http://wttr.in/galveston'
 alias rsync='rsync -v --progress --stats '
 
 alias g='git '
@@ -220,6 +219,10 @@ curltar() {
 }
 
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
+
+weather() {
+  command curl -s http://wttr.in/"${*:-galveston texas}"
+}
 
 if has synclient vipe; then
   synclient() {
