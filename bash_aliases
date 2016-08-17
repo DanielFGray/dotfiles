@@ -241,22 +241,17 @@ fi
 if has fzf; then
   has ag && export FZF_DEFAULT_COMMAND='ag -l'
   umnt() {
-    device=$(mount -l | awk '$5 !~ /gvfsd|debugfs|hugetlbfs|mqueue|tracefs|devpts|securityfs|pstore|sysfs|proc|autofs|cgroup|fusect|tmpfs/{print $1, $3, $5, $6}' | column -t | fzf | awk '{print $2}')
+    device=$(mount -l | awk '$5 !~ /gvfsd|debugfs|hugetlbfs|mqueue|tracefs|devpts|securityfs|pstore|sysfs|proc|autofs|cgroup|fusect|tmpfs/{print $1, $3, $5, $6}' | column -t | fzf --inline-info | awk '{print $2}')
     [[ -n "$device" ]] && sudo umount -l "$device"
   }
 
-  loadnvm() {
-    [[ -s "/home/dan/.nvm/nvm.sh" ]] && source "/home/dan/.nvm/nvm.sh"
-    nvm use stable
-  }
-
   nvmuse() {
-    version=$(nvm ls | fzf --ansi | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
+    version=$(nvm ls | fzf --inline-info --ansi | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
     [[ -n $version ]] && nvm use "$version"
   }
 
   nvminstall() {
-    version=$(nvm ls-remote | fzf --ansi --tac | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
+    version=$(nvm ls-remote | fzf --inline-info --ansi --tac | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
     [[ -n $version ]] && nvm install "$version"
   }
 
@@ -268,15 +263,19 @@ if has fzf; then
         *) break
       esac
     done
-    package=$(npm search "$*" | fzf --multi --ansi --header-lines=1 | awk '{print $1}')
+    package=$(npm search "$*" | fzf --inline-info --multi --ansi --header-lines=1 | awk '{print $1}')
     [[ -n $package ]] && npm i "${args[@]}" "$package"
   }
-
-  loadperlbrew() {
-    source ~/perl5/perlbrew/etc/bashrc
-    perlbrew
-  }
 fi
+
+loadnvm() {
+  [[ -s "$HOME/.nvm/nvm.sh" ]] && source "$HOME/.nvm/nvm.sh"
+}
+
+loadperlbrew() {
+  source ~/perl5/perlbrew/etc/bashrc
+  perlbrew
+}
 
 if has rlwrap; then
   if has node; then
@@ -302,13 +301,16 @@ if has rlwrap; then
       fi
     }
   fi
-fi
 
-
-if [[ -e /opt/clojure-1.8.0/clojure-1.8.0.jar ]]; then
-  clojure() {
-    rlwrap java -cp /opt/clojure-1.8.0/clojure-1.8.0.jar clojure.main
-  }
+  if has clojure; then
+    clojure() {
+      if (( $# > 0 )); then
+        command clojure "$@"
+      else
+        rlwrap clojure
+      fi
+    }
+  fi
 fi
 
 if [[ -e /opt/closure/compiler.jar ]]; then
