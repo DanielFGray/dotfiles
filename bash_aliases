@@ -6,6 +6,8 @@ export HISTFILESIZE=500000
 export HISTSIZE=100000
 unset GREP_OPTIONS
 
+fortune -ae
+
 has() {
   local verbose=false
   if [[ $1 == '-v' ]]; then
