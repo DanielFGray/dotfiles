@@ -450,10 +450,15 @@ Plug 'tsukkee/unite-tag'
 Plug 'osyo-manga/unite-filetype'
 Plug 'thinca/vim-unite-history'
 Plug 'kopischke/unite-spell-suggest'
+Plug 'moznion/unite-git-conflict.vim'
+Plug 'voi/unite-textobj'
 
 " {{{ settings
   let g:unite_data_directory = '~/.vim/cache/unite'
   let g:unite_force_overwrite_statusline = 0
+  let g:unite_winheight = 15
+  let g:unite_enable_start_insert = 1
+  let g:unite_split_rule = 'rightbelow'
   if executable('ag')
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
@@ -466,17 +471,19 @@ Plug 'kopischke/unite-spell-suggest'
     let g:unite_source_rec_async_command = [ 'ack', '-f', '--nofilter' ]
   endif
 
-  nnoremap <silent> <leader><leader> <Esc>:Unite -buffer-name=mapping  mapping<CR>
-  nnoremap <silent> <leader>r        <Esc>:Unite -buffer-name=register register<CR>
-  nnoremap <silent> <leader>y        <Esc>:Unite -buffer-name=yank     history/yank<CR>
-  nnoremap <silent> <leader>;        <Esc>:Unite -buffer-name=command  history/command command<CR>
-  nnoremap <silent> <leader>o        <Esc>:Unite -buffer-name=outline  outline<CR>
-  nnoremap <silent> <leader>h        <Esc>:Unite -buffer-name=help     help<CR>
-  nnoremap <silent> <leader>/        <Esc>:Unite -buffer-name=grep     grep<CR>
-  nnoremap <silent> <leader>t        <Esc>:Unite -buffer-name=tag      tag tag/file<CR>
-  nnoremap <silent> <leader>b        <Esc>:Unite -buffer-name=files    buffer neomru/file file file/new<CR>
-  nnoremap <silent> <leader>f        <Esc>:Unite -buffer-name=files    jump_point file_point file neomru/file file/new<CR>
-  nnoremap <silent> z=               <Esc>:Unite -buffer-name=spell    spell_suggest -complete<CR>
+  nnoremap <silent> <Leader><Leader> <Esc>:Unite -buffer-name=mapping  mapping<CR>
+  nnoremap <silent> <Leader>r        <Esc>:Unite -buffer-name=register register<CR>
+  nnoremap <silent> <Leader>y        <Esc>:Unite -buffer-name=yank     history/yank<CR>
+  nnoremap <silent> <Leader>;        <Esc>:Unite -buffer-name=command  history/command command<CR>
+  nnoremap <silent> <Leader>o        <Esc>:Unite -buffer-name=outline  outline<CR>
+  nnoremap <silent> <Leader>h        <Esc>:Unite -buffer-name=help     help<CR>
+  nnoremap <silent> <Leader>/        <Esc>:Unite -buffer-name=grep     grep<CR>
+  nnoremap <silent> <Leader>ta       <Esc>:Unite -buffer-name=tag      tag tag/file<CR>
+  nnoremap <silent> <Leader>b        <Esc>:Unite -buffer-name=buffer   buffer neomru/file file file/new<CR>
+  nnoremap <silent> <Leader>f        <Esc>:Unite -buffer-name=files    jump_point file_point file neomru/file file/new<CR>
+  nnoremap <silent> <Leader>gl       <Esc>:Unite -buffer-name=line     line<CR>
+  nnoremap <silent> z=               <Esc>:Unite -buffer-name=spell    spell_suggest<CR>
+  nnoremap <silent> <Leader>to       <Esc>:Unite -buffer-name=textobj  textobj<CR>
 
   augroup Unite
     autocmd!
@@ -487,11 +494,17 @@ Plug 'kopischke/unite-spell-suggest'
     call unite#filters#sorter_default#use([ 'sorter_rank' ])
     call unite#filters#matcher_default#use([ 'matcher_fuzzy' ])
     call unite#set_profile('files', 'context.smartcase', 1)
-    call unite#custom#source('line,outline', 'matchers', 'matcher_fuzzy')
+    call unite#custom#source('line,outline', 'matchers', 'matcher_regexp')
+    call unite#custom#source('line,spell_suggest,textobj,help', 'context', {
+    \   'no_split': 0,
+    \   'split': 1,
+    \   'auto_resize': 1,
+    \   'winheight': 15
+    \ })
 
     call unite#custom#profile('default', 'context', {
     \   'start_insert': 1,
-    \   'prompt_direction': 'below',
+    \   'prompt_direction': 'top',
     \   'prompt_focus': 1,
     \   'force_redraw': 1,
     \   'no_empty': 1,
@@ -963,7 +976,7 @@ augroup VIM
   \ endif
 
   autocmd FileType vim
-  \ nnoremap <buffer> K <Esc>:UniteWithCursorWord -buffer-name=help -auto-resize help<CR>
+  \ nnoremap <buffer> K <Esc>:UniteWithCursorWord -buffer-name=help -split -direction=botright -winheight=15 -auto-resize help<CR>
   autocmd FileType vim
   \ xnoremap <buffer> <Leader>S y:@"<CR>
 
