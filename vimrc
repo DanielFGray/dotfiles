@@ -555,7 +555,7 @@ Plug 'voi/unite-textobj'
 Plug 'tpope/vim-fugitive' " {{{
   nnoremap <Leader>gs <Esc>:Gstatus<CR><Esc>:call PushBelowOrLeft()<CR><C-L>
   nnoremap <Leader>gd <Esc>:Gdiff<CR>
-  nnoremap <Leader>gc <Esc>:Gcommit<CR>
+  nnoremap <Leader>gc <Esc>:Gcommit<CR><Esc>:call PushBelowOrLeft()<CR><C-L>
   nnoremap <Leader>gb <Esc>:Gblame<CR>
   nnoremap <Leader>gp <Esc>:Git push<CR>
   nnoremap <Leader>gu <Esc>:Git pull<CR>
