@@ -93,14 +93,28 @@ Plug 'terryma/vim-multiple-cursors' " {{{
     if exists(':NeoCompleteLock') == 2
       NeoCompleteLock
     endif
+    if exists('*SwoopFreezeContext') != 0
+        call SwoopFreezeContext()
+    endif
   endfunction
   function! Multiple_cursors_after()
     if exists(':NeoCompleteUnlock') == 2
       NeoCompleteUnlock
     endif
+    if exists('*SwoopUnFreezeContext') != 0
+        call SwoopUnFreezeContext()
+    endif
   endfunction
 " }}}
 Plug 'bronson/vim-visual-star-search'
+Plug 'pelodelfuego/vim-swoop' " {{{
+  let g:swoopUseDefaultKeyMap = 0
+  let g:swoopIgnoreCase = 1
+  nnoremap <silent> <Leader>l :call Swoop()<CR>
+  vnoremap <silent> <Leader>l :call SwoopSelection()<CR>
+  nnoremap <silent> <Leader>ml :call SwoopMulti()<CR>
+  vnoremap <silent> <Leader>ml :call SwoopMultiSelection()<CR>
+" }}}
 if executable('ag')
   set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
   set grepformat=%f:%l:%c:%m
