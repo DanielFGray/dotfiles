@@ -658,10 +658,13 @@ Plug 'ujihisa/neco-ghc'
 call plug#end()
 
 if exists('*nrun#Which')
-  let g:syntastic_javascript_eslint_exec = nrun#Which('eslint')
-  let g:syntastic_css_stylelint_exec = nrun#Which('stylelint')
-  let g:neomake_javascript_eslint_exe = nrun#Which('eslint')
-  let g:neomake_javascript_enabled_makers = ['eslint']
+  if exists(':SyntasticInfo')
+    let g:syntastic_javascript_eslint_exec = nrun#Which('eslint')
+    let g:syntastic_css_stylelint_exec = nrun#Which('stylelint')
+  elseif exists(':NeoMake')
+    let g:neomake_javascript_eslint_exe = nrun#Which('eslint')
+    let g:neomake_javascript_enabled_makers = ['eslint']
+  endif
 endif
 
 " }}}
