@@ -208,8 +208,8 @@ Plug 'christoomey/vim-titlecase' " {{{
   nmap <Leader>gT <Plug>TitlecaseLine
 " }}}
 Plug 'junegunn/vim-easy-align' " {{{
-  nmap <Leader>a <Plug>(EasyAlign)
-  vmap <Leader>a <Plug>(EasyAlign)
+  nmap <Leader>a <Plug>(LiveEasyAlign)
+  vmap <Leader>a <Plug>(LiveEasyAlign)
 " }}}
 Plug 'reedes/vim-pencil' " {{{
   let g:pencil#wrapModeDefault = 'soft'
