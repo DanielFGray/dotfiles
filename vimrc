@@ -407,7 +407,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf' " {{{
 \, { 'dir': '~/.fzf', 'do': './install --all' }
-  nnoremap <leader>F <Esc>:Files<CR>
+  nnoremap <Leader>F <Esc>:Files<CR>
 " }}}
 Plug 'junegunn/fzf.vim'
 Plug 'chilicuil/vim-sprunge' " {{{
@@ -570,10 +570,10 @@ Plug 'airblade/vim-gitgutter' " {{{
 " }}}
 Plug 'lambdalisue/vim-gista'
 Plug 'lambdalisue/vim-gista-unite' " {{{
-  nnoremap <silent> <leader>gi <Esc>:Unite gista -buffer-name=gista<CR>
+  nnoremap <silent> <Leader>gi <Esc>:Unite gista -buffer-name=gista<CR>
 " }}}
 Plug 'kmnk/vim-unite-giti' " {{{
-  nnoremap <silent> <leader>gg <Esc>:Unite giti -buffer-name=giti<CR>
+  nnoremap <silent> <Leader>gg <Esc>:Unite giti -buffer-name=giti<CR>
 " }}}
 " }}}
 
@@ -581,7 +581,7 @@ Plug 'kmnk/vim-unite-giti' " {{{
 " Plug 'tejr/vim-tmux'
 Plug 'wellle/tmux-complete.vim'
 Plug 'mhinz/vim-tmuxify' " {{{
-  let g:tmuxify_map_prefix = '<leader>m'
+  let g:tmuxify_map_prefix = '<Leader>m'
   let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
   let g:tmuxify_global_maps = 1
   let g:tmuxify_run = {
@@ -997,7 +997,7 @@ augroup END
 " }}}
 
 " {{{ misc commands and maps
-nnoremap <leader>evim <Esc>:vs ~/dotfiles/vimrc<CR>
+nnoremap <Leader>evim <Esc>:vs ~/dotfiles/vimrc<CR>
 
 nnoremap ' `
 nnoremap ` '
