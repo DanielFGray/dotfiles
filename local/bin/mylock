@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+declare tmpbg suspend
+# icon="$HOME/.xlock/icon.png"
+tmpbg='/tmp/screen.png'
+
+finish() {
+  [[ -f "$tmpbg" ]] && rm "$tmpbg"
+}
+
+trap finish SIGHUP SIGINT SIGTERM
+
+_suspend() {
+  sleep 1
+  xset dpms force off
+  systemctl suspend
+}
+
+while :; do
+  case "$1" in
+    -s|--suspend) suspend=1; shift ;;
+    # -i|--icon) icon="$2"; shift 2 ;;
+    # -n|--scale) scale="$2"; shift 2 ;;
+    *) break ;;
+  esac
+done
+
+maim --format png /dev/stdout |
+  convert - -scale 20% -scale 500% "$tmpbg"
+
+i3lock -i "$tmpbg"
+
+[[ -n "$suspend" ]] && _suspend
+
+finish

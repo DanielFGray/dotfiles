@@ -101,15 +101,24 @@ alias gl='git pull '
 alias gp='git push '
 alias gst='git status '
 gcl() {
-  if [[ -n "$1" ]]; then
-    case "$1" in
-      http*|https*|git*|ssh*)
-        repo="$1";;
-      *) repo="https://github.com/$1"
-    esac
-    shift
-    git clone "$repo" "$@"
+  local dir repo
+  if [[ -z "$1" ]]; then
+    echo 'no arguments specified'
+    return 1
   fi
+  case "$1" in
+    http*|https*|git*|ssh*) repo="$1" ;;
+    *)   repo="https://github.com/$1" ;;
+  esac
+  shift
+  if [[ -n "$2" ]]; then
+    dir="$2"
+  else
+    dir="${repo##*/}"
+    dir="${dir%.git}"
+  fi
+  git clone "$repo" "$@"
+  [[ -d "$dir" ]] && cd "$dir"
 }
 
 cd() {
