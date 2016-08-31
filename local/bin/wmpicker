@@ -21,4 +21,4 @@ picker() {
   fi
 }
 
-startx "$(picker)"
+exec startx "$(picker)"
