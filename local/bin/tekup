@@ -24,7 +24,7 @@ die() {
 export -f err
 
 usage() {
-  less -EXR <<-'HELP'
+  LESS=-FEXR less <<-'HELP'
 Usage: tekup [OPTIONS] [FILES..]
   -h          print this help
   -p [NUMBER] use [NUMBER] of concurrent processes to upload files with.
