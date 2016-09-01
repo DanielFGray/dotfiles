@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 declare verbose=0
-declare esc=$(printf '\033')
+declare esc=$'\033'
 declare c_reset="${esc}[0m"
 declare c_red="${esc}[31m"
 declare c_blue="${esc}[34m"

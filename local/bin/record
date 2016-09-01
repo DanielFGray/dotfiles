@@ -7,7 +7,7 @@ declare duration
 declare delay=0
 declare verbose
 declare -A dimensions
-declare esc=$(printf '\033')
+declare esc=$'\033'
 declare c_reset="${esc}[0m"
 declare c_red="${esc}[31m"
 
