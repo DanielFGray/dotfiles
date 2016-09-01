@@ -5,13 +5,13 @@ has() {
 }
 
 picker() {
-  known_wms=( awesome openbox-session bspwm xmonad dwm startkde startxfce4 xterm )
-  avail_wms=()
+  local known_wms=( awesome openbox-session bspwm xmonad dwm startkde startxfce4 xterm )
+  local avail_wms=()
   for wm in "${known_wms[@]}"; do
     has "$wm" && avail_wms+=( "$wm" )
   done
   if has fzf; then
-    fzf --reverse --inline-info --cycle < <(printf '%s\n' "${avail_wms[@]}")
+    fzf -1 --reverse --inline-info --cycle < <(printf '%s\n' "${avail_wms[@]}")
   else
     PS3="choose a number between 1 and ${#avail_wms[@]}: "
     select v in "${avail_wms[@]}"; do
@@ -21,4 +21,4 @@ picker() {
   fi
 }
 
-exec startx "$(picker)"
+picker
