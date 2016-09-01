@@ -491,16 +491,16 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey }, "Left", awful.tag.viewprev),
   awful.key({ modkey }, "Right", awful.tag.viewnext),
   awful.key({ modkey }, "Escape", awful.tag.history.restore),
+  awful.key({ modkey }, "h", function()
+    awful.client.focus.bydirection("left")
+    if client.focus then client.focus:raise() end
+  end),
   awful.key({ modkey }, "j", function()
     awful.client.focus.bydirection("down")
     if client.focus then client.focus:raise() end
   end),
   awful.key({ modkey }, "k", function()
     awful.client.focus.bydirection("up")
-    if client.focus then client.focus:raise() end
-  end),
-  awful.key({ modkey }, "h", function()
-    awful.client.focus.bydirection("left")
     if client.focus then client.focus:raise() end
   end),
   awful.key({ modkey }, "l", function()
@@ -573,15 +573,6 @@ globalkeys = awful.util.table.join(
     awful.util.eval, nil,
     awful.util.getdir("cache") .. "/history_eval")
   end),
-  -- awful.key({ }, "XF86AudioRaiseVolume", function()
-  --   exec("amixer -q sset Master 1%+")
-  -- end),
-  -- awful.key({ }, "XF86AudioLowerVolume", function()
-  --   exec("amixer -q sset Master 1%-")
-  -- end),
-  -- awful.key({ }, "XF86AudioMute", function()
-  --   exec("amixer -q sset Master toggle")
-  -- end),
   awful.key({ modkey, "Shift" }, "d", function()
     lain.util.remove_tag()
   end),
@@ -631,6 +622,18 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey, "Shift" }, "r", shifty.rename),
   awful.key({ modkey, "Shift" }, "a", function()
     shifty.add({ nopopup = true })
+  end),
+  awful.key({ }, "XF86AudioRaiseVolume", function()
+    sexec("amixer -q sset Master 2%+")
+  end),
+  awful.key({ }, "XF86AudioLowerVolume", function()
+    sexec("amixer -q sset Master 2%-")
+  end),
+  awful.key({ }, "XF86AudioMute", function()
+    sexec("amixer -q sset Master toggle")
+  end),
+  awful.key({ }, "XF86Sleep", function()
+    sexec("mylock --suspend")
   end)
 )
 
@@ -652,6 +655,9 @@ modal_exec = {
   end,
   f = function()
     exec(filemanager)
+  end,
+  l = function()
+    sexec('mylock')
   end,
   v = function()
     exec("pavucontrol")
