@@ -42,7 +42,7 @@ join() {
 }
 
 err() {
-  printf "${c_red}%s${c_reset}" "$*" >&2
+  printf "${c_red}%s${c_reset}\n" "$*" >&2
 }
 
 die() {
