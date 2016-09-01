@@ -409,7 +409,7 @@ for s = 1, screen.count() do
 
   mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
   mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
-  mywibox[s] = awful.wibox({ position = "top", screen = s, height = beautiful.awful_widget_height })
+  mywibox[s] = awful.wibox({ position = "bottom", screen = s, height = beautiful.awful_widget_height })
 
   local left_layout = wibox.layout.fixed.horizontal()
   left_layout:add(mytaglist[s])
@@ -439,33 +439,41 @@ for s = 1, screen.count() do
   right_layout:add(memwidget)
   right_layout:add(cpuicon)
   right_layout:add(cpuwidget)
+  if s == 1 then
+    right_layout:add(lsep)
+    right_layout:add(wibox.widget.systray())
+    right_layout:add(spr)
+  end
+  right_layout:add(lsep)
+  right_layout:add(clockicon)
+  right_layout:add(mytextclock)
 
   local layout = wibox.layout.align.horizontal()
   layout:set_left(left_layout)
-  -- layout:set_middle(mytasklist[s])
+  layout:set_middle(mytasklist[s])
   layout:set_right(right_layout)
   mywibox[s]:set_widget(layout)
 
-  lowerwibox[s] = awful.wibox({ position = "bottom", screen = s, height = beautiful.awful_widget_height })
+  -- lowerwibox[s] = awful.wibox({ position = "bottom", screen = s, height = beautiful.awful_widget_height })
 
-  local lower_left_layout = wibox.layout.fixed.horizontal()
-  lower_left_layout:add(mylauncher)
+  -- local lower_left_layout = wibox.layout.fixed.horizontal()
+  -- lower_left_layout:add(mylauncher)
 
-  local lower_right_layout = wibox.layout.fixed.horizontal()
-  if s == 1 then
-    lower_right_layout:add(lsep)
-    lower_right_layout:add(wibox.widget.systray())
-    lower_right_layout:add(spr)
-  end
-  lower_right_layout:add(lsep)
-  lower_right_layout:add(clockicon)
-  lower_right_layout:add(mytextclock)
+  -- local lower_right_layout = wibox.layout.fixed.horizontal()
+  -- if s == 1 then
+  --   lower_right_layout:add(lsep)
+  --   lower_right_layout:add(wibox.widget.systray())
+  --   lower_right_layout:add(spr)
+  -- end
+  -- lower_right_layout:add(lsep)
+  -- lower_right_layout:add(clockicon)
+  -- lower_right_layout:add(mytextclock)
 
-  lower_layout = wibox.layout.align.horizontal()
-  lower_layout:set_left(lower_left_layout)
-  lower_layout:set_middle(mytasklist[s])
-  lower_layout:set_right(lower_right_layout)
-  lowerwibox[s]:set_widget(lower_layout)
+  -- lower_layout = wibox.layout.align.horizontal()
+  -- lower_layout:set_left(lower_left_layout)
+  -- lower_layout:set_middle(mytasklist[s])
+  -- lower_layout:set_right(lower_right_layout)
+  -- lowerwibox[s]:set_widget(lower_layout)
 end
 
 shifty.taglist = mytaglist
