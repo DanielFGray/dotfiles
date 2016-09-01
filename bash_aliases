@@ -30,7 +30,7 @@ ask() {
   [[ ${ans^} == Y* ]]
 }
 
-export esc=$(printf '\033')
+export esc=$'\033'
 export c_reset="${esc}[0m"
 export c_red="${esc}[31m"
 export c_green="${esc}[32m"
