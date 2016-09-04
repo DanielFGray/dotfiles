@@ -7,12 +7,12 @@ declare duration
 declare delay=0
 declare verbose
 declare -A dimensions
-declare esc=$'\033'
-declare c_reset="${esc}[0m"
-declare c_red="${esc}[31m"
+declare -r esc=$'\033'
+declare -r c_reset="${esc}[0m"
+declare -r c_red="${esc}[31m"
 
 usage() {
-  more <<'HELP'
+  LESS=-FEXR less <<'HELP'
 'Usage: record [OPTIONS]
   -h  this help
   -f  specify file name [defaults to "$(date +%F-%s).webm"]
@@ -49,7 +49,7 @@ has() {
   done
 }
 
-select-from() {
+select_from() {
   local cmd='command -v'
   for a in "$@"; do
     case "$a" in
@@ -79,7 +79,7 @@ delay() {
   printf 'recording                \r'
 }
 
-getdimensions() {
+get_dimensions() {
   if [[ "$window" == true ]]; then
     local xwininfo x y w h seltool
     printf 'click a window\r'
@@ -91,7 +91,7 @@ getdimensions() {
       END { print x, y, w, h }' <<< "$xwininfo")
     dimensions=( ['x']="$x" ['y']="$y" ['w']="$w" ['h']="$h" )
   elif [[ "$region" == true ]]; then
-    seltool=$(select-from 'slop -b 1 -f' xrectsel) || die 'xrectsel or slop required for -s'
+    seltool=$(select_from 'slop -b 1 -f' xrectsel) || die 'xrectsel or slop required for -s'
     printf 'select a region\r'
     eval "dimensions=( $($seltool "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") )"
   else
@@ -100,7 +100,7 @@ getdimensions() {
   fi
 }
 
-record-byzanz() {
+record_byzanz() {
   #TODO: remove byzanz altogether in favor of plain ffmpeg
   byzanz-record \
     --duration="${duration:-10}" \
@@ -112,7 +112,7 @@ record-byzanz() {
   printf 'saved as %s\n' "$file"
 }
 
-record-ffmpeg() {
+record_ffmpeg() {
   local loglevel size offset
   loglevel='panic'
   [[ -n $verbose ]] && loglevel='info'
@@ -154,15 +154,15 @@ if [[ -f "$file" && "$overwrite" == false ]] && ! ask "overwrite ${file}? "; the
   die
 fi
 
-getdimensions
+get_dimensions
 case "$file" in
   *gif)
     has byzanz-record || die 'need byzanz-record for recording gifs'
     delay
-    record-byzanz ;;
+    record_byzanz ;;
   *webm)
     has ffmpeg || die 'need ffmpeg for recording webms'
     delay
-    record-ffmpeg ;;
+    record_ffmpeg ;;
   *) die 'unknown file type, must be gif or webm' ;;
 esac

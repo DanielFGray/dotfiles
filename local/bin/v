@@ -8,7 +8,7 @@ else
 fi
 
 usage() {
-  more <<'HELP'
+  LESS=-FEXR less <<'HELP'
 v [OPTIONS] [FILES]
 create a new vim server or interact with an existing one
 

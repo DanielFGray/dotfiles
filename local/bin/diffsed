@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 usage() {
   LESS=-FEXR less <<'HELP'
 Usage: diffsed [OPTION]... <EXPR> <FILE>
