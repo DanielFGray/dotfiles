@@ -7,12 +7,12 @@ declare from to joinpart_filter nick cmd
 declare -a awkcmds
 declare -a channels
 declare -a nicks
-declare esc=$'\033'
-declare c_reset="${esc}[0m"
-declare c_red="${esc}[31m"
+declare -r esc=$'\033'
+declare -r c_reset="${esc}[0m"
+declare -r c_red="${esc}[31m"
 
 usage() {
-  LESS=-EXR less <<-HELP
+  LESS=-FEXR less <<-HELP
 weelog [options] [string]
 
   -c  specify a channel to search, eg: freenode.#freenode
