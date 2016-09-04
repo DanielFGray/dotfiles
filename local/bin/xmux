@@ -20,7 +20,7 @@ else
 fi
 
 xrdb -load ~/.Xresources
-if inTerm; then
+if in_term; then
   exec "${cmds[@]}"
 else
   exec x-terminal-emulator -e ${cmds[*]}
