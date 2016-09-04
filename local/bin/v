@@ -19,7 +19,7 @@ create a new vim server or interact with an existing one
 HELP
 }
 
-selectPane() {
+select_pane() {
   serv="$1"
   if [[ -n "$TMUX" && "$noselect" != true ]]; then
     pane=$(vim --servername "$serv" --remote-expr '$TMUX_PANE')
@@ -30,9 +30,9 @@ selectPane() {
   fi &
 }
 
-startServer() {
+start_server() {
   serv="V_$(date +%s)"
-  if inTerm; then
+  if in_term; then
     if [[ "$noselect" != true && -n "$TMUX" ]]; then
       tmux rename-window -t "$TMUX_PANE" 'vim'
       if ! tmux list-sessions -F '#S' | grep 'cmd' &> /dev/null; then
@@ -66,7 +66,7 @@ if [[ -n "$serv" ]]; then
   vimopts=( '--servername' "$serv" )
   if (( $# == 0 )); then
     ! has fv && die 'enter a file name or install fv'
-    if inTerm; then
+    if in_term; then
       fv -c "v ${noselect:+-d}"
       exit 0
     else
@@ -84,7 +84,7 @@ if [[ -n "$serv" ]]; then
       shift
     done
   fi
-  selectPane "$serv"
+  select_pane "$serv"
   for f in "${files[@]}"; do
     if [[ -d "$f" ]]; then
       f=$(ag -lk)
@@ -93,5 +93,5 @@ if [[ -n "$serv" ]]; then
     sleep 0.2
   done
 else
-  startServer "$@"
+  start_server "$@"
 fi
