@@ -3,7 +3,6 @@
 declare -r esc=$'\033'
 declare -r c_reset="${esc}[0m"
 declare -r c_red="${esc}[31m"
-declare -r c_green="${esc}[32m"
 declare -r c_blue="${esc}[34m"
 declare noselect
 declare -a files
@@ -83,8 +82,13 @@ start_server() {
   if in_term; then
     if [[ "$noselect" != true && -n "$TMUX" ]]; then
       tmux rename-window -t "$TMUX_PANE" 'vim'
-      if ! tmux list-sessions -F '#S' | grep 'cmd' &> /dev/null; then
-        tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ${HOME}/dotfiles/tmux.alt.conf'
+      if ! tmux list-sessions -F '#S' | grep -qF 'cmd'; then
+        if [[ -e "$HOME/.tmux.alt.conf" ]]; then
+          tmux_opts='source-file $HOME/.tmux.alt.conf'
+        else
+          tmux_opts="set prefix C-s \; bind s send-prefix \; bind C-s last-window \; unbind C-a \; set status-position top \; set status-justify centre \; set status-right '' \; set status-left ''"
+        fi
+        tmux split-window -t "$TMUX_PANE" -d -v -p 25 "TMUX="" tmux new-session -s \"cmd\" \; $tmux_opts"
       fi
     fi &
     if has nvim nvr; then
@@ -97,6 +101,10 @@ start_server() {
     exec gvim --servername 'VIMSERVER'  "$@"
   fi
 }
+
+if ! has vim && ! has nvim; then
+  die 'vim or nevim not found!'
+fi
 
 while true; do
   case "$1" in
@@ -116,6 +124,7 @@ if has nvim nvr; then
 else
   serv=$(vim --serverlist | grep -oP '^VIMSERVER$')
 fi
+
 if [[ -n "$serv" ]]; then
   vimopts=( '--servername' "$serv" )
   if (( $# == 0 )); then
