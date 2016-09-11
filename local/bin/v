@@ -23,7 +23,7 @@ vim() {
   if has nvim nvr; then
     NVIM_LISTEN_ADDRESS="/tmp/nvimsocket" nvr -l "$@"
   else
-    vim "$@"
+    command vim "$@"
   fi
 }
 
