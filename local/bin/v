@@ -19,6 +19,14 @@ create a new vim server or interact with an existing one
 HELP
 }
 
+vim() {
+  if has nvim nvr; then
+    NVIM_LISTEN_ADDRESS="/tmp/nvimsocket" nvr -l "$@"
+  else
+    vim "$@"
+  fi
+}
+
 select_pane() {
   serv="$1"
   if [[ -n "$TMUX" && "$noselect" != true ]]; then
@@ -31,7 +39,6 @@ select_pane() {
 }
 
 start_server() {
-  serv="V_$(date +%s)"
   if in_term; then
     if [[ "$noselect" != true && -n "$TMUX" ]]; then
       tmux rename-window -t "$TMUX_PANE" 'vim'
@@ -39,12 +46,14 @@ start_server() {
         tmux split-window -t "$TMUX_PANE" -d -v -p 25 'TMUX="" tmux new-session -s "cmd" \; source-file ${HOME}/dotfiles/tmux.alt.conf'
       fi
     fi &
-    exec vim --servername "$serv"  "$@"
-  else
-    if ! has gvim; then
-      die 'cannot start new vim server'
+    if has nvim nvr; then
+      NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim "$@"
+    else
+      vim --servername 'VIMSERVER'  "$@"
     fi
-    exec gvim --servername "$serv"  "$@"
+  else
+    has gvim || die 'cannot start new vim server'
+    exec gvim --servername 'VIMSERVER'  "$@"
   fi
 }
 
@@ -61,11 +70,19 @@ while true; do
   shift
 done
 
-serv=$(vim --serverlist | grep -oP '^V_\d+$')
+if has nvim nvr; then
+  if [[ -e /tmp/nvimsocket ]]; then
+    serv=/tmp/nvimsocket
+  else
+    serv=''
+  fi
+else
+  serv=$(vim --serverlist | grep -oP '^VIMSERVER$')
+fi
 if [[ -n "$serv" ]]; then
   vimopts=( '--servername' "$serv" )
   if (( $# == 0 )); then
-    ! has fv && die 'enter a file name or install fv'
+    has fv || die 'enter a file name'
     if in_term; then
       fv -c "v ${noselect:+-d}"
       exit 0
