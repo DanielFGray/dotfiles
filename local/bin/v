@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-if [[ -e "${HOME}/.bash_utils" ]]; then
-  source "${HOME}/.bash_utils"
-else
-  printf '\e[31mbash_utils not found\e[0m\n' >&2
-  exit 1
-fi
+declare -r esc=$'\033'
+declare -r c_reset="${esc}[0m"
+declare -r c_red="${esc}[31m"
+declare -r c_green="${esc}[32m"
+declare -r c_blue="${esc}[34m"
+declare noselect
+declare -a files
+declare -a vimopts
 
 usage() {
   LESS=-FEXR less <<'HELP'
@@ -17,6 +19,45 @@ create a new vim server or interact with an existing one
     : 'str'  send command
     ! 'str'  send raw keys
 HELP
+}
+
+in_term() {
+  [[ -t 0 || -p /dev/stdin ]]
+}
+
+info() {
+  if in_term; then
+    printf "${c_blue}%s${c_reset}\n" "$*" >&2
+  else
+    zenity --info --text="$*"
+  fi
+}
+
+err() {
+  if in_term; then
+    printf "${c_red}%s${c_reset}\n" "$*" >&2
+  else
+    zenity --error --text="$*"
+  fi
+}
+
+die() {
+  [[ -n "$1" ]] && err "$1"
+  exit 1
+}
+
+has() {
+  local verbose=false
+  if [[ $1 == '-v' ]]; then
+    verbose=true
+    shift
+  fi
+  for c in "$@"; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
+      [[ "$verbose" == true ]] && err "$c not found"
+      return 1
+    fi
+  done
 }
 
 vim() {
@@ -57,10 +98,6 @@ start_server() {
   fi
 }
 
-declare noselect
-declare -a files
-declare -a vimopts
-
 while true; do
   case "$1" in
     -h|--help) usage; exit 0 ;;
@@ -95,7 +132,7 @@ if [[ -n "$serv" ]]; then
         :*) vim "${vimopts[@]}" --remote-send "<esc>$1<cr>" ;;
         !*) vim "${vimopts[@]}" --remote-send "${1:1}" ;;
         +*) vim "${vimopts[@]}" --remote-expr "${1:1}" ;;
-        http://* | https://* ) vim "${vimopts[@]}" --remote-send "<esc>:enew | r !command curl -sL $1<cr><esc>ggdd:set ft=" ;;
+        http://* | https://* ) vim "${vimopts[@]}" --remote-send "<esc>:enew | r !command curl -sL $1<cr><esc>ggdd:setfiletype " ;;
         *) files+=("$1") ;;
       esac
       shift
