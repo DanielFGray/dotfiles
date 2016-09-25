@@ -664,6 +664,10 @@ if exists('*nrun#Which')
   elseif exists(':NeoMake')
     let g:neomake_javascript_eslint_exe = nrun#Which('eslint')
     let g:neomake_javascript_enabled_makers = ['eslint']
+    let g:neomake_jsx_eslint_exe = nrun#Which('eslint')
+    let g:neomake_jsx_enabled_makers = ['eslint']
+    let g:neomake_css_eslint_exe = nrun#Which('stylelint')
+    let g:neomake_css_enabled_makers = ['stylelint']
   endif
 endif
 
