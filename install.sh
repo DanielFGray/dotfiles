@@ -6,7 +6,7 @@ declare verbose
 
 source "${thisdir}/bash_utils"
 
-echo-cmd() {
+echo_cmd() {
   echo "$*"
   $*
 }
@@ -34,14 +34,14 @@ library() {
   path="$2"
   if [[ -d "$path" ]]; then
     if [[ -d "${path}/.git" ]]; then
-      echo-cmd git -C "$path" pull
+      echo_cmd git -C "$path" pull
     elif ask "no .git found in ${path}, delete entire folder and clone repo?"; then
       rm -fr ${verbose:+-v} "$path"
     fi
   fi
   if [[ ! -d "$path" ]]; then
     mkdir -p ${verbose:+-v} "${path%/*}"
-    echo-cmd git clone "$url" "$path"
+    echo_cmd git clone "$url" "$path"
   fi
 }
 

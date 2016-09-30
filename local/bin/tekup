@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
+declare -r esc=$'\033'
+declare -r c_reset="${esc}[0m"
+declare -r c_red="${esc}[31m"
+declare -r c_blue="${esc}[34m"
 declare verbose=0
-declare esc=$(printf '\033')
-declare c_reset="${esc}[0m"
-declare c_red="${esc}[31m"
-declare c_blue="${esc}[34m"
 declare processes=1
 
 info() {
@@ -24,7 +24,7 @@ die() {
 export -f err
 
 usage() {
-  less -EXR <<-'HELP'
+  LESS=-FEXR less <<-'HELP'
 Usage: tekup [OPTIONS] [FILES..]
   -h          print this help
   -p [NUMBER] use [NUMBER] of concurrent processes to upload files with.

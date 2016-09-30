@@ -9,7 +9,7 @@ fi
 
 favs=('v' 'gvim' 'vim' 'emacs' 'vi' 'nano')
 editor=$(select-from "${favs[@]}") || die "no editor found in ( ${favs[*]} )"
-if inTerm; then
+if in_term; then
   exec "$editor" "$@"
 else
   ( exec x-terminal-emulator -e bash "$editor" $* &)
