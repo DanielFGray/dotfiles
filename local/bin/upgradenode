@@ -1,22 +1,45 @@
 #!/usr/bin/env bash
 
+declare -r esc=$'\033'
+declare -r c_reset="${esc}[0m"
+declare -r c_red="${esc}[31m"
+
 ask() {
   read -r -p "$1 " -n1 ans
   echo
   [[ "${ans^}" == Y ]]
 }
 
-has(){
-  command -v "${1%% *}" &>/dev/null
+err() {
+  printf "${c_red}%s${c_reset}\n" "$*" >&2
 }
 
-confirm-cmd() {
+die() {
+  [[ -n "$1" ]] && err "$1"
+  exit 1
+}
+
+has() {
+  local verbose=false
+  if [[ $1 == '-v' ]]; then
+    verbose=true
+    shift
+  fi
+  for c in "$@"; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
+      [[ "$verbose" == true ]] && err "$c not found"
+      return 1
+    fi
+  done
+}
+
+confirm_cmd() {
   if ask "$*?"; then
-    $*
+    "$@"
   fi
 }
 
-check-hash() {
+check_hash() {
   file="$1"
   latest="$2"
   remotehash=$(grep "${file##*/}" <<< "$latest")
@@ -29,10 +52,7 @@ check-hash() {
   fi
 }
 
-if ! has curl; then
-  echo 'install curl'
-  exit 1
-fi
+has -v curl || die
 
 declare path="$HOME"
 if [[ -d $1 ]]; then
@@ -56,25 +76,25 @@ if has node; then
 fi
 
 declare file="${path}/${name}.tar.xz"
-if [[ ! -f "${file}" ]]; then
-  confirm-cmd curl -LO "https://nodejs.org/dist/latest/${name}.tar.xz" -o "$file"
-  [[ -f "$file" ]] && check-hash "$file" "$latest"
+if [[ ! -e "${file}" ]]; then
+  confirm_cmd curl -LO "https://nodejs.org/dist/latest/${name}.tar.xz" -o "$file"
+  [[ -e "$file" ]] && check_hash "$file" "$latest"
 fi
 
-if [[ ! -f "${file}" ]]; then
+if [[ ! -e "${file}" ]]; then
   echo "$path"
-  if [[ -f "${path}/node*.tar.xz" ]]; then
+  if [[ -e "${path}/node*.tar.xz" ]]; then
     file=$(realpath "${path}node*.tar.xz" | sort -h | head -n1)
   fi
   echo "$file"
 fi
 
-if [[ -f "$file" ]]; then
+if [[ -e "$file" ]]; then
   echo "installing $file"
   mkdir -p "${HOME}/build"
-  tar -x -f "$file" -C "${HOME}/build/" || exit 1
-  mv "${HOME}/build/node*/bin/*" "${HOME}/.local/bin/"
-  rm -fr ${HOME}/.local/{lib/node_modules,include/node}
-  cp -R ${HOME}/build/node*/{lib,share,include} ${HOME}/.local/
-  rm -fr "${HOME}/build/${name}"
+  tar -x -f "$file" -C "${HOME}/build/" || die
+  mv "${HOME}/build"/node*/bin/* "${HOME}/.local/bin/"
+  rm -fr "${HOME}/.local"/{lib/node_modules,include/node}
+  cp -R "${HOME}/build/node"*/{lib,share,include} "${HOME}/.local/"
+  rm -fr "${HOME}/build/$name"
 fi
