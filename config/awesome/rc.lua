@@ -7,8 +7,6 @@ local naughty           = require("naughty")
 local menubar           = require("menubar")
 local shifty            = require("shifty")
 local lain              = require("lain")
-local freedesktop_utils = require("freedesktop.utils")
-local freedesktop_menu  = require("freedesktop.menu")
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -73,14 +71,12 @@ function run_once(cmd)
   if firstspace then
     findme = cmd:sub(0, firstspace - 1)
   end
-  sexec("pgrep -u $USER -i -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
+  sexec("pgrep -i -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 
 exec("nitrogen --restore")
 run_once("urxvtd -q -f")
--- run_once("compton --config ~/.compton.conf")
-run_once("mpd")
--- run_once("keepass")
+run_once("compton --config ~/.compton.conf")
 run_once("clipit")
 run_once("nm-applet")
 run_once("pnmixer")
@@ -139,7 +135,9 @@ shifty.config.apps = {
       "Nightly",
       "uzbl",
       "dwb",
-      "qutebrowser"
+      "qutebrowser",
+      "glide",
+      "brave"
     },
     tag = "web",
   }, {
@@ -229,49 +227,45 @@ shifty.config.defaults = {
 -- }}}
 
 -- {{{ Wibox widgets
-menu_items = freedesktop.menu.new()
-mymainmenu = awful.menu.new({ items = menu_items, width = 150 })
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon, menu = mymainmenu })
-freedesktop.utils.icon_theme = 'Faenza-CrunchBang-Dark'
-
 markup = lain.util.markup
 spr = wibox.widget.textbox(" ")
 lsep = wibox.widget.textbox(markup("#666", " "))
 
 clockicon = wibox.widget.background(wibox.widget.imagebox(beautiful.widget_clock))
-mytextclock = wibox.widget.background(awful.widget.textclock(" %a %d %b %r ", 1))
+-- mytextclock = wibox.widget.background(awful.widget.textclock(" %a %d %b %r ", 1))
+mytextclock = wibox.widget.background(awful.widget.textclock(" %r ", 1))
 
 lain.widgets.calendar:attach(mytextclock)
 
-mpdicon = wibox.widget.imagebox(beautiful.widget_music)
-mpdwidget = lain.widgets.mpd({
-  settings = function()
-    if mpd_now.state == "play" then
-      artist = " " .. mpd_now.artist .. " - "
-      title = mpd_now.title .. " "
-      mpdicon:set_image(beautiful.widget_music_on)
-    elseif mpd_now.state == "pause" then
-      artist = markup("#666", " " .. mpd_now.artist .. " - ")
-      title = markup("#666", mpd_now.title .. " ")
-    else
-      artist = ""
-      title = ""
-      mpdicon:set_image(beautiful.widget_music)
-    end
-    widget:set_markup(artist .. title)
-  end
-})
+-- mpdicon = wibox.widget.imagebox(beautiful.widget_music)
+-- mpdwidget = lain.widgets.mpd({
+--   settings = function()
+--     if mpd_now.state == "play" then
+--       artist = " " .. mpd_now.artist .. " - "
+--       title = mpd_now.title .. " "
+--       mpdicon:set_image(beautiful.widget_music_on)
+--     elseif mpd_now.state == "pause" then
+--       artist = markup("#666", " " .. mpd_now.artist .. " - ")
+--       title = markup("#666", mpd_now.title .. " ")
+--     else
+--       artist = ""
+--       title = ""
+--       mpdicon:set_image(beautiful.widget_music)
+--     end
+--     widget:set_markup(artist .. title)
+--   end
+-- })
 
-mpdwidget:buttons(awful.util.table.join(
-  awful.button({ }, 3, function()
-    sexec("mpc -q toggle")
-    mpdwidget.update()
-  end),
-  awful.button({ }, 1, function()
-    sexec(mpdclient)
-  end)
-))
-mpdwidgetbg = wibox.widget.background(mpdwidget)
+-- mpdwidget:buttons(awful.util.table.join(
+--   awful.button({ }, 3, function()
+--     sexec("mpc -q toggle")
+--     mpdwidget.update()
+--   end),
+--   awful.button({ }, 1, function()
+--     sexec(mpdclient)
+--   end)
+-- ))
+-- mpdwidgetbg = wibox.widget.background(mpdwidget)
 
 memicon = wibox.widget.background(wibox.widget.imagebox(beautiful.widget_mem))
 memwidget = wibox.widget.background(lain.widgets.mem({
@@ -303,24 +297,12 @@ fswidget = wibox.widget.background(lain.widgets.fs({
 fswidgetbg = wibox.widget.background(fswidget)
 
 -- baticon = wibox.widget.imagebox(beautiful.widget_battery)
--- batticon = wibox.widget.background((baticon))
--- batwidget = lain.widgets.bat({
+-- batticon = wibox.widget.background(baticon)
+-- battwidget = wibox.widget.background(lain.widgets.bat({
 --   settings = function()
---     if bat_now.perc == "N/A" then
---       widget:set_markup(" AC ")
---       baticon:set_image(beautiful.widget_ac)
---       return
---     elseif tonumber(bat_now.perc) <= 5 then
---       baticon:set_image(beautiful.widget_battery_empty)
---     elseif tonumber(bat_now.perc) <= 15 then
---       baticon:set_image(beautiful.widget_battery_low)
---     else
---       baticon:set_image(beautiful.widget_battery)
---     end
---     widget:set_markup(" " .. bat_now.perc .. "% ")
+--     widget:set_markup(" " .. tostring(bat_now.time) .. "% ")
 --   end
--- })
--- battwidget = wibox.widget.background(batwidget)
+-- }))
 
 netupicon = wibox.widget.background(wibox.widget.imagebox(beautiful.widget_netup))
 netupwidget = wibox.widget.background(lain.widgets.net({
@@ -412,14 +394,14 @@ for s = 1, screen.count() do
   mywibox[s] = awful.wibox({ position = "bottom", screen = s, height = beautiful.awful_widget_height })
 
   local left_layout = wibox.layout.fixed.horizontal()
+  left_layout:add(mypromptbox[s])
   left_layout:add(mytaglist[s])
   left_layout:add(mylayoutbox[s])
-  left_layout:add(mypromptbox[s])
   left_layout:add(spr)
 
   local right_layout = wibox.layout.fixed.horizontal()
   right_layout:add(spr)
-  right_layout:add(mpdwidget)
+  -- right_layout:add(mpdwidget)
   right_layout:add(lsep)
   right_layout:add(netdownicon)
   right_layout:add(netdownwidget)
@@ -453,27 +435,6 @@ for s = 1, screen.count() do
   layout:set_middle(mytasklist[s])
   layout:set_right(right_layout)
   mywibox[s]:set_widget(layout)
-
-  -- lowerwibox[s] = awful.wibox({ position = "bottom", screen = s, height = beautiful.awful_widget_height })
-
-  -- local lower_left_layout = wibox.layout.fixed.horizontal()
-  -- lower_left_layout:add(mylauncher)
-
-  -- local lower_right_layout = wibox.layout.fixed.horizontal()
-  -- if s == 1 then
-  --   lower_right_layout:add(lsep)
-  --   lower_right_layout:add(wibox.widget.systray())
-  --   lower_right_layout:add(spr)
-  -- end
-  -- lower_right_layout:add(lsep)
-  -- lower_right_layout:add(clockicon)
-  -- lower_right_layout:add(mytextclock)
-
-  -- lower_layout = wibox.layout.align.horizontal()
-  -- lower_layout:set_left(lower_left_layout)
-  -- lower_layout:set_middle(mytasklist[s])
-  -- lower_layout:set_right(lower_right_layout)
-  -- lowerwibox[s]:set_widget(lower_layout)
 end
 
 shifty.taglist = mytaglist
@@ -564,9 +525,6 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey, "Control" }, "n", awful.client.restore),
   awful.key({ modkey, "Control" }, "r", awesome.restart),
   awful.key({ modkey, "Shift" }, "q", awesome.quit),
-  -- awful.key({ modkey }, "r", function()
-  --   mypromptbox[mouse.screen]:run()
-  -- end),
   awful.key({ modkey }, "F4", function()
     awful.prompt.run({ prompt = "Run Lua code: " },
     mypromptbox[mouse.screen].widget,
@@ -606,7 +564,9 @@ globalkeys = awful.util.table.join(
     end)
   end),
   awful.key({ modkey }, "r", function()
-    menubar.show()
+    -- menubar.show()
+    -- mypromptbox[mouse.screen]:run()
+    sexec("dmenu_run -b -z -fn 'Fantasque Sans Mono-9' -nb '#131313'")
   end),
   awful.key({ modkey, "Shift" }, "d", shifty.del),
   awful.key({ modkey, "Shift" }, "n", shifty.send_prev),
