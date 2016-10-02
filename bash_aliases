@@ -41,6 +41,7 @@ export c_blue="${esc}[34m"
 if [[ -f /etc/debian_version ]]; then
   PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
   [[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
+  unset PERLVER
   for h in 'apt' 'aptitude' 'apt-get'; do
     if has $h; then
       alias canhaz="sudo $h install "
@@ -49,6 +50,7 @@ if [[ -f /etc/debian_version ]]; then
       break
     fi
   done
+  unset h
   alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
 elif [[ -f /etc/arch-release ]]; then
   for h in 'pacaur' 'yaourt' 'pacman'; do
@@ -60,6 +62,7 @@ elif [[ -f /etc/arch-release ]]; then
       break
     fi
   done
+  unset h
   if has cope_path && [[ -d $(cope_path) ]]; then
     export PATH="$(cope_path):$PATH"
   elif [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
