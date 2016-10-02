@@ -23,7 +23,7 @@ theme.colors.cyan    = "#2aa198"
 theme.colors.green   = "#859900"
 
 -- Default settings
-theme.font = "Ubuntu Mono 8"
+theme.font = "Fantasque Sans Mono 8"
 theme.fg   = theme.colors.base03
 theme.bg   = theme.colors.base3
 

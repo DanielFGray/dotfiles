@@ -8,7 +8,7 @@ else
 fi
 
 favs=('v' 'gvim' 'vim' 'emacs' 'vi' 'nano')
-editor=$(select-from "${favs[@]}") || die "no editor found in ( ${favs[*]} )"
+editor=$(select_from "${favs[@]}") || die "no editor found in ( ${favs[*]} )"
 if in_term; then
   exec "$editor" "$@"
 else

@@ -13,7 +13,7 @@
 *Rxvt.url-launcher:    /home/dan/dotfiles/local/bin/x-www-browser
 *Rxvt.matcher.button:  1
 *Rxvt.urgentOnBell:    True
-*Rxvt*letterSpace:     -1
+*Rxvt*letterSpace:     -2
 URxvt.font-size.step:  2
 
 *Rxvt.keysym.C-Up:     perl:font-size:increase
@@ -21,6 +21,8 @@ URxvt.font-size.step:  2
 *Rxvt.keysym.C-S-Up:   perl:font-size:incglobal
 *Rxvt.keysym.C-S-Down: perl:font-size:decglobal
 
+Emacs*font:            Fantasque\ Sans\ Mono\ 9
+Emacs*FontBackend:     xft
 *Rxvt*font:            xft:Fantasque\ Sans\ Mono:pixelsize=12
 *Rxvt*boldFont:        xft:Fantasque\ Sans\ Mono:pixelsize=12
 *XTerm*faceName:       xft:Fantasque\ Sans\ Mono:pixelsize=12

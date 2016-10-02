@@ -434,6 +434,14 @@ add_binds("normal", {
     key({"Control"}, "z",
         "Enter `passthrough` mode, ignores all luakit keybindings.",
         function (w) w:set_mode("passthrough") end),
+
+    key({}, "v", function (w) 
+        local view = w.view
+        local uri = view.hovered_uri or view.uri
+        if uri then
+            luakit.spawn(string.format("mpv %s", uri))
+        end 
+    end),
 })
 
 add_binds("insert", {

@@ -8,5 +8,5 @@ else
 fi
 
 favs=('mupdf' 'zathura' 'apvlv' 'evince')
-cmd=$(select-from "${favs[@]}") || die "no pdf viewer found in ( ${favs[*]} )"
-( exec $cmd "$@" &)
+cmd=$(select_from "${favs[@]}") || die "no pdf viewer found in ( ${favs[*]} )"
+( exec $cmd "$@" &> /dev/null &)

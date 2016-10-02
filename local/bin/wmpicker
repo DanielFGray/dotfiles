@@ -5,7 +5,7 @@ has() {
 }
 
 picker() {
-  local known_wms=( awesome openbox-session bspwm xmonad dwm startkde startxfce4 xterm )
+  local known_wms=( awesome openbox-session bspwm xmonad dwm startkde startxfce4 xterm velox )
   local avail_wms=()
   for wm in "${known_wms[@]}"; do
     has "$wm" && avail_wms+=( "$wm" )

@@ -1,23 +1,71 @@
 #!/usr/bin/env zsh
 
-ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="agnoster"
-COMPLETION_WAITING_DOTS="true"
-DEFAULT_USER="dan"
-plugins=( vi-mode zsh-autosuggestions zsh-syntax-highlighting )
-source $ZSH/oh-my-zsh.sh
+autoload -Uz compinit && compinit
+autoload -Uz colors && colors
+autoload -Uz zmv
 
-export NVM_DIR="/home/dan/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"  # This loads nvm
 
-PATH="/home/dan/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/home/dan/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/dan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/dan/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/dan/perl5"; export PERL_MM_OPT;
+[[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
+
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+
+DEFAULT_USER='dan'
+theme='agnoster'
+plugin_path=( "$HOME/.zsh/plugins" )
+[[ -d "$HOME/.oh-my-zsh/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/plugins" )
+[[ -d "$HOME/.oh-my-zsh/custom/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/custom/plugins" )
+plugins=(
+  fancy-ctrl-z
+  git-extras
+  vi-mode
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+load_plugins() {
+  local errors=() loaded_p p p_path p_paths
+  for p in "${plugins[@]}"; do
+    for p_path in "${plugin_path[@]}"; do
+      p_paths=( "$p_path/$p/$p.zsh" "$p_path/$p/$p.plugin.zsh" )
+      for f in "${p_paths[@]}"; do
+        if [[ -f "$f" ]]; then
+          source "$f" || errors+=( "$p failed to load" )
+          loaded_p="$f"
+          break 2
+        fi
+      done
+    done
+    if [[ -z "$loaded_p" ]]; then
+      errors+=( "$p not found" )
+    fi
+  done
+  if [[ -n "$errors" ]]; then
+    printf '%sError loading plugins:' "${c_red}"
+    printf '\n  %s' "$errors"
+    printf '%s\n' "$c_reset"
+  fi
+}
+load_plugins
+
+load_theme() {
+  if [[ -n "$theme" ]]; then
+    theme_path="$HOME/.zsh/themes/$theme.zsh-theme"
+    if [[ -e "$theme_path" ]]; then
+      source "$HOME/.zsh/themes/$theme.zsh-theme" ||
+        printf "${c_red}Error loading theme: %s${c_reset}\n" "$theme"
+    else
+      printf "${c_red}Error loading theme: %s not found${c_reset}\n" "$theme"
+    fi
+  fi
+
+}
+load_theme
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-[[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
+# export NVM_DIR="/home/dan/.nvm"
+# [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"  # This loads nvm
 
 bindkey '^ ' autosuggest-accept
 
@@ -27,17 +75,6 @@ if command -v fzf &> /dev/null; then
     print -z $(fc -nl 1 | grep -v '^history' | fzf --tac +s -e -q "$*")
   }
 fi
-
-fancy-ctrl-z () {
-  if [[ $#BUFFER -eq 0 ]]; then
-    BUFFER="fg"
-    zle accept-line
-  else
-    zle push-input
-  fi
-}
-zle -N fancy-ctrl-z
-bindkey '^Z' fancy-ctrl-z
 
 unfunction cd
 chpwd() {
@@ -53,8 +90,6 @@ ask() {
   [[ ${ans:u} == Y* ]]
 }
 
-autoload -U zmv
-
 alias zcp='noglob zmv -C '
 alias zln='noglob zmv -L '
 alias zmv='noglob zmv '
@@ -66,104 +101,32 @@ alias -g SUC='| sort | uniq -c | sort -n'
 alias -g V='| vim -'
 alias -g DN='&> /dev/null'
 
+setopt append_history
+setopt extended_history
+setopt extended_glob
+setopt nomatch
+setopt notify
+setopt prompt_subst
+setopt complete_in_word
+setopt menu_complete
+
+setopt autocd
+setopt auto_pushd
+setopt pushd_silent
+setopt pushd_to_home
+setopt pushd_minus
+setopt pushd_ignore_dups
+unsetopt beep
 bindkey -v
-bindkey '^[[A'  history-search-backward
-bindkey '^[[B'  history-search-forward
-bindkey '^[[5~' up-line-or-history
-bindkey '^[[6~' down-line-or-history
-bindkey '^[[7~' beginning-of-line
-bindkey '^[[8~' end-of-line
-bindkey '^[[1~' beginning-of-line
-bindkey '^[[4~' end-of-line
 
-bindkey -M vicmd 'cc' vi-change-whole-line
-bindkey -M vicmd 'dd' kill-whole-line
-# bindkey -M vicmd 'Y' y$
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+zstyle ':completion:*' list-dirs-first true
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' max-errors 2 numeric
+zstyle ':completion:*' menu select=long-list select=0
+zstyle ':completion:*' prompt '%e>'
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 
-delete-in() {
-  local CHAR LCHAR RCHAR LSEARCH RSEARCH COUNT
-  read -k CHAR
-  if [[ "$CHAR" == 'w' ]];then
-    zle vi-backward-word
-    LSEARCH="$CURSOR"
-    zle vi-forward-word
-    RSEARCH="$CURSOR"
-    RBUFFER="$BUFFER[$RSEARCH+1,${#BUFFER}]"
-    LBUFFER="$LBUFFER[1,$LSEARCH]"
-    return
-  elif [[ "$CHAR" == '(' || "$CHAR" == ')' ]];then
-    LCHAR='('
-    RCHAR=')'
-  elif [[ "$CHAR" == '[' || "$CHAR" == ']' ]];then
-    LCHAR='['
-    RCHAR=']'
-  elif [[ "$CHAR" == '{' || "$CHAR" == '}' ]];then
-    LCHAR='{'
-    RCHAR='}'
-  else
-    LSEARCH="${#LBUFFER}"
-    while (( LSEARCH > 0 )) && [[ "$LBUFFER[$LSEARCH]" != "$CHAR" ]]; do
-      (( LSEARCH-- ))
-    done
-    RSEARCH=0
-    while [[ $RSEARCH -lt (( ${#RBUFFER} + 1 )) ]] && [[ "$RBUFFER[$RSEARCH]" != "$CHAR" ]]; do
-      (( RSEARCH++ ))
-    done
-    RBUFFER="$RBUFFER[$RSEARCH,${#RBUFFER}]"
-    LBUFFER="$LBUFFER[1,$LSEARCH]"
-    return
-  fi
-  COUNT=1
-  LSEARCH="${#LBUFFER}"
-  while (( LSEARCH > 0 )) && (( COUNT > 0 )); do
-    (( LSEARCH-- ))
-    if [[ "$LBUFFER[$LSEARCH]" == "$RCHAR" ]];then
-      (( COUNT++ ))
-    fi
-    if [[ "$LBUFFER[$LSEARCH]" == "$LCHAR" ]];then
-      (( COUNT-- ))
-    fi
-  done
-  COUNT=1
-  RSEARCH=0
-  while (( "$RSEARCH" < ${#RBUFFER} + 1 )) && [[ "$COUNT" > 0 ]]; do
-    (( RSEARCH++ ))
-    if [[ $RBUFFER[$RSEARCH] == "$LCHAR" ]];then
-      (( COUNT++ ))
-    fi
-    if [[ $RBUFFER[$RSEARCH] == "$RCHAR" ]];then
-      (( COUNT-- ))
-    fi
-  done
-  RBUFFER="$RBUFFER[$RSEARCH,${#RBUFFER}]"
-  LBUFFER="$LBUFFER[1,$LSEARCH]"
-}
-zle -N delete-in
-bindkey -M vicmd 'di' delete-in
-
-delete-around() {
-  zle delete-in
-  zle vi-backward-char
-  zle vi-delete-char
-  zle vi-delete-char
-}
-zle -N delete-around
-bindkey -M vicmd 'da' delete-around
-
-change-in() {
-  zle delete-in
-  zle vi-insert
-}
-zle -N change-in
-bindkey -M vicmd 'ci' change-in
-
-change-around() {
-  zle delete-in
-  zle vi-backward-char
-  zle vi-delete-char
-  zle vi-delete-char
-  zle vi-insert
-}
-zle -N change-around
-bindkey -M vicmd 'ca' change-around
-
+compdef _pacman pacman-color=pacman
