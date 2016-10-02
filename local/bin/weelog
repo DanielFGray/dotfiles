@@ -89,7 +89,7 @@ cmd=$(join ' && ' "${awkcmds[@]}")
 for channel in "${channels[@]}"; do
   file="${HOME}/.weechat/logs/irc.${channel}.weechatlog"
   if [[ -e "$file" ]]; then
-    awk -F '\t' "$cmd { print \"$channel\", \$0 }" "$file"
+    mawk -F '\t' "$cmd { print \"$channel\", \$0 }" "$file"
   else
     err "can't find a weechatlog file for ${channel}"
   fi

@@ -5,14 +5,6 @@ if [[ -n "$BASH_VERSION" && -f "$HOME/.bashrc" ]]; then
 fi
 
 dirs=(
-  '/bin'
-  '/sbin'
-  '/usr/bin'
-  '/usr/sbin'
-  '/usr/local/bin'
-  '/usr/local/sbin'
-  '/usr/games'
-  '/usr/local/games'
   "$HOME/.rakudobrew/bin"
   "$HOME/.rvm/bin"
   "$(ruby -e 'print Gem.user_dir')/bin"
@@ -21,7 +13,6 @@ dirs=(
   "$HOME/.local/bin"
 )
 
-export PATH=''
 for d in "${dirs[@]}"; do
   if [[ -d "$d" ]]; then
     PATH="$d:$PATH"
@@ -47,3 +38,5 @@ export INFINALITY_FT_STEM_FITTING_STRENGTH=0
 export INFINALITY_FT_STEM_SNAPPING_SLIDING_SCALE=0
 export INFINALITY_FT_USE_KNOWN_SETTINGS_ON_SELECTED_FONTS=true
 export INFINALITY_FT_USE_VARIOUS_TWEAKS=true
+
+export MPD_HOST='10.0.0.3'

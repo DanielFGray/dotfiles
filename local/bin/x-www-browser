@@ -7,8 +7,8 @@ else
   exit 1
 fi
 
-browsers=(firefox brave chromium chrome luakit uzbl dwb qutebrowser)
-cmd=$(select-from -c 'pgrep -f' "${browsers[@]}") ||
-  cmd=$(select-from "${browsers[@]}") ||
+browsers=( luakit brave firefox chromium chrome uzbl dwb qutebrowser )
+cmd=$(select_from -c 'pgrep -f' "${browsers[@]}") ||
+  cmd=$(select_from "${browsers[@]}") ||
   die "no browser found in (${browsers[*]})"
 (exec $cmd "$@" &)

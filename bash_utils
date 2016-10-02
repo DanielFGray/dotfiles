@@ -77,7 +77,7 @@ prompt() {
     opts+=( '-s' )
     shift
   fi
-  read -e -r ${opts[*]} -p "$* " ans
+  read -e -r "${opts[@]}" -p "$* " ans
   if [[ $one == '1' ]]; then
     printf '\n'
     [[ ${ans,} == y ]]

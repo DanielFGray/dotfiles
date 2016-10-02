@@ -367,20 +367,6 @@ Plug 'reedes/vim-wordy' " {{{
     \ nnoremap <buffer> ]w <Esc>:NextWordy<CR>
   augroup END
 " }}}
-" Plug 'danielbmarques/vim-ditto' " {{{
-"   augroup Ditto
-"     autocmd!
-"     autocmd FileType markdown,text,liquid
-"     \ DittoOn
-"     nnoremap <Leader>di <Plug>ToggleDitto
-"     nnoremap =d <Plug>DittoNext
-"     nnoremap -d <Plug>DittoPrev
-"     nnoremap +d <Plug>DittoGood
-"     nnoremap _d <Plug>DittoBad
-"     nnoremap ]d <Plug>DittoMore
-"     nnoremap [d <Plug>DittoLess
-"   augroup END
-" " }}}
 " }}}
 
 " {{{ misc/unorganized
@@ -429,8 +415,8 @@ Plug 'chilicuil/vim-sprunge' " {{{
 " }}}
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'metakirby5/codi.vim' " {{{
-nnoremap <leader>C <Esc>:Codi!!<CR>
-  let g:codi#rightalign = 0
+nnoremap <Leader>C <Esc>:Codi!!<CR>
+  let g:codi#rightalign = 1
   let g:codi#rightsplit = 0
   let g:codi#aliases =
   \ { 'javascript.jsx': 'javascript'
@@ -439,6 +425,9 @@ nnoremap <leader>C <Esc>:Codi!!<CR>
 " }}}
 
 " {{{ unite.vim
+if has('nvim')
+Plug 'Shougo/denite.nvim'
+else
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/unite-help'
@@ -549,6 +538,7 @@ Plug 'voi/unite-textobj'
 
 " }}}
 
+endif
 " }}}
 
 " {{{ git
@@ -578,7 +568,7 @@ Plug 'kmnk/vim-unite-giti' " {{{
 " }}}
 
 " {{{ tmux
-" Plug 'tejr/vim-tmux'
+Plug 'tmux-plugins/vim-tmux'
 Plug 'wellle/tmux-complete.vim'
 Plug 'mhinz/vim-tmuxify' " {{{
   let g:tmuxify_map_prefix = '<Leader>m'
@@ -1020,7 +1010,7 @@ inoremap <F6> <C-O>:set paste!<CR>
 
 nnoremap <Leader> <Nop>
 
-nnoremap <silent><expr> K (&keywordprg == 'man' && exists('$TMUX')) ? printf(':!tmux split-window -h "man %s"<CR>:redraw<CR>', expand('<cword>')) : 'K'
+nnoremap <silent><expr> K (&keywordprg == 'man -s' && exists('$TMUX')) ? printf(':!tmux split-window -h "man %s"<CR>:redraw<CR>', expand('<cword>')) : 'K'
 
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
 

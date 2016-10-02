@@ -116,13 +116,13 @@ while true; do
 done
 
 if has nvim nvr; then
-  if [[ -e /tmp/nvimsocket ]]; then
-    serv=/tmp/nvimsocket
-  else
-    serv=''
-  fi
+    if [[ -e /tmp/nvimsocket ]]; then
+      serv=/tmp/nvimsocket
+    else
+      serv=''
+    fi
 else
-  serv=$(vim --serverlist | grep -oP '^VIMSERVER$')
+  serv=$(vim --serverlist | grep -oP -m1 '^VIMSERVER$')
 fi
 
 if [[ -n "$serv" ]]; then
