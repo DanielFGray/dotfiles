@@ -75,7 +75,7 @@ if has vim; then
 fi
 
 if has zsh; then
-  backup_then_symlink zshrc zprofile zlogin
+  backup_then_symlink zsh zshrc zshenv zlogin
   library https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh"
   library https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
   library https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
