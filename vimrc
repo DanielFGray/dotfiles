@@ -954,12 +954,15 @@ augroup VIM
   " autocmd InsertLeave * hi CursorLine ctermbg=0
   " autocmd InsertEnter * hi CursorLine ctermbg=7
 
+  autocmd FileType qf
+  \ call AdjustWindowHeight(1, winheight(0) / 2)
+
   autocmd FileType help
   \ wincmd L |
   \ vert resize 80
 
-  autocmd FileType qf
-  \ call AdjustWindowHeight(1, winheight(0) / 2)
+  autocmd VimResized help
+  \ vert resize 10
 
   autocmd BufEnter *
   \ if &filetype ==? 'help' |
@@ -972,9 +975,6 @@ augroup VIM
   \   execute 'normal 0' |
   \   vert resize 10 |
   \ endif
-
-  autocmd VimResized help
-  \ vert resize 10
 
   autocmd BufWritePost *vimrc
   \ source ~/.vimrc |
