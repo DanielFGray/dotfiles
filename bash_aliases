@@ -108,7 +108,7 @@ if has git; then
   alias gc='git commit -v '
   alias gcm='git commit -m '
   alias gco='git checkout '
-  alias gl='git pull '
+  alias gl='git pull --rebase '
   alias gp='git push '
   alias gst='git status --untracked-files=no '
   gcl() {
