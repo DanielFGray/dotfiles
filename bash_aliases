@@ -6,8 +6,6 @@ export HISTFILESIZE=500000
 export HISTSIZE=100000
 unset GREP_OPTIONS
 
-fortune -ae
-
 has() {
   local verbose=false
   if [[ $1 == '-v' ]]; then
@@ -22,8 +20,10 @@ has() {
   done
 }
 
+has fortune && fortune -ae
+
 err() {
-  echo -e "\e[31m$1\e[0m" >&2
+  printf "\e[31m%s\e[0m\n" "$*" >&2
 }
 
 ask() {
@@ -83,43 +83,56 @@ alias rename='rename -v '
 alias ls='ls -Fh --color --group-directories-first '
 alias l='ls -lgo '
 alias la='l -A '
-alias cdu='cdu -isdhD '
 alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P '
 alias historygrep='history | grep -vF "history" | grep '
-alias xargs="tr '\n' '\0' | xargs -0 -I'{}' "
+alias xargs="tr '\n' '\0' | xargs -0 -I% "
 alias shuf1='shuf -n1'
-alias rsync='rsync -v --progress --stats '
+has cdu && alias cdu='cdu -isdhD '
+has rsync && alias rsync='rsync -v --progress --stats '
+has lein && alias lein='rlwrap lein '
 
-alias g='git '
-alias ga='git add '
-alias gap='git add -p '
-alias gb='git branch '
-alias gc='git commit -v '
-alias gcm='git commit -m '
-alias gco='git checkout '
-alias gl='git pull '
-alias gp='git push '
-alias gst='git status '
-gcl() {
-  local dir repo
-  if [[ -z "$1" ]]; then
-    echo 'no arguments specified'
-    return 1
-  fi
-  case "$1" in
-    http*|https*|git*|ssh*) repo="$1" ;;
-    *)   repo="https://github.com/$1" ;;
-  esac
-  shift
-  if [[ -n "$2" ]]; then
-    dir="$2"
-  else
-    dir="${repo##*/}"
-    dir="${dir%.git}"
-  fi
-  git clone "$repo" "$@"
-  [[ -d "$dir" ]] && cd "$dir"
-}
+# git aliases {{{
+if has git; then
+  alias g='git '
+  alias ga='git add '
+  alias gap='git add -p '
+  alias gb='git branch '
+  alias gc='git commit -v '
+  alias gcm='git commit -m '
+  alias gco='git checkout '
+  alias gl='git pull '
+  alias gp='git push '
+  alias gst='git status --untracked-files=no '
+  gcl() {
+    local dir repo
+    if [[ -z "$1" ]]; then
+      echo 'no arguments specified'
+      return 1
+    fi
+    case "$1" in
+      http*|https*|git*|ssh*) repo="$1" ;;
+      *)   repo="https://github.com/$1" ;;
+    esac
+    shift
+    if [[ -n "$2" ]]; then
+      dir="$2"
+    else
+      dir="${repo##*/}"
+      dir="${dir%.git}"
+    fi
+    git clone "$repo" "$@"
+    [[ -d "$dir" ]] && cd "$dir"
+  }
+  gsb() {
+    if [[ -z "$1" ]]; then
+      err 'No branch name specified'
+      return 1
+    fi
+    git stash
+    git stash branch "$1"
+  }
+fi
+# }}}
 
 cd() {
   if [[ -z "$@" ]]; then
@@ -250,6 +263,7 @@ if has synclient vipe; then
 fi
 
 if has fzf; then
+  export FZF_CTRL_R_OPTS="--sort --preview 'echo {}' --preview-window='down:3:hidden' --bind='?:toggle-preview'"
   has ag && export FZF_DEFAULT_COMMAND='ag -l'
   umnt() {
     device=$(mount -l | awk '$5 !~ /gvfsd|debugfs|hugetlbfs|mqueue|tracefs|devpts|securityfs|pstore|sysfs|proc|autofs|cgroup|fusect|tmpfs/{print $1, $3, $5, $6}' | column -t | fzf --inline-info | awk '{print $2}')
