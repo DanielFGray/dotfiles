@@ -75,6 +75,11 @@ elif [[ -f /etc/gentoo-release ]]; then
   alias canhaz='sudo emerge -av '
 fi
 
+updateEverything() {
+  txs "printf '%s\n' ~/.oh-my-zsh{,/custom/plugins/zsh*} ~/.vim/bundle/* ~/.emacs.d ~/.fzf ~/.tmux/plugins/* | xargs -P8 -I% git -C % pull"
+  sudo -l && updupg
+}
+
 alias cp='cp -v '
 alias mv='mv -v '
 alias rm='rm -v '
@@ -153,8 +158,8 @@ trash() {
   for arg in "$@"; do
     [[ "$arg" == -* ]] && shift
   done
-  mkdir -p ~/.trash
-  mv -t ~/.trash "$@"
+  mkdir -vp ~/.trash
+  mv -vt ~/.trash "$@"
 }
 
 cat() { (( $# > 1 )) && /bin/cat "$@" ;}
