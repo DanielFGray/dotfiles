@@ -8,3 +8,4 @@
   default = simple
 [alias]
   cl = clone
+	gud = commit -a -m \"git gud\"
