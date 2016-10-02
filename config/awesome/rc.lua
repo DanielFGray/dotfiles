@@ -607,7 +607,9 @@ globalkeys = awful.util.table.join(
     end)
   end),
   awful.key({ modkey }, "r", function()
-    menubar.show()
+    -- menubar.show()
+    -- mypromptbox[mouse.screen]:run()
+    exec("dmenu_run -b -z -fn 'Fantasque Sans Mono-12' -nb '#131313'")
   end),
   awful.key({ modkey, "Shift" }, "d", shifty.del),
   awful.key({ modkey, "Shift" }, "n", shifty.send_prev),
