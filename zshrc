@@ -12,10 +12,7 @@ HISTSIZE=100000
 SAVEHIST=100000
 
 DEFAULT_USER='dan'
-theme='agnoster'
-plugin_path=( "$HOME/.zsh/plugins" )
-[[ -d "$HOME/.oh-my-zsh/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/plugins" )
-[[ -d "$HOME/.oh-my-zsh/custom/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/custom/plugins" )
+theme="${TTY_THEME:-agnoster}"
 plugins=(
   fancy-ctrl-z
   git-extras
@@ -25,43 +22,55 @@ plugins=(
 )
 
 load_plugins() {
-  local errors=() loaded_p p p_path p_paths
+  local plugin_path=( "$HOME/.zsh/plugins" ) errors=() loaded_p p p_path p_paths
+  [[ -d "$HOME/.oh-my-zsh/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/plugins" )
+  [[ -d "$HOME/.oh-my-zsh/custom/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/custom/plugins" )
   for p in "${plugins[@]}"; do
     for p_path in "${plugin_path[@]}"; do
       p_paths=( "$p_path/$p/$p.zsh" "$p_path/$p/$p.plugin.zsh" )
       for f in "${p_paths[@]}"; do
         if [[ -f "$f" ]]; then
           source "$f" || errors+=( "$p failed to load" )
-          loaded_p="$f"
+          loaded_p="$p"
           break 2
         fi
       done
     done
-    if [[ -z "$loaded_p" ]]; then
+    if [[ "$loaded_p" != "$p" ]]; then
       errors+=( "$p not found" )
     fi
   done
   if [[ -n "$errors" ]]; then
     printf '%sError loading plugins:' "${c_red}"
-    printf '\n  %s' "$errors"
+    printf '\n  %s' "${errors[@]}"
     printf '%s\n' "$c_reset"
   fi
+  unset plugins
 }
-load_plugins
+(( ${#plugins[@]} > 0 )) && load_plugins
 
 load_theme() {
-  if [[ -n "$theme" ]]; then
-    theme_path="$HOME/.zsh/themes/$theme.zsh-theme"
-    if [[ -e "$theme_path" ]]; then
-      source "$HOME/.zsh/themes/$theme.zsh-theme" ||
-        printf "${c_red}Error loading theme: %s${c_reset}\n" "$theme"
-    else
-      printf "${c_red}Error loading theme: %s not found${c_reset}\n" "$theme"
+  local theme_path=( "$HOME/.zsh/themes" ) errors=() t file found_theme
+  [[ -d "$HOME/.oh-my-zsh/themes" ]] && plugin_path+=( "$HOME/.oh-my-zsh/themes" )
+  for t in "${theme_path[@]}"; do
+    file="${t}/${theme}.zsh-theme"
+    if [[ -f "$file" ]]; then
+      source "$file" || errors+=( "$theme failed to load" )
+      found_theme="$file"
+      break
     fi
+  done
+  if [[ -z "$found_theme" ]]; then
+    errors+=( "$theme not found" )
   fi
-
+  if [[ -n "$errors" ]]; then
+    printf '%sError loading theme:' "${c_red}"
+    printf '\n  %s' "${errors[@]}"
+    printf '%s\n' "$c_reset"
+  fi
+  unset theme
 }
-load_theme
+[[ -n "$theme" ]] && load_theme
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 # export NVM_DIR="/home/dan/.nvm"
