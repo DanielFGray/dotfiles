@@ -19,10 +19,13 @@ plugins=(
   vi-mode
   zsh-autosuggestions
   zsh-syntax-highlighting
+  lein
 )
 
 load_plugins() {
-  local plugin_path=( "$HOME/.zsh/plugins" ) errors=() loaded_p p p_path p_paths
+  local plugin_path errors loaded_p p p_path p_paths
+  plugin_path=( "$HOME/.zsh/plugins" )
+  errors=()
   [[ -d "$HOME/.oh-my-zsh/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/plugins" )
   [[ -d "$HOME/.oh-my-zsh/custom/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/custom/plugins" )
   for p in "${plugins[@]}"; do
@@ -50,7 +53,9 @@ load_plugins() {
 (( ${#plugins[@]} > 0 )) && load_plugins
 
 load_theme() {
-  local theme_path=( "$HOME/.zsh/themes" ) errors=() t file found_theme
+  local theme_path errors t file found_theme
+  theme_path=( "$HOME/.zsh/themes" )
+  errors=()
   [[ -d "$HOME/.oh-my-zsh/themes" ]] && plugin_path+=( "$HOME/.oh-my-zsh/themes" )
   for t in "${theme_path[@]}"; do
     file="${t}/${theme}.zsh-theme"
