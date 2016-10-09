@@ -6,21 +6,55 @@ set hintchars=hjklasdfgqweruioptyzxcvbnm
 set animations
 set complete=slth
 
+nnoremap <C-q> :js toggle_bottombar()<CR>
+
+:js << EOF
+function toggle_bottombar(p) {
+ var bb = document.getElementById('liberator-bottombar');
+ if (!bb)
+ return;
+ if (p == 'on') {
+ Object.assign(bb.style, { height: '', overflow: '' });
+ return;
+ }
+ if (p == 'off') {
+ Object.assign(bb.style, { height: '0', overflow: 'hidden' });
+ return;
+ }
+ bb.style.height = (bb.style.height == '') ? '0' : '';
+ bb.style.overflow = (bb.style.height == '') ? '' : 'hidden';
+}
+EOF
+
+
 hi clear
-hi Normal             background: #121212; color: #eee; font-family: Fantasque Sans Mono;
-hi CmdLine            background: #121212; color: #eee; font-family: Fantasque Sans Mono;
-hi StatusLine         background: #121212; color: #eee; font-family: Fantasque Sans Mono;
-hi InfoMsg            background: #121212; color: #eee; font-family: Fantasque Sans Mono;
-hi MoreMsg            background: #121212; color: #eee; font-family: Fantasque Sans Mono;
-hi CompItem[selected] background: #222;
-hi CompDesc           color: #999;
-hi CompTitle          background: #333; font-family: Fantasque Sans Mono;
-hi CompTitle>*        border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 2px 0.5ex; font-size: 9pt;
-hi ErrorMsg           color: #c22;
-hi URL                color: #fff; text-decoration: underline; padding: 0 2px;
-hi Title              background: #121212; color: #eee;
-hi Keyword            background: #121212; color: #eee;
-hi Tag                background: #121212; color: #eee;
-hi ModeMsg            background-color: #080; border-radius: 3px; padding: 0px 5px;
+hi! Normal                        background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi! CmdLine                       background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi! CmdLine>*                     font-family: Fantasque Sans Mono;
+hi! CmdOutput                     background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi! StatusLine                    background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi! InfoMsg                       background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi! MoreMsg                       background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi! ContentSeparator              border-top: 1px solid gray; display: -moz-box;
+hi! Preview                       color: #666;
+hi! CompGroup:not(:first-of-type) margin-top: 0;
+hi! CompItem                      background: #080808;
+hi! CompItem[selected]            background: #222;
+hi! CompDesc                      color: #999;
+hi! CompTitle                     background: #333; font-family: Fantasque Sans Mono;
+hi! CompTitle>*                   border-top: 1px solid gray; border-bottom: 1px solid gray; font-size: 9pt;
+hi! ErrorMsg                      color: #c22;
+hi! URL                           color: #ccc; text-decoration: underline; padding: 0 2px;
+hi! URL:hover                     color: #eee; text-decoration: underline; cursor: pointer;
+hi! Title                         background: #121212; color: #eee;
+hi! Keyword                       background: #121212; color: #eee;
+hi! Tag                           background: #121212; color: #eee;
+hi! Indicator                     background: #121212; color: #ccc;
+hi! PromptText                    background: #333; color: #eee; padding-top: 3px;
+hi! ModeMsg                       background: #080; border-radius: 3px; padding: 0 5px;
+hi! Filter                        background: #ccc; color: #121212; border-radius: 3px;
+hi! Hint                          background: #121212; color: #eee; border-radius: 3px; padding: 0 3px;
+hi! HintElem                      background: #ccc; color: #121212;
+hi! HintActive                    background: #121212; color: #eee; border-radius: 3px;
 
 " vim: set ft=vim:
