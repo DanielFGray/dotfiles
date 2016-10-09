@@ -1,0 +1,26 @@
+set gui=none
+nnoremap j <C-d>
+nnoremap k <C-u>
+
+set hintchars=hjklasdfgqweruioptyzxcvbnm
+set animations
+set complete=slth
+
+hi clear
+hi Normal             background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi CmdLine            background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi StatusLine         background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi InfoMsg            background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi MoreMsg            background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi CompItem[selected] background: #222;
+hi CompDesc           color: #999;
+hi CompTitle          background: #333; font-family: Fantasque Sans Mono;
+hi CompTitle>*        border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 2px 0.5ex; font-size: 9pt;
+hi ErrorMsg           color: #c22;
+hi URL                color: #fff; text-decoration: underline; padding: 0 2px;
+hi Title              background: #121212; color: #eee;
+hi Keyword            background: #121212; color: #eee;
+hi Tag                background: #121212; color: #eee;
+hi ModeMsg            background-color: #080; border-radius: 3px; padding: 0px 5px;
+
+" vim: set ft=vim:
