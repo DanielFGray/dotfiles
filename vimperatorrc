@@ -1,6 +1,7 @@
-set gui=none
+set gui=nonavigation
 nnoremap j <C-d>
 nnoremap k <C-u>
+nnoremap <C-l> :nohlsearch<CR><C-l>
 
 set hintchars=hjklasdfgqweruioptyzxcvbnm
 set animations
@@ -49,10 +50,10 @@ hi! URL:hover                     color: #eee; text-decoration: underline; curso
 hi! Title                         background: #121212; color: #eee;
 hi! Keyword                       background: #121212; color: #eee;
 hi! Tag                           background: #121212; color: #eee;
-hi! Indicator                     background: #121212; color: #ccc;
-hi! PromptText                    background: #333; color: #eee; padding-top: 3px;
-hi! ModeMsg                       background: #080; border-radius: 3px; padding: 0 5px;
-hi! Filter                        background: #ccc; color: #121212; border-radius: 3px;
+hi! Indicator                     background: #080808; color: #ccc;
+hi! PromptText                    background: #333; color: #eee; padding: 5px 5px 0;
+hi! ModeMsg                       background: #080; border-radius: 3px; padding: 0 5px; margin: 1px 5px;
+hi! Filter                        background: #ccc; color: #121212; border-radius: 2px;
 hi! Hint                          background: #121212; color: #eee; border-radius: 3px; padding: 0 3px;
 hi! HintElem                      background: #ccc; color: #121212;
 hi! HintActive                    background: #121212; color: #eee; border-radius: 3px;
