@@ -5,6 +5,7 @@ export EDITOR='vim'
 export HISTFILESIZE=500000
 export HISTSIZE=100000
 unset GREP_OPTIONS
+stty -ixon
 
 has() {
   local verbose=false

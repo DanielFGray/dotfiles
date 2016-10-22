@@ -132,6 +132,7 @@ setopt pushd_to_home
 setopt pushd_minus
 setopt pushd_ignore_dups
 unsetopt beep
+setopt no_flow_control
 bindkey -v
 
 zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
