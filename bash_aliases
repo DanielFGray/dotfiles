@@ -302,6 +302,7 @@ if has fzf; then
 fi
 
 loadnvm() {
+  echo 'loading nvm...'
   [[ -s "$HOME/.nvm/nvm.sh" ]] && source "$HOME/.nvm/nvm.sh"
 }
 

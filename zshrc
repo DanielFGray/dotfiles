@@ -68,18 +68,18 @@ load_theme() {
   if [[ -z "$found_theme" ]]; then
     errors+=( "$theme not found" )
   fi
+  unset theme
   if [[ -n "$errors" ]]; then
     printf '%sError loading theme:' "${c_red}"
     printf '\n  %s' "${errors[@]}"
     printf '%s\n' "$c_reset"
+    return 1
   fi
-  unset theme
 }
 [[ -n "$theme" ]] && load_theme
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-# export NVM_DIR="/home/dan/.nvm"
-# [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"  # This loads nvm
+[[ -f package.json && -s "/home/dan/.nvm/nvm.sh" ]] && source "/home/dan/.nvm/nvm.sh"  # This loads nvm
 
 bindkey '^ ' autosuggest-accept
 
@@ -94,6 +94,7 @@ unfunction cd
 chpwd() {
   emulate -L zsh
   ls
+  [[ -f package.json ]] && loadnvm
 }
 
 unfunction ask
