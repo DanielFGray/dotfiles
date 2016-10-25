@@ -1,9 +1,6 @@
-
 has() {
   for c; do
-    if ! command -v "$c" &> /dev/null; then
-      return 1
-    fi
+    command -v "$c" &> /dev/null || return 1
   done
 }
 
@@ -18,7 +15,7 @@ if [[ -n "$SSH_CONNECTION" ]]; then
     fi
   fi
 else
-  if [[ -z "$DISPLAY" &&  $(tty) == '/dev/tty1' ]] ; then
+  if [[ -z "$DISPLAY" && "$TTY" == '/dev/tty1' ]] ; then
     if has fzf wmpicker; then
       exec startx "$(wmpicker)"
     else

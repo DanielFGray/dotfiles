@@ -13,7 +13,7 @@ has() {
     verbose=true
     shift
   fi
-  for c in "$@"; do c="${c%% *}"
+  for c; do c="${c%% *}"
     if ! command -v "$c" &> /dev/null; then
       [[ "$verbose" == true ]] && err "$c not found"
       return 1
@@ -40,9 +40,6 @@ export c_green="${esc}[32m"
 export c_blue="${esc}[34m"
 
 if [[ -f /etc/debian_version ]]; then
-  PERLVER=$(perl --version | /bin/grep -Eom1 '[0-9]\.[0-9]+\.[0-9]+')
-  [[ -d /usr/local/share/perl/$PERLVER/auto/share/dist/Cope ]] && export PATH="/usr/local/share/perl/$PERLVER/auto/share/dist/Cope:$PATH"
-  unset PERLVER
   for h in 'apt' 'aptitude' 'apt-get'; do
     if has $h; then
       alias canhaz="sudo $h install "
@@ -56,7 +53,7 @@ if [[ -f /etc/debian_version ]]; then
 elif [[ -f /etc/arch-release ]]; then
   for h in 'pacaur' 'yaourt' 'pacman'; do
     if has $h; then
-      h="${h/pacman/sudo pacman}"
+      [[ "$h" == "pacman" ]] && h="sudo pacman"
       alias canhaz="$h -S "
       alias updupg="$h -Syu "
       alias pkgrm="$h -Rsu "

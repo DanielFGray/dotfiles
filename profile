@@ -2,19 +2,31 @@
 
 if [[ -n "$BASH_VERSION" && -f "$HOME/.bashrc" ]]; then
   source "$HOME/.bashrc"
+  IFS=: read -ra current_path <<< "$PATH"
+elif [[ -n "$ZSH_VERSION" ]]; then
+  IFS=: read -rA current_path <<< "$PATH"
 fi
 
-dirs=(
+has() {
+  for c; do
+    command -v "$c" &> /dev/null || return 1
+  done
+}
+
+dirs=()
+
+has cope_path && dirs+=( "$(cope_path)" )
+has ruby gem && dirs+=( "$(ruby -e 'print Gem.user_dir')/bin" )
+dirs+=(
   "$HOME/.rakudobrew/bin"
   "$HOME/.rvm/bin"
-  "$(ruby -e 'print Gem.user_dir')/bin"
   "$HOME/.npm/bin"
   "$HOME/.cabal/bin"
   "$HOME/.local/bin"
 )
 
 for d in "${dirs[@]}"; do
-  if [[ -d "$d" ]]; then
+  if [[ -d "$d" && ! " ${current_path[*]} " == *" $d "* ]]; then
     PATH="$d:$PATH"
   fi
 done
