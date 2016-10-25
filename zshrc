@@ -4,7 +4,6 @@ autoload -Uz compinit && compinit
 autoload -Uz colors && colors
 autoload -Uz zmv
 
-
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
 
 HISTFILE=~/.zsh_history
@@ -12,7 +11,8 @@ HISTSIZE=100000
 SAVEHIST=100000
 
 DEFAULT_USER='dan'
-theme="${TTY_THEME:-agnoster}"
+theme='agnoster'
+[[ $(tty) == '/dev/tty'* ]] && theme='kardan'
 plugins=(
   fancy-ctrl-z
   git-extras
@@ -43,12 +43,13 @@ load_plugins() {
       errors+=( "$p not found" )
     fi
   done
+  unset plugins
   if [[ -n "$errors" ]]; then
     printf '%sError loading plugins:' "${c_red}"
     printf '\n  %s' "${errors[@]}"
     printf '%s\n' "$c_reset"
+    return 1
   fi
-  unset plugins
 }
 (( ${#plugins[@]} > 0 )) && load_plugins
 
@@ -56,7 +57,7 @@ load_theme() {
   local theme_path errors t file found_theme
   theme_path=( "$HOME/.zsh/themes" )
   errors=()
-  [[ -d "$HOME/.oh-my-zsh/themes" ]] && plugin_path+=( "$HOME/.oh-my-zsh/themes" )
+  [[ -d "$HOME/.oh-my-zsh/themes" ]] && theme_path+=( "$HOME/.oh-my-zsh/themes" )
   for t in "${theme_path[@]}"; do
     file="${t}/${theme}.zsh-theme"
     if [[ -f "$file" ]]; then
@@ -79,7 +80,9 @@ load_theme() {
 [[ -n "$theme" ]] && load_theme
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-[[ -f package.json && -s "/home/dan/.nvm/nvm.sh" ]] && source "/home/dan/.nvm/nvm.sh"  # This loads nvm
+if ! has nvm && [[ -f package.json && -s "/home/dan/.nvm/nvm.sh" ]]; then
+  loadnvm
+fi
 
 bindkey '^ ' autosuggest-accept
 
@@ -94,7 +97,9 @@ unfunction cd
 chpwd() {
   emulate -L zsh
   ls
-  [[ -f package.json ]] && loadnvm
+  if ! has nvm && [[ -f package.json ]]; then
+    loadnvm
+  fi
 }
 
 unfunction ask
