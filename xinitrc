@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+declare wm="${2:-xterm}"
+
+has() {
+  command -v "${1%% *}" &> /dev/null
+}
 
 xrdb -load ~/.Xresources
 
@@ -16,20 +20,25 @@ xrdb -load ~/.Xresources
   # setxkbmap -option 'grp:switch,grp:shifts_toggle,grp_led:scroll' \
   #   -layout 'us,us(dvorak)'
 
-  mpdscribble
+  has mpdscribble && mpdscribble
 
   syndaemon -t -k -i 2 -d &
   synclient TapButton1=1 \
             VertTwoFingerScroll=1 \
-            HorizTwoFingerScroll=1\
+            HorizTwoFingerScroll=1 \
             PalmDetect=1
+
+  case "$wm" in
+    *) ;;
+  esac
 ) &)
 
 if [[ -d /etc/X11/xinit/xinitrc.d ]]; then
   for f in /etc/X11/xinit/xinitrc.d/*; do
-    [[ -x "$f" ]] && source "$f"
+    source "$f"
   done
   unset f
 fi
 
-exec "${2:-xterm}"
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+exec "$wm"

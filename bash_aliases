@@ -96,6 +96,7 @@ alias shuf1='shuf -n1'
 has cdu && alias cdu='cdu -isdhD '
 has rsync && alias rsync='rsync -v --progress --stats '
 has lein && alias lein='rlwrap lein '
+has pkgsearch && alias pkgs='pkgsearch '
 
 # git aliases {{{
 if has git; then
@@ -117,11 +118,11 @@ if has git; then
     fi
     case "$1" in
       http*|https*|git*|ssh*) repo="$1" ;;
-      *)   repo="https://github.com/$1" ;;
+      *) repo="https://github.com/$1" ;;
     esac
-    shift
-    if [[ -n "$2" ]]; then
+    if [[ -n "$2" && "$2" != -* ]]; then
       dir="$2"
+      shift
     else
       dir="${repo##*/}"
       dir="${dir%.git}"
@@ -301,7 +302,8 @@ fi
 
 loadnvm() {
   echo 'loading nvm...'
-  [[ -s "$HOME/.nvm/nvm.sh" ]] && source "$HOME/.nvm/nvm.sh"
+  export NVM_DIR="$HOME/.nvm"
+  [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 }
 
 loadperlbrew() {
