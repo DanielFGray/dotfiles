@@ -1,21 +1,35 @@
 " TODO: more comments
+scriptencoding utf8
 filetype plugin indent on
 let g:mapleader = "\<Space>"
 
 " {{{ plugins
-let s:configdir = '.vim'
+let s:configdir = '~/.vim'
 if has('nvim')
-  let s:configdir = '.config/nvim'
+  let s:configdir = '~/.config/nvim'
 endif
 
-if empty(glob('~/' . s:configdir . '/autoload/plug.vim'))
-  silent call system('mkdir -p ~/' . s:configdir . '/{autoload,bundle,cache,undo,backups,swaps}')
-  silent call system('curl -fLo ~/' . s:configdir . '/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
-  execute 'source  ~/' . s:configdir . '/autoload/plug.vim'
-  autocmd VimEnter * PlugInstall
+if empty(glob(s:configdir . '/bundle')) || empty(glob(s:configdir . '/autoload/plug.vim'))
+  augroup InstallPlugins
+    autocmd!
+    autocmd VimEnter * call s:InstallPlugins()
+  augroup END
+  function! s:InstallPlugins() abort
+    redraw!
+    echo 'Install missing plugins? [y/N] '
+    let l:char = nr2char(getchar())
+    if l:char ==? 'y'
+      silent call system('mkdir -p ' . s:configdir . '/{autoload,bundle,cache,undo,backups,swaps}')
+      silent call system('curl -fLo ' . s:configdir . '/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+      execute 'source ' . s:configdir . '/autoload/plug.vim'
+      PlugInstall
+    endif
+    redraw!
+  endfunction
 endif
 
-call plug#begin('~/' . s:configdir . '/bundle')
+if ! empty(glob(s:configdir . '/bundle'))
+call plug#begin(s:configdir . '/bundle')
 
 " {{{ text objects
 Plug 'wellle/targets.vim'
@@ -93,7 +107,7 @@ Plug 'terryma/vim-multiple-cursors' " {{{
     if exists(':NeoCompleteLock') == 2
       NeoCompleteLock
     endif
-    if exists('*SwoopFreezeContext') != 0
+    if exists('*SwoopFreezeContext')
         call SwoopFreezeContext()
     endif
   endfunction
@@ -101,7 +115,7 @@ Plug 'terryma/vim-multiple-cursors' " {{{
     if exists(':NeoCompleteUnlock') == 2
       NeoCompleteUnlock
     endif
-    if exists('*SwoopUnFreezeContext') != 0
+    if exists('*SwoopUnFreezeContext')
         call SwoopUnFreezeContext()
     endif
   endfunction
@@ -126,58 +140,6 @@ endif
 
 " {{{ completion/building
 Plug 'jaawerth/nrun.vim'
-if has('nvim')
-  Plug 'Shougo/Deoplete.nvim' " {{{
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#auto_completion_start_length = 3
-  " }}}
-  Plug 'benekastah/neomake' " {{{
-    let g:neomake_open_list = 2
-  " }}}
-  Plug 'kassio/neoterm'
-else
-  Plug 'Shougo/vimproc' " {{{
-  \, {'do': 'make'}
-  " }}}
-  if has('lua') && (version >= 704 || version == 703 && has('patch885')) " {{{
-    Plug 'Shougo/neocomplete.vim'
-    let g:completionEngine = 'neocomplete'
-  elseif has('lua')
-    Plug 'Shougo/neocomplcache.vim'
-    let g:completionEngine = 'neocomplcache'
-  endif
-  if exists('g:completionEngine')
-    let g:acp_enableAtStartup = 0
-    let g:{g:completionEngine}#enable_at_startup = 1
-    let g:{g:completionEngine}#enable_smart_case = 1
-    let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-    let g:{g:completionEngine}#auto_completion_start_length = 3
-    let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
-    let g:{g:completionEngine}#sources#omni#input_patterns = {}
-    let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
-    let g:{g:completionEngine}#data_directory = '~/' . s:configdir . '/cache/neocompl'
-    inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
-    inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
-    inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
-    inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
-  endif " }}}
-  Plug 'scrooloose/syntastic' " {{{
-    let g:syntastic_enable_signs = 1
-    let g:syntastic_auto_loc_list = 1
-    let g:syntastic_check_on_open = 1
-    let g:syntastic_error_symbol = '✗'
-    let g:syntastic_style_error_symbol = '✠'
-    let g:syntastic_warning_symbol = '∆'
-    let g:syntastic_style_warning_symbol = '≈'
-    let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
-    let g:syntastic_check_on_wq = 0
-    let g:syntastic_auto_jump = 3
-    let g:syntastic_javascript_checkers = ['eslint']
-    let g:syntastic_css_checkers = ['stylelint']
-
-    nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
-  " }}}
-endif
 Plug 'Shougo/neosnippet' " {{{
   Plug 'Shougo/neosnippet-snippets'
   let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
@@ -198,6 +160,78 @@ Plug 'Raimondi/delimitMate' " {{{
   let g:delimitMate_jump_expansion = 1
 " }}}
 Plug 'tpope/vim-endwise'
+if has('nvim') || v:version >= 8
+  Plug 'neomake/neomake' " {{{
+    let g:neomake_open_list = 2
+    let g:neomake_place_signs = 1
+    let g:neomake_error_sign = {
+    \ 'text': '✗'
+    \ }
+    let g:neomake_warning_sign = {
+    \ 'text': '∆'
+    \ }
+    let g:neomake_info_sign = {
+    \ 'text': '✠'
+    \ }
+    let g:neomake_message_sign = {
+    \ 'text': '≈'
+    \ }
+    let g:quickfixsigns_protect_sign_rx = '^neomake_'
+    nnoremap <silent> <Leader>c <Esc>:Neomake<CR>
+  " }}}
+  Plug 'dojoteef/neomake-autolint' " {{{
+    let g:neomake_autolint_enabled = 1
+    let g:neomake_autolint_cachedir = '/home/dan/.vim/cache/'
+  " }}}
+else
+  Plug 'scrooloose/syntastic' " {{{
+    let g:syntastic_enable_signs = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_error_symbol = '✗'
+    let g:syntastic_style_error_symbol = '✠'
+    let g:syntastic_warning_symbol = '∆'
+    let g:syntastic_style_warning_symbol = '≈'
+    let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
+    let g:syntastic_check_on_wq = 0
+    let g:syntastic_auto_jump = 3
+
+    nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
+  " }}}
+endif
+if has('nvim')
+  Plug 'Shougo/Deoplete.nvim' " {{{
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#auto_completion_start_length = 3
+  " }}}
+  Plug 'kassio/neoterm'
+else
+  Plug 'Shougo/vimproc' " {{{
+  \, {'do': 'make'}
+  " }}}
+  if has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
+    Plug 'Shougo/neocomplete.vim'
+    let g:completionEngine = 'neocomplete'
+  elseif has('lua')
+    Plug 'Shougo/neocomplcache.vim'
+    let g:completionEngine = 'neocomplcache'
+  endif
+  if exists('g:completionEngine')
+    let g:acp_enableAtStartup = 0
+    let g:{g:completionEngine}#enable_at_startup = 1
+    let g:{g:completionEngine}#enable_smart_case = 1
+    let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
+    let g:{g:completionEngine}#auto_completion_start_length = 3
+    let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
+    let g:{g:completionEngine}#sources#omni#input_patterns = {}
+    let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
+    let g:{g:completionEngine}#data_directory = s:configdir . '/cache/neocompl'
+    inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
+    inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
+    inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
+    inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
+  endif " }}}
+endif
 " }}}
 
 " {{{ formatting
@@ -338,12 +372,25 @@ Plug 'reedes/vim-thematic' " {{{
 " }}}
 Plug 'noahfrederick/vim-noctu'
 Plug 'gosukiwi/vim-atom-dark'
-Plug 'DanielFGray/DistractionFree.vim'
+Plug 'DanielFGray/DistractionFree.vim' " {{{
+  let g:distraction_free#toggle_tmux = 1
+  function! s:distractions_off()
+    set showmode showcmd scrolloff=999
+  endfunction
+  function! s:distractions_on()
+    set noshowmode noshowcmd scrolloff=5
+  endfunction
+  augroup DF
+    autocmd!
+    autocmd User DistractionsOn nested call <SID>distractions_on()
+    autocmd User DistractionsOff nested call <SID>distractions_off()
+  augroup END
+" }}}
 " }}}
 
 " {{{ prose
 Plug 'reedes/vim-litecorrect' " {{{
-  augroup litecorrect
+  augroup LiteCorrect
     autocmd!
     autocmd FileType markdown,text,liquid
     \ call litecorrect#init()
@@ -634,7 +681,7 @@ Plug 'heavenshell/vim-jsdoc' " {{{
     \ nnoremap <buffer> <Leader>jd <Plug>(jsdoc)
   augroup END
 " }}}
-Plug 'mxw/vim-jsx'
+" Plug 'mxw/vim-jsx'
 " Plug 'mtscout6/syntastic-local-eslint.vim'
 " }}}
 
@@ -647,20 +694,30 @@ Plug 'ujihisa/neco-ghc'
 
 call plug#end()
 
-if exists('*nrun#Which')
-  if exists(':SyntasticInfo')
-    let g:syntastic_javascript_eslint_exec = nrun#Which('eslint')
-    let g:syntastic_css_stylelint_exec = nrun#Which('stylelint')
-  elseif exists(':NeoMake')
-    let g:neomake_javascript_eslint_exe = nrun#Which('eslint')
-    let g:neomake_javascript_enabled_makers = ['eslint']
-    let g:neomake_jsx_eslint_exe = nrun#Which('eslint')
-    let g:neomake_jsx_enabled_makers = ['eslint']
-    let g:neomake_css_eslint_exe = nrun#Which('stylelint')
-    let g:neomake_css_enabled_makers = ['stylelint']
-  endif
+if exists(':SyntasticInfo')
+  augroup Nrun
+    autocmd!
+    autocmd BufEnter *.js,*.jsx
+    \ let g:syntastic_javascript_eslint_exec = nrun#Which('eslint') |
+    \ let g:syntastic_jsx_eslint_exec = nrun#Which('eslint')
+    autocmd BufEnter *.css
+    \ let g:syntastic_css_stylelint_exec = nrun#Which('stylelint')
+  augroup END
+elseif exists(':Neomake')
+  augroup Nrun
+    autocmd!
+    autocmd FileType javascript,javascript.jsx,jsx
+    \ let g:neomake_javascript_eslint_exe = nrun#Which('eslint') |
+    \ let g:neomake_javascript_enabled_makers = ['eslint'] |
+    \ let g:neomake_jsx_eslint_exe = nrun#Which('eslint') |
+    \ let g:neomake_jsx_enabled_makers = ['eslint']
+    autocmd FileType css
+    \ let g:neomake_css_eslint_exe = nrun#Which('stylelint') |
+    \ let g:neomake_css_enabled_makers = ['stylelint']
+  augroup END
 endif
 
+endif
 " }}}
 
 " {{{ general settings
