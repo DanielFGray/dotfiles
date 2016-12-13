@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-tmux split-window -t "$TMUX_PANE" -d -v -p 25 "TMUX='' tmux new-session -d -s 'cmd' \; source-file ~/dotfiles/tmux.alt.conf"
-# tmux send-keys -t cmd:1.1 "alias man=\"tmux split-window -ht $(v -d +'$TMUX_PANE') man \"" C-m
-TMUX='' tmux attach -t cmd
