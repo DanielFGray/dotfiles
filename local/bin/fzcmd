@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-declare -a history
-declare -r histfile="$HOME/.zsh_history"
-
-mapfile -t history < <(cut -d';' -f2- < "$histfile" | tac)
-
-fzf --bind='tab:jump-accept' --print-query < <(printf '%s\n' "${history[@]}")

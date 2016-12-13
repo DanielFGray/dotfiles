@@ -1,4 +1,0 @@
-#!/bin/sh
-
-sleep 1
-scrot "$@" -e 'mv $f ~/images/screenshots/; optipng ~/images/screenshots/$f; qiv -f ~/images/screenshots/$f'
