@@ -9,28 +9,17 @@ has() {
 xrdb -load ~/.Xresources
 
 (sleep 2 && (
-  xset +fp ~/.fonts
-  xset fp rehash
   xsetroot -cursor_name left_ptr
 
-  xmodmap ~/.xmodmap
-  # setxkbmap -option 'caps:ctrl_modifier'
-  # xcape -e 'Caps_Lock=Escape'
-  # xmodmap -e 'keycode 37 ='
-  # setxkbmap -option 'grp:switch,grp:shifts_toggle,grp_led:scroll' \
-  #   -layout 'us,us(dvorak)'
+  setxkbmap -option 'grp:switch,grp:shifts_toggle,grp_led:scroll' \
+    -layout 'us,us(dvorak)'
+  setxkbmap -option 'caps:ctrl_modifier' -option 'compose:paus'
+  xcape -e 'Caps_Lock=Escape'
 
-  has mpdscribble && mpdscribble
-
-  syndaemon -t -k -i 2 -d &
   synclient TapButton1=1 \
             VertTwoFingerScroll=1 \
             HorizTwoFingerScroll=1 \
             PalmDetect=1
-
-  case "$wm" in
-    *) ;;
-  esac
 ) &)
 
 if [[ -d /etc/X11/xinit/xinitrc.d ]]; then
