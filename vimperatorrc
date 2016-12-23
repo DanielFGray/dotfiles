@@ -7,43 +7,25 @@ set hintchars=hjklasdfgqweruioptyzxcvbnm
 set animations
 set complete=slth
 
-nnoremap <C-q> :js toggle_bottombar()<CR>
-
-:js << EOF
-function toggle_bottombar(p) {
- var bb = document.getElementById('liberator-bottombar');
- if (!bb)
- return;
- if (p == 'on') {
- Object.assign(bb.style, { height: '', overflow: '' });
- return;
- }
- if (p == 'off') {
- Object.assign(bb.style, { height: '0', overflow: 'hidden' });
- return;
- }
- bb.style.height = (bb.style.height == '') ? '0' : '';
- bb.style.overflow = (bb.style.height == '') ? '' : 'hidden';
-}
-EOF
-
+nnoremap <C-q> <Nop>
+nnoremap <C-w> <Nop>
 
 hi clear
-hi! Normal                        background: #121212; color: #eee; font-family: Fantasque Sans Mono;
+hi! Normal                        background: #121212; color: #eee; font-family: Fantasque Sans Mono; font-size: 8pt;
 hi! CmdLine                       background: #121212; color: #eee; font-family: Fantasque Sans Mono;
 hi! CmdLine>*                     font-family: Fantasque Sans Mono;
 hi! CmdOutput                     background: #121212; color: #eee; font-family: Fantasque Sans Mono;
 hi! StatusLine                    background: #121212; color: #eee; font-family: Fantasque Sans Mono;
 hi! InfoMsg                       background: #121212; color: #eee; font-family: Fantasque Sans Mono;
 hi! MoreMsg                       background: #121212; color: #eee; font-family: Fantasque Sans Mono;
-hi! ContentSeparator              border-top: 1px solid gray; display: -moz-box;
+hi! ContentSeparator              border-top: 1px solid #666; display: -moz-box;
 hi! Preview                       color: #666;
 hi! CompGroup:not(:first-of-type) margin-top: 0;
-hi! CompItem                      background: #080808;
+hi! CompItem                      background: #333; line-height: 2;
 hi! CompItem[selected]            background: #222;
 hi! CompDesc                      color: #999;
 hi! CompTitle                     background: #333; font-family: Fantasque Sans Mono;
-hi! CompTitle>*                   border-top: 1px solid gray; border-bottom: 1px solid gray; font-size: 9pt;
+hi! CompTitle>*                   background: #444; font-size: 9pt; line-height: 2.1; padding: 0 17pt;
 hi! ErrorMsg                      color: #c22;
 hi! URL                           color: #ccc; text-decoration: underline; padding: 0 2px;
 hi! URL:hover                     color: #eee; text-decoration: underline; cursor: pointer;
