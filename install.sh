@@ -8,13 +8,13 @@ source "${thisdir}/bash_utils"
 
 echo_cmd() {
   echo "$*"
-  $*
+  "$@"
 }
 
 backup_then_symlink() {
   for f in "$@"; do
     src=$( realpath "${thisdir}/${f}" )
-    dest="${HOME}/.${f}"
+    dest="$HOME/.${f}"
     if [[ ! -e "$src" ]]; then
       err "$src does not exist"
       break;
@@ -30,7 +30,14 @@ backup_then_symlink() {
 }
 
 library() {
-  url="$1"
+  if (( $# != 2 )); then
+    err 'library() needs repo and path to clone to'
+    return 1
+  fi
+  case "$1" in
+    http*|https*|git*|ssh*) repo="$1" ;;
+    *) repo="https://github.com/$1" ;;
+  esac
   path="$2"
   if [[ -d "$path" ]]; then
     if [[ -d "${path}/.git" ]]; then
@@ -41,12 +48,12 @@ library() {
   fi
   if [[ ! -d "$path" ]]; then
     mkdir -p ${verbose:+-v} "${path%/*}"
-    echo_cmd git clone "$url" "$path"
+    echo_cmd git clone "$repo" "$path"
   fi
 }
 
 finish() {
-  echo 'done'
+  info 'done. you should probably log out'
 }
 
 trap finish SIGHUP SIGINT SIGTERM
@@ -59,75 +66,65 @@ while true; do
   shift
 done
 
-if ! has 'git' || ! has 'curl'; then
-  err 'git and curl both required'
-  exit 1
-fi
+has -v git curl || die 'git and curl both required'
 
-backup_then_symlink profile bash_aliases bash_utils inputrc
+backup_then_symlink profile bash_aliases bash_utils inputrc gitconfig
 
-if has git; then
-  backup_then_symlink gitconfig
-fi
+library danielfgray/bin "$HOME/.local/bin"
 
-if has vim; then
+if has -v vim; then
   backup_then_symlink vimrc
 fi
 
-if has zsh; then
+if has -v zsh; then
   backup_then_symlink zsh zshrc zshenv zlogin
-  library https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh"
-  library https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-  library https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+  library robbyrussell/oh-my-zsh.git "$HOME/.oh-my-zsh"
+  library zsh-users/zsh-syntax-highlighting.git "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+  library zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
 fi
 
-library https://github.com/junegunn/fzf.git "${HOME}/.fzf"
-yes | ~/.fzf/install
-
-if [[ ! -L ~/.local/bin ]]; then
-  ln -sf ~/dotfiles/local/bin ~/.local/bin
+library junegunn/fzf.git "$HOME/.fzf"
+if [[ -x ~/.fzf/install ]]; then
+  ~/.fzf/install --all
+  library danielfgray/fzf-scripts "$HOME/build/fzf-scripts"
+else
+  err 'failed to install fzf'
 fi
 
-if has tmux; then
+if has -v tmux; then
   backup_then_symlink tmux.conf
-  library https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
+  library tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 fi
 
-if has node; then
-  backup_then_symlink npmrc
-fi
-
-if has gem; then
+if has -v gem; then
   backup_then_symlink gemrc
 fi
 
-if has X; then
-  if has startx; then
+if has -v X; then
+  if has -v startx; then
     backup_then_symlink xinitrc
   fi
 
-  if has xmodmap; then
+  if has -v xmodmap; then
     backup_then_symlink xmodmap
-    xmodmap "${HOME}/.xmodmap"
   fi
 
-  if has xrdb; then
+  if has -v xrdb; then
     backup_then_symlink Xresources
-    xrdb -load "${HOME}/.Xresources"
   fi
 
-  if [[ ! -f ~/.fonts/FantasqueSansMono-Regular.ttf  ]]; then
-    [[ ! -f ${thisdir}/../downloads/fantasque-sans-mono.zip ]] && curl 'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip' -L -o "${thisdir}/../downloads/fantasque-sans-mono.zip"
-    if [[ -f ${thisdir}/../downloads/fantasque-sans-mono.zip ]]; then
-      unzip "${thisdir}/../downloads/fantasque-sans-mono.zip" '*.ttf' -d ~/.fonts
-      mkfontdir "${HOME}/.fonts"
-      xset +fp "${HOME}/.fonts"
-      xset fp rehash
-      fc-cache -f ${verbose:+-v}
+  if [[ ! -f "$HOME/.local/share/fonts/FantasqueSansMono-Regular.ttf"  ]]; then
+    mkdir -p "$HOME/.local/share/fonts"
+    if [[ ! -f "$HOME/downloads/fantasque-sans-mono.zip" ]]; then
+      curl  -L -o "$HOME/downloads/fantasque-sans-mono.zip" --create-dirs \
+        'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip'
+    fi
+    if [[ -f "$HOME/downloads/fantasque-sans-mono.zip" ]]; then
+      unzip "$HOME/downloads/fantasque-sans-mono.zip" '*.ttf' -d "$HOME/.local/share/fonts"
+    else
+      err 'failed to download font Fantasque Sans Mono'
     fi
   fi
-else
-  echo 'no X found'
 fi
 
-info 'done. you should probably log out'
+finish
