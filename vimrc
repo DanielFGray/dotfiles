@@ -295,28 +295,29 @@ Plug 'junegunn/limelight.vim' " {{{
 " }}}
 Plug 'junegunn/goyo.vim' " {{{
   function! s:goyo_enter()
-    set showmode
-    set scrolloff=999
+    set showmode scrolloff=999
     if exists('$TMUX')
       silent !tmux set status off
+      augroup Distractions
+        autocmd!
+        autocmd VimLeavePre * silent! !tmux set -q status on
+      augroup END
     endif
-    augroup Distractions
-      autocmd!
-      autocmd VimLeavePre * silent! !tmux set -q status on
-    augroup END
   endfunction
   function! s:goyo_leave()
-    set noshowmode
-    set scrolloff=5
+    set noshowmode scrolloff=5
     if exists('$TMUX')
       silent !tmux set status on
+      augroup Distractions
+        autocmd!
+      augroup END
     endif
-    augroup Distractions
-      autocmd!
-    augroup END
   endfunction
-  autocmd! User GoyoEnter nested call <SID>goyo_enter()
-  autocmd! User GoyoLeave nested call <SID>goyo_leave()
+  augroup Goyo
+    autocmd!
+    autocmd User GoyoEnter nested call <SID>goyo_enter()
+    autocmd User GoyoLeave nested call <SID>goyo_leave()
+  augroup END
   nnoremap <Leader>df <Esc>:Goyo<CR>
 " }}}
 Plug 'mhinz/vim-startify' " {{{
@@ -328,35 +329,35 @@ Plug 'mhinz/vim-startify' " {{{
 
   if has('nvim')
     " let g:startify_custom_header = s:filter_header('NeoVim')
-    let g:startify_custom_header = [
-    \ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓',
-    \ '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃',
-    \ '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹',
-    \ '' ]
+    let g:startify_custom_header =
+    \ [ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓'
+    \ , '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃'
+    \ , '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹'
+    \ , ''
+    \ ]
   else
     " let g:startify_custom_header = s:filter_header('Vim')
-    let g:startify_custom_header = [
-    \ '        ╻ ╻╻┏┳┓',
-    \ '        ┃┏┛┃┃┃┃',
-    \ '        ┗┛ ╹╹ ╹',
-    \ '' ]
+    let g:startify_custom_header =
+    \ [ '        ╻ ╻╻┏┳┓'
+    \ , '        ┃┏┛┃┃┃┃'
+    \ , '        ┗┛ ╹╹ ╹'
+    \ , ''
+    \ ]
   endif
 " }}}
 Plug 'reedes/vim-thematic' " {{{
-  let g:thematic#defaults = {
-  \ 'background': 'dark'
-  \ }
-  let g:thematic#themes = {
-  \ 'gui': {
-  \   'colorscheme': 'atom-dark-256',
-  \   'airline': 'noctu',
-  \   'typeface': 'Fantasque Sans Mono',
-  \   'font-size': 10,
-  \ },
-  \ 'term': {
-    \ 'colorscheme': 'noctu',
-    \ 'airline': 'hybridline'
-  \ }
+  let g:thematic#defaults = { 'background': 'dark' }
+  let g:thematic#themes =
+  \ { 'gui':
+  \   { 'colorscheme': 'atom-dark-256'
+  \   , 'airline': 'noctu'
+  \   , 'typeface': 'Fantasque Sans Mono'
+  \   , 'font-size': 10
+  \   }
+  \ , 'term':
+  \   { 'colorscheme': 'noctu'
+  \   , 'airline': 'hybridline'
+  \   }
   \ }
   if has('gui_running')
     let g:thematic#theme_name = 'gui'
@@ -531,25 +532,24 @@ Plug 'voi/unite-textobj'
     call unite#filters#matcher_default#use([ 'matcher_fuzzy' ])
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_regexp')
-    call unite#custom#source('line,spell_suggest,textobj,help', 'context', {
-    \   'no_split': 0,
-    \   'split': 1,
-    \   'auto_resize': 1,
-    \   'winheight': 15
+    call unite#custom#source('line,spell_suggest,textobj,help', 'context',
+    \ {  'split': 1
+    \ ,  'prompt_direction': 'below'
+    \ ,  'winheight': 15
     \ })
 
-    call unite#custom#profile('default', 'context', {
-    \   'start_insert': 1,
-    \   'prompt_direction': 'top',
-    \   'prompt_focus': 1,
-    \   'force_redraw': 1,
-    \   'no_empty': 1,
-    \   'winheight': 100,
-    \   'direction': 'dynamicbottom',
-    \   'enable_start_insert': 1,
-    \   'no_split': 1
+    call unite#custom#profile('default', 'context',
+    \ {  'start_insert': 1
+    \ ,  'prompt_direction': 'top'
+    \ ,  'prompt_focus': 1
+    \ ,  'force_redraw': 1
+    \ ,  'no_empty': 1
+    \ ,  'winheight': 100
+    \ ,  'direction': 'dynamicbottom'
+    \ ,  'enable_start_insert': 1
+    \ ,  'no_split': 1
     \ })
-    " \   'prompt': ' ',
+    " \ ,  'prompt': ' '
 
   " imap <buffer>               <Esc> <Plug>(unite_exit)
     nmap <buffer>               <Esc> <Plug>(unite_exit)
@@ -567,8 +567,8 @@ Plug 'voi/unite-textobj'
     nmap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
     imap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
 
-    let unite = unite#get_current_unite()
-    if unite.profile_name ==# 'search'
+    let l:unite = unite#get_current_unite()
+    if l:unite.profile_name ==# 'search'
       nnoremap <silent><buffer><expr> r unite#do_action('replace')
     else
       nnoremap <silent><buffer><expr> r unite#do_action('rename')
@@ -577,7 +577,7 @@ Plug 'voi/unite-textobj'
     nnoremap <silent><buffer><expr> cd unite#do_action('lcd')
     nnoremap <buffer><expr> S unite#mappings#set_current_sorters( empty(unite#mappings#get_current_sorters()) ? [ 'sorter_reverse' ] : [])
 
-    " Runs "split" action by <C-s>.
+    " Runs 'split' action by <C-s>.
     imap <silent><buffer><expr> <C-s> unite#do_action('split')
     imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
   endfunction
@@ -621,13 +621,13 @@ Plug 'mhinz/vim-tmuxify' " {{{
   let g:tmuxify_map_prefix = '<Leader>m'
   let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
   let g:tmuxify_global_maps = 1
-  let g:tmuxify_run = {
-    \ 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%%ly/pdf}"; done',
-    \ 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%%tex/pdf}"; done',
-    \ 'ruby':       ' ruby %',
-    \ 'python':     ' python %',
-    \ 'javascript': ' node %'
-  \}
+  let g:tmuxify_run =
+  \ { 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%%ly/pdf}"; done'
+  \ , 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%%tex/pdf}"; done'
+  \ , 'ruby':       ' ruby %'
+  \ , 'python':     ' python %'
+  \ , 'javascript': ' node %'
+  \ }
 " }}}
 " }}}
 
@@ -791,7 +791,7 @@ function! s:DiffU() abort " {{{
   " TODO: get buffer without mangling newlines
   let l:changes = join(getline(1, '$'), "\n")."\n"
   let l:diff = system(printf('diff -u %s -', l:original), l:changes)
-  if l:diff == ''
+  if l:diff ==# ''
     echo 'no changes'
     return 0
   endif
@@ -802,7 +802,7 @@ function! s:DiffU() abort " {{{
   call PushBelowOrLeft()
   nnoremap <silent><buffer> q <Esc>:q<CR>
   nnoremap <silent><buffer> <Esc> <Esc>:q<CR>
-  setlocal bt=nofile bh=wipe nomod nobl noswf ro foldmethod=diff ft=diff
+  setlocal buftype=nofile bufhidden=wipe nomodified nobuflisted noswapfile readonly foldmethod=diff filetype=diff
   return 1
 endfunction
 command! -bar -nargs=0 DiffU call s:DiffU()
@@ -840,9 +840,9 @@ function! s:ReadUrl(url) abort " {{{
     execute 'normal! Gddgg'
   endif
   redraw!
-  let newft = input('filetype? ')
-  if strlen(newft) > 0
-    execute 'set filetype=' . newft
+  let l:newft = input('filetype? ')
+  if strlen(l:newft) > 0
+    execute 'set filetype=' . l:newft
   endif
   redraw!
 endfunction
@@ -856,7 +856,7 @@ function! s:DiffUrl(url) abort " {{{
     echo 'curl not found'
     return 0
   endif
-  let l:difft = &ft
+  let l:difft = &filetype
   diffthis
   vnew | put =system('curl -sL ' . a:url)
   execute 'set ft=' . l:difft
@@ -875,12 +875,12 @@ function! PromptQuit() abort " {{{
   echo 'y - kill buffer but preserve window'
   echo 'c - kill window but preserve buffer'
   echo 'close current buffer? '
-  let char = nr2char(getchar())
-  if char ==# 'Y'
+  let l:char = nr2char(getchar())
+  if l:char ==# 'Y'
     Sayonara
-  elseif char ==# 'y'
+  elseif l:char ==# 'y'
     execute 'Sayonara!'
-  elseif char ==? 'c'
+  elseif l:char ==? 'c'
     wincmd q
   endif
   silent! redraw!
@@ -911,12 +911,12 @@ nnoremap <silent> <Leader>tgj <Esc>:call Togglegjgk()<CR>
 
 function! s:GetVisualSelection() abort " {{{
   " http://stackoverflow.com/a/6271254/570760
-  let [ lnum1, col1] = getpos("'<")[1:2]
-  let [ lnum2, col2 ] = getpos("'>")[1:2]
-  let lines = getline(lnum1, lnum2)
-  let lines[-1] = lines[-1][: col2 - (&selection ==? 'inclusive' ? 1 : 2)]
-  let lines[0] = lines[0][col1 - 1:]
-  return join(lines, "\n")
+  let [ l:lnum1, l:col1] = getpos("'<")[1:2]
+  let [ l:lnum2, l:col2 ] = getpos("'>")[1:2]
+  let l:lines = getline(l:lnum1, l:lnum2)
+  let l:lines[-1] = l:lines[-1][: l:col2 - (&selection ==? 'inclusive' ? 1 : 2)]
+  let l:lines[0] = l:lines[0][l:col1 - 1:]
+  return join(l:lines, "\n")
 endfunction
 " }}}
 
@@ -938,15 +938,15 @@ endfunction
 
 function! MyFoldText() abort " {{{
   " courtesy Steve Losch
-  let line = getline(v:foldstart)
-  let nucolwidth = &fdc + &number * &numberwidth
-  let windowwidth = winwidth(0) - nucolwidth - 3
-  let foldedlinecount = v:foldend - v:foldstart
-  let onetab = strpart('          ', 0, &tabstop)
-  let line = substitute(line, '\t', onetab, 'g')
-  let line = strpart(line, 0, windowwidth - 2 - len(foldedlinecount))
-  let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - 2
-  return line . ' ' . repeat(' ', fillcharcount)  . ' '. foldedlinecount
+  let l:line = getline(v:foldstart)
+  let l:nucolwidth = &foldcolumn + &number * &numberwidth
+  let l:windowwidth = winwidth(0) - l:nucolwidth - 3
+  let l:foldedlinecount = v:foldend - v:foldstart
+  let l:onetab = strpart('          ', 0, &tabstop)
+  let l:line = substitute(l:line, '\t', l:onetab, 'g')
+  let l:line = strpart(l:line, 0, l:windowwidth - 2 - len(l:foldedlinecount))
+  let l:fillcharcount = l:windowwidth - len(l:line) - len(l:foldedlinecount) - 2
+  return l:line . ' ' . repeat(' ', l:fillcharcount)  . ' '. l:foldedlinecount
 endfunction
 " }}}
 
@@ -958,7 +958,7 @@ xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 " }}}
 
 function! LessInitFunc() abort " {{{
-  setlocal nonu nornu nolist laststatus=0
+  setlocal nonumber norelativenumber nolist laststatus=0
   if exists(':AirlineToggle')
     AirlineToggle
   endif
@@ -1002,6 +1002,7 @@ augroup VIM
   " autocmd InsertEnter * hi CursorLine ctermbg=7
 
   autocmd FileType qf
+  \ setlocal bufhidden=wipe nobuflisted |
   \ call AdjustWindowHeight(1, winheight(0) / 2)
 
   autocmd FileType help
@@ -1067,7 +1068,7 @@ inoremap <F6> <C-O>:set paste!<CR>
 
 nnoremap <Leader> <Nop>
 
-nnoremap <silent><expr> K (&keywordprg == 'man -s' && exists('$TMUX')) ? printf(':!tmux split-window -h "man %s"<CR>:redraw<CR>', expand('<cword>')) : 'K'
+nnoremap <silent><expr> K (&keywordprg == 'man' && exists('$TMUX')) ? printf(':!tmux split-window -h "man %s"<CR>:redraw<CR>', expand('<cword>')) : 'K'
 
 cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
 
@@ -1080,10 +1081,6 @@ if exists(':SudoWrite')
 else
   cabbrev w!! w !sudo tee >/dev/null "%"
 endif
-
-highlight diffAdded ctermfg=darkgreen
-highlight diffRemoved ctermfg=darkred
-highlight Folded ctermfg=14
 
 "           +--Disable hlsearch while loading viminfo
 "           | +--Remember marks for last 500 files
@@ -1099,7 +1096,7 @@ set viminfo=h,'500,<10000,s1000,/1000,:1000
 if exists('$TMUX')
   let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
   let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-elseif &term == 'xterm-256color' || &term == 'screen-256color'
+elseif &term ==? 'xterm-256color' || &term ==? 'screen-256color'
   let &t_SI = "\<Esc>[5 q"
   let &t_EI = "\<Esc>[2 q"
 endif
