@@ -161,9 +161,20 @@ trash() {
   mv -vt ~/.trash "$@"
 }
 
-cat() { (( $# > 1 )) && /bin/cat "$@" ;}
+cat() {
+  if [[ -t 1 ]]; then
+    more "$@" | LESS=-~FEXR less
+  else
+    command cat "$@"
+  fi
+}
 
 help() { bash -c "help $*" ;}
+
+bground() { ("$@" &> /dev/null &) ;}
+restart() { pkill "$1"; bground "$@" ;}
+
+ed() { command ed -p: "$@" ;} # https://sanctum.geek.nz/arabesque/actually-using-ed/
 
 txs() {
   local nested opts=( -d )
@@ -180,7 +191,7 @@ txs() {
   tmux split-window "${opts[@]}" "$cmd"
 }
 
-sprunge() { command curl -sF 'sprunge=<-' http://sprunge.us ;}
+sprunge() { more -- "$@" | command curl -sF 'sprunge=<-' http://sprunge.us ;}
 
 pgrep() { ps aux | command grep -iP "$*" | command grep -ivF grep ;}
 
@@ -251,9 +262,7 @@ curltar() {
 
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
-weather() {
-  command curl -s http://wttr.in/"${*:-galveston texas}"
-}
+weather() { command curl -s http://wttr.in/"${*:-galveston texas}"; }
 
 if has synclient vipe; then
   synclient() {
