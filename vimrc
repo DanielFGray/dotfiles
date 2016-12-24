@@ -139,7 +139,7 @@ endif
 " }}}
 
 " {{{ completion/building
-Plug 'jaawerth/nrun.vim'
+" Plug 'jaawerth/nrun.vim'
 Plug 'Shougo/neosnippet' " {{{
   Plug 'Shougo/neosnippet-snippets'
   let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
@@ -160,45 +160,23 @@ Plug 'Raimondi/delimitMate' " {{{
   let g:delimitMate_jump_expansion = 1
 " }}}
 Plug 'tpope/vim-endwise'
-if has('nvim') || v:version >= 8
-  Plug 'neomake/neomake' " {{{
-    let g:neomake_open_list = 2
-    let g:neomake_place_signs = 1
-    let g:neomake_error_sign = {
-    \ 'text': '✗'
-    \ }
-    let g:neomake_warning_sign = {
-    \ 'text': '∆'
-    \ }
-    let g:neomake_info_sign = {
-    \ 'text': '✠'
-    \ }
-    let g:neomake_message_sign = {
-    \ 'text': '≈'
-    \ }
-    let g:quickfixsigns_protect_sign_rx = '^neomake_'
-    nnoremap <silent> <Leader>c <Esc>:Neomake<CR>
-  " }}}
-  Plug 'dojoteef/neomake-autolint' " {{{
-    let g:neomake_autolint_enabled = 1
-    let g:neomake_autolint_cachedir = '/home/dan/.vim/cache/'
-  " }}}
-else
-  Plug 'scrooloose/syntastic' " {{{
-    let g:syntastic_enable_signs = 1
-    let g:syntastic_auto_loc_list = 1
-    let g:syntastic_check_on_open = 1
-    let g:syntastic_error_symbol = '✗'
-    let g:syntastic_style_error_symbol = '✠'
-    let g:syntastic_warning_symbol = '∆'
-    let g:syntastic_style_warning_symbol = '≈'
-    let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
-    let g:syntastic_check_on_wq = 0
-    let g:syntastic_auto_jump = 3
-
-    nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
-  " }}}
-endif
+Plug 'w0rp/ale' " {{{
+  let g:ale_statusline_format = ['✘ %d', '∆ %d', '● ok']
+  let g:ale_sign_error = '✘'
+  let g:ale_sign_warning = '∆'
+  let g:ale_echo_msg_error_str = 'E'
+  let g:ale_echo_msg_warning_str = 'W'
+  let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+  nnoremap <silent> <Leader>] <Plug>(ale_previous_wrap)
+  nnoremap <silent> <Leader>[ <Plug>(ale_next_wrap)
+  " augroup AleLint
+  "   autocmd!
+  "   autocmd User ALELint lwindow
+  " augroup END
+" }}}
+Plug 'Shougo/vimproc' " {{{
+\, {'do': 'make'}
+" }}}
 if has('nvim')
   Plug 'Shougo/Deoplete.nvim' " {{{
     let g:deoplete#enable_at_startup = 1
@@ -206,9 +184,6 @@ if has('nvim')
   " }}}
   Plug 'kassio/neoterm'
 else
-  Plug 'Shougo/vimproc' " {{{
-  \, {'do': 'make'}
-  " }}}
   if has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
     Plug 'Shougo/neocomplete.vim'
     let g:completionEngine = 'neocomplete'
@@ -272,17 +247,38 @@ Plug 'vim-airline/vim-airline' " {{{
   Plug 'vim-airline/vim-airline-themes'
   let g:airline_theme = 'hybridline'
   let g:airline_powerline_fonts = 1
-  let g:airline#extensions#whitespace#enabled = 0
   let g:airline#extensions#branch#enabled = 1
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#fnamemod = ':t'
-  let g:airline_extensions = [ 'branch', 'tabline', 'nrrwrgn', 'syntastic', 'hunks' ]
+  let g:airline#extensions#whitespace#enabled = 0
+  let g:airline#extensions#wordcount#enabled = 0
+  let g:airline_skip_empty_sections = 1
+  let g:airline_mode_map =
+  \ { '__' : '-'
+  \ , 'n'  : 'N'
+  \ , 'i'  : 'I'
+  \ , 'R'  : 'R'
+  \ , 'c'  : 'C'
+  \ , 'v'  : 'V'
+  \ , 'V'  : 'V'
+  \ , '' : 'V'
+  \ , 's'  : 'S'
+  \ , 'S'  : 'S'
+  \ , '' : 'S'
+  \ }
+  " let g:airline#extensions#default#layout =
+  " \ [ [ 'a', 'b', 'c' ]
+  " \ , [ 'x', 'y', 'error', 'warning'
+  " \ ] ]
+  " let g:airline_extensions = [ 'branch', 'tabline', 'nrrwrgn', 'hunks' ]
   function! AirlineInit()
     let g:airline_section_z = g:airline_section_y
     let g:airline_section_y = g:airline_section_x
     let g:airline_section_x = '%{PencilMode()} %{gutentags#statusline("[Generating ctags...]")}'
   endfunction
-  autocmd User AirlineAfterInit call AirlineInit()
+  augroup Airline
+    autocmd User AirlineAfterInit call AirlineInit()
+  augroup END
 " }}}
 Plug 'nathanaelkane/vim-indent-guides' " {{{
   let g:indent_guides_start_level = 2
@@ -470,12 +466,10 @@ nnoremap <Leader>C <Esc>:Codi!!<CR>
   \ { 'javascript.jsx': 'javascript'
   \ }
 " }}}
+Plug 'vim-scripts/loremipsum'
 " }}}
 
 " {{{ unite.vim
-if has('nvim')
-Plug 'Shougo/denite.nvim'
-else
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/unite-help'
@@ -585,7 +579,6 @@ Plug 'voi/unite-textobj'
 
 " }}}
 
-endif
 " }}}
 
 " {{{ git
@@ -693,30 +686,6 @@ Plug 'ujihisa/neco-ghc'
 " }}}
 
 call plug#end()
-
-if exists(':SyntasticInfo')
-  augroup Nrun
-    autocmd!
-    autocmd BufEnter *.js,*.jsx
-    \ let g:syntastic_javascript_eslint_exec = nrun#Which('eslint') |
-    \ let g:syntastic_jsx_eslint_exec = nrun#Which('eslint')
-    autocmd BufEnter *.css
-    \ let g:syntastic_css_stylelint_exec = nrun#Which('stylelint')
-  augroup END
-elseif exists(':Neomake')
-  augroup Nrun
-    autocmd!
-    autocmd FileType javascript,javascript.jsx,jsx
-    \ let g:neomake_javascript_eslint_exe = nrun#Which('eslint') |
-    \ let g:neomake_javascript_enabled_makers = ['eslint'] |
-    \ let g:neomake_jsx_eslint_exe = nrun#Which('eslint') |
-    \ let g:neomake_jsx_enabled_makers = ['eslint']
-    autocmd FileType css
-    \ let g:neomake_css_eslint_exe = nrun#Which('stylelint') |
-    \ let g:neomake_css_enabled_makers = ['stylelint']
-  augroup END
-endif
-
 endif
 " }}}
 
