@@ -36,6 +36,7 @@ Plug 'wellle/targets.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-function'
+Plug 'kana/vim-textobj-line'
 Plug 'kentaro/vim-textobj-function-php'
 Plug 'thinca/vim-textobj-function-javascript'
 Plug 'glts/vim-textobj-comment'
@@ -139,7 +140,6 @@ endif
 " }}}
 
 " {{{ completion/building
-" Plug 'jaawerth/nrun.vim'
 Plug 'Shougo/neosnippet' " {{{
   Plug 'Shougo/neosnippet-snippets'
   let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
@@ -418,12 +418,6 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-eunuch'
 Plug 'vim-utils/vim-husk'
-" Plug 'sjl/gundo.vim' " {{{
-"   nnoremap <silent> <Leader>u <Esc>:GundoToggle<CR>
-"   let g:gundo_right = 1
-"   let g:gundo_width = 80
-"   let g:gundo_preview_height = 20
-" " }}}
 Plug 'chrisbra/NrrwRgn'
 Plug 'Shougo/echodoc' " {{{
   let g:echodoc_enable_at_startup = 1
@@ -612,11 +606,11 @@ Plug 'tmux-plugins/vim-tmux'
 Plug 'wellle/tmux-complete.vim'
 Plug 'mhinz/vim-tmuxify' " {{{
   let g:tmuxify_map_prefix = '<Leader>m'
-  let g:tmuxify_custom_command = 'tmux split-window -d -v -p 25'
+  let g:tmuxify_custom_command = 'tmux splitw -dv -p25'
   let g:tmuxify_global_maps = 1
   let g:tmuxify_run =
-  \ { 'lilypond':   ' for file in %; do; lilypond $file; x-pdf "${file[@]/%%ly/pdf}"; done'
-  \ , 'tex':        ' for file in %; do; texi2pdf $file; x-pdf "${file[@]/%%tex/pdf}"; done'
+  \ { 'lilypond':   ' f="%"; lilypond "$f" && x-pdf "${f/%ly/pdf}"'
+  \ , 'tex':        ' f="%"; texi2pdf "$f" && x-pdf "${f/%tex/pdf}"'
   \ , 'ruby':       ' ruby %'
   \ , 'python':     ' python %'
   \ , 'javascript': ' node %'
@@ -630,9 +624,6 @@ Plug 'xuhdev/vim-latex-live-preview'
 " }}}
 
 " {{{ html/css
-" Plug 'jaxbot/browserlink.vim' " {{{
-"   \, {'for': [ 'html', 'javascript', 'css' ]}
-" " }}}
 Plug 'suan/vim-instant-markdown' " {{{
   \, {'for': 'markdown'}
   let g:instant_markdown_autostart = 0
@@ -640,7 +631,6 @@ Plug 'suan/vim-instant-markdown' " {{{
 Plug 'mattn/emmet-vim' " {{{
   \, { 'for': [ 'html', 'javascript.jsx' ] }
 " }}}
-" Plug 'Valloric/MatchTagAlways'
 Plug 'tmhedberg/matchit'
 Plug 'othree/html5.vim'
 Plug 'groenewege/vim-less'
@@ -650,7 +640,6 @@ Plug 'tpope/vim-liquid'
 Plug 'tpope/vim-ragtag' " {{{
   let g:ragtag_global_maps = 1
 " }}}
-
 " }}}
 
 " {{{ javascript
@@ -665,7 +654,6 @@ Plug 'marijnh/tern_for_vim' " {{{
   \, { 'do': 'npm install' }
   let g:tern_show_signature_in_pum = 1
 " }}}
-" Plug 'walm/jshint.vim'
 Plug 'heavenshell/vim-jsdoc' " {{{
   let g:jsdoc_enable_es6 = 1
   augroup JsDoc
