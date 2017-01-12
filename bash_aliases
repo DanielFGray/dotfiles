@@ -120,12 +120,13 @@ if has git; then
       http*|https*|git*|ssh*) repo="$1" ;;
       *) repo="https://github.com/$1" ;;
     esac
-    if [[ -n "$2" && "$2" != -* ]]; then
-      dir="$2"
+    shift
+    if [[ -n "$1" && "$1" != -* ]]; then
+      dir="$1"
       shift
     else
       dir="${repo##*/}"
-      dir="${dir%.git}"
+      dir="${dir/%.git}"
     fi
     git clone "$repo" "$@"
     [[ -d "$dir" ]] && cd "$dir"
