@@ -160,20 +160,37 @@ Plug 'Raimondi/delimitMate' " {{{
   let g:delimitMate_jump_expansion = 1
 " }}}
 Plug 'tpope/vim-endwise'
-Plug 'w0rp/ale' " {{{
-  let g:ale_statusline_format = ['✘ %d', '∆ %d', '● ok']
-  let g:ale_sign_error = '✘'
-  let g:ale_sign_warning = '∆'
-  let g:ale_echo_msg_error_str = 'E'
-  let g:ale_echo_msg_warning_str = 'W'
-  let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-  nnoremap <silent> <Leader>] <Plug>(ale_previous_wrap)
-  nnoremap <silent> <Leader>[ <Plug>(ale_next_wrap)
-  " augroup AleLint
-  "   autocmd!
-  "   autocmd User ALELint lwindow
-  " augroup END
-" }}}
+if has('nvim') || has('job')
+  Plug 'w0rp/ale' " {{{
+    let g:ale_statusline_format = ['✘ %d', '∆ %d', '● ok']
+    let g:ale_sign_error = '✘'
+    let g:ale_sign_warning = '∆'
+    let g:ale_echo_msg_error_str = 'E'
+    let g:ale_echo_msg_warning_str = 'W'
+    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+    nnoremap <silent> <Leader>] <Plug>(ale_previous_wrap)
+    nnoremap <silent> <Leader>[ <Plug>(ale_next_wrap)
+    " augroup AleLint
+    "   autocmd!
+    "   autocmd User ALELint lwindow
+    " augroup END
+  " }}}
+else
+  Plug 'scrooloose/syntastic' " {{{
+    let g:syntastic_enable_signs = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_error_symbol = '✗'
+    let g:syntastic_style_error_symbol = '✠'
+    let g:syntastic_warning_symbol = '∆'
+    let g:syntastic_style_warning_symbol = '≈'
+    let g:syntastic_html_tidy_ignore_errors = [' proprietary attribute "ng-']
+    let g:syntastic_check_on_wq = 0
+    let g:syntastic_auto_jump = 3
+
+    nnoremap <silent> <Leader>c <Esc>:SyntasticCheck<CR>
+  " }}}
+endif
 Plug 'Shougo/vimproc' " {{{
 \, {'do': 'make'}
 " }}}
