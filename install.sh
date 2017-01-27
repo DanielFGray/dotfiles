@@ -12,7 +12,8 @@ echo_cmd() {
 }
 
 backup_then_symlink() {
-  for f in "$@"; do
+  local f src dest
+  for f; do
     src=$( realpath "${thisdir}/${f}" )
     dest="$HOME/.${f}"
     if [[ ! -e "$src" ]]; then
@@ -30,6 +31,7 @@ backup_then_symlink() {
 }
 
 library() {
+  local repo path
   if (( $# != 2 )); then
     err 'library() needs repo and path to clone to'
     return 1
@@ -60,7 +62,7 @@ trap finish SIGHUP SIGINT SIGTERM
 
 while true; do
   case "$1" in
-    '-v'|'--verbose') verbose=true ;;
+    -v|--verbose) verbose=true ;;
     *) break ;;
   esac
   shift
