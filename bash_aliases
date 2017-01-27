@@ -9,13 +9,13 @@ stty -ixon
 
 has() {
   local verbose=false
-  if [[ $1 == '-v' ]]; then
+  if [[ $1 = -v ]]; then
     verbose=true
     shift
   fi
   for c; do c="${c%% *}"
     if ! command -v "$c" &> /dev/null; then
-      [[ "$verbose" == true ]] && err "$c not found"
+      [[ "$verbose" = true ]] && err "$c not found"
       return 1
     fi
   done
@@ -30,7 +30,7 @@ err() {
 ask() {
   read -r -n1 -p "$* " ans
   echo
-  [[ ${ans^} == Y* ]]
+  [[ ${ans^} = Y* ]]
 }
 
 export esc=$'\033'
@@ -53,19 +53,18 @@ if [[ -f /etc/debian_version ]]; then
 elif [[ -f /etc/arch-release ]]; then
   for h in 'pacaur' 'yaourt' 'pacman'; do
     if has $h; then
-      [[ "$h" == "pacman" ]] && h="sudo pacman"
+      [[ "$h" = "pacman" ]] && h="sudo pacman"
       alias canhaz="$h -S "
-      alias updupg="$h -Syu "
-      alias pkgrm="$h -Rsu "
+      if has pkgup; then
+        updupg() { upglibs; sudo pacman -Sy && pkgup ;}
+      else
+        alias updupg="$h -Syu "
+      fi
       break
     fi
   done
   unset h
-  if has cope_path && [[ -d $(cope_path) ]]; then
-    export PATH="$(cope_path):$PATH"
-  elif [[ -d /usr/share/perl5/vendor_perl/auto/share/dist/Cope ]]; then
-    export PATH="/usr/share/perl5/vendor_perl/auto/share/dist/Cope:$PATH"
-  fi
+  has pkgrm || alias pkgrm="sudo pacman -Rsu "
 elif [[ -f /etc/redhat-release ]]; then
   alias yum='sudo yum '
   alias canhaz='yum install '
@@ -73,9 +72,8 @@ elif [[ -f /etc/gentoo-release ]]; then
   alias canhaz='sudo emerge -av '
 fi
 
-updateEverything() {
-  txs "printf '%s\n' ~/.oh-my-zsh{,/custom/plugins/zsh*} ~/.vim/bundle/* ~/.emacs.d ~/.fzf ~/.tmux/plugins/* | xargs -P8 -I% git -C % pull"
-  sudo -l && updupg
+upglibs() {
+  txs "printf '%s\n' ~/.oh-my-zsh{,/custom/plugins/zsh*} ~/.vim/bundle/* ~/.emacs.d ~/.fzf ~/.tmux/plugins/* | xargs -P8 -I% bash -c 'git -C % pull | sed \"s@Already up-to-date.@% already up-to-date.@\"' || echo \"failed to pull %\""
 }
 
 alias cp='cp -v '
@@ -98,7 +96,7 @@ has rsync && alias rsync='rsync -v --progress --stats '
 has lein && alias lein='rlwrap lein '
 has pkgsearch && alias pkgs='pkgsearch '
 
-# git aliases {{{
+# {{{ git aliases
 if has git; then
   alias g='git '
   alias ga='git add '
@@ -156,7 +154,7 @@ mkd() { mkdir -p "$@" && cd "$1" ;}
 
 trash() {
   for arg in "$@"; do
-    [[ "$arg" == -* ]] && shift
+    [[ "$arg" = -* ]] && shift
   done
   mkdir -vp ~/.trash
   mv -vt ~/.trash "$@"
@@ -174,6 +172,8 @@ help() { bash -c "help $*" ;}
 
 bground() { ("$@" &> /dev/null &) ;}
 restart() { pkill "$1"; bground "$@" ;}
+
+decide() { printf '%s\n' "$@" | shuf -n1 ;}
 
 ed() { command ed -p: "$@" ;} # https://sanctum.geek.nz/arabesque/actually-using-ed/
 
@@ -280,8 +280,6 @@ if has synclient vipe; then
 fi
 
 if has fzf; then
-  export FZF_CTRL_R_OPTS="--sort --preview 'echo {}' --preview-window='down:3:hidden' --bind='?:toggle-preview'"
-  has ag && export FZF_DEFAULT_COMMAND='ag -l'
   umnt() {
     device=$(mount -l | awk '$5 !~ /gvfsd|debugfs|hugetlbfs|mqueue|tracefs|devpts|securityfs|pstore|sysfs|proc|autofs|cgroup|fusect|tmpfs/{print $1, $3, $5, $6}' | column -t | fzf --inline-info | awk '{print $2}')
     [[ -n "$device" ]] && sudo umount -l "$device"

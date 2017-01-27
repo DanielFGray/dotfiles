@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# vim: ft=sh
 
 if [[ -n "$BASH_VERSION" && -f "$HOME/.bashrc" ]]; then
   source "$HOME/.bashrc"
@@ -21,34 +21,31 @@ dirs+=(
   "$HOME/.rakudobrew/bin"
   "$HOME/.rvm/bin"
   "$HOME/.npm/bin"
+  "$HOME/.yarn/bin"
   "$HOME/.cabal/bin"
+  "$HOME/.cargo/bin"
+  "$HOME/bin"
+  "$HOME/.bin"
   "$HOME/.local/bin"
 )
 
 for d in "${dirs[@]}"; do
-  if [[ -d "$d" && ! " ${current_path[*]} " == *" $d "* ]]; then
+  if [[ -d "$d" && ! " ${current_path[*]} " = *" $d "* ]]; then
     PATH="$d:$PATH"
   fi
 done
 
 export PATH
 
-export INFINALITY_FT_FILTER_PARAMS='10 35 40 35 10'
-export INFINALITY_FT_AUTOHINT_HORIZONTAL_STEM_DARKEN_STRENGTH=0
-export INFINALITY_FT_AUTOHINT_VERTICAL_STEM_DARKEN_STRENGTH=0
-export INFINALITY_FT_AUTOHINT_INCREASE_GLYPH_HEIGHTS=false
-export INFINALITY_FT_AUTOHINT_SNAP_STEM_HEIGHT=0
-export INFINALITY_FT_GAMMA_CORRECTION='0 100'
-export INFINALITY_FT_BRIGHTNESS=0
-export INFINALITY_FT_CONTRAST=0
-export INFINALITY_FT_CHROMEOS_STYLE_SHARPENING_STRENGTH=5
-export INFINALITY_FT_WINDOWS_STYLE_SHARPENING_STRENGTH=0
-export INFINALITY_FT_FRINGE_FILTER_STRENGTH=5
-export INFINALITY_FT_GRAYSCALE_FILTER_STRENGTH=10
-export INFINALITY_FT_STEM_ALIGNMENT_STRENGTH=0
-export INFINALITY_FT_STEM_FITTING_STRENGTH=0
-export INFINALITY_FT_STEM_SNAPPING_SLIDING_SCALE=0
-export INFINALITY_FT_USE_KNOWN_SETTINGS_ON_SELECTED_FONTS=true
-export INFINALITY_FT_USE_VARIOUS_TWEAKS=true
+# export PATH="$HOME/.cargo/bin:$PATH"
 
-export MPD_HOST='10.0.0.3'
+if has fzf; then
+  has ag && export FZF_DEFAULT_COMMAND='ag -l'
+  export FZF_CTRL_T_COMMAND='fnd'
+  export FZF_DEFAULT_OPTS='--bind="`:jump" --inline-info --cycle'
+  export FZF_CTRL_R_OPTS='--reverse -e --bind="?:toggle-preview" --preview="echo {}" --preview-window="down:3:wrap:hidden"'
+fi
+
+if has rustc racer; then
+  export RUST_SRC_PATH="$HOME/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"
+fi

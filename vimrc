@@ -17,8 +17,7 @@ if empty(glob(s:configdir . '/bundle')) || empty(glob(s:configdir . '/autoload/p
   function! s:InstallPlugins() abort
     redraw!
     echo 'Install missing plugins? [y/N] '
-    let l:char = nr2char(getchar())
-    if l:char ==? 'y'
+    if nr2char(getchar()) ==? 'y'
       silent call system('mkdir -p ' . s:configdir . '/{autoload,bundle,cache,undo,backups,swaps}')
       silent call system('curl -fLo ' . s:configdir . '/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
       execute 'source ' . s:configdir . '/autoload/plug.vim'
@@ -122,14 +121,6 @@ Plug 'terryma/vim-multiple-cursors' " {{{
   endfunction
 " }}}
 Plug 'bronson/vim-visual-star-search'
-Plug 'pelodelfuego/vim-swoop' " {{{
-  let g:swoopUseDefaultKeyMap = 0
-  let g:swoopIgnoreCase = 1
-  nnoremap <silent> <Leader>l :call Swoop()<CR>
-  vnoremap <silent> <Leader>l :call SwoopSelection()<CR>
-  nnoremap <silent> <Leader>ml :call SwoopMulti()<CR>
-  vnoremap <silent> <Leader>ml :call SwoopMultiSelection()<CR>
-" }}}
 if executable('ag')
   set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
   set grepformat=%f:%l:%c:%m
@@ -201,28 +192,31 @@ if has('nvim')
   " }}}
   Plug 'kassio/neoterm'
 else
-  if has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
-    Plug 'Shougo/neocomplete.vim'
-    let g:completionEngine = 'neocomplete'
-  elseif has('lua')
-    Plug 'Shougo/neocomplcache.vim'
-    let g:completionEngine = 'neocomplcache'
-  endif
-  if exists('g:completionEngine')
-    let g:acp_enableAtStartup = 0
-    let g:{g:completionEngine}#enable_at_startup = 1
-    let g:{g:completionEngine}#enable_smart_case = 1
-    let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-    let g:{g:completionEngine}#auto_completion_start_length = 3
-    let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
-    let g:{g:completionEngine}#sources#omni#input_patterns = {}
-    let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
-    let g:{g:completionEngine}#data_directory = s:configdir . '/cache/neocompl'
-    inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
-    inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
-    inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
-    inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
-  endif " }}}
+  " if has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
+  "   Plug 'Shougo/neocomplete.vim'
+  "   let g:completionEngine = 'neocomplete'
+  " elseif has('lua')
+  "   Plug 'Shougo/neocomplcache.vim'
+  "   let g:completionEngine = 'neocomplcache'
+  " endif
+  " if exists('g:completionEngine')
+  "   let g:acp_enableAtStartup = 0
+  "   let g:{g:completionEngine}#enable_at_startup = 1
+  "   let g:{g:completionEngine}#enable_smart_case = 1
+  "   let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
+  "   let g:{g:completionEngine}#auto_completion_start_length = 3
+  "   let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
+  "   let g:{g:completionEngine}#sources#omni#input_patterns = {}
+  "   let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
+  "   let g:{g:completionEngine}#data_directory = s:configdir . '/cache/neocompl'
+  "   inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
+  "   inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
+  "   inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
+  "   inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
+  " endif " }}}
+endif
+if has('job') && has('timers') && has('lambda')
+  Plug 'maralla/completor.vim'
 endif
 " }}}
 
@@ -679,8 +673,7 @@ Plug 'heavenshell/vim-jsdoc' " {{{
     \ nnoremap <buffer> <Leader>jd <Plug>(jsdoc)
   augroup END
 " }}}
-" Plug 'mxw/vim-jsx'
-" Plug 'mtscout6/syntastic-local-eslint.vim'
+Plug 'lambdatoast/elm.vim'
 " }}}
 
 " {{{ haskell
@@ -689,6 +682,9 @@ Plug 'raichoo/purescript-vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'ujihisa/neco-ghc'
 " }}}
+
+Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
 
 call plug#end()
 endif
@@ -944,6 +940,8 @@ endfunction
 " {{{ autocmds
 augroup VIM
   autocmd!
+
+  autocmd FileType rust set formatprg=rustfmt
 
   autocmd BufWritePost *tmux.conf
   \ if exists('$TMUX') |
