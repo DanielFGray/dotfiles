@@ -1,33 +1,34 @@
 #!/usr/bin/env zsh
 
 autoload -Uz compinit && compinit
+autoload -Uz promptinit && promptinit
 autoload -Uz colors && colors
 autoload -Uz zmv
 
 [[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
 
-HISTFILE=~/.zsh_history
+HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=100000
 
 DEFAULT_USER='dan'
 theme='agnoster'
-[[ $(tty) == '/dev/tty'* ]] && theme='kardan'
+[[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 plugins=(
   fancy-ctrl-z
   git-extras
+  lein
   vi-mode
   zsh-autosuggestions
   zsh-syntax-highlighting
-  lein
 )
 
 load_plugins() {
   local plugin_path errors loaded_p p p_path p_paths
   plugin_path=( "$HOME/.zsh/plugins" )
   errors=()
-  [[ -d "$HOME/.oh-my-zsh/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/plugins" )
-  [[ -d "$HOME/.oh-my-zsh/custom/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/custom/plugins" )
+  # [[ -d "$HOME/.oh-my-zsh/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/plugins" )
+  # [[ -d "$HOME/.oh-my-zsh/custom/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/custom/plugins" )
   for p in "${plugins[@]}"; do
     for p_path in "${plugin_path[@]}"; do
       p_paths=( "$p_path/$p/$p.zsh" "$p_path/$p/$p.plugin.zsh" )
@@ -57,7 +58,7 @@ load_theme() {
   local theme_path errors t file found_theme
   theme_path=( "$HOME/.zsh/themes" )
   errors=()
-  [[ -d "$HOME/.oh-my-zsh/themes" ]] && theme_path+=( "$HOME/.oh-my-zsh/themes" )
+  # [[ -d "$HOME/.oh-my-zsh/themes" ]] && theme_path+=( "$HOME/.oh-my-zsh/themes" )
   for t in "${theme_path[@]}"; do
     file="${t}/${theme}.zsh-theme"
     if [[ -f "$file" ]]; then
@@ -107,7 +108,7 @@ ask() {
   echo -n "$* "
   read -r -k 1 ans
   echo
-  [[ ${ans:u} == Y* ]]
+  [[ ${ans:u} = Y* ]]
 }
 
 alias zcp='noglob zmv -C '
@@ -123,7 +124,16 @@ alias -g DN='&> /dev/null'
 
 setopt append_history
 setopt extended_history
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_verify
+setopt inc_append_history
+setopt share_history
+
 setopt extended_glob
+setopt no_case_glob
+
 setopt nomatch
 setopt notify
 setopt prompt_subst
@@ -136,12 +146,24 @@ setopt pushd_silent
 setopt pushd_to_home
 setopt pushd_minus
 setopt pushd_ignore_dups
-unsetopt beep
+
 setopt no_flow_control
+
+unsetopt beep
+
 bindkey -v
+
+bindkey '\e[1~' beginning-of-line
+bindkey '\e[4~' end-of-line
+bindkey '\e[A' up-line-or-history
+bindkey '\e[B' down-line-or-history
+
+bindkey -M vicmd 'q' push-line
+bindkey -M viins ' ' magic-space
 
 zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 zstyle ':completion:*' list-dirs-first true
+zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
@@ -149,5 +171,10 @@ zstyle ':completion:*' max-errors 2 numeric
 zstyle ':completion:*' menu select=long-list select=0
 zstyle ':completion:*' prompt '%e>'
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion::*:(rm|vi):*' ignore-line true
+zstyle ':completion:*' ignore-parents parent pwd
+zstyle ':completion::approximate*:*' prefix-needed false
 
-compdef _pacman pacman-color=pacman
+export DISABLE_AUTO_TITLE=true
+
+export PATH="$HOME/.yarn/bin:$PATH"
