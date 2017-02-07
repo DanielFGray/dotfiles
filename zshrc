@@ -5,96 +5,47 @@ autoload -Uz promptinit && promptinit
 autoload -Uz colors && colors
 autoload -Uz zmv
 
-[[ -f $HOME/.bash_aliases ]] && source $HOME/.bash_aliases
+if [[ -f $HOME/.bash_aliases ]]; then
+  source $HOME/.bash_aliases
+else
+ printf "${c_red}Error loading bash_aliases${c_reset}\n"
+fi
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=100000
 
+VIRTUAL_ENV_DISABLE_PROMPT=1
 DEFAULT_USER='dan'
-theme='agnoster'
-[[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 plugins=(
-  fancy-ctrl-z
   git-extras
   lein
   vi-mode
   zsh-autosuggestions
   zsh-syntax-highlighting
+  autoenv
 )
+theme='agnoster'
+[[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 
-load_plugins() {
-  local plugin_path errors loaded_p p p_path p_paths
-  plugin_path=( "$HOME/.zsh/plugins" )
-  errors=()
-  # [[ -d "$HOME/.oh-my-zsh/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/plugins" )
-  # [[ -d "$HOME/.oh-my-zsh/custom/plugins" ]] && plugin_path+=( "$HOME/.oh-my-zsh/custom/plugins" )
-  for p in "${plugins[@]}"; do
-    for p_path in "${plugin_path[@]}"; do
-      p_paths=( "$p_path/$p/$p.zsh" "$p_path/$p/$p.plugin.zsh" )
-      for f in "${p_paths[@]}"; do
-        if [[ -f "$f" ]]; then
-          source "$f" || errors+=( "$p failed to load" )
-          loaded_p="$p"
-          break 2
-        fi
-      done
-    done
-    if [[ "$loaded_p" != "$p" ]]; then
-      errors+=( "$p not found" )
-    fi
-  done
-  unset plugins
-  if [[ -n "$errors" ]]; then
-    printf '%sError loading plugins:' "${c_red}"
-    printf '\n  %s' "${errors[@]}"
-    printf '%s\n' "$c_reset"
-    return 1
-  fi
-}
-(( ${#plugins[@]} > 0 )) && load_plugins
+err() { printf "${colors[red]}%s${colors[reset]}\n" "$*"; }
+die() { err "$@"; exit 1; }
 
-load_theme() {
-  local theme_path errors t file found_theme
-  theme_path=( "$HOME/.zsh/themes" )
-  errors=()
-  # [[ -d "$HOME/.oh-my-zsh/themes" ]] && theme_path+=( "$HOME/.oh-my-zsh/themes" )
-  for t in "${theme_path[@]}"; do
-    file="${t}/${theme}.zsh-theme"
-    if [[ -f "$file" ]]; then
-      source "$file" || errors+=( "$theme failed to load" )
-      found_theme="$file"
-      break
-    fi
-  done
-  if [[ -z "$found_theme" ]]; then
-    errors+=( "$theme not found" )
-  fi
-  unset theme
-  if [[ -n "$errors" ]]; then
-    printf '%sError loading theme:' "${c_red}"
-    printf '\n  %s' "${errors[@]}"
-    printf '%s\n' "$c_reset"
-    return 1
-  fi
-}
-[[ -n "$theme" ]] && load_theme
+source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 if ! has nvm && [[ -f package.json && -s "/home/dan/.nvm/nvm.sh" ]]; then
   loadnvm
 fi
 
-bindkey '^ ' autosuggest-accept
-
 if command -v fzf &> /dev/null; then
-  unalias historygrep
+  [[ $(type historygrep) = *'alias'* ]] && unalias historygrep
   function historygrep {
     print -z $(fc -nl 1 | grep -v '^history' | fzf --tac +s -e -q "$*")
   }
 fi
 
-unfunction cd
+[[ $(type cd) = *'shell function'* ]] && unfunction cd
 chpwd() {
   emulate -L zsh
   ls
@@ -152,6 +103,8 @@ setopt no_flow_control
 unsetopt beep
 
 bindkey -v
+
+bindkey '^ ' autosuggest-accept
 
 bindkey '\e[1~' beginning-of-line
 bindkey '\e[4~' end-of-line
