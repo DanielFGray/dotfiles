@@ -8,7 +8,7 @@ autoload -Uz zmv
 if [[ -f $HOME/.bash_aliases ]]; then
   source $HOME/.bash_aliases
 else
- printf "${c_red}Error loading bash_aliases${c_reset}\n"
+  printf '%s%s%s\n' "$(tput setaf 1)" 'Error loading bash_aliases' "$(tput sgr0)"
 fi
 
 HISTFILE="$HOME/.zsh_history"
@@ -23,12 +23,11 @@ plugins=(
   vi-mode
   zsh-autosuggestions
   zsh-syntax-highlighting
-  autoenv
 )
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 
-err() { printf "${colors[red]}%s${colors[reset]}\n" "$*"; }
+err() { printf "${c_red}%s${c_reset}\n" "$@"; }
 die() { err "$@"; exit 1; }
 
 source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
@@ -54,7 +53,7 @@ chpwd() {
   fi
 }
 
-unfunction ask
+[[ $(type cd) = *'shell function'* ]] && unfunction ask
 ask() {
   echo -n "$* "
   read -r -k 1 ans

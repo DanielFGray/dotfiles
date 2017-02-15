@@ -25,9 +25,8 @@
   done
   unset plugins
   if [[ -n "$errors" ]]; then
-    err '%sError loading plugins:' "${c_red}"
-    err '\n  %s' "${errors[@]}"
-    err '%s\n' "$c_reset"
+    err 'Error loading plugins:'
+    printf "${c_red}  %s${c_reset}\n" "${errors[@]}"
     return 1
   fi
 }
