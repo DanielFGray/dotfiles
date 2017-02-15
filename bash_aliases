@@ -64,7 +64,7 @@ elif [[ -f /etc/arch-release ]]; then
     fi
   done
   unset h
-  has pkgrm || alias pkgrm="sudo pacman -Rsu "
+  has pkgrm || alias pkgrm='sudo pacman -Rsu '
 elif [[ -f /etc/redhat-release ]]; then
   alias yum='sudo yum '
   alias canhaz='yum install '
@@ -73,7 +73,7 @@ elif [[ -f /etc/gentoo-release ]]; then
 fi
 
 upglibs() {
-  txs "printf '%s\n' ~/.oh-my-zsh{,/custom/plugins/zsh*} ~/.vim/bundle/* ~/.emacs.d ~/.fzf ~/.tmux/plugins/* | xargs -P8 -I% bash -c 'git -C % pull | sed \"s@Already up-to-date.@% already up-to-date.@\"' || echo \"failed to pull %\""
+  txs "printf '%s\n' ~/.oh-my-zsh{,/custom/plugins/zsh*} ~/.vim/bundle/* ~/.emacs.d ~/.fzf ~/.tmux/plugins/* | xargs -P8 -I% bash -c 'git -C % pull | sed \"s@Already up-to-date.@% already up-to-date.@\" || echo \"failed to pull %\"'"
 }
 
 alias cp='cp -v '
@@ -87,6 +87,8 @@ alias rename='rename -v '
 alias ls='ls -Fh --color --group-directories-first '
 alias l='ls -lgo '
 alias la='l -A '
+alias lax='la -X'
+alias lat='la -t'
 alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P '
 alias historygrep='history | grep -vF "history" | grep '
 alias xargs="tr '\n' '\0' | xargs -0 -I% "
@@ -171,7 +173,7 @@ cat() {
 help() { bash -c "help $*" ;}
 
 bground() { ("$@" &> /dev/null &) ;}
-restart() { pkill "$1"; bground "$@" ;}
+restart() { pkill -x "$1"; bground "$@" ;}
 
 decide() { printf '%s\n' "$@" | shuf -n1 ;}
 
@@ -249,14 +251,9 @@ curltar() {
     *.tar.bz2)   command curl -L "$1" | tar xvjf   -  ;;
     *.tar.gz)    command curl -L "$1" | tar xvzf   -  ;;
     *.bz2)       command curl -L "$1" | bunzip2    -  ;;
-    *.rar)       command curl -L "$1" | unrar x    -  ;;
-    *.gz)        command curl -L "$1" | gunzip     -  ;;
     *.tar)       command curl -L "$1" | tar xvf    -  ;;
     *.tbz2)      command curl -L "$1" | tar xvjf   -  ;;
     *.tgz)       command curl -L "$1" | tar xvzf   -  ;;
-    *.zip)       command curl -L "$1" | unzip      -  ;;
-    *.Z)         command curl -L "$1" | uncompress -  ;;
-    *.7z)        command curl -L "$1" | 7z x       -  ;;
     *)           command curl -LO "$1"
   esac
 }
@@ -337,7 +334,7 @@ if has rlwrap; then
   if has guile; then
     guile() {
       if (( $# > 0 )); then
-        command guile "$@"
+         command guile "$@"
       else
         rlwrap guile
       fi
@@ -360,5 +357,12 @@ if [[ -e /opt/closure/compiler.jar ]]; then
     java -jar /opt/closure/compiler.jar "$@"
   }
 fi
+
+vm() {
+  VBoxManage startvm "$1" --type headless || return
+  echo 'starting ssh...'
+  ssh "$1"
+  VBoxManage controlvm "$1" poweroff
+}
 
 # vim:ft=sh:

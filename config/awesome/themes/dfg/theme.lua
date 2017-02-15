@@ -107,7 +107,7 @@ theme.widget_hdd                                = beautifultheme .. "icons/17.pn
 theme.widget_netup                              = beautifultheme .. "icons/up.png"
 theme.widget_netdown                            = beautifultheme .. "icons/down.png"
 
-theme.useless_gap                               = 13
+theme.useless_gap                               = 5
 theme.gap_single_client                         = false
 
 theme.menu_disable_icon                         = false

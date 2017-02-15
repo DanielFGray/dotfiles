@@ -15,7 +15,7 @@ if [[ -n "$SSH_CONNECTION" ]]; then
     fi
   fi
 else
-  if [[ -z "$DISPLAY" && "$TTY" == '/dev/tty1' ]] ; then
+  if [[ -z "$DISPLAY" && "$TTY" = '/dev/tty1' ]] ; then
     if has fzf wmpicker; then
       exec startx "$(wmpicker)"
     else

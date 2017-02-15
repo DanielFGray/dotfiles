@@ -5,3 +5,4 @@ set keymap vi-command
 "\e[B": history-search-forward
 "\e[C": forward-char
 "\e[D": backward-char
+"\C-xe": rlwrap-call-editor

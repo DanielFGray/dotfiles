@@ -71,7 +71,7 @@ visualizer_type = spectrum
 # message_delay_time = SECONDS
 # Delay for displayed messages to remain visible.
 
-song_list_format = " {%n }{$4%a$9$8 - %t}|{%D/%f}$1{     $R$7%b{ $0($3%y$0)}$9} "
+song_list_format = " {$3%a$9$8 / [%n] $5%t}|{%D/%f}$1{      $R[%l] $2%b{ $0($3%y$0)}$9} "
 # song_list_format
 # Format for songs' list.
 

@@ -6,6 +6,17 @@ nnoremap <C-l> :nohlsearch<CR><C-l>
 set hintchars=hjklasdfgqweruioptyzxcvbnm
 set animations
 set complete=slth
+set autocomplete
+set wildmode=list:full
+
+js <<EOF
+toggle_element = function(name) {
+  document.getElementById(name).collapsed ^= 1;
+}
+EOF
+" and now use it in mappings (':h key-notation'):
+nnoremap <silent> <Leader>m :js toggle_element('toolbar-menubar')<CR>
+nnoremap <silent> <Leader>n :js toggle_element('nav-bar')<CR>
 
 nnoremap <C-q> <Nop>
 nnoremap <C-w> <Nop>

@@ -640,6 +640,22 @@ globalkeys = awful.util.table.join(
     }
   end, { description = "rename", group = "tag" }),
 
+  awful.key({ modkey }, "Print", function()
+    sexec("yaxg -w -D1")
+  end, { description = "screencast whole screen", group = "launcher" }),
+
+  awful.key({ modkey, "Shift" }, "Print", function()
+    sexec("yaxg -w -D1 -s")
+  end, { description = "screencast a selection", group = "launcher" }),
+
+  awful.key({ }, "Print", function()
+    sexec("yaxg -D1")
+  end, { description = "screenshot whole screen", group = "launcher" }),
+
+  awful.key({ "Shift" }, "Print", function()
+    sexec("yaxg -D1 -s")
+  end, { description = "screenshot a selection", group = "launcher" }),
+
   awful.key({ }, "XF86AudioRaiseVolume", function()
     sexec("amixer -q sset Master 2%+")
   end),
@@ -649,7 +665,7 @@ globalkeys = awful.util.table.join(
   awful.key({ }, "XF86AudioMute", function()
     sexec("amixer -q sset Master toggle")
   end),
-  awful.key({ }, "XF86Sleep", function()
+  awful.key({ modkey }, "F12", function()
     sexec("mylock --suspend")
   end),
   awful.key({ modkey }, "v", treetile.vertical),
@@ -772,7 +788,8 @@ awful.rules.rules = {
       keys = clientkeys,
       buttons = clientbuttons,
       screen = awful.screen.preferred,
-      placement = awful.placement.no_overlap+awful.placement.no_offscreen
+      placement = awful.placement.no_overlap+awful.placement.no_offscreen,
+      size_hints_honor = false,
     }
   },
 

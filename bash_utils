@@ -8,10 +8,10 @@
 # fi
 
 declare -r esc=$'\033'
-declare -r c_reset="${esc}[0m"
 declare -r c_red="${esc}[31m"
 declare -r c_green="${esc}[32m"
 declare -r c_blue="${esc}[34m"
+declare -r c_reset="${esc}[0m"
 
 in_term() {
   [[ -t 0 || -p /dev/stdin ]]
@@ -43,14 +43,14 @@ die() {
 }
 
 has() {
-  local verbose=false
-  if [[ $1 == '-v' ]]; then
-    verbose=true
+  local verbose
+  if [[ $1 = '-v' ]]; then
+    verbose=1
     shift
   fi
-  for c in "$@"; do c="${c%% *}"
+  for c; do c="${c%% *}"
     if ! command -v "$c" &> /dev/null; then
-      [[ "$verbose" == true ]] && err "$c not found"
+      (( "$verbose" > 0 )) && err "$c not found"
       return 1
     fi
   done
@@ -60,7 +60,7 @@ ask() {
   if in_term; then
     read -r -n1 -p "$* " ans
     printf '\n'
-    [[ ${ans^} == Y* ]]
+    [[ ${ans^} = Y* ]]
   else
     zenity --question --text="$*"
   fi
@@ -68,19 +68,19 @@ ask() {
 
 prompt() {
   local opts=() one
-  if [[ "$1" == '-1' ]]; then
+  if [[ "$1" = '-1' ]]; then
     opts+=( '-n1' )
     one=1
     shift
   fi
-  if [[ "$1" == '-s' ]]; then
+  if [[ "$1" = '-s' ]]; then
     opts+=( '-s' )
     shift
   fi
   read -e -r "${opts[@]}" -p "$* " ans
-  if [[ $one == '1' ]]; then
+  if [[ $one = '1' ]]; then
     printf '\n'
-    [[ ${ans,} == y ]]
+    [[ ${ans,} = y ]]
   else
     printf '%s\n' "$ans"
   fi
@@ -88,7 +88,7 @@ prompt() {
 
 select_from() {
   local cmd='command -v'
-  for a in "$@"; do
+  for a; do
     case "$a" in
       -c)
         cmd="$2"
@@ -96,7 +96,7 @@ select_from() {
         ;;
     esac
   done
-  for c in "$@"; do
+  for c; do
     if $cmd "${c%% *}" &> /dev/null; then
       echo "$c"
       return 0
