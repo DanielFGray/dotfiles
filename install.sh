@@ -70,7 +70,7 @@ done
 
 has -v git curl || die 'git and curl both required'
 
-backup_then_symlink profile bash_aliases bash_utils inputrc gitconfig
+backup_then_symlink profile bashrc bash_aliases bash_utils inputrc gitconfig
 
 library danielfgray/bin "$HOME/.local/bin"
 
