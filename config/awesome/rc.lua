@@ -70,20 +70,16 @@ awful.layout.layouts = {
   awful.layout.suit.floating,
   treetile,
   awful.layout.suit.tile,
-  -- awful.layout.suit.tile.left,
-  -- awful.layout.suit.tile.bottom,
-  -- awful.layout.suit.tile.top,
-  -- awful.layout.suit.fair,
-  -- awful.layout.suit.fair.horizontal,
-  -- awful.layout.suit.spiral,
-  -- awful.layout.suit.spiral.dwindle,
-  -- awful.layout.suit.max,
-  -- awful.layout.suit.max.fullscreen,
-  -- awful.layout.suit.magnifier,
-  -- awful.layout.suit.corner.nw,
-  -- awful.layout.suit.corner.ne,
-  -- awful.layout.suit.corner.sw,
-  -- awful.layout.suit.corner.se,
+  awful.layout.suit.tile.left,
+  awful.layout.suit.tile.bottom,
+  awful.layout.suit.tile.top,
+  awful.layout.suit.fair,
+  awful.layout.suit.fair.horizontal,
+  awful.layout.suit.spiral,
+  awful.layout.suit.spiral.dwindle,
+  awful.layout.suit.max,
+  awful.layout.suit.max.fullscreen,
+  awful.layout.suit.magnifier,
 }
 -- }}}
 
@@ -93,7 +89,7 @@ tyrannical.tags = {
     name        = "term",                 -- Call the tag "Term"
     init        = false,                  -- Load the tag on startup
     exclusive   = true,                   -- Refuse any other type of clients (by classes)
-    layout      = treetile,
+    layout      = awful.layout.suit.tile,
     instance    = { "dev", "ops" },       -- Accept the following instances. This takes precedence over 'class'
     volatile    = true,
     class       = {                       -- Accept the following classes, refuse everything else (because of "exclusive=true")
@@ -105,6 +101,7 @@ tyrannical.tags = {
       "XTerm",
       "konsole",
       "terminator",
+      "termite",
       "gnome-terminal",
       ".*term.*",
       "st-*",
@@ -115,7 +112,7 @@ tyrannical.tags = {
     exclusive   = true,
     -- icon        = "~net.png",                  -- Use this icon for the tag (uncomment with a real path)
     screen      = screen.count() > 1 and 2 or 1, -- Setup on screen 2 if there is more than 1 screen, else on screen 1
-    layout      = treetile,
+    layout      = awful.layout.suit.tile,
     volatile    = true,
     class = {
       "Opera",
@@ -150,6 +147,7 @@ tyrannical.properties.intrusive = {
   "Dolphin",
   "ark",
   "Nautilus",
+  "Nemo",
   "emelfm",
   "ksnapshot",
   "pinentry",
@@ -166,6 +164,7 @@ tyrannical.properties.intrusive = {
   "Xephyr",
   "kruler",
   "plasmaengineexplorer",
+  "zenity",
 }
 
 -- Ignore the tiled layout for the matching clients
@@ -190,6 +189,7 @@ tyrannical.properties.floating = {
   "kcharselect",
   "mythfrontend",
   "plasmoidviewer",
+  "zenity",
 }
 
 -- Make the matching clients (by classes) on top of the default layout
@@ -197,6 +197,7 @@ tyrannical.properties.ontop = {
   "Xephyr",
   "ksnapshot",
   "kruler",
+  "zenity",
 }
 
 -- Force the matching clients (by classes) to be centered on the screen on init
@@ -204,6 +205,7 @@ tyrannical.properties.placement = {
   kcalc = awful.placement.centered
 }
 
+tyrannical.default_layout = awful.layout.suit.tile
 tyrannical.settings.block_children_focus_stealing = true --Block popups ()
 tyrannical.settings.group_children = true --Force popups/dialogs to have the same tags as the parent client
 -- }}}
@@ -335,7 +337,7 @@ local mpdwidget = lain.widgets.mpd({
       title = mpd_now.title .. " "
     elseif mpd_now.state == "pause" then
       artist = markup("#666", mpd_now.artist .. " - ")
-      title = markup("#666", mpd_now.title)
+      title = markup("#666", mpd_now.title .. " ")
     end
     widget:set_markup(artist .. title)
   end
@@ -451,6 +453,7 @@ awful.screen.connect_for_each_screen(function(s)
       s.mylayoutbox,
       s.mypromptbox,
     },
+    -- space,
     s.mytasklist, -- Middle widget
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
@@ -616,15 +619,30 @@ globalkeys = awful.util.table.join(
   end, { description = "run dmenu", group = "launcher" }),
 
   -- Tag management
+  awful.key({ modkey, "Shift", }, "d", function()
+    local t = awful.screen.focused().selected_tag
+    if not t then return end
+    t:delete()
+  end, { description = "delete", group = "tag" }),
+
   awful.key({ modkey, "Shift" }, "a", function()
     awful.prompt.run {
-      prompt       = "New tag name: ",
-      textbox      = awful.screen.focused().mypromptbox.widget,
-      exe_callback = function(new_name)
-        if not new_name or #new_name == 0 then return end
-      end
-    }
-  end, { description = "add new", group = "tag" }),
+        textbox      = awful.screen.focused().mypromptbox.widget,
+        prompt       = "New tag name: ",
+        exe_callback = function(new_name)
+          if not new_name or #new_name == 0 then
+            return
+          else
+            props = { selected = true }
+            if tyrannical.tags_by_name[new_name] then
+              props = tyrannical.tags_by_name[new_name]
+            end
+            t = awful.tag.add(new_name, props)
+            awful.tag.viewonly(t)
+          end
+        end
+      }
+    end, { description = "add", group = "tag" }),
 
   awful.key({ modkey, "Shift" }, "r", function()
     awful.prompt.run {
@@ -668,8 +686,8 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey }, "F12", function()
     sexec("mylock --suspend")
   end),
-  awful.key({ modkey }, "v", treetile.vertical),
-  awful.key({ modkey }, "h", treetile.horizontal),
+  -- awful.key({ modkey }, "v", treetile.vertical),
+  -- awful.key({ modkey }, "h", treetile.horizontal),
 
   awful.key({ modkey }, "o", function(c)
     awful.client.cycle(true, s)
@@ -809,7 +827,6 @@ awful.rules.rules = {
         "pinentry",
         "veromix",
         "xtightvncviewer",
-        "zenity",
       },
       name = {
         "Event Tester",  -- xev.
