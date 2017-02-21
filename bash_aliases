@@ -377,4 +377,13 @@ vm() {
   VBoxManage controlvm "$1" poweroff
 }
 
+if has api; then
+  repo_create() {
+    case $1 in
+      github) api github post user/repos -d "{ \"name\": \"$1\", \"auto_init\": false }" | jq '.' ;;
+      gitlab) api gitlab post projects -d "name=$2" | jq '.' ;;
+    esac
+  }
+fi
+
 # vim:ft=sh:
