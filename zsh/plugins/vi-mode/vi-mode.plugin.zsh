@@ -26,13 +26,47 @@ bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 
+# if mode indicator wasn't setup by theme, define default
+if [[ -z "$MODE_INDICATOR" ]]; then
+  MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
+fi
+
+function vi_mode_prompt_info() {
+  echo "${${KEYMAP/vicmd/$MODE_INDICATOR}/(main|viins)/}"
+}
+
+# define right prompt, if it wasn't defined by a theme
+if [[ -z "$RPS1" && -z "$RPROMPT" ]]; then
+  RPS1='$(vi_mode_prompt_info)'
+fi
+
+# change cursor style based on mode
+function zle-keymap-select zle-line-init {
+  case $KEYMAP in
+    vicmd)      print -n -- "\E[1 q" ;;  # blinking block cursor
+    viins|main) print -n -- "\E[5 q" ;;  # blinking line cursor
+  esac
+  zle reset-prompt
+  zle -R
+}
+
+function zle-line-finish {
+  print -n -- "\E[5 q"  # blinking line cursor
+}
+
+zle -N zle-line-init
+zle -N zle-line-finish
+zle -N zle-keymap-select
+
+# add more vim-like operators
+
 bindkey -M vicmd 'cc' vi-change-whole-line
 bindkey -M vicmd 'dd' kill-whole-line
 
-delete-in() {
+_vi_delete-in() {
   local char lchar rchar lsearch rsearch count
   read -k char
-  if [[ "$char" == 'w' ]]; then
+  if [[ "$char" = 'w' ]]; then
     zle vi-backward-word
     lsearch="$CURSOR"
     zle vi-forward-word
@@ -40,13 +74,13 @@ delete-in() {
     RBUFFER="$BUFFER[$rsearch+1,${#BUFFER}]"
     LBUFFER="$LBUFFER[1,$lsearch]"
     return
-  elif [[ "$char" == '(' || "$char" == ')' ]]; then
+  elif [[ "$char" = '(' || "$char" = ')' ]]; then
     lchar='('
     rchar=')'
-  elif [[ "$char" == '[' || "$char" == ']' ]]; then
+  elif [[ "$char" = '[' || "$char" = ']' ]]; then
     lchar='['
     rchar=']'
-  elif [[ "$char" == '{' || "$char" == '}' ]]; then
+  elif [[ "$char" = '{' || "$char" = '}' ]]; then
     lchar='{'
     rchar='}'
   else
@@ -66,10 +100,10 @@ delete-in() {
   lsearch="${#LBUFFER}"
   while (( lsearch > 0 )) && (( count > 0 )); do
     (( lsearch-- ))
-    if [[ "$LBUFFER[$lsearch]" == "$rchar" ]]; then
+    if [[ "$LBUFFER[$lsearch]" = "$rchar" ]]; then
       (( count++ ))
     fi
-    if [[ "$LBUFFER[$lsearch]" == "$lchar" ]]; then
+    if [[ "$LBUFFER[$lsearch]" = "$lchar" ]]; then
       (( count-- ))
     fi
   done
@@ -77,55 +111,41 @@ delete-in() {
   rsearch=0
   while (( "$rsearch" < ${#RBUFFER} + 1 )) && [[ "$count" > 0 ]]; do
     (( rsearch++ ))
-    if [[ $RBUFFER[$rsearch] == "$lchar" ]]; then
+    if [[ $RBUFFER[$rsearch] = "$lchar" ]]; then
       (( count++ ))
     fi
-    if [[ $RBUFFER[$rsearch] == "$rchar" ]]; then
+    if [[ $RBUFFER[$rsearch] = "$rchar" ]]; then
       (( count-- ))
     fi
   done
   RBUFFER="$RBUFFER[$rsearch,${#RBUFFER}]"
   LBUFFER="$LBUFFER[1,$lsearch]"
 }
-zle -N delete-in
-bindkey -M vicmd 'di' delete-in
+zle -N _vi_delete-in
+bindkey -M vicmd 'di' _vi_delete-in
 
-delete-around() {
-  zle delete-in
+_vi_delete-around() {
+  zle _vi_delete-in
   zle vi-backward-char
   zle vi-delete-char
   zle vi-delete-char
 }
-zle -N delete-around
-bindkey -M vicmd 'da' delete-around
+zle -N _vi_delete-around
+bindkey -M vicmd 'da' _vi_delete-around
 
-change-in() {
-  zle delete-in
+_vi_change-in() {
+  zle _vi_delete-in
   zle vi-insert
 }
-zle -N change-in
-bindkey -M vicmd 'ci' change-in
+zle -N _vi_change-in
+bindkey -M vicmd 'ci' _vi_change-in
 
-change-around() {
-  zle delete-in
+_vi_change-around() {
+  zle _vi_delete-in
   zle vi-backward-char
   zle vi-delete-char
   zle vi-delete-char
   zle vi-insert
 }
-zle -N change-around
-bindkey -M vicmd 'ca' change-around
-
-# if mode indicator wasn't setup by theme, define default
-if [[ "$MODE_INDICATOR" == "" ]]; then
-  MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
-fi
-
-function vi_mode_prompt_info() {
-  echo "${${KEYMAP/vicmd/$MODE_INDICATOR}/(main|viins)/}"
-}
-
-# define right prompt, if it wasn't defined by a theme
-if [[ "$RPS1" == "" && "$RPROMPT" == "" ]]; then
-  RPS1='$(vi_mode_prompt_info)'
-fi
+zle -N _vi_change-around
+bindkey -M vicmd 'ca' _vi_change-around

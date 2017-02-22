@@ -1038,12 +1038,6 @@ endif
 "           v v    v      v     v     v
 set viminfo=h,'500,<10000,s1000,/1000,:1000
 
-" FIXME: Use a blinking upright bar cursor in Insert mode, a blinking block in normal
-if exists('$TMUX')
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-elseif &term ==? 'xterm-256color' || &term ==? 'screen-256color'
-  let &t_SI = "\<Esc>[5 q"
-  let &t_EI = "\<Esc>[2 q"
-endif
+let &t_SI = "\<Esc>[5 q"
+let &t_EI = "\<Esc>[1 q"
 " }}}

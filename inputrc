@@ -1,8 +1,13 @@
 set editing-mode vi
-set keymap vi-command
+set show-mode-in-prompt on
+set vi-ins-mode-string \1\e[5 q\2
+set vi-cmd-mode-string \1\e[1 q\2
 
+set keymap vi-insert
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 "\e[C": forward-char
 "\e[D": backward-char
 "\C-xe": rlwrap-call-editor
+
+RETURN: "\e\n"
