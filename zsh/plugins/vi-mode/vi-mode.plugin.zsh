@@ -51,7 +51,7 @@ function zle-keymap-select zle-line-init {
 }
 
 function zle-line-finish {
-  print -n -- "\E[5 q"  # blinking line cursor
+  print -n -- "\E[1 q"  # blinking block cursor
 }
 
 zle -N zle-line-init
