@@ -8,7 +8,8 @@ unset GREP_OPTIONS
 stty -ixon
 
 has() {
-  local verbose=false
+  local verbose
+  verbose=false
   if [[ $1 = -v ]]; then
     verbose=true
     shift
@@ -23,21 +24,24 @@ has() {
 
 has fortune && fortune -ae
 
-err() {
-  printf "\e[31m%s\e[0m\n" "$*" >&2
-}
-
 ask() {
   read -r -n1 -p "$* " ans
   echo
   [[ ${ans^} = Y* ]]
 }
 
-export esc=$'\033'
-export c_reset="${esc}[0m"
-export c_red="${esc}[31m"
-export c_green="${esc}[32m"
-export c_blue="${esc}[34m"
+esc=$'\033'
+c_red="${esc}[31m"
+c_green="${esc}[32m"
+c_blue="${esc}[34m"
+c_reset="${esc}[0m"
+export esc
+export c_red
+export c_green
+export c_blue
+export c_reset
+
+err() { printf "${c_red}%s${c_reset}\n" "$*" >&2; }
 
 if [[ -f /etc/debian_version ]]; then
   for h in 'apt' 'aptitude' 'apt-get'; do
@@ -108,7 +112,7 @@ alias shuf1='shuf -n1'
 has cdu && alias cdu='cdu -isdhD '
 has rsync && alias rsync='rsync -v --progress --stats '
 has lein && alias lein='rlwrap lein '
-has pkgsearch && alias pkgs='pkgsearch '
+has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --reverse --preview-window=bottom:hidden" pkgsearch '
 
 # {{{ git aliases
 if has git; then
@@ -155,10 +159,11 @@ fi
 # }}}
 
 cd() {
+  local dir
   if [[ -z "$@" ]]; then
     builtin cd ~ && ls
   else
-    local dir="$1"
+    dir="$1"
     shift
     builtin cd "$dir" && ls "$@";
   fi
@@ -187,12 +192,18 @@ help() { bash -c "help $*" ;}
 bground() { ("$@" &> /dev/null &) ;}
 restart() { pkill -x "$1"; bground "$@" ;}
 
-decide() { printf '%s\n' "$@" | shuf -n1 ;}
+decide() {
+  local args
+  args=( "$@" )
+  (( $# < 2 )) && args=( yes no )
+  printf '%s\n' "${args[@]}" | shuf -n1
+}
 
 ed() { command ed -p: "$@" ;} # https://sanctum.geek.nz/arabesque/actually-using-ed/
 
 txs() {
-  local nested opts=( -d )
+  local nested opts
+  opts=( -d )
   for a in "$@"; do
     case $a in
       -N) nested=1 ; shift ;;
@@ -304,17 +315,7 @@ if has fzf; then
     [[ -n $version ]] && nvm install "$version"
   }
 
-  npmsearch() {
-    local args=()
-    while true; do
-      case "$1" in
-        -*) args+=( "$1" ) ; shift ;;
-        *) break
-      esac
-    done
-    package=$(npm search "$*" | fzf --inline-info --multi --ansi --header-lines=1 | awk '{print $1}')
-    [[ -n $package ]] && npm i "${args[@]}" "$package"
-  }
+  has npmsearch && alias npms='npmsearch '
 fi
 
 loadnvm() {
@@ -333,12 +334,10 @@ if has rlwrap; then
     node() {
       if (( $# > 0 )); then
         command node "$@"
+      elif has babel-node; then
+        NODE_NO_READLINE=1 rlwrap -m -H ~/.node_repl_history -pblue babel-node
       else
-        if has babel-node; then
-          rlwrap babel-node
-        else
-          rlwrap node
-        fi
+        NODE_NO_READLINE=1 rlwrap -m -H ~/.node_repl_history -pblue node
       fi
     }
   fi
@@ -354,7 +353,7 @@ if has rlwrap; then
   fi
 
   if has clojure; then
-    clojure() {
+     clojure() {
       if (( $# > 0 )); then
         command clojure "$@"
       else
@@ -370,7 +369,7 @@ if [[ -e /opt/closure/compiler.jar ]]; then
   }
 fi
 
-vm() {
+has VBoxManage && vm() {
   VBoxManage startvm "$1" --type headless || return
   echo 'starting ssh...'
   ssh "$1"
@@ -383,6 +382,22 @@ if has api; then
       github) api github post user/repos -d "{ \"name\": \"$1\", \"auto_init\": false }" | jq '.' ;;
       gitlab) api gitlab post projects -d "name=$2" | jq '.' ;;
     esac
+  }
+
+  gitlab_get_repoid() {
+    api gitlab get projects | jq ".[] | select(.name == \"$1\") | .id"
+  }
+
+  gitlab_make_public() {
+    local repoid
+    repoid=$(gitlab_get_repoid "$1")
+    api gitlab put "projects/$repoid" -d 'visibility_level=20&issues_enabled=true&wiki_enabled=true'
+  }
+
+  gitlab_build_list() {
+    local repoid
+    repoid=$(gitlab_get_repoid "$1")
+    api gitlab get "projects/$repoid/builds" -d 'scope=running' | jq '.'
   }
 fi
 
