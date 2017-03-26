@@ -10,7 +10,7 @@
 *Rxvt*internalBorder:  0
 *Rxvt*borderless:      true
 *Rxvt.perl-ext-common: default,matcher,font-size
-*Rxvt.url-launcher:    /home/dan/dotfiles/local/bin/x-www-browser
+*Rxvt.url-launcher:    /home/dan/.local/bin/x-www-browser
 *Rxvt.matcher.button:  1
 *Rxvt.urgentOnBell:    True
 *Rxvt*letterSpace:     -2

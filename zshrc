@@ -15,9 +15,11 @@ HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=100000
 
+MODE_INDICATOR="%{$fg[red]%}%{$bg[red]%}  %{$reset_color%}"
 VIRTUAL_ENV_DISABLE_PROMPT=1
 DEFAULT_USER='dan'
 plugins=(
+  fancy-ctrl-z
   git-extras
   lein
   vi-mode
@@ -27,7 +29,13 @@ plugins=(
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 
-err() { printf "${c_red}%s${c_reset}\n" "$@"; }
+red() {
+  printf '%s' "$(tput setaf 1)"
+  printf '%s\n' "$@"
+  printf '%s' "$(tput sgr0)"
+}
+
+err() { red "$@" >&2; return 1; }
 die() { err "$@"; exit 1; }
 
 source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
@@ -110,9 +118,6 @@ bindkey '\e[4~' end-of-line
 bindkey '\e[A' up-line-or-history
 bindkey '\e[B' down-line-or-history
 
-bindkey -M vicmd 'q' push-line
-bindkey -M viins ' ' magic-space
-
 zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -129,4 +134,4 @@ zstyle ':completion::approximate*:*' prefix-needed false
 
 export DISABLE_AUTO_TITLE=true
 
-export PATH="$HOME/.yarn/bin:$PATH"
+# export PATH="$HOME/.yarn/bin:$PATH"

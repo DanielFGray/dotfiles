@@ -13,21 +13,19 @@
       p_paths=( "$p_path/$p/$p.zsh" "$p_path/$p/$p.plugin.zsh" )
       for f in "${p_paths[@]}"; do
         if [[ -f "$f" ]]; then
-          source "$f" || errors+=( "$p failed to load" )
+          source "$f" || errors+=( "  $p failed to load" )
           loaded_p="$p"
           break 2
         fi
       done
     done
     if [[ "$loaded_p" != "$p" ]]; then
-      errors+=( "$p not found" )
+      errors+=( "  $p not found" )
     fi
   done
   unset plugins
   if [[ -n "$errors" ]]; then
-    err 'Error loading plugins:'
-    printf "${c_red}  %s${c_reset}\n" "${errors[@]}"
-    return 1
+    err 'Error loading plugins:' "${errors[@]}"
   fi
 }
 
@@ -40,19 +38,16 @@
   for t in "${theme_path[@]}"; do
     file="${t}/${theme}.zsh-theme"
     if [[ -f "$file" ]]; then
-      source "$file" || errors+=( "$theme failed to load" )
+      source "$file" || errors+=( "  $theme failed to load" )
       found_theme="$file"
       break
     fi
   done
   if [[ -z "$found_theme" ]]; then
-    errors+=( "$theme not found" )
+    errors+=( "  $theme not found" )
   fi
   unset theme
   if [[ -n "$errors" ]]; then
-    printf '%sError loading theme:' "${c_red}"
-    printf '\n  %s' "${errors[@]}"
-    printf '%s\n' "$c_reset"
-    return 1
+    err 'Error loading plugins:' "${errors[@]}"
   fi
 }

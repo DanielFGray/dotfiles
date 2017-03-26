@@ -120,13 +120,6 @@ Plug 'terryma/vim-multiple-cursors' " {{{
   endfunction
 " }}}
 Plug 'bronson/vim-visual-star-search'
-if executable('ag')
-  set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
-  set grepformat=%f:%l:%c:%m
-elseif executable('ack')
-  set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
-  set grepformat=%f:%l:%c:%m
-endif
 " }}}
 " {{{ completion/building
 Plug 'Shougo/neosnippet' " {{{
@@ -151,7 +144,9 @@ Plug 'Raimondi/delimitMate' " {{{
 Plug 'tpope/vim-endwise'
 if has('nvim') || has('job')
   Plug 'w0rp/ale' " {{{
-    let g:ale_statusline_format = ['✘ %d', '∆ %d', '● ok']
+    let g:ale_lint_delay = 100
+    let g:ale_open_list = 0
+    let g:ale_statusline_format = [ '✘ %d', '∆ %d', '' ]
     let g:ale_sign_error = '✘'
     let g:ale_sign_warning = '∆'
     let g:ale_echo_msg_error_str = 'E'
@@ -189,33 +184,30 @@ if has('nvim')
     let g:deoplete#auto_completion_start_length = 3
   " }}}
   Plug 'kassio/neoterm'
-else
-  if has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
-    Plug 'Shougo/neocomplete.vim'
-    let g:completionEngine = 'neocomplete'
-  elseif has('lua')
-    Plug 'Shougo/neocomplcache.vim'
-    let g:completionEngine = 'neocomplcache'
-  endif
-  if exists('g:completionEngine')
-    let g:acp_enableAtStartup = 0
-    let g:{g:completionEngine}#enable_at_startup = 1
-    let g:{g:completionEngine}#enable_smart_case = 1
-    let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-    let g:{g:completionEngine}#auto_completion_start_length = 3
-    let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
-    let g:{g:completionEngine}#sources#omni#input_patterns = {}
-    let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
-    let g:{g:completionEngine}#data_directory = s:configdir . '/cache/neocompl'
-    inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
-    inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
-    inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
-    inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
-  endif " }}}
-endif
-if has('job') && has('timers') && has('lambda')
+elseif has('job') && has('timers') && has('lambda')
   Plug 'maralla/completor.vim'
+elseif has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
+  Plug 'Shougo/neocomplete.vim'
+  let g:completionEngine = 'neocomplete'
+elseif has('lua')
+  Plug 'Shougo/neocomplcache.vim'
+  let g:completionEngine = 'neocomplcache'
 endif
+if exists('g:completionEngine')
+  let g:acp_enableAtStartup = 0
+  let g:{g:completionEngine}#enable_at_startup = 1
+  let g:{g:completionEngine}#enable_smart_case = 1
+  let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
+  let g:{g:completionEngine}#auto_completion_start_length = 3
+  let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
+  let g:{g:completionEngine}#sources#omni#input_patterns = {}
+  let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
+  let g:{g:completionEngine}#data_directory = s:configdir . '/cache/neocompl'
+  inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
+  inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
+  inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
+  inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
+endif " }}}
 " }}}
 " {{{ formatting
 Plug 'christoomey/vim-titlecase' " {{{
@@ -320,9 +312,9 @@ Plug 'junegunn/goyo.vim' " {{{
 Plug 'mhinz/vim-startify' " {{{
   let g:startify_change_to_vcs_root = 1
 
-  function! s:filter_header(str) abort
-    return map(split(system('figlet -f future "'. a:str .'"'), '\n'), '"         ". v:val') + [ '', '' ]
-  endfunction
+  " function! s:filter_header(str) abort
+  "   return map(split(system('figlet -f future "'. a:str .'"'), '\n'), '"         ". v:val') + [ '', '' ]
+  " endfunction
 
   if has('nvim')
     " let g:startify_custom_header = s:filter_header('NeoVim')
@@ -466,8 +458,10 @@ nnoremap <Leader>C <Esc>:Codi!!<CR>
   \ }
 " }}}
 Plug 'vim-scripts/loremipsum'
-Plug 't9md/vim-quickhl'
-Plug 'laurentgoudet/vim-howdoi'
+Plug 't9md/vim-quickhl' " {{{
+  nnoremap <leader>ht <Plug>(quickhl-cword-toggle)
+" }}}
+Plug 'mickaobrien/vim-stackoverflow'
 " }}}
 " {{{ unite.vim
 Plug 'Shougo/unite.vim'
@@ -595,7 +589,7 @@ endif
     let g:unite_source_rec_async_command = [ 'ack', '-f', '--nofilter' ]
   endif
 
-  " if exists(':Unite')
+  if exists(':Unite') > 0
     call unite#filters#sorter_default#use([ 'sorter_rank' ])
     call unite#filters#matcher_default#use([ 'matcher_fuzzy' ])
     call unite#set_profile('files', 'context.smartcase', 1)
@@ -664,7 +658,7 @@ endif
     imap <silent><buffer><expr> <C-s> unite#do_action('split')
     imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
   endfunction
-  " endif
+  endif
 " }}}
 " }}}
 " {{{ general settings
@@ -684,7 +678,7 @@ set wildmenu wildcharm=<C-Z>
 set switchbuf=useopen,usetab
 set tabstop=2 shiftwidth=2 expandtab
 set foldmethod=marker foldopen-=block foldtext=MyFoldText()
-set noruler rulerformat=%32(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
+set ruler rulerformat=%32(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set laststatus=2
 set showcmd noshowmode
 set hidden
@@ -711,6 +705,14 @@ set diffopt=vertical
 set undofile undodir=~/.vim/undo undoreload=10000 undolevels=1000
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
+
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
+  set grepformat=%f:%l:%c:%m
+elseif executable('ack')
+  set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
+  set grepformat=%f:%l:%c:%m
+endif
 
 if has('gui_running')
   set guioptions-=LrbTm
@@ -916,7 +918,8 @@ endfunction
 augroup VIM
   autocmd!
 
-  autocmd FileType rust set formatprg=rustfmt
+  autocmd FileType rust
+  \ set formatprg=rustfmt
 
   autocmd BufWritePost *tmux.conf
   \ if exists('$TMUX') |
@@ -976,6 +979,9 @@ augroup VIM
   \ if exists(':AirlineRefresh') |
   \   AirlineRefresh |
   \ endif
+  " \ if exists('*lightline#highlight') |
+  " \   call lightline#highlight() |
+  " \ endif
 
   autocmd FileType vim
   \ nnoremap <buffer> K <Esc>:UniteWithCursorWord -buffer-name=help -split -direction=botright -winheight=15 -auto-resize help<CR>
@@ -1009,6 +1015,10 @@ nnoremap <C-Z> <Esc>zMzvzz
 
 nnoremap gV `[v`]
 
+nnoremap <F2> <Esc>:bw<CR>
+nnoremap <F3> <Esc>"=strftime('%c')<Left><Left>
+inoremap <F3> <C-R>=strftime('%c')<Left><Left>
+nnoremap <F5> <Esc>:e %<CR>
 nnoremap <F6> <Esc>:set paste!<CR>
 inoremap <F6> <C-O>:set paste!<CR>
 
@@ -1022,7 +1032,7 @@ command! -bang Qa qa<bang>
 command! -bang Wa wa<bang>
 command! -bang Wqa wqa<bang>
 
-if exists(':SudoWrite')
+if exists(':SudoWrite') > 0
   cabbrev w!! SudoWrite
 else
   cabbrev w!! w !sudo tee >/dev/null "%"

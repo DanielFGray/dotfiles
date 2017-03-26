@@ -1,12 +1,10 @@
-fancy-ctrl-z () {
-  if [[ $#BUFFER -eq 0 ]]; then
-    BUFFER="fg"
+_fancy-ctrl-z () {
+  if (( #BUFFER == 0 )); then
+    BUFFER='fg'
     zle accept-line
   else
     zle push-input
-    zle clear-screen
   fi
 }
-zle -N fancy-ctrl-z
-bindkey '^Z' fancy-ctrl-z
-
+zle -N _fancy-ctrl-z
+bindkey '^Z' _fancy-ctrl-z

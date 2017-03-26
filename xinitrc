@@ -32,7 +32,7 @@ while sleep 0.1; do
       fi
     fi
 
-    [[ "$wm" != *'kde'* ]] && xmux
+    has xmux && [[ "$wm" != *'kde'* ]] && xmux
 
     break
   fi

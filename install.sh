@@ -43,13 +43,15 @@ library() {
     *) repo="https://github.com/$1" ;;
   esac
   path="$2"
-  if [[ -d "$path" && -d "${path}/.git" ]]; then
-    echo_cmd git -C "$path" pull
-  elif prompt -1 "no .git found in ${path}, delete entire folder and clone repo?" <> /dev/tty; then
-    echo_cmd rm -fr "$path"
+  if [[ -d "$path" ]]; then
+    if [[ -d "${path}/.git" ]]; then
+      echo_cmd git -C "$path" pull
+    elif ask "no .git found in ${path}, delete entire folder and clone repo?"; then
+      rm -fr ${verbose:+-v} "$path"
+    fi
   fi
   if [[ ! -d "$path" ]]; then
-    echo_cmd mkdir -p "${path%/*}"
+    mkdir ${verbose:+-v} -p "${path%/*}"
     echo_cmd git clone "$repo" "$path"
   fi
 }

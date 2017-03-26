@@ -279,38 +279,38 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock(" %r ", 1)
-lain.widgets.calendar:attach(mytextclock)
+local calendar = lain.widget.calendar({ attach_to = { mytextclock  } })
 
 local cpuicon = wibox.widget.imagebox(beautiful.widget_cpu)
-local cpuwidget = lain.widgets.cpu({
+local cpuwidget = lain.widget.cpu({
   settings = function()
     widget:set_markup(string.format("%02d", cpu_now.usage) .. markup("#666", "% "))
   end
 })
 
 local memicon = wibox.widget.imagebox(beautiful.widget_mem)
-local memwidget = lain.widgets.mem({
+local memwidget = lain.widget.mem({
   settings = function()
     widget:set_markup(mem_now.used .. markup("#666", "MB "))
   end
 })
 
 local tempicon = wibox.widget.imagebox(beautiful.widget_temp)
-local tempwidget = lain.widgets.temp({
+local tempwidget = lain.widget.temp({
   settings = function()
     widget:set_markup(coretemp_now .. markup("#666", "°C "))
   end
 })
 
 local fsicon = wibox.widget.imagebox(beautiful.widget_hdd)
-local fswidget = lain.widgets.fs({
+local fswidget = lain.widget.fs({
   settings = function()
     widget:set_markup(fs_now.used .. markup("#666", "% "))
   end
 })
 
 local netupicon = wibox.widget.imagebox(beautiful.widget_netup)
-local netupwidget = lain.widgets.net({
+local netupwidget = lain.widget.net({
   settings = function()
     local data = tostring(net_now.sent):gsub("^0.%d", "0")
     data = data:gsub(".0$", "")
@@ -319,7 +319,7 @@ local netupwidget = lain.widgets.net({
 })
 
 local netdownicon = wibox.widget.imagebox(beautiful.widget_netdown)
-local netdownwidget = lain.widgets.net({
+local netdownwidget = lain.widget.net({
   settings = function()
     local data = tostring(net_now.received):gsub("^0.%d", "0")
     data = data:gsub(".0$", "")
@@ -328,7 +328,7 @@ local netdownwidget = lain.widgets.net({
 })
 
 local mpdicon = wibox.widget.imagebox(beautiful.widget_music)
-local mpdwidget = lain.widgets.mpd({
+local mpdwidget = lain.widget.mpd({
   settings = function()
     artist = ""
     title = ""
@@ -342,15 +342,15 @@ local mpdwidget = lain.widgets.mpd({
     widget:set_markup(artist .. title)
   end
 })
-mpdwidget:buttons(awful.util.table.join(
-  awful.button({ }, 3, function()
-    sexec("mpc -q toggle")
-    mpdwidget.update()
-  end),
-  awful.button({ }, 1, function()
-    sexec(mpdclient)
-  end)
-))
+-- mpdwidget:buttons(awful.util.table.join(
+--   awful.button({ }, 3, function()
+--     sexec("mpc -q toggle")
+--     mpdwidget.update()
+--   end),
+--   awful.button({ }, 1, function()
+--     sexec(mpdclient)
+--   end)
+-- ))
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = awful.util.table.join(
@@ -626,37 +626,20 @@ globalkeys = awful.util.table.join(
   end, { description = "delete", group = "tag" }),
 
   awful.key({ modkey, "Shift" }, "a", function()
-    awful.prompt.run {
-        textbox      = awful.screen.focused().mypromptbox.widget,
-        prompt       = "New tag name: ",
-        exe_callback = function(new_name)
-          if not new_name or #new_name == 0 then
-            return
-          else
-            props = { selected = true }
-            if tyrannical.tags_by_name[new_name] then
-              props = tyrannical.tags_by_name[new_name]
-            end
-            t = awful.tag.add(new_name, props)
-            awful.tag.viewonly(t)
-          end
-        end
-      }
-    end, { description = "add", group = "tag" }),
+    lain.util.add_tag(mylayout)
+  end, { description = "add", group = "tag" }),
 
   awful.key({ modkey, "Shift" }, "r", function()
-    awful.prompt.run {
-      prompt       = "New tag name: ",
-      textbox      = awful.screen.focused().mypromptbox.widget,
-      exe_callback = function(new_name)
-        if not new_name or #new_name == 0 then return end
-        local t = awful.screen.focused().selected_tag
-        if t then
-            t.name = new_name
-        end
-      end
-    }
+    lain.util.rename_tag()
   end, { description = "rename", group = "tag" }),
+
+  awful.key({ modkey }, ",", function ()
+    lain.util.move_tag(-1)
+  end, { description = "move left", group = "tag" }),
+
+  awful.key({ modkey }, ".", function ()
+    lain.util.move_tag(1)
+  end, { description = "move right", group = "tag" }),
 
   awful.key({ modkey }, "Print", function()
     sexec("yaxg -w -D1")
@@ -674,30 +657,41 @@ globalkeys = awful.util.table.join(
     sexec("yaxg -D1 -s")
   end, { description = "screenshot a selection", group = "launcher" }),
 
-  awful.key({ }, "XF86AudioRaiseVolume", function()
-    sexec("amixer -q sset Master 2%+")
-  end),
-  awful.key({ }, "XF86AudioLowerVolume", function()
-    sexec("amixer -q sset Master 2%-")
-  end),
-  awful.key({ }, "XF86AudioMute", function()
-    sexec("amixer -q sset Master toggle")
-  end),
+  -- awful.key({ }, "XF86AudioRaiseVolume", function()
+  --   sexec("amixer -q sset Master 2%+")
+  -- end),
+  -- awful.key({ }, "XF86AudioLowerVolume", function()
+  --   sexec("amixer -q sset Master 2%-")
+  -- end),
+  -- awful.key({ }, "XF86AudioMute", function()
+  --   sexec("amixer -q sset Master toggle")
+  -- end),
   awful.key({ modkey }, "F12", function()
     sexec("mylock --suspend")
-  end),
-  -- awful.key({ modkey }, "v", treetile.vertical),
-  -- awful.key({ modkey }, "h", treetile.horizontal),
+  end, { description = "suspend and lock", group = "launcher" }),
+
+  awful.key({ modkey, "Shift" }, "-", treetile.vertical, { description = "treetile split vertical", group = "layout" }),
+  awful.key({ modkey, "Shift" }, "\\", treetile.horizontal, { description = "treetile split horizontal", group = "layout" }),
 
   awful.key({ modkey }, "o", function(c)
     awful.client.cycle(true, s)
     awful.client.jumpto(awful.client.getmaster())
-  end),
+  end, { description = "cycle clockwise", group = "tag" }),
 
   awful.key({ modkey, "Shift" }, "o", function(c)
     awful.client.cycle(false, s)
     awful.client.jumpto(awful.client.getmaster())
-  end)
+  end, { description = "cycle counter-clockwise", group = "tag" }),
+
+  awful.key({ modkey, "Shift" }, "=", function()
+    lain.util.useless_gaps_resize(1)
+  end, { description = "increase gap size", group = "tag" }),
+
+  awful.key({ modkey }, "-", function()
+    lain.util.useless_gaps_resize(-1)
+  end, { description = "decrease gap size", group = "tag" }),
+
+  awful.key({ modkey }, "Tab", awful.menu.clients)
 )
 
 clientkeys = awful.util.table.join(
