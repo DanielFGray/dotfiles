@@ -106,6 +106,7 @@ setopt pushd_minus
 setopt pushd_ignore_dups
 
 setopt no_flow_control
+setopt interactivecomments
 
 unsetopt beep
 
@@ -117,6 +118,7 @@ bindkey '\e[1~' beginning-of-line
 bindkey '\e[4~' end-of-line
 bindkey '\e[A' up-line-or-history
 bindkey '\e[B' down-line-or-history
+bindkey ' ' magic-space
 
 zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 zstyle ':completion:*' list-dirs-first true
