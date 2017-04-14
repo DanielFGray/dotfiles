@@ -70,8 +70,7 @@ elif [[ -f /etc/arch-release ]]; then
   unset h
   has pkgrm || alias pkgrm='sudo pacman -Rsu '
 elif [[ -f /etc/redhat-release ]]; then
-  alias yum='sudo yum '
-  alias canhaz='yum install '
+  alias canhaz='sudo dnf install '
 elif [[ -f /etc/gentoo-release ]]; then
   alias canhaz='sudo emerge -av '
 fi
