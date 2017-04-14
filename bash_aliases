@@ -318,29 +318,27 @@ if has fzf; then
   has npmsearch && alias npms='npmsearch '
 fi
 
-loadnvm() {
-  echo 'loading nvm...'
-  export NVM_DIR="$HOME/.nvm"
-  [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-}
-
-loadperlbrew() {
-  source ~/perl5/perlbrew/etc/bashrc
-  perlbrew
+[[ -s ~/.nvm/nvm.sh ]] && loadnvm() {
+  if ! has nvm; then
+    echo 'loading nvm...'
+    export NVM_DIR="$HOME/.nvm"
+    [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+  else
+    echo 'nvm already loaded!'
+  fi
 }
 
 if has rlwrap; then
-  if has node; then
-    node() {
-      if (( $# > 0 )); then
-        command node "$@"
-      elif has babel-node; then
-        NODE_NO_READLINE=1 rlwrap -m -H ~/.node_repl_history -pblue babel-node
-      else
-        NODE_NO_READLINE=1 rlwrap -m -H ~/.node_repl_history -pblue node
+  node() {
+    if (( $# > 0 )); then
+      command node "$@"
+    else
+      if ! type -p node &> /dev/null && has loadnvm; then
+        loadnvm
       fi
-    }
-  fi
+      NODE_NO_READLINE=1 rlwrap -m -H ~/.node_repl_history -pblue node
+    fi
+  }
 
   if has guile; then
     guile() {
