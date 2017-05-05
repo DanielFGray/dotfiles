@@ -12,7 +12,7 @@ menubar = require("menubar")
 hotkeys_popup = require("awful.hotkeys_popup").widget
 tyrannical = require("tyrannical")
 lain = require("lain")
-treetile = require("treetile")
+-- treetile = require("treetile")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -68,7 +68,7 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
   awful.layout.suit.floating,
-  treetile,
+  -- treetile,
   awful.layout.suit.tile,
   awful.layout.suit.tile.left,
   awful.layout.suit.tile.bottom,
@@ -670,8 +670,8 @@ globalkeys = awful.util.table.join(
     sexec("mylock --suspend")
   end, { description = "suspend and lock", group = "launcher" }),
 
-  awful.key({ modkey, "Shift" }, "-", treetile.vertical, { description = "treetile split vertical", group = "layout" }),
-  awful.key({ modkey, "Shift" }, "\\", treetile.horizontal, { description = "treetile split horizontal", group = "layout" }),
+  -- awful.key({ modkey, "Shift" }, "-", treetile.vertical, { description = "treetile split vertical", group = "layout" }),
+  -- awful.key({ modkey, "Shift" }, "\\", treetile.horizontal, { description = "treetile split horizontal", group = "layout" }),
 
   awful.key({ modkey }, "o", function(c)
     awful.client.cycle(true, s)
