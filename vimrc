@@ -538,10 +538,6 @@ Plug 'mattn/emmet-vim' " {{{
 " }}}
 Plug 'tmhedberg/matchit'
 Plug 'hhsnopek/vim-sugarss'
-Plug 'othree/html5.vim'
-Plug 'groenewege/vim-less'
-Plug 'hail2u/vim-css3-syntax'
-Plug 'digitaltoad/vim-jade'
 Plug 'tpope/vim-liquid'
 Plug 'tpope/vim-ragtag' " {{{
   let g:ragtag_global_maps = 1
