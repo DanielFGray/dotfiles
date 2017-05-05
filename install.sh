@@ -2,18 +2,36 @@
 
 cd "${BASH_SOURCE%/*}" || exit
 declare thisdir="$PWD"
-declare verbose=0
+declare verbose
+declare -a errors
+declare -a configs_avail
+declare -a configs_chosen
 
-source "${thisdir}/bash_utils"
+source "./bash_utils"
 
 err() {
-  printf "${c_red}%s${c_reset}\n" "$*" >&2
+  errors+=( "  $*" )
 }
 
 echo_cmd() {
-  (( verbose > 0 )) && echo "$*"
-  "$@"
+  if (( verbose > 0 )); then
+    echo "$*"
+    "$@" &>/dev/null
+  else
+    "$@" &>/dev/null
+  fi
 }
+
+curl() {
+  local flags
+  flags=()
+  case "$verbose" in
+    ''|0) flags+=('-s') ;;
+    2|3) flags+=('-v') ;;
+  esac
+  command curl "${flags[@]}" "$@"
+}
+export -f curl
 
 backup_then_symlink() {
   local f src dest
@@ -33,7 +51,8 @@ backup_then_symlink() {
 }
 
 library() {
-  local repo path
+  local repo path flags
+  flags=()
   if (( $# != 2 )); then
     err 'library() needs repo and path to clone to'
     return 1
@@ -46,33 +65,15 @@ library() {
   if [[ -d "$path" ]]; then
     if [[ -d "${path}/.git" ]]; then
       echo_cmd git -C "$path" pull
-    elif ask "no .git found in ${path}, delete entire folder and clone repo?"; then
-      rm -fr ${verbose:+-v} "$path"
+    else
+      err "no .git found in ${path}, could not update"
     fi
   fi
   if [[ ! -d "$path" ]]; then
     mkdir ${verbose:+-v} -p "${path%/*}"
-    echo_cmd git clone "$repo" "$path"
+    echo_cmd git clone "${flags[@]}" "$repo" "$path"
   fi
 }
-
-finish() {
-  echo 'done. you should probably log out'
-  exit
-}
-
-trap finish SIGHUP SIGINT SIGTERM
-
-while getopts ":hv" opt; do
-  case "$opt" in
-    h) usage; exit ;;
-    v) (( ++verbose )) ;;
-  esac
-done
-shift $(( OPTIND - 1 ))
-unset opt OPTARG OPTIND OPTERR
-
-has -v git curl || die 'git and curl both required'
 
 config_base() {
   backup_then_symlink profile bashrc bash_aliases bash_utils inputrc gitconfig
@@ -82,13 +83,18 @@ config_base() {
 config_vim() {
   has -v vim || return 1
   backup_then_symlink vimrc
+  mkdir ${verbose:+-v} -p ~/.vim/{autoload,bundle,cache,undo,backups,swaps}
+  curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  (( verbose > 0 )) && echo 'installing vim plugins'
+  vim -c PlugInstall -c 'quitall!' -e &> /dev/null
+  if (( verbose > 0 )); then echo 'finished vim plugins'; fi
 }
 
 config_zsh() {
   has -v zsh || return 1
   backup_then_symlink zsh zshrc zshenv zlogin
   library robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-  library zsh-users/zsh-syntax-highlighting.git ~/.zsh/plugins/zsh-syntax-highlighting
+  library zdharma/fast-syntax-highlighting ~/.zsh/plugins/fast-syntax-highlighting
   library zsh-users/zsh-autosuggestions ~/.zsh/plugins/zsh-autosuggestions
 }
 
@@ -107,6 +113,7 @@ config_tmux() {
   has -v tmux || return 1
   backup_then_symlink tmux.conf
   library tmux-plugins/tpm ~/.tmux/plugins/tpm
+  [[ -x ~/.tmux/plugins/tpm/bin/install_plugins ]] && echo_cmd ~/.tmux/plugins/tpm/bin/install_plugins
 }
 
 config_gem() {
@@ -129,7 +136,10 @@ config_font() {
     echo_cmd curl -L --create-dirs -o ~/downloads/fantasque-sans-mono.zip \
       'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip'
   fi
-  has -v unzip || return 1
+  if ! has -v unzip; then
+    err 'downloaded Fantasque Sans Mono but unzip is unavailable'
+    return 1
+  fi
   if [[ -f ~/downloads/fantasque-sans-mono.zip ]]; then
     echo_cmd unzip ~/downloads/fantasque-sans-mono.zip '*.ttf' -d ~/.local/share/fonts
   else
@@ -137,39 +147,61 @@ config_font() {
   fi
 }
 
+config_yarn() {
+  echo_cmd curl -L https://yarnpkg.com/install.sh | sh
+}
+
+config_nvm() {
+  echo_cmd curl -L https://raw.githubusercontent.com/creationix/nvm/master/install.sh | sh
+}
+
 config() {
-  printf '\e[32mSTARTING %s\e[0m\n' "$1"
+  color blue ":: STARTING $1"
   if "config_$1"; then
-    printf '\e[34mFINISHED %s\e[0m\n' "$1"
+    color green ":: FINISHED $1"
   else
-    printf '\e[31mFAILED %s\e[0m\n' "$1"
+    color red ":: FAILED $1"
   fi
 }
 
-config=(
-  base
-  vim
-  zsh
-  fzf
-  tmux
-  gem
-  x11
-  font
-)
+finish() {
+  printf '%s' "$(tput sgr0)"
+  exit
+}
 
-for c in "${config[@]}"; do
-  export -f "config_$c"
+trap finish SIGHUP SIGINT SIGTERM
+
+while getopts ":hv" opt; do
+  case "$opt" in
+    h) usage; exit ;;
+    v) (( ++verbose )) ;;
+  esac
 done
-export verbose
-export thisdir
-export -f has
-export -f backup_then_symlink
-export -f library
-export -f prompt
-export -f err
-export -f echo_cmd
-export -f config
+shift $(( OPTIND - 1 ))
+unset opt OPTARG OPTIND OPTERR
 
-printf '%s\n' "${config[@]}" | xargs -P4 -I% bash -c 'config %'
+has -v git curl || die 'git and curl both required'
+
+mapfile -t configs_avail < <(compgen -A function | perl -lne 'print $1 if /config_(.*)/')
+
+if in_term && [[ $1 != '--all' ]]; then
+  printf 'will install the following groups:\n'
+  read -r -e -p '> ' -i "${configs_avail[*]}" -a configs_chosen
+else
+  configs_chosen=( "${configs_avail[@]}" )
+fi
+
+for f in "${configs_chosen[@]}"; do
+  (( count++ >= 4 )) && wait -n
+  config "$f" &
+done
+wait
+
+if (( "${#errors[@]}" > 0 )); then
+  color red 'The following errors occured'
+  color red "${errors[@]}"
+else
+  color green 'success!'
+fi
 
 finish
