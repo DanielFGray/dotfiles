@@ -1051,4 +1051,11 @@ set viminfo=h,'500,<10000,s1000,/1000,:1000
 
 let &t_SI = "\<Esc>[5 q"
 let &t_EI = "\<Esc>[1 q"
+
+" macros
+
+" extract markdown links into footnotes
+" appends footnotes to the bottom, assuming `[1]: ` is the last line
+" di)mmG$pyyplWD^klyi]'mPcs)]n
+
 " }}}
