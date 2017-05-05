@@ -49,17 +49,17 @@ my_prompt() {
   fi
   printf -v cwd '%s' "${PWD/$HOME/\~}"
   if branch=$(_git_branch); then
-    color="$c_green"
+    color="${colors[green]}"
     dirty=$(_git_dirty)
     staged=$(git diff --cached)
     head=$(_git_head_status)
-    [[ -n "$dirty" ]] && color="$c_red"
-    [[ -n "$staged" ]] && status+='✚'
+    [[ -n "$dirty" ]] && color="${colors[red]}"
+    [[ -n "$staged" ]] && status+='+'
     [[ -n "$head" ]] && status+=" $head"
-    printf -v git ' %s[%s%s]%s' "$color" "$branch" "$status" "$c_reset"
+    printf -v git ' %s[%s%s]%s' "$color" "$branch" "$status" "${colors[reset]}"
   fi
-  [[ "$retval" != 0 ]] && printf '%s[%s]%s ' "$c_red" "$retval" "$c_reset"
-  printf '%s%s %s$%s ' "$cwd" "$git"
+  [[ "$retval" != 0 ]] && printf '%s[%s]%s ' "${colors[red]}" "$retval" "${colors[reset]}"
+  printf '%s%s $ ' "$cwd" "$git"
 }
 
 set vi-ins-mode-string ''

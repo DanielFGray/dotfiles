@@ -7,11 +7,11 @@
 #   exit 1
 # fi
 
-declare -r esc=$'\033'
-declare -r c_red="${esc}[31m"
-declare -r c_green="${esc}[32m"
-declare -r c_blue="${esc}[34m"
-declare -r c_reset="${esc}[0m"
+declare -A colors
+colors[red]=$(tput setaf 1)
+colors[green]=$(tput setaf 2)
+colors[blue]=$(tput setaf 4)
+colors[reset]=$(tput sgr0)
 
 in_term() {
   [[ -t 0 || -p /dev/stdin ]]
@@ -22,19 +22,20 @@ is_running() {
 }
 
 info() {
-  if in_term; then
-    printf "${c_blue}%s${c_reset}\n" "$*" >&2
-  else
-    zenity --info --text="$*"
-  fi
+  color green "$@" >&2
+}
+
+color() {
+  local c
+  c="$1"
+  shift
+  printf '%s' "${colors[$c]}" >&2
+  printf '%s\n' "$@" >&2
+  printf '%s' "${colors[reset]}" >&2
 }
 
 err() {
-  if in_term; then
-    printf "${c_red}%s${c_reset}\n" "$*" >&2
-  else
-    zenity --error --text="$*"
-  fi
+  color red "$@" >&2
 }
 
 die() {
@@ -57,13 +58,9 @@ has() {
 }
 
 ask() {
-  if in_term; then
-    read -r -n1 -p "$* " ans
-    printf '\n'
-    [[ ${ans^} = Y* ]]
-  else
-    zenity --question --text="$*"
-  fi
+  read -r -n1 -p "$* " ans
+  printf '\n'
+  [[ ${ans^} = Y* ]]
 }
 
 prompt() {

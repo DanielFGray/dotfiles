@@ -30,18 +30,22 @@ ask() {
   [[ ${ans^} = Y* ]]
 }
 
-esc=$'\033'
-c_red="${esc}[31m"
-c_green="${esc}[32m"
-c_blue="${esc}[34m"
-c_reset="${esc}[0m"
-export esc
-export c_red
-export c_green
-export c_blue
-export c_reset
+declare -A colors
+colors[red]=$(tput setaf 1)
+colors[green]=$(tput setaf 2)
+colors[blue]=$(tput setaf 4)
+colors[reset]=$(tput sgr0)
 
-err() { printf "${c_red}%s${c_reset}\n" "$*" >&2; }
+color() {
+  local c
+  c="$1"
+  shift
+  printf '%s' "${colors[$c]}"
+  printf '%s\n' "$@"
+  printf '%s' "${colors[reset]}"
+}
+
+err() { color red "$@" >2; }
 
 if [[ -f /etc/debian_version ]]; then
   for h in 'apt' 'aptitude' 'apt-get'; do
