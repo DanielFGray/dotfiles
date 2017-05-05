@@ -137,10 +137,11 @@ Plug 'Shougo/neosnippet' " {{{
     set conceallevel=2 concealcursor=i
   endif
 " }}}
-Plug 'Raimondi/delimitMate' " {{{
-  let g:delimitMate_expand_cr = 1
-  let g:delimitMate_jump_expansion = 1
-" }}}
+" Plug 'Raimondi/delimitMate' " {{{
+"   let g:delimitMate_expand_cr = 1
+"   let g:delimitMate_jump_expansion = 1
+" " }}}
+Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-endwise'
 if has('nvim') || has('job')
   Plug 'w0rp/ale' " {{{
