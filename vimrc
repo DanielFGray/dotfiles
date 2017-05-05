@@ -558,6 +558,7 @@ Plug 'othree/jspc.vim'
 Plug 'marijnh/tern_for_vim' " {{{
   \, { 'do': 'npm install' }
   let g:tern_show_signature_in_pum = 1
+  let g:tern#filetypes = [ 'jsx', 'javascript.jsx' ]
 " }}}
 Plug 'heavenshell/vim-jsdoc' " {{{
   let g:jsdoc_enable_es6 = 1
@@ -567,6 +568,12 @@ Plug 'heavenshell/vim-jsdoc' " {{{
     \ nnoremap <buffer> <Leader>jd <Plug>(jsdoc)
   augroup END
 " }}}
+Plug 'samuelsimoes/vim-jsx-utils' " {{{
+  nnoremap <leader>ja :call JSXEncloseReturn()<CR>
+  nnoremap <leader>ji :call JSXEachAttributeInLine()<CR>
+  nnoremap <leader>je :call JSXExtractPartialPrompt()<CR>
+  nnoremap <leader>jc :call JSXChangeTagPrompt()<CR>
+  nnoremap vat :call JSXSelectTag()<CR>
 Plug 'lambdatoast/elm.vim'
 " }}}
 " {{{ haskell
