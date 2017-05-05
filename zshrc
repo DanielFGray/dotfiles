@@ -41,7 +41,7 @@ fi
 if command -v fzf &> /dev/null; then
   [[ $(type historygrep) = *'alias'* ]] && unalias historygrep
   function historygrep {
-    print -z $(fc -nl 1 | grep -v '^history' | fzf --tac +s -e -q "$*")
+    print -z $(fc -nl 1 | grep -v '^history' | fzf --reverse --tac +s -e --height=20% -q "$*")
   }
 fi
 
