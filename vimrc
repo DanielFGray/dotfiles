@@ -153,6 +153,8 @@ if has('nvim') || has('job')
     let g:ale_echo_msg_error_str = 'E'
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+    let g:ale_linters =
+    \ { 'sugarss': ['stylelint'] }
     nnoremap <silent> <Leader>] <Plug>(ale_previous_wrap)
     nnoremap <silent> <Leader>[ <Plug>(ale_next_wrap)
     " augroup AleLint
@@ -535,6 +537,7 @@ Plug 'mattn/emmet-vim' " {{{
   \, { 'for': [ 'html', 'javascript.jsx' ] }
 " }}}
 Plug 'tmhedberg/matchit'
+Plug 'hhsnopek/vim-sugarss'
 Plug 'othree/html5.vim'
 Plug 'groenewege/vim-less'
 Plug 'hail2u/vim-css3-syntax'
