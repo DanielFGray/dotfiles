@@ -25,9 +25,10 @@ Emacs*font:            Fantasque\ Sans\ Mono\ 9
 Emacs*FontBackend:     xft
 *Rxvt*font:            xft:Fantasque\ Sans\ Mono:pixelsize=12
 *Rxvt*boldFont:        xft:Fantasque\ Sans\ Mono:pixelsize=12
-*XTerm*faceName:       xft:Fantasque\ Sans\ Mono:pixelsize=12
-*XTerm*allowBoldFonts: false
-*XTerm*boldMode:       false
+*XTerm*faceName:       xft:Fantasque\ Sans\ Mono:pixelsize=14
+UXTerm*faceName:       xft:Fantasque\ Sans\ Mono:pixelsize=14
+XTerm*metaSendsEscape: true
+XTerm*lineDrawingCharacters: true
 *XTerm*scaleHeight:    1.01
 *XTerm*colorBDMode:    true
 *XTerm*utf8:           1
