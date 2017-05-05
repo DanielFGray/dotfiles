@@ -626,7 +626,6 @@ endif
   nnoremap <silent> <Leader>y        <Esc>:Unite -buffer-name=yank     history/yank<CR>
   nnoremap <silent> <Leader>;        <Esc>:Unite -buffer-name=command  history/command command function<CR>
   nnoremap <silent> <Leader>o        <Esc>:Unite -buffer-name=outline  outline<CR>
-  nnoremap <silent> <Leader>h        <Esc>:Unite -buffer-name=help     help<CR>
   nnoremap <silent> <Leader>/        <Esc>:Unite -buffer-name=grep     grep<CR>
   nnoremap <silent> <Leader>ta       <Esc>:Unite -buffer-name=tag      tag tag/file<CR>
   nnoremap <silent> <Leader>b        <Esc>:Unite -buffer-name=buffer   file/new buffer neomru/file file<CR>
@@ -997,8 +996,6 @@ augroup VIM
   " \   call lightline#highlight() |
   " \ endif
 
-  autocmd FileType vim
-  \ nnoremap <buffer> K <Esc>:UniteWithCursorWord -buffer-name=help -split -direction=botright -winheight=15 -auto-resize help<CR>
   autocmd FileType vim
   \ xnoremap <buffer> <Leader>S y:@"<CR>
 
