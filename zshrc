@@ -126,6 +126,7 @@ zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p
 zstyle ':completion::*:(rm|vi):*' ignore-line true
 zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion::approximate*:*' prefix-needed false
+zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
 
 export DISABLE_AUTO_TITLE=true
 
