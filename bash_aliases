@@ -109,13 +109,14 @@ alias la='l -A '
 alias lax='la -X'
 alias lat='la -t'
 alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P '
-alias historygrep='history | grep -vF "history" | grep '
+alias historygrep='history | command grep -vF "history" | grep '
 alias xargs="tr '\n' '\0' | xargs -0 -I% "
 alias shuf1='shuf -n1'
 has cdu && alias cdu='cdu -isdhD '
 has rsync && alias rsync='rsync -v --progress --stats '
 has lein && alias lein='rlwrap lein '
 has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --reverse --preview-window=bottom:hidden" pkgsearch '
+has pip && alias pipi='pip install --user --upgrade '
 
 # {{{ git aliases
 if has git; then
@@ -194,6 +195,13 @@ help() { bash -c "help $*" ;}
 
 bground() { ("$@" &> /dev/null &) ;}
 restart() { pkill -x "$1"; bground "$@" ;}
+
+function in {
+  local t
+  t=( "$1" "$2" )
+  shift 2
+  at now + "${t[@]}" <<< "$*"
+}
 
 decide() {
   local args
@@ -329,6 +337,10 @@ fi
   else
     echo 'nvm already loaded!'
   fi
+}
+
+[[ -s ~/.perlbrew/etc/bashrc ]] && loadperlbrew() {
+  source ~/.perlbrew/etc/bashrc
 }
 
 if has rlwrap; then
