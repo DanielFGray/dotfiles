@@ -185,6 +185,13 @@ if has('nvim')
     let g:deoplete#auto_completion_start_length = 3
   " }}}
   Plug 'kassio/neoterm'
+  Plug 'carlitux/deoplete-ternjs'
+  Plug 'wokalski/autocomplete-flow'
+  let g:deoplete#omni#functions = {}
+  let g:deoplete#omni#functions.javascript = [
+  \  'tern#Complete',
+  \  'jspc#omni'
+  \ ]
 elseif has('job') && has('timers') && has('lambda')
   Plug 'maralla/completor.vim'
 elseif has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
