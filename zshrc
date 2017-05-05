@@ -29,18 +29,11 @@ plugins=(
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 
-red() {
-  printf '%s' "$(tput setaf 1)"
-  printf '%s\n' "$@"
-  printf '%s' "$(tput sgr0)"
-}
-
-err() { red "$@" >&2; return 1; }
-die() { err "$@"; exit 1; }
 
 source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
 if ! has nvm && [[ -f package.json && -s "/home/dan/.nvm/nvm.sh" ]]; then
   loadnvm
 fi
