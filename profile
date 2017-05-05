@@ -25,6 +25,7 @@ dirs+=(
   "$HOME/.cabal/bin"
   "$HOME/.cargo/bin"
   "$HOME/.go/bin"
+  "$HOME/.perlbrew/bin"
   "$HOME/bin"
   "$HOME/.bin"
   "$HOME/.local/bin"
@@ -39,9 +40,11 @@ done
 export PATH
 
 if has fzf; then
-  has ag && export FZF_DEFAULT_COMMAND='ag -l'
-  has fnd && export FZF_CTRL_T_COMMAND='fnd -no-hidden'
-  has fnd && export FZF_ALT_C_COMMAND='fnd -no-hidden -type d'
+  has fnd && {
+    export FZF_DEFAULT_COMMAND='fnd -no-hidden'
+    export FZF_CTRL_T_COMMAND='fnd -no-hidden'
+    export FZF_ALT_C_COMMAND='fnd -no-hidden -type d'
+  }
   export FZF_DEFAULT_OPTS='--bind="Ctrl-A:toggle-all,`:jump,Ctrl-d:half-page-down,Ctrl-u:half-page-up" --inline-info --cycle --jump-labels="asdfghjkl;qwertyuiopzxcvbnm1234567890"'
   export FZF_CTRL_R_OPTS='--reverse -e --height='50%' --bind="?:toggle-preview" --preview="echo {}" --preview-window="down:3:wrap:hidden"'
 fi
