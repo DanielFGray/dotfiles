@@ -390,37 +390,6 @@ has VBoxManage && vm() {
 }
 
 if has api; then
-  repo_create() {
-    name="${2// }"
-    if [[ -z $name ]]; then
-      err 'must specify a project name'
-      return
-    fi
-    case $1 in
-    github)
-      # https://developer.github.com/v3/repos/#create
-      if res=$(api github post user/repos --json ".name=\"$2\""); then
-        if [[ -d '.git' ]] && ask 'push current repo?'; then
-          git remote add origin "$(jq -r '.ssh_url' <<< "$res")"
-          git push -u origin master
-          ask 'make gitlab mirror?' &&
-            api gitlab post projects -d "name=$2" -d 'visibility_level=20&issues_enabled=true&wiki_enabled=true'
-        fi
-      else
-        jq <<< "$res"
-      fi ;;
-    gitlab)
-      if res=$(api gitlab post projects -d "name=$2"); then
-        if [[ -d '.git' ]] && ask 'push current repo?'; then
-          git remote add origin "$(jq -r '.ssh_url_to_repo' <<< "$res")"
-          git push -u origin master
-        fi
-      else
-        jq <<< "$res"
-      fi ;;
-    esac
-  }
-
   gitlab_get_repoid() {
     api gitlab get projects | jq ".[] | select(.name == \"$1\") | .id"
   }
