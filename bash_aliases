@@ -392,7 +392,7 @@ has VBoxManage && vm() {
 if has api; then
   repo_create() {
     case $1 in
-      github) api github post user/repos -d "{ \"name\": \"$1\", \"auto_init\": false }" | jq '.' ;;
+      github) api github post user/repos --json ".name=$2" | jq '.' ;;
       gitlab) api gitlab post projects -d "name=$2" | jq '.' ;;
     esac
   }
