@@ -96,6 +96,8 @@ alias chmod='chmod -v '
 alias rename='rename -v '
 alias ls='ls -Fh --color --group-directories-first '
 alias l='ls -lgo '
+alias lt='l -t'
+alias lx='l -X'
 alias la='l -A '
 alias lax='la -X'
 alias lat='la -t'
@@ -118,9 +120,11 @@ if has git; then
   alias gc='git commit -v '
   alias gcm='git commit -m '
   alias gco='git checkout '
-  alias gl='git pull --rebase '
+  alias gl='git pull '
   alias gp='git push '
   alias gst='git status --untracked-files=no '
+  alias gm='git merge --no-ff '
+  alias gd='git diff '
   gcl() {
     local dir repo
     if [[ -z "$1" ]]; then
