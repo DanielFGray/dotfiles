@@ -585,6 +585,10 @@ Plug 'racer-rust/vim-racer'
 " {{{ python
 Plug 'davidhalter/jedi-vim'
 " }}}
+" {{{ elixir
+Plug 'slashmili/alchemist.vim'
+Plug 'c-brenn/phoenix.vim'
+" }}}
 call plug#end()
 endif
 " {{{ unite settings
