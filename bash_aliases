@@ -402,4 +402,13 @@ if has api; then
   }
 fi
 
+has boil && boil() {
+  loadperlbrew
+  command boil "$@" && while getopts 'n:' x; do
+    case "$x" in
+      n) cd ~/build/"$OPTARG"
+    esac
+  done
+}
+
 # vim:ft=sh:
