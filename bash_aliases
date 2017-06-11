@@ -411,4 +411,13 @@ has boil && boil() {
   done
 }
 
+make() {
+  if [[ "$*" == 'me a sandwich'* ]]; then
+    shift 3
+    ./configure "$@" && command make -j $(( $(nproc) - 1))
+  else
+    command make "$@"
+  fi
+}
+
 # vim:ft=sh:
