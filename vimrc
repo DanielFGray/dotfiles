@@ -469,7 +469,7 @@ nnoremap <Leader>C <Esc>:Codi!!<CR>
 " }}}
 Plug 'vim-scripts/loremipsum'
 Plug 't9md/vim-quickhl' " {{{
-  nnoremap <leader>ht <Plug>(quickhl-cword-toggle)
+  nmap <leader>ht <Plug>(quickhl-cword-toggle)
 " }}}
 Plug 'mickaobrien/vim-stackoverflow'
 " }}}
