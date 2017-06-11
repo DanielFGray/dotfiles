@@ -80,16 +80,7 @@ elif [[ -f /etc/gentoo-release ]]; then
 fi
 
 upglibs() {
-  txs "printf '%s\n' \
-    ~/.oh-my-zsh \
-    ~/.zsh/plugins/zsh* \
-    ~/.vim/bundle/* \
-    ~/.emacs.d \
-    ~/.fzf \
-    ~/.tmux/plugins/* |
-      xargs -P8 -I% bash -c 'git -C % pull | sed \"s|Already up-to-date.|% already up-to-date.|\" || echo failed to pull %' ;
-        ~/.fzf/install --all; bash -c 'read -r -p \"Done! Press any key to close.\" -n1'"
-
+  txs "gitup -F -p8 ~/.oh-my-zsh ~/.zsh/plugins ~/.vim/bundle ~/.emacs.d ~/.fzf ~/.tmux/plugins; bash -c 'read -r -p \"Done! Press any key to close.\" -n1'"
 }
 
 alias ..='cd ..'
