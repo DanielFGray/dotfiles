@@ -420,4 +420,23 @@ make() {
   fi
 }
 
+diffplugins() {
+  if (( $# < 1 )); then
+    err 'need a file or url'
+    return 1
+  fi
+  if [[ $1 = http* ]]; then
+    has -v curl || return
+    file=$(command curl -s "$1")
+  elif [[ -r $1 ]]; then
+    file=$(< "$1")
+  else
+    err "$1 is not a readable file or url"
+    return 1
+  fi
+  diff -u <(command grep -Po "Plug '[^']+'" ~/.vimrc | sort) \
+    <(command grep -Po "Plug '[^']+'" <<< "$file" | sort) |
+    awk -F \' '/^\+/{printf "%s/%s\n", "https://github.com", $2}'
+}
+
 # vim:ft=sh:
