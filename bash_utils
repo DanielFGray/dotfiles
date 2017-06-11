@@ -29,9 +29,9 @@ color() {
   local c
   c="$1"
   shift
-  printf '%s' "${colors[$c]}" >&2
-  printf '%s\n' "$@" >&2
-  printf '%s' "${colors[reset]}" >&2
+  printf '%s' "${colors[$c]}"
+  printf '%s\n' "$@"
+  printf '%s' "${colors[reset]}"
 }
 
 err() {
@@ -44,14 +44,14 @@ die() {
 }
 
 has() {
-  local verbose
+  local verb
   if [[ $1 = '-v' ]]; then
-    verbose=1
+    verb=1
     shift
   fi
   for c; do c="${c%% *}"
     if ! command -v "$c" &> /dev/null; then
-      (( "$verbose" > 0 )) && err "$c not found"
+      (( verb > 0 )) && err "$c not found"
       return 1
     fi
   done
