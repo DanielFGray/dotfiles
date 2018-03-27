@@ -17,13 +17,13 @@ shopt -s extglob
 
 _git_dirty() {
   local status
-  status=$(command git status --porcelain  --untracked-files=no 2> /dev/null | tail -n1)
+  status=$(git status --porcelain  --untracked-files=no 2> /dev/null | tail -n1)
   [[ -n "$status" ]] && printf '*'
 }
 
 _git_head_status() {
   local gitdir
-  gitdir="$(command git rev-parse --git-dir 2> /dev/null)"
+  gitdir="$(git rev-parse --git-dir 2> /dev/null)"
   if [[ -f "${gitdir}/MERGE_HEAD" ]]; then
     printf '>M<'
   elif [[ -d "${gitdir}/rebase-apply" || -d "${gitdir}/rebase-merge" ]]; then
@@ -32,40 +32,48 @@ _git_head_status() {
 }
 
 _git_branch() {
-  command git rev-parse --is-inside-work-tree &> /dev/null || return 1
+  git rev-parse --is-inside-work-tree &> /dev/null || return 1
   local branch
-  if branch=$(command git symbolic-ref -q HEAD); then
+  if branch=$(git symbolic-ref -q HEAD); then
     printf '%s' "${branch#refs/heads/}"
   else
-    command git rev-parse --short -q HEAD
+    git rev-parse --short -q HEAD
   fi
 }
 
 my_prompt() {
-  local retval="$?"
-  local branch cwd git dirty staged status color
-  if [[ -n "$SSH_CLIENT" ]] || (( UID < 1000)); then
-    printf '%s@%s:' "$USER" "$HOSTNAME"
-  fi
+  retval="$?"
+  local branch cwd git dirty staged status userfg gitfg err user linefg
+  err=''
   printf -v cwd '%s' "${PWD/$HOME/\~}"
+  linefg="${colors[blue]}"
   if branch=$(_git_branch); then
-    color="${colors[green]}"
+    gitfg="${colors[green]}"
     dirty=$(_git_dirty)
     staged=$(git diff --cached)
     head=$(_git_head_status)
-    [[ -n "$dirty" ]] && color="${colors[red]}"
+    [[ -n "$dirty" ]] && gitfg="${colors[red]}"
     [[ -n "$staged" ]] && status+='+'
-    [[ -n "$head" ]] && status+=" $head"
-    printf -v git ' %s[%s%s]%s' "$color" "$branch" "$status" "${colors[reset]}"
+    [[ -n "$head" ]] && status+="^$head"
+    printf -v git ']─[%s%s%s%s' "$gitfg" "$branch" "$status" "${colors[reset]}"
   fi
-  [[ "$retval" != 0 ]] && printf '%s[%s]%s ' "${colors[red]}" "$retval" "${colors[reset]}"
-  printf '%s%s $ ' "$cwd" "$git"
+
+  if [[ -n "$SSH_CLIENT" || $UID != 1000 ]]; then
+    userfg="${colors[green]}"
+    [[ $UID = 0 ]] && userfg="${colors[red]}"
+    printf -v user '─[%s%s@%s%s]' "${userfg}" "$USER" "$HOSTNAME" "${colors[reset]}"
+  fi
+  [[ "$retval" != 0 ]] && printf -v err '─[%s%s%s]' "${colors[red]}" "$retval" "${colors[reset]}"
+  printf '┌─[%s%s]\n└%s%s─» ' "$cwd" "$git" "$err" "$user"
 }
 
-set vi-ins-mode-string ''
-set vi-cmd-mode-string ':'
-set show-mode-in-prompt on
+[[ -n $DISPLAY ]] && {
+  set vi-ins-mode-string ''
+  set vi-cmd-mode-string ':'
+  set show-mode-in-prompt on
+}
 
+export -f my_prompt
 export PS1='$(my_prompt)'
 
 unset prompt_color
