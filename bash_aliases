@@ -7,20 +7,17 @@ export HISTSIZE=100000
 unset GREP_OPTIONS
 stty -ixon
 
-has() {
-  local verbose local c
-  verbose=false
-  if [[ $1 = -v ]]; then
-    verbose=true
-    shift
+for bu in "${HOME}/.bash_utils" "${HOME}/dotfiles/bash_utils"; do
+  if [[ -s "$bu" ]]; then
+    . "$bu"
+    break
   fi
-  for c; do c="${c%% *}"
-    if ! command -v "$c" &> /dev/null; then
-      [[ "$verbose" = true ]] && err "$c not found"
-      return 1
-    fi
-  done
+done
+[[ -s "$bu" ]] || {
+  err() { tput setaf 1; printf '%s\n' "$@"; tput sgr0; }
+  err 'cannot source bash_utils' 'probably gonna die now'
 }
+unset d
 
 has fortune && fortune -ae
 
