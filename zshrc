@@ -12,23 +12,37 @@ else
 fi
 
 HISTFILE="$HOME/.zsh_history"
-HISTSIZE=100000
-SAVEHIST=100000
+HISTSIZE=99999999999
+HISTFILESIZE=9999999999
+REPORTTIME=1
 
-MODE_INDICATOR="%{$fg[red]%}%{$bg[red]%}  %{$reset_color%}"
+# MODE_INDICATOR="%{$fg[red]%}%{$bg[red]%}  %{$reset_color%}"
 VIRTUAL_ENV_DISABLE_PROMPT=1
 DEFAULT_USER='dan'
 plugins=(
   fancy-ctrl-z
   git-extras
-  lein
   vi-mode
   zsh-autosuggestions
-  zsh-syntax-highlighting
+  fast-syntax-highlighting
+  yarn
 )
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 
+# ZPLUG_REPOS=~/.zsh/plugins
+# source ~/.zsh/zplug/init.zsh
+# zplug "zsh-users/zsh-autosuggestions", defer:2
+# zplug "zdharma/fast-syntax-highlight", defer:2
+# zplug "themes:agnoster", as:theme, from:oh-my-zsh
+# zplug "~/.zsh/plugins", from:local
+# # if ! zplug check --verbose; then
+# #     printf "Install? [y/N]: "
+# #     if read -q; then
+# #         echo; zplug install
+# #     fi
+# # fi
+# zplug load
 
 source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
 
@@ -72,6 +86,10 @@ alias -g SU='| sort -u'
 alias -g SUC='| sort | uniq -c | sort -n'
 alias -g V='| vim -'
 alias -g DN='&> /dev/null'
+alias -g F='| fzf -e -m'
+
+alias -s pdf=zathura
+alias -s epub=zathura
 
 setopt append_history
 setopt extended_history
@@ -131,3 +149,6 @@ zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f
 export DISABLE_AUTO_TITLE=true
 
 # export PATH="$HOME/.yarn/bin:$PATH"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH=/home/dan/.local/bin/luna-studio:$PATH

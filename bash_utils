@@ -1,17 +1,40 @@
 #!/usr/bin/env bash
 
-# if [[ -e "${HOME}/.bash_utils" ]]; then
+# if [[ -s "${HOME}/.bash_utils" ]]; then
 #   source "${HOME}/.bash_utils"
+# elif [[ -s "${HOME}/dotfiles/.bash_utils" ]]; then
+#   source "${HOME}/dotfiles/.bash_utils"
 # else
-#   printf '\e[31m~/.bash_utils does not exist\e[0m\n' >&2
-#   exit 1
+#   printf '\e[31m~/cannot source bash_utils \e[0m\n' >&2
 # fi
 
 declare -A colors
+colors[reset]=$(tput sgr0)
+colors[black]=$(tput setaf 0)
 colors[red]=$(tput setaf 1)
 colors[green]=$(tput setaf 2)
+colors[yellow]=$(tput setaf 3)
 colors[blue]=$(tput setaf 4)
-colors[reset]=$(tput sgr0)
+colors[magenta]=$(tput setaf 5)
+colors[cyan]=$(tput setaf 6)
+colors[grey]=$(tput setaf 7)
+colors[lblack]=$(tput setaf 8)
+colors[lred]=$(tput setaf 9)
+colors[lgreen]=$(tput setaf 10)
+colors[lyellow]=$(tput setaf 11)
+colors[lblue]=$(tput setaf 12)
+colors[lmagenta]=$(tput setaf 13)
+colors[lcyan]=$(tput setaf 14)
+colors[lgrey]=$(tput setaf 15)
+
+color() {
+  local c
+  c="$1"
+  shift
+  printf '%s' "${colors[$c]}"
+  printf '%s\n' "$@"
+  printf '%s' "${colors[reset]}"
+}
 
 in_term() {
   [[ -t 0 || -p /dev/stdin ]]
@@ -43,19 +66,41 @@ die() {
   exit 1
 }
 
+
 has() {
-  local verb
-  if [[ $1 = '-v' ]]; then
-    verb=1
-    shift
-  fi
+  local o c loud
+  loud=0
+  while getopts 'v' o; do
+    case "$o" in
+      v) loud=1 ;;
+    esac
+  done
+  shift "$((OPTIND-1))"
   for c; do c="${c%% *}"
     if ! command -v "$c" &> /dev/null; then
-      (( verb > 0 )) && err "$c not found"
+      (( loud )) && err "$c not found"
       return 1
     fi
   done
 }
+
+select_from() {
+  local a c cmd
+  cmd='command -v'
+  for a in "$@"; do
+    case "$a" in
+      -c) cmd="$2"; shift 2 ;;
+    esac
+  done
+  for c in "$@"; do
+    if $cmd "${c%% *}" &> /dev/null; then
+      echo "$c"
+      return 0
+    fi
+  done
+  return 1
+}
+
 
 ask() {
   read -r -n1 -p "$* " ans
@@ -65,39 +110,49 @@ ask() {
 
 prompt() {
   local opts=() one
-  if [[ "$1" = '-1' ]]; then
-    opts+=( '-n1' )
-    one=1
-    shift
-  fi
-  if [[ "$1" = '-s' ]]; then
-    opts+=( '-s' )
-    shift
-  fi
-  read -e -r "${opts[@]}" -p "$* " ans
-  if [[ $one = '1' ]]; then
-    printf '\n'
-    [[ ${ans,} = y ]]
-  else
-    printf '%s\n' "$ans"
-  fi
-}
-
-select_from() {
-  local cmd='command -v'
   for a; do
     case "$a" in
-      -c)
-        cmd="$2"
-        shift 2
-        ;;
+      -1) opts+=( '-n1' ); one=1; shift ;;
+      -s) opts+=( '-s' ); shift ;;
     esac
   done
-  for c; do
-    if $cmd "${c%% *}" &> /dev/null; then
-      echo "$c"
+  read -e -r "${opts[@]}" -p "$* " ans
+  if [[ $one = 1 ]]; then
+    printf '\n'
+    if [[ ${ans,} = y ]]; then
       return 0
+    else
+      return 1
     fi
+  fi
+  printf '%s\n' "$ans"
+}
+
+parse_config_file() {
+  local line key val nr space line
+  nr=0
+  config_err=()
+  while IFS= read -r line; do
+    (( ++nr ))
+    [[ -z "$line" || "$line" = '#'* ]] && continue
+    space=${line%%[![:space:]]*}
+    line=${line#"$space"}
+    key=${line%% *}
+    line=${line#"$key"}
+    space=${line%%[![:space:]]*}
+    val=${line#"$space"}
+    [[ $key = '"'*'"' ]] && key=${key/#\"} key=${key/%\"}
+    [[ $key = *: ]] && key="${key%:/}"
+    [[ $val = '= '* ]] && val="${val#* }"
+    if [[ -z "$val" ]]; then
+      config_err+=( "  missing value for \"$key\" in config file on line $nr" )
+      continue
+    fi
+    case "$key" in
+      *) config_error+=("unknown config entry $key on line $nr") ;;
+    esac
   done
-  return 1
+  if (( ${#config_err[@]} > 0 )); then
+    err 'there were errors parsing config file:' "${config_err[@]}"
+  fi
 }
