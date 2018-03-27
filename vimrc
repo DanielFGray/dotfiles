@@ -100,26 +100,29 @@ Plug 'https://github.com/osyo-manga/vim-over' " {{{
   let g:over#command_line#search#enable_move_cursor = 1
   nnoremap <silent> <Leader>s <Esc>:OverCommandLine %s///g<CR><Left><Left>
   xnoremap <silent> <Leader>s <Esc>:OverCommandLine '<,'>s///g<CR><Left><Left>
+  xnoremap <silent> <Leader>n *<Esc>:OverCommandLine %s///gc<CR><Left><Left>
+  nnoremap <silent> <C-n> *N<Esc>:OverCommandLine %s///gc<CR><Left><Left><Left>
+  xnoremap <silent> <C-n> *N<Esc>:OverCommandLine %s///gc<CR><Left><Left><Left>
 " }}}
-Plug 'https://github.com/terryma/vim-multiple-cursors' " {{{
-  function! Multiple_cursors_before()
-    if exists(':NeoCompleteLock') == 2
-      NeoCompleteLock
-    endif
-    if exists('*SwoopFreezeContext')
-        call SwoopFreezeContext()
-    endif
-  endfunction
-  function! Multiple_cursors_after()
-    if exists(':NeoCompleteUnlock') == 2
-      NeoCompleteUnlock
-    endif
-    if exists('*SwoopUnFreezeContext')
-        call SwoopUnFreezeContext()
-    endif
-  endfunction
-" }}}
-Plug 'https://github.com/bronson/vim-visual-star-search'
+" Plug 'https://github.com/terryma/vim-multiple-cursors' " {{{
+"   function! Multiple_cursors_before()
+"     if exists(':NeoCompleteLock') == 2
+"       NeoCompleteLock
+"     endif
+"     if exists('*SwoopFreezeContext')
+"         call SwoopFreezeContext()
+"     endif
+"   endfunction
+"   function! Multiple_cursors_after()
+"     if exists(':NeoCompleteUnlock') == 2
+"       NeoCompleteUnlock
+"     endif
+"     if exists('*SwoopUnFreezeContext')
+"         call SwoopUnFreezeContext()
+"     endif
+"   endfunction
+" " }}}
+" Plug 'https://github.com/bronson/vim-visual-star-search'
 " }}}
 " {{{ completion/building
 Plug 'https://github.com/Shougo/neosnippet' " {{{
@@ -150,8 +153,8 @@ if has('nvim') || has('lambda')
     let g:ale_lint_delay = 500
     let g:ale_open_list = 0
     let g:ale_statusline_format = [ '✘ %d', '∆ %d', '' ]
-    let g:ale_sign_error = '✘'
-    let g:ale_sign_warning = '∆'
+    let g:ale_sign_error = ''
+    let g:ale_sign_warning = ''
     let g:ale_echo_msg_error_str = 'E'
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
@@ -182,26 +185,38 @@ endif
 Plug 'https://github.com/Shougo/vimproc' " {{{
 \, {'do': 'make'}
 " }}}
-let g:tern#filetypes = [ 'jsx', 'javascript.jsx' ]
 if has('nvim')
-  Plug 'https://github.com/Shougo/Deoplete.nvim' " {{{
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#auto_completion_start_length = 3
-  " }}}
+  " Plug 'https://github.com/autozimu/LanguageClient-neovim' " {{{
+  "   \ , { 'do': ':UpdateRemotePlugins' }
+  "   let g:LanguageClient_autoStart = 1
+  "   let g:LanguageClient_serverCommands = {}
+  "   augroup LSP
+  "     if executable('javascript-typescript-stdio')
+  "       let g:LanguageClient_serverCommands.javascript = ['javascript-typescript-stdio']
+  "       let g:LanguageClient_serverCommands.jsx = ['javascript-typescript-stdio']
+  "       let g:LanguageClient_serverCommands['javascript.jsx'] = ['javascript-typescript-stdio']
+  "       autocmd FileType javascript
+  "       \ setlocal omnifunc+=LanguageClient#complete
+  "     endif
+  "     autocmd FileType javascript
+  "     \ nnoremap <silent><buffer> <Leader>ld :call LanguageClient_textDocument_definition()<CR>
+  "     autocmd FileType javascript
+  "     \ nnoremap <silent><buffer> <Leader>lh :call LanguageClient_textDocument_hover()<CR>
+  "     autocmd FileType javascript
+  "     \ nnoremap <silent><buffer> <Leader>lr :call LanguageClient_textDocument_rename()<CR>
+  "   augroup END
+  " " }}}
+  " Plug 'https://github.com/Shougo/Deoplete.nvim' " {{{
+  "   \ , { 'do': ':UpdateRemotePlugins' }
+  "   let g:deoplete#enable_at_startup = 1
+  "   let g:deoplete#auto_completion_start_length = 3
+  "   augroup Deoplete
+  "     au!
+  "     autocmd CompleteDone * silent! pclose!
+  "   augroup END
+  " " }}}
   Plug 'https://github.com/kassio/neoterm'
   Plug 'https://github.com/Shougo/neco-syntax'
-  Plug 'https://github.com/carlitux/deoplete-ternjs'
-  Plug 'https://github.com/steelsojka/deoplete-flow'
-  Plug 'https://github.com/zchee/deoplete-jedi'
-  let g:deoplete#omni#functions = {}
-  let g:deoplete#omni#functions.javascript = [
-  \  'tern#Complete',
-  \  'jspc#omni'
-  \ ]
-  augroup Deoplete
-    au!
-    autocmd CompleteDone * silent! pclose!
-  augroup END
 elseif has('job') && has('timers') && has('lambda')
   Plug 'https://github.com/maralla/completor.vim'
   let g:completor_node_binary = system('which node')
@@ -212,7 +227,7 @@ elseif has('lua')
   Plug 'https://github.com/Shougo/neocomplcache.vim'
   let g:completionEngine = 'neocomplcache'
 endif
-if exists('g:completionEngine')
+if exists('g:completionEngine') " {{{
   let g:acp_enableAtStartup = 0
   let g:{g:completionEngine}#enable_at_startup = 1
   let g:{g:completionEngine}#enable_smart_case = 1
@@ -225,8 +240,8 @@ if exists('g:completionEngine')
   inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
   inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
   inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
-  inoremap <expr><Tab>     pumvisible() ? "\<C-N>" : "\<Tab>"
 endif " }}}
+  " }}}
 " }}}
 " {{{ formatting
 Plug 'https://github.com/christoomey/vim-titlecase' " {{{
@@ -388,8 +403,12 @@ let g:indentLine_fileTypeExclude = [
 \   'startify',
 \ ]
 " }}}
-
-Plug 'https://github.com/junegunn/rainbow_parentheses.vim'
+Plug 'https://github.com/junegunn/rainbow_parentheses.vim' " {{{
+  augroup rainbow_lisp
+    autocmd!
+    autocmd FileType lisp,clojure,scheme RainbowParentheses
+  augroup END
+" }}}
 Plug 'https://github.com/DanielFGray/DistractionFree.vim' " {{{
   let g:distraction_free#toggle_tmux = 1
   function! s:distractions_off()
@@ -448,11 +467,12 @@ Plug 'https://github.com/jeetsukumaran/vim-filebeagle' " {{{
 Plug 'https://github.com/mhinz/vim-sayonara'
 Plug 'https://github.com/AndrewRadev/splitjoin.vim'
 Plug 'https://github.com/sheerun/vim-polyglot'
-Plug 'https://github.com/junegunn/fzf' " {{{
-\, { 'dir': '~/.fzf', 'do': './install --all' }
+" Plug 'https://github.com/junegunn/fzf' " {{{
+" \, { 'dir': '~/.fzf', 'do': './install --all' }
+" " }}}
+Plug 'https://github.com/junegunn/fzf.vim' " {{{
   nnoremap <Leader>F <Esc>:Files<CR>
 " }}}
-Plug 'https://github.com/junegunn/fzf.vim'
 Plug 'https://github.com/chilicuil/vim-sprunge' " {{{
   let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
 " }}}
@@ -487,9 +507,9 @@ nnoremap <Leader>C <Esc>:Codi!!<CR>
 " }}}
 Plug 'https://github.com/vim-scripts/loremipsum'
 Plug 'https://github.com/t9md/vim-quickhl' " {{{
-  nnoremap <leader>th <Plug>(quickhl-cword-toggle)
+  nnoremap <silent> <leader>th <Esc>:QuickhlCwordToggle<CR>
 " }}}
-Plug 'https://github.com/mickaobrien/vim-stackoverflow'
+" Plug 'https://github.com/mickaobrien/vim-stackoverflow'
 " Plug 'https://github.com/hecal3/vim-leader-guide' " {{{
 "   " nnoremap <silent> <Leader> :<c-u>LeaderGuide '<Space>'<CR>
 "   let g:leaderGuide_default_group_name = '+group'
@@ -552,7 +572,9 @@ Plug 'https://github.com/moznion/unite-git-conflict.vim'
 Plug 'https://github.com/lambdalisue/vim-gista-unite'
 Plug 'https://github.com/kmnk/vim-unite-giti'
 if has('nvim')
-  Plug 'https://github.com/shougo/denite.nvim'
+  Plug 'https://github.com/shougo/denite.nvim' " {{{
+  \ , { 'do': ':UpdateRemotePlugins' }
+  " }}}
 endif
 " }}}
 " {{{ git
@@ -562,9 +584,10 @@ Plug 'https://github.com/tpope/vim-fugitive' " {{{
   nnoremap <Leader>gc <Esc>:Gcommit<CR><Esc>:call PushBelowOrLeft()<CR><C-L>
   nnoremap <Leader>gb <Esc>:Gblame<CR>
   nnoremap <Leader>gp <Esc>:Git push<CR>
-  nnoremap <Leader>gu <Esc>:Git pull<CR>
 " }}}
-Plug 'https://github.com/esneider/YUNOcommit.vim'
+Plug 'https://github.com/esneider/YUNOcommit.vim' " {{{
+  let g:YUNOcommit_after = 5
+" }}}
 Plug 'https://github.com/airblade/vim-gitgutter' " {{{
   let g:gitgutter_map_keys = 0
   nnoremap <silent> [h <Esc>:GitGutterPrevHunk<CR>zMzvzz
@@ -574,6 +597,7 @@ Plug 'https://github.com/airblade/vim-gitgutter' " {{{
   nnoremap <silent> <Leader>hp <Esc>:GitGutterPreviewHunk<CR>
 " }}}
 Plug 'https://github.com/lambdalisue/vim-gista'
+Plug 'https://github.com/int3/vim-extradite'
 " }}}
 " {{{ tmux
 Plug 'https://github.com/tmux-plugins/vim-tmux'
@@ -593,7 +617,7 @@ Plug 'https://github.com/mhinz/vim-tmuxify' " {{{
 " }}}
 " {{{ latex
 Plug 'https://github.com/LaTeX-Box-Team/LaTeX-Box'
-Plug 'https://github.com/xuhdev/vim-latex-live-preview'
+" Plug 'https://github.com/xuhdev/vim-latex-live-preview'
 " }}}
 " {{{ html/css
 Plug 'https://github.com/mattn/emmet-vim' " {{{
@@ -631,21 +655,26 @@ Plug 'https://github.com/euclio/vim-markdown-composer' " {{{
 " {{{ javascript
 " Plug 'https://github.com/moll/vim-node'
 " Plug 'https://github.com/elzr/vim-json' " {{{
-"   let g:vim_json_syntax_conceal = 0
-" " }}}
+  let g:vim_json_syntax_conceal = 0
+" }}}
 " Plug 'https://github.com/othree/yajs.vim'
 " Plug 'https://github.com/othree/javascript-libraries-syntax.vim'
 " Plug 'https://github.com/othree/jspc.vim'
-Plug 'https://github.com/marijnh/tern_for_vim' " {{{
-  \, { 'do': 'npm install' }
-  let g:tern#command = [ 'tern' ]
-  let g:tern#arguments = [ '--persistent' ]
-  let g:tern_show_signature_in_pum = 1
-  let g:tern#filetypes = [
-  \ 'jsx',
-  \ 'javascript.jsx',
-  \ ]
-" }}}
+" Plug 'https://github.com/marijnh/tern_for_vim' " {{{
+"   \, { 'do': 'npm install' }
+"   let g:tern#command = [ 'tern' ]
+"   let g:tern#arguments = [ '--persistent' ]
+"   let g:tern_show_signature_in_pum = 1
+"   let g:tern#filetypes = [
+"   \ 'jsx',
+"   \ 'javascript.jsx',
+"   \ ]
+" " }}}
+  if has ('nvim')
+    Plug 'https://github.com/steelsojka/deoplete-flow'
+  endif
+  " Plug 'carlitux/deoplete-ternjs'
+  " Plug 'wokalski/autocomplete-flow'
 Plug 'https://github.com/heavenshell/vim-jsdoc' " {{{
   let g:jsdoc_enable_es6 = 1
   augroup JsDoc
@@ -689,37 +718,42 @@ augroup GhcMod
 augroup END
 " }}}
 Plug 'https://github.com/eagletmt/neco-ghc'
-Plug 'https://github.com/Twinside/vim-hoogle'
-augroup Hoogle
-  au!
-  autocmd FileType haskell
-  \ nnoremap <buffer> <leader>hh :Hoogle<Space>
-  autocmd FileType haskell
-  \ nnoremap <buffer> <Leader>hC :HoogleClose<CR>
-  autocmd FileType haskell
-  \ nnoremap <buffer> <Lewader>hl :HoogleLine<CR>
-augroup END
+Plug 'https://github.com/Twinside/vim-hoogle' " {{{
+  augroup Hoogle
+    au!
+    autocmd FileType haskell
+    \ nnoremap <buffer> <leader>hh :Hoogle<Space>
+    autocmd FileType haskell
+    \ nnoremap <buffer> <Leader>hC :HoogleClose<CR>
+    autocmd FileType haskell
+    \ nnoremap <buffer> <Lewader>hl :HoogleLine<CR>
+  augroup END
+" }}}
 Plug 'https://github.com/enomsg/vim-haskellConcealPlus'
 Plug 'https://github.com/mpickering/hlint-refactor-vim'
 " }}}
-" {{{ rust
-Plug 'https://github.com/rust-lang/rust.vim'
-Plug 'https://github.com/racer-rust/vim-racer'
-" }}}
-" {{{ python
-Plug 'https://github.com/davidhalter/jedi-vim'
-" }}}
-" {{{ elixir
-Plug 'https://github.com/slashmili/alchemist.vim'
-Plug 'https://github.com/c-brenn/phoenix.vim'
-" }}}
-" {{{ elm
-Plug 'lambdatoast/elm.vim'
-" }}}
-" {{{ clojure
-Plug 'https://github.com/tpope/vim-fireplace'
-Plug 'https://github.com/bhurlow/vim-parinfer'
-" }}}
+" " {{{ rust
+" Plug 'https://github.com/rust-lang/rust.vim'
+" Plug 'https://github.com/racer-rust/vim-racer'
+" " }}}
+" " {{{ python
+" if has('nvim')
+"   Plug 'zchee/deoplete-jedi'
+" " else
+" " Plug 'https://github.com/davidhalter/jedi-vim'
+" endif
+" " }}}
+" " {{{ elixir
+" Plug 'https://github.com/slashmili/alchemist.vim'
+" Plug 'https://github.com/c-brenn/phoenix.vim'
+" " }}}
+" " {{{ elm
+" Plug 'lambdatoast/elm.vim'
+" " }}}
+" " {{{ clojure
+" Plug 'https://github.com/tpope/vim-fireplace'
+" Plug 'https://github.com/bhurlow/vim-parinfer'
+" " }}}
 call plug#end()
 endif
 " {{{ unite settings
@@ -742,20 +776,21 @@ endif
     call unite#filters#matcher_default#use([ 'matcher_fuzzy' ])
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_regexp')
-    call unite#custom#profile('default', 'context',
-    \ {  'start_insert': 1
-    \ ,  'prompt_direction': 'below'
-    \ ,  'prompt_focus': 1
-    \ ,  'force_redraw': 1
-    \ ,  'no_empty': 1
-    \ ,  'winheight': 10
-    \ ,  'direction': 'dynamicbottom'
-    \ ,  'enable_start_insert': 1
+    call unite#custom#profile('default', 'context', {
+    \   'no_split': 1,
+    \   'prompt_direction': 'top',
+    \   'start_insert': 1,
+    \   'prompt': ' ',
+    \   'prompt_focus': 1,
+    \   'force_redraw': 1,
+    \   'no_empty': 1,
+    \   'winheight': 10,
+    \   'enable_start_insert': 1,
     \ })
-    " \ ,  'no_split': 1
-    " \ ,  'prompt': ' '
+    " \   'prompt_direction': 'below',
+    " \   'direction': 'dynamicbottom',
 
-  nnoremap <silent> <Leader><Leader> <Esc>:Unite -buffer-name=mapping  mapping command function<CR>
+  nnoremap <silent> <Leader><Leader> <Esc>:Unite -buffer-name=mapping  mapping command function<CR>Space
   nnoremap <silent> <Leader>r        <Esc>:Unite -buffer-name=register register<CR>
   nnoremap <silent> <Leader>y        <Esc>:Unite -buffer-name=yank     history/yank<CR>
   nnoremap <silent> <Leader>;        <Esc>:Unite -buffer-name=command  history/command mapping command function<CR>
@@ -763,8 +798,8 @@ endif
   nnoremap <silent> <Leader>/        <Esc>:Unite -buffer-name=grep     grep<CR>
   nnoremap <silent> <Leader>ta       <Esc>:Unite -buffer-name=tag      tag tag/file<CR>
   nnoremap <silent> <Leader>b        <Esc>:Unite -buffer-name=buffer   buffer neomru/file file<CR>
-  nnoremap <silent> <Leader>f        <Esc>:Unite -buffer-name=files    jump_point file_point file file/async neomru/file file/new<CR>
-  nnoremap <silent> <Leader>gl       <Esc>:Unite -buffer-name=line     line<CR>
+  nnoremap <silent> <Leader>f        <Esc>:Unite -buffer-name=files    jump_point file_point file/async neomru/file file/new<CR>
+  nnoremap <silent> <Leader>l        <Esc>:Unite -buffer-name=line     line<CR>
   nnoremap <silent> z=               <Esc>:Unite -buffer-name=spell    spell_suggest<CR>
   nnoremap <silent> <Leader>gi       <Esc>:Unite -buffer-name=gista    gista<CR>
   nnoremap <silent> <Leader>gg       <Esc>:Unite -buffer-name=giti     giti<CR>
@@ -775,7 +810,7 @@ endif
   augroup END
 
   function! s:unite_my_settings()
-  " imap <buffer>               <Esc> <Plug>(unite_exit)
+    imap <buffer>               <Esc> <Plug>(unite_exit)
     nmap <buffer>               <Esc> <Plug>(unite_exit)
     nnoremap <silent><buffer><expr> l unite#smart_map('l', unite#do_action('default'))
     imap <buffer><expr> j   unite#smart_map('j', '')
@@ -1075,7 +1110,7 @@ augroup VIM
   \ endif
 
   autocmd FileType javascript
-  \ set formatprg=yarn\ prettier-eslint\ --stdin
+  \ set formatprg=yarn\ --silent\ prettier-eslint\ --stdin
 
   autocmd BufReadPost *
   \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line('$') |
@@ -1150,6 +1185,8 @@ augroup VIM
 augroup END
 " }}}
 " {{{ misc commands and maps
+imap <expr><Tab> pumvisible() ? "\<C-N>" : "\<Tab>"
+
 nnoremap <Leader>evim <Esc>:vs ~/dotfiles/vimrc<CR>
 
 nnoremap ' `
@@ -1158,6 +1195,8 @@ nnoremap ` '
 nnoremap g; g;zvzz
 nnoremap g, g,zvzz
 nnoremap <C-Z> <Esc>zMzvzz
+nnoremap zk zkzMzvzz
+nnoremap zj zjzMzvzz
 
 nnoremap gV `[v`]
 
