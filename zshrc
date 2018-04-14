@@ -26,6 +26,7 @@ plugins=(
   zsh-autosuggestions
   fast-syntax-highlighting
   yarn
+  zsh-autopair
 )
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
@@ -80,7 +81,7 @@ alias zcp='noglob zmv -C '
 alias zln='noglob zmv -L '
 alias zmv='noglob zmv '
 
-alias -g L='| less'
+alias -g L='| less -R'
 alias -g S='| sort'
 alias -g SU='| sort -u'
 alias -g SUC='| sort | uniq -c | sort -n'
