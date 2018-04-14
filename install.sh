@@ -23,13 +23,7 @@ echo_cmd() {
 }
 
 curl() {
-  local flags
-  flags=()
-  case "$verbose" in
-    ''|0) flags+=('-s') ;;
-    2|3) flags+=('-v') ;;
-  esac
-  command curl "${flags[@]}" "$@"
+  command curl -s "$@"
 }
 export -f curl
 
@@ -77,78 +71,82 @@ library() {
 
 config_base() {
   backup_then_symlink profile bashrc bash_aliases bash_utils inputrc gitconfig
-  library danielfgray/bin ~/.local/bin
 }
 
-config_vim() {
-  has -v vim || return 1
+config_scripts() {
+  library ssh://git@github.com/danielfgray/bin ~/.local/bin
+  library ssh://git@github.com/danielfgray/api-helper ~/build/api-helper
+  library ssh://git@github.com/danielfgray/fzf-scripts ~/build/fzf-scripts
+  library ssh://git@github.com/danielfgray/tekup ~/build/tekup
+  library ssh://git@github.com/danielfgray/yaxg ~/build/yaxg
+  library ssh://git@github.com/danielfgray/boiler ~/build/boiler
+  wait
+  find ~/build/{yaxg,boiler,tekup,fzf-scripts,api-helper} -maxdepth 1 -executable -type f -exec ln ${verbose:+-v} -s -t "$HOME/.local/bin" {} \;
+}
+
+has -v vim && config_vim() {
   backup_then_symlink vimrc
   mkdir ${verbose:+-v} -p ~/.vim/{autoload,bundle,cache,undo,backups,swaps}
   curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  (( verbose > 0 )) && echo 'installing vim plugins'
-  vim -c PlugInstall -c 'quitall!' -e &> /dev/null
-  if (( verbose > 0 )); then echo 'finished vim plugins'; fi
 }
 
-config_zsh() {
-  has -v zsh || return 1
+has -v zsh && config_zsh() {
   backup_then_symlink zsh zshrc zshenv zlogin
-  library robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
   library zdharma/fast-syntax-highlighting ~/.zsh/plugins/fast-syntax-highlighting
   library zsh-users/zsh-autosuggestions ~/.zsh/plugins/zsh-autosuggestions
+  library hlissner/zsh-autopair ~/.zsh/plugins/zsh-autopair
 }
 
 config_fzf() {
   library junegunn/fzf.git ~/.fzf
-  if [[ -x ~/.fzf/install ]]; then
-    ~/.fzf/install --all &> /dev/null
-    library danielfgray/fzf-scripts ~/build/fzf-scripts
-  else
+  if [[ ! -x ~/.fzf/install ]]; then
     err 'failed to install fzf'
     return 1
   fi
+  ~/.fzf/install --all &> /dev/null
 }
 
-config_tmux() {
-  has -v tmux || return 1
+has -v tmux && config_tmux() {
   backup_then_symlink tmux.conf
   library tmux-plugins/tpm ~/.tmux/plugins/tpm
   [[ -x ~/.tmux/plugins/tpm/bin/install_plugins ]] && echo_cmd ~/.tmux/plugins/tpm/bin/install_plugins
 }
 
-config_gem() {
-  has -v gem || return 1
+has -v gem && config_gem() {
   backup_then_symlink gemrc
 }
 
-config_x11() {
-  has -v X || return 1
-  has -v startx && backup_then_symlink xinitrc
-  has -v xmodmap && backup_then_symlink xmodmap
-  has -v xrdb && backup_then_symlink Xresources
-  has -v fc-cache && config_font
-}
-
-config_font() {
-  [[ -f ~/.local/share/fonts/FantasqueSansMono-Regular.ttf ]] && return 0
-  mkdir -p ~/.local/share/fonts
-  if [[ ! -f ~/downloads/fantasque-sans-mono.zip ]]; then
-    echo_cmd curl -L --create-dirs -o ~/downloads/fantasque-sans-mono.zip \
-      'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip'
-  fi
-  if ! has -v unzip; then
-    err 'downloaded Fantasque Sans Mono but unzip is unavailable'
-    return 1
-  fi
-  if [[ -f ~/downloads/fantasque-sans-mono.zip ]]; then
-    echo_cmd unzip ~/downloads/fantasque-sans-mono.zip '*.ttf' -d ~/.local/share/fonts
-  else
-    err 'failed to download font Fantasque Sans Mono'
-  fi
-}
+if has -v X; then
+  config_x11() {
+    has -v startx && backup_then_symlink xinitrc
+    has -v xmodmap && backup_then_symlink xmodmap
+    has -v xrdb && backup_then_symlink Xresources
+    if has -v fc-cache; then
+      [[ -f ~/.local/share/fonts/FantasqueSansMono-Regular.ttf ]] && return 0
+      mkdir -p ~/.local/share/fonts
+      if [[ ! -f ~/downloads/fantasque-sans-mono.zip ]]; then
+        echo_cmd curl -L --create-dirs -o ~/downloads/fantasque-sans-mono.zip \
+          'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip'
+      fi
+      if ! has -v unzip; then
+        err 'downloaded Fantasque Sans Mono but unzip is unavailable'
+        return 1
+      fi
+      if [[ -f ~/downloads/fantasque-sans-mono.zip ]]; then
+        echo_cmd unzip ~/downloads/fantasque-sans-mono.zip '*.ttf' -d ~/.local/share/fonts
+      else
+        err 'failed to download font Fantasque Sans Mono'
+      fi
+    fi
+  }
+fi
 
 config_yarn() {
   echo_cmd curl -L https://yarnpkg.com/install.sh | sh
+  ~/.yarn/bin/yarn config set init-version 0.0.1
+  ~/.yarn/bin/yarn config set init-author-email DanielFGray@gmail.com
+  ~/.yarn/bin/yarn config set init-author-name DanielFGray
+  ~/.yarn/bin/yarn config set init-license GPL-3.0
 }
 
 config_nvm() {
@@ -156,6 +154,10 @@ config_nvm() {
 }
 
 config() {
+  has "config_$1" || {
+    color red ":: FAILED $1: does not exist"
+    return 1
+  }
   color blue ":: STARTING $1"
   if "config_$1"; then
     color green ":: FINISHED $1"
@@ -182,7 +184,7 @@ unset opt OPTARG OPTIND OPTERR
 
 has -v git curl || die 'git and curl both required'
 
-mapfile -t configs_avail < <(compgen -A function | perl -lne 'print $1 if /config_(.*)/')
+mapfile -t configs_avail < <(compgen -A function | awk '/^config_/{ sub(/^config_/, "", $0); print }')
 
 if in_term && [[ $1 != '--all' ]]; then
   printf 'will install the following groups:\n'
