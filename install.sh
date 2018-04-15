@@ -53,7 +53,7 @@ library() {
   fi
   case "$1" in
     http*|https*|git*|ssh*) repo="$1" ;;
-    *) repo="https://github.com/$1" ;;
+    *) repo="ssh://git@github.com/danielfgray/$1" ;;
   esac
   path="$2"
   if [[ -d "$path" ]]; then
@@ -74,13 +74,12 @@ config_base() {
 }
 
 config_scripts() {
-  library ssh://git@github.com/danielfgray/bin ~/.local/bin
-  library ssh://git@github.com/danielfgray/api-helper ~/build/api-helper
-  library ssh://git@github.com/danielfgray/fzf-scripts ~/build/fzf-scripts
-  library ssh://git@github.com/danielfgray/tekup ~/build/tekup
-  library ssh://git@github.com/danielfgray/yaxg ~/build/yaxg
-  library ssh://git@github.com/danielfgray/boiler ~/build/boiler
-  wait
+  library bin ~/.local/bin
+  library api-helper ~/build/api-helper
+  library fzf-scripts ~/build/fzf-scripts
+  library tekup ~/build/tekup
+  library yaxg ~/build/yaxg
+  library boiler ~/build/boiler
   find ~/build/{yaxg,boiler,tekup,fzf-scripts,api-helper} -maxdepth 1 -executable -type f -exec ln ${verbose:+-v} -s -t "$HOME/.local/bin" {} \;
 }
 
@@ -92,13 +91,13 @@ has -v vim && config_vim() {
 
 has -v zsh && config_zsh() {
   backup_then_symlink zsh zshrc zshenv zlogin
-  library zdharma/fast-syntax-highlighting ~/.zsh/plugins/fast-syntax-highlighting
-  library zsh-users/zsh-autosuggestions ~/.zsh/plugins/zsh-autosuggestions
-  library hlissner/zsh-autopair ~/.zsh/plugins/zsh-autopair
+  library https://github.com/zdharma/fast-syntax-highlighting ~/.zsh/plugins/fast-syntax-highlighting
+  library https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/plugins/zsh-autosuggestions
+  library https://github.com/hlissner/zsh-autopair ~/.zsh/plugins/zsh-autopair
 }
 
 config_fzf() {
-  library junegunn/fzf.git ~/.fzf
+  library https://github.com/junegunn/fzf.git ~/.fzf
   if [[ ! -x ~/.fzf/install ]]; then
     err 'failed to install fzf'
     return 1
@@ -108,7 +107,7 @@ config_fzf() {
 
 has -v tmux && config_tmux() {
   backup_then_symlink tmux.conf
-  library tmux-plugins/tpm ~/.tmux/plugins/tpm
+  library https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   [[ -x ~/.tmux/plugins/tpm/bin/install_plugins ]] && echo_cmd ~/.tmux/plugins/tpm/bin/install_plugins
 }
 
