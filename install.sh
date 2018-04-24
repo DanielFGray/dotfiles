@@ -96,7 +96,7 @@ has vim && config_vim() {
   install_dots vimrc
   mkdir ${verbose:+-v} -p ~/.vim/{autoload,bundle,cache,undo,backups,swaps}
   curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  vim +PlugInstall +qa
+  vim +PlugInstall +qa &> /dev/null
 }
 
 has nvim && config_neovim() {
@@ -210,7 +210,7 @@ else
   read -r -e -p '> ' -i "${configs_avail[*]}" -a configs_chosen
 fi
 
-(( configs_chosen > 0 )) || die
+(( ${#configs_chosen[@]} > 0 )) || die
 
 for f in "${configs_chosen[@]}"; do
   (( count++ >= process )) && wait -n
