@@ -49,9 +49,7 @@ source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
-if ! has nvm && [[ -f package.json && -s "/home/dan/.nvm/nvm.sh" ]]; then
-  loadnvm
-fi
+[[ -f package.json ]] && loadnvm
 
 if command -v fzf &> /dev/null; then
   [[ $(type historygrep) = *'alias'* ]] && unalias historygrep
@@ -64,9 +62,7 @@ fi
 chpwd() {
   emulate -L zsh
   ls
-  if ! has nvm && [[ -f package.json ]]; then
-    loadnvm
-  fi
+  [[ -f package.json ]] && loadnvm
 }
 
 [[ $(type cd) = *'shell function'* ]] && unfunction ask

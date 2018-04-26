@@ -324,8 +324,8 @@ if has fzf; then
   has npm npmuninstall && alias npmun='npmuninstall '
 fi
 
-[[ -s ~/.nvm/nvm.sh ]] && loadnvm() {
-  if ! has nvm; then
+loadnvm() {
+  if [[ -s "/home/dan/.nvm/nvm.sh" ]] && ! has nvm; then
     echo 'loading nvm...'
     export NVM_DIR="$HOME/.nvm"
     [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh" --no-use
@@ -346,8 +346,6 @@ fi
       version=$(unalias curl; nvm ls | fzf --inline-info --ansi | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
       [[ -n $version ]] && nvm uninstall "$version"
     }
-  else
-    echo 'nvm already loaded!'
   fi
 }
 
