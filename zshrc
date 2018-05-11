@@ -28,6 +28,7 @@ plugins=(
   fast-syntax-highlighting
   yarn
   zsh-autopair
+  you-should-use
 )
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
@@ -45,6 +46,8 @@ theme='agnoster'
 # #     fi
 # # fi
 # zplug load
+
+export YSU_HARDCORE=1
 
 source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
 
