@@ -32,7 +32,7 @@ plugins=(
 )
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
-
+ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 # ZPLUG_REPOS=~/.zsh/plugins
