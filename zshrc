@@ -33,6 +33,8 @@ plugins=(
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 
+ZSH_AUTOSUGGEST_USE_ASYNC=1
+
 # ZPLUG_REPOS=~/.zsh/plugins
 # source ~/.zsh/zplug/init.zsh
 # zplug "zsh-users/zsh-autosuggestions", defer:2
