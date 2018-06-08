@@ -186,35 +186,41 @@ Plug 'https://github.com/Shougo/vimproc' " {{{
 \, {'do': 'make'}
 " }}}
 if has('nvim')
-  " Plug 'https://github.com/autozimu/LanguageClient-neovim' " {{{
-  "   \ , { 'do': ':UpdateRemotePlugins' }
-  "   let g:LanguageClient_autoStart = 1
-  "   let g:LanguageClient_serverCommands = {}
-  "   augroup LSP
-  "     if executable('javascript-typescript-stdio')
-  "       let g:LanguageClient_serverCommands.javascript = ['javascript-typescript-stdio']
-  "       let g:LanguageClient_serverCommands.jsx = ['javascript-typescript-stdio']
-  "       let g:LanguageClient_serverCommands['javascript.jsx'] = ['javascript-typescript-stdio']
-  "       autocmd FileType javascript
-  "       \ setlocal omnifunc+=LanguageClient#complete
-  "     endif
-  "     autocmd FileType javascript
-  "     \ nnoremap <silent><buffer> <Leader>ld :call LanguageClient_textDocument_definition()<CR>
-  "     autocmd FileType javascript
-  "     \ nnoremap <silent><buffer> <Leader>lh :call LanguageClient_textDocument_hover()<CR>
-  "     autocmd FileType javascript
-  "     \ nnoremap <silent><buffer> <Leader>lr :call LanguageClient_textDocument_rename()<CR>
-  "   augroup END
-  " " }}}
-  " Plug 'https://github.com/Shougo/Deoplete.nvim' " {{{
-  "   \ , { 'do': ':UpdateRemotePlugins' }
-  "   let g:deoplete#enable_at_startup = 1
-  "   let g:deoplete#auto_completion_start_length = 3
-  "   augroup Deoplete
-  "     au!
-  "     autocmd CompleteDone * silent! pclose!
-  "   augroup END
-  " " }}}
+  Plug 'https://github.com/autozimu/LanguageClient-neovim' " {{{
+    \ { 'do': [':UpdateRemotePlugins', './install.sh']
+    \ , 'branch': 'next',
+    \ }
+    let g:LanguageClient_autoStart = 1
+    let g:LanguageClient_serverCommands = {}
+    augroup LSP
+      if executable('flow-language-server')
+        let g:LanguageClient_serverCommands.javascript = ['flow-language-server', '--stdio']
+        let g:LanguageClient_serverCommands.jsx = ['flow-language-server', '--stdio']
+        let g:LanguageClient_serverCommands['javascript.jsx'] = ['flow-language-server', '--stdio']
+        autocmd FileType javascript
+        \ setlocal omnifunc+=LanguageClient#complete
+        autocmd FileType javascript
+        \ nnoremap <silent><buffer> <Leader>ld :call LanguageClient_textDocument_definition()<CR>
+        autocmd FileType javascript
+        \ nnoremap <silent><buffer> <Leader>lh :call LanguageClient_textDocument_hover()<CR>
+        autocmd FileType javascript
+        \ nnoremap <silent><buffer> <Leader>lr :call LanguageClient_textDocument_rename()<CR>
+      endif
+    augroup END
+    nnoremap <silent> <leader>lsp :call LanguageClient_contextMenu()<CR>
+    " nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+    " nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+    " nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+  " }}}
+  Plug 'https://github.com/Shougo/Deoplete.nvim' " {{{
+    \ , { 'do': ':UpdateRemotePlugins' }
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#auto_completion_start_length = 3
+    augroup Deoplete
+      au!
+      autocmd CompleteDone * silent! pclose!
+    augroup END
+  " }}}
   Plug 'https://github.com/kassio/neoterm'
   Plug 'https://github.com/Shougo/neco-syntax'
 elseif has('job') && has('timers') && has('lambda')
@@ -467,9 +473,9 @@ Plug 'https://github.com/jeetsukumaran/vim-filebeagle' " {{{
 Plug 'https://github.com/mhinz/vim-sayonara'
 Plug 'https://github.com/AndrewRadev/splitjoin.vim'
 Plug 'https://github.com/sheerun/vim-polyglot'
-" Plug 'https://github.com/junegunn/fzf' " {{{
-" \, { 'dir': '~/.fzf', 'do': './install --all' }
-" " }}}
+Plug 'https://github.com/junegunn/fzf' " {{{
+\, { 'dir': '~/.fzf', 'do': './install --all' }
+" }}}
 Plug 'https://github.com/junegunn/fzf.vim' " {{{
   nnoremap <Leader>F <Esc>:Files<CR>
 " }}}
@@ -510,51 +516,51 @@ Plug 'https://github.com/t9md/vim-quickhl' " {{{
   nnoremap <silent> <leader>th <Esc>:QuickhlCwordToggle<CR>
 " }}}
 " Plug 'https://github.com/mickaobrien/vim-stackoverflow'
-" Plug 'https://github.com/hecal3/vim-leader-guide' " {{{
-"   " nnoremap <silent> <Leader> :<c-u>LeaderGuide '<Space>'<CR>
-"   let g:leaderGuide_default_group_name = '+group'
-"   let g:leaderGuide_hspace = 2
-"   let s:leaderGuide_max_desc_len = 30
+Plug 'https://github.com/hecal3/vim-leader-guide' " {{{
+  nnoremap <silent> <Leader> :<c-u>LeaderGuide '<Space>'<CR>
+  let g:leaderGuide_default_group_name = '+group'
+  let g:leaderGuide_hspace = 2
+  let s:leaderGuide_max_desc_len = 30
 
-"   function! s:leaderGuide_displayfunc() abort
-"     " Kill ending <cr>
-"     let g:leaderGuide#displayname =
-"     \ substitute(g:leaderGuide#displayname, '<CR>$', '', 'i')
-"     " Kill beginning <esc>
-"     let g:leaderGuide#displayname =
-"     \ substitute(g:leaderGuide#displayname, '^<Esc>', '', 'i')
-"     let g:leaderGuide#displayname =
-"     \ substitute(g:leaderGuide#displayname, '<Esc>', '⇬', 'i')
-"     let g:leaderGuide#displayname =
-"     \ substitute(g:leaderGuide#displayname, '<CR>', '↵', 'i')
-"     " Kill beginning <plug>
-"     let g:leaderGuide#displayname =
-"     \ substitute(g:leaderGuide#displayname,
-"     \ '^<plug>(\?\([^)]*\))\?', '\1', 'i')
-"     " Truncate to s:leaderGuide_max_desc_len chars or less
-"     if len(g:leaderGuide#displayname) > s:leaderGuide_max_desc_len
-"       let g:leaderGuide#displayname =
-"       \ g:leaderGuide#displayname[:s:leaderGuide_max_desc_len-1]
-"       \ ."…"
-"     endif
-"   endfunction
-"   let g:leaderGuide_displayfunc = [function("s:leaderGuide_displayfunc")]
+  function! s:leaderGuide_displayfunc() abort
+    " Kill ending <cr>
+    let g:leaderGuide#displayname =
+    \ substitute(g:leaderGuide#displayname, '<CR>$', '', 'i')
+    " Kill beginning <esc>
+    let g:leaderGuide#displayname =
+    \ substitute(g:leaderGuide#displayname, '^<Esc>', '', 'i')
+    let g:leaderGuide#displayname =
+    \ substitute(g:leaderGuide#displayname, '<Esc>', '⇬', 'i')
+    let g:leaderGuide#displayname =
+    \ substitute(g:leaderGuide#displayname, '<CR>', '↵', 'i')
+    " Kill beginning <plug>
+    let g:leaderGuide#displayname =
+    \ substitute(g:leaderGuide#displayname,
+    \ '^<plug>(\?\([^)]*\))\?', '\1', 'i')
+    " Truncate to s:leaderGuide_max_desc_len chars or less
+    if len(g:leaderGuide#displayname) > s:leaderGuide_max_desc_len
+      let g:leaderGuide#displayname =
+      \ g:leaderGuide#displayname[:s:leaderGuide_max_desc_len-1]
+      \ ."…"
+    endif
+  endfunction
+  let g:leaderGuide_displayfunc = [function("s:leaderGuide_displayfunc")]
 
-"   function! s:map_leaderGuides(maps, l) abort
-"     for k in a:l
-"       let g = k == '<leader>' ? g:mapleader : k
-"       if a:maps =~ 'n'
-"         exe 'nnoremap <silent> ' . k . ' :<c-u>LeaderGuide ''' . g . '''<CR>'
-"       endif
-"       if a:maps =~ 'v'
-"         exe 'xnoremap <silent> ' . k . ' :<c-u>LeaderGuideVisual ''' . g . '''<CR>'
-"       endif
-"     endfor
-"   endfunction
+  function! s:map_leaderGuides(maps, l) abort
+    for k in a:l
+      let g = k == '<leader>' ? g:mapleader : k
+      if a:maps =~ 'n'
+        exe 'nnoremap <silent> ' . k . ' :<c-u>LeaderGuide ''' . g . '''<CR>'
+      endif
+      if a:maps =~ 'v'
+        exe 'xnoremap <silent> ' . k . ' :<c-u>LeaderGuideVisual ''' . g . '''<CR>'
+      endif
+    endfor
+  endfunction
 
-"   call s:map_leaderGuides('n', [ 'co' ])
-"   call s:map_leaderGuides('nv', [ '<leader>', '[', ']' ])
-"   " }}}
+  call s:map_leaderGuides('n', [ 'co' ])
+  call s:map_leaderGuides('nv', [ '<leader>', '[', ']' ])
+  " }}}
 " }}}
 " {{{ unite.vim
 Plug 'https://github.com/Shougo/unite.vim'
@@ -730,7 +736,9 @@ Plug 'https://github.com/Twinside/vim-hoogle' " {{{
   augroup END
 " }}}
 Plug 'https://github.com/enomsg/vim-haskellConcealPlus'
-Plug 'https://github.com/mpickering/hlint-refactor-vim'
+Plug 'https://github.com/mpickering/hlint-refactor-vim' " {{{
+  let g:hlintRefactor#disableDefaultKeybindings = 1
+" }}}
 " }}}
 " " {{{ rust
 " Plug 'https://github.com/rust-lang/rust.vim'
@@ -777,8 +785,8 @@ endif
     call unite#set_profile('files', 'context.smartcase', 1)
     call unite#custom#source('line,outline', 'matchers', 'matcher_regexp')
     call unite#custom#profile('default', 'context', {
-    \   'no_split': 1,
-    \   'prompt_direction': 'top',
+    \   'prompt_direction': 'below',
+    \   'direction': 'dynamicbottom',
     \   'start_insert': 1,
     \   'prompt': ' ',
     \   'prompt_focus': 1,
@@ -787,8 +795,8 @@ endif
     \   'winheight': 10,
     \   'enable_start_insert': 1,
     \ })
-    " \   'prompt_direction': 'below',
-    " \   'direction': 'dynamicbottom',
+    " \   'no_split': 1,
+    " \   'prompt_direction': 'top',
 
   nnoremap <silent> <Leader><Leader> <Esc>:Unite -buffer-name=mapping  mapping command function<CR>Space
   nnoremap <silent> <Leader>r        <Esc>:Unite -buffer-name=register register<CR>
@@ -903,13 +911,9 @@ endif
 " }}}
 " {{{ functions
 
-function! PlugAdd() abort " {{{ TODO
-  " check clipboard for 'https://github.com/' or user arg
-  " substitute above match with 'Plug '
-  " surround remainder with quotes
-  " add to current line
+function! UrlToScriptTag() abort " {{{
+  normal ysiW"Isrc=diWAscript,�kl pa type="text/javascript^j
 endfunction
-command! -nargs=* PlugAdd call PlugAdd()
 " }}}
 
 function! s:DiffU() abort " {{{
@@ -937,7 +941,7 @@ function! s:DiffU() abort " {{{
   return 1
 endfunction
 command! -bar -nargs=0 DiffU call s:DiffU()
-nnoremap <silent> <Leader>d <Esc>:DiffU<CR>
+" nnoremap <silent> <Leader>d <Esc>:DiffU<CR>
 " }}}
 
 function! DiffWrite() abort " {{{
@@ -957,7 +961,7 @@ function! DiffWrite() abort " {{{
   redraw!
 endfunction
 command! -bar -nargs=0 W call DiffWrite()
-nnoremap <silent> <Leader>w <Esc>:W<CR>
+" nnoremap <silent> <Leader>w <Esc>:W<CR>
 " }}}
 
 function! s:ReadUrl(url) abort " {{{
@@ -1209,7 +1213,8 @@ nnoremap <F6> <Esc>:set paste!<CR>
 inoremap <F6> <C-O>:set paste!<CR>
 nnoremap <leader>t2 :<C-u>set ts=2 sw=2<CR>
 nnoremap <leader>t4 :<C-u>set ts=4 sw=4<CR>
-nnoremap coe :<C-u>set expandtab!<CR>
+nnoremap <leader>t8 :<C-u>set ts=8 sw=8<CR>
+nnoremap yoe :<C-u>set expandtab!<CR>
 
 " nnoremap <Leader> <Nop>
 
