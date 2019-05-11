@@ -6,8 +6,8 @@ esac
 
 [[ -f ~/.bash_aliases ]] && source ~/.bash_aliases
 
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=999999999
+HISTFILESIZE=999999999
 HISTCONTROL=ignoreboth
 shopt -s histappend
 shopt -s histverify

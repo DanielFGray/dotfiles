@@ -60,92 +60,94 @@ zle -N zle-keymap-select
 
 # add more vim-like operators
 
-bindkey -M vicmd 'cc' vi-change-whole-line
-bindkey -M vicmd 'dd' kill-whole-line
+# if (( ${ZSH_VERSION%%.*} < 5.1 )); then
+  bindkey -M vicmd 'cc' vi-change-whole-line
+  bindkey -M vicmd 'dd' kill-whole-line
 
-_vi_delete-in() {
-  local char lchar rchar lsearch rsearch count
-  read -k char
-  if [[ "$char" = 'w' ]]; then
-    zle vi-backward-word
-    lsearch="$CURSOR"
-    zle vi-forward-word
-    rsearch="$CURSOR"
-    RBUFFER="$BUFFER[$rsearch+1,${#BUFFER}]"
-    LBUFFER="$LBUFFER[1,$lsearch]"
-    return
-  elif [[ "$char" = '(' || "$char" = ')' ]]; then
-    lchar='('
-    rchar=')'
-  elif [[ "$char" = '[' || "$char" = ']' ]]; then
-    lchar='['
-    rchar=']'
-  elif [[ "$char" = '{' || "$char" = '}' ]]; then
-    lchar='{'
-    rchar='}'
-  else
+  _vi_delete-in() {
+    local char lchar rchar lsearch rsearch count
+    read -k char
+    if [[ "$char" = 'w' ]]; then
+      zle vi-backward-word
+      lsearch="$CURSOR"
+      zle vi-forward-word
+      rsearch="$CURSOR"
+      RBUFFER="$BUFFER[$rsearch+1,${#BUFFER}]"
+      LBUFFER="$LBUFFER[1,$lsearch]"
+      return
+    elif [[ "$char" = '(' || "$char" = ')' ]]; then
+      lchar='('
+      rchar=')'
+    elif [[ "$char" = '[' || "$char" = ']' ]]; then
+      lchar='['
+      rchar=']'
+    elif [[ "$char" = '{' || "$char" = '}' ]]; then
+      lchar='{'
+      rchar='}'
+    else
+      lsearch="${#LBUFFER}"
+      while (( lsearch > 0 )) && [[ "$LBUFFER[$lsearch]" != "$char" ]]; do
+        (( lsearch-- ))
+      done
+      rsearch=0
+      while [[ $rsearch -lt (( ${#RBUFFER} + 1 )) ]] && [[ "$RBUFFER[$rsearch]" != "$char" ]]; do
+        (( rsearch++ ))
+      done
+      RBUFFER="$RBUFFER[$rsearch,${#RBUFFER}]"
+      LBUFFER="$LBUFFER[1,$lsearch]"
+      return
+    fi
+    count=1
     lsearch="${#LBUFFER}"
-    while (( lsearch > 0 )) && [[ "$LBUFFER[$lsearch]" != "$char" ]]; do
+    while (( lsearch > 0 )) && (( count > 0 )); do
       (( lsearch-- ))
+      if [[ "$LBUFFER[$lsearch]" = "$rchar" ]]; then
+        (( count++ ))
+      fi
+      if [[ "$LBUFFER[$lsearch]" = "$lchar" ]]; then
+        (( count-- ))
+      fi
     done
+    count=1
     rsearch=0
-    while [[ $rsearch -lt (( ${#RBUFFER} + 1 )) ]] && [[ "$RBUFFER[$rsearch]" != "$char" ]]; do
+    while (( "$rsearch" < ${#RBUFFER} + 1 )) && [[ "$count" > 0 ]]; do
       (( rsearch++ ))
+      if [[ $RBUFFER[$rsearch] = "$lchar" ]]; then
+        (( count++ ))
+      fi
+      if [[ $RBUFFER[$rsearch] = "$rchar" ]]; then
+        (( count-- ))
+      fi
     done
     RBUFFER="$RBUFFER[$rsearch,${#RBUFFER}]"
     LBUFFER="$LBUFFER[1,$lsearch]"
-    return
-  fi
-  count=1
-  lsearch="${#LBUFFER}"
-  while (( lsearch > 0 )) && (( count > 0 )); do
-    (( lsearch-- ))
-    if [[ "$LBUFFER[$lsearch]" = "$rchar" ]]; then
-      (( count++ ))
-    fi
-    if [[ "$LBUFFER[$lsearch]" = "$lchar" ]]; then
-      (( count-- ))
-    fi
-  done
-  count=1
-  rsearch=0
-  while (( "$rsearch" < ${#RBUFFER} + 1 )) && [[ "$count" > 0 ]]; do
-    (( rsearch++ ))
-    if [[ $RBUFFER[$rsearch] = "$lchar" ]]; then
-      (( count++ ))
-    fi
-    if [[ $RBUFFER[$rsearch] = "$rchar" ]]; then
-      (( count-- ))
-    fi
-  done
-  RBUFFER="$RBUFFER[$rsearch,${#RBUFFER}]"
-  LBUFFER="$LBUFFER[1,$lsearch]"
-}
-zle -N _vi_delete-in
-bindkey -M vicmd 'di' _vi_delete-in
+  }
+  zle -N _vi_delete-in
+  bindkey -M vicmd 'di' _vi_delete-in
 
-_vi_delete-around() {
-  zle _vi_delete-in
-  zle vi-backward-char
-  zle vi-delete-char
-  zle vi-delete-char
-}
-zle -N _vi_delete-around
-bindkey -M vicmd 'da' _vi_delete-around
+  _vi_delete-around() {
+    zle _vi_delete-in
+    zle vi-backward-char
+    zle vi-delete-char
+    zle vi-delete-char
+  }
+  zle -N _vi_delete-around
+  bindkey -M vicmd 'da' _vi_delete-around
 
-_vi_change-in() {
-  zle _vi_delete-in
-  zle vi-insert
-}
-zle -N _vi_change-in
-bindkey -M vicmd 'ci' _vi_change-in
+  _vi_change-in() {
+    zle _vi_delete-in
+    zle vi-insert
+  }
+  zle -N _vi_change-in
+  bindkey -M vicmd 'ci' _vi_change-in
 
-_vi_change-around() {
-  zle _vi_delete-in
-  zle vi-backward-char
-  zle vi-delete-char
-  zle vi-delete-char
-  zle vi-insert
-}
-zle -N _vi_change-around
-bindkey -M vicmd 'ca' _vi_change-around
+  _vi_change-around() {
+    zle _vi_delete-in
+    zle vi-backward-char
+    zle vi-delete-char
+    zle vi-delete-char
+    zle vi-insert
+  }
+  zle -N _vi_change-around
+  bindkey -M vicmd 'ca' _vi_change-around
+# fi

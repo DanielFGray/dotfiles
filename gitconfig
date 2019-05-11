@@ -1,11 +1,27 @@
 [github]
-  user = DanielFGray
-  email = DanielFGray@gmail.com
+	user = DanielFGray
+	email = DanielFGray@gmail.com
 [user]
-  name = DanielFGray
-  email = DanielFGray@gmail.com
+	name = DanielFGray
+	email = DanielFGray@gmail.com
 [push]
-  default = simple
+	default = simple
 [alias]
-  cl = clone
-	gud = commit -a -m \"git gud\"
+	gud = commit -a -m \"my hands are typing words\"
+	stashpop = pull --rebase --autostash
+[core]
+	pager = diff-so-fancy | less --tabs=2 -RFX
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse

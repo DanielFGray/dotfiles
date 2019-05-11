@@ -16,7 +16,7 @@ mpd_port = 6600
 # mpd_port = PORT
 # Connect to MPD on the specified port.
 
-mpd_music_dir = /mnt/media/music
+mpd_music_dir = /home/shared/music
 # mpd_music_dir = PATH
 # Search for files in specified directory. This is needed for tag editor to work.
 
@@ -41,15 +41,11 @@ visualizer_in_stereo = yes
 # visualizer_in_stereo = yes/no
 # Should be set to 'yes', if fifo output's format was set to 44100:16:2.
 
-visualizer_sample_multiplier = 1
-# visualizer_sample_multiplier = NUMBER
-# Multiply received samples by given value. Very useful for proper visualization of quiet music.
-
 visualizer_sync_interval = 10
 # visualizer_sync_interval = SECONDS
 # Defines interval between syncing visualizer and audio outputs.
 
-visualizer_type = spectrum
+# visualizer_type = spectrum
 # visualizer_type = spectrum/wave/wave_filled/ellipse
 # Defines default visualizer type (spectrum is available only if ncmpcpp was  compiled  with  fftw
 # support).
@@ -383,10 +379,6 @@ main_window_color = white
 # color2 = COLOR
 # One of colors used in Song info, Tiny tag editor and Search engine.
 
-main_window_highlight_color = cyan
-# main_window_highlight_color = COLOR
-# Color of main window's highlight.
-
 progressbar_color = black
 # progressbar_color = COLOR
 # Color of progressbar.
@@ -401,7 +393,8 @@ progressbar_elapsed_color = white
 # alternative_ui_separator_color = COLOR
 # Color of separators used in alternative user interface.
 
-active_column_color = blue
+current_item_inactive_column_prefix ''
+current_item_inactive_column_suffix ''
 # active_column_color = COLOR
 # Color of active column's highlight.
 
@@ -410,3 +403,5 @@ active_column_color = blue
 
 # active_window_border = COLOR
 # Color of active window's border.
+current_item_prefix = "$(cyan)$r"
+current_item_suffix = "$/r$(end)"

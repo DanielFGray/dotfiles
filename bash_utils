@@ -87,6 +87,7 @@ has() {
 select_from() {
   local a c cmd
   cmd='command -v'
+  [[ -n $ZSH_VERSION ]] && emulate -L bash
   for a in "$@"; do
     case "$a" in
       -c) cmd="$2"; shift 2 ;;

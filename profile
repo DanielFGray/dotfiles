@@ -2,9 +2,6 @@
 
 if [[ -n "$BASH_VERSION" && -f "$HOME/.bashrc" ]]; then
   source "$HOME/.bashrc"
-  IFS=: read -ra current_path <<< "$PATH"
-elif [[ -n "$ZSH_VERSION" ]]; then
-  IFS=: read -rA current_path <<< "$PATH"
 fi
 
 has() {
@@ -32,7 +29,7 @@ dirs+=(
 )
 
 for d in "${dirs[@]}"; do
-  if [[ -d "$d" && ! " ${current_path[*]} " = *" $d "* ]]; then
+  if [[ -d "$d" && ! ":${PATH}:" = *":$d:"* ]]; then
     PATH="$d:$PATH"
   fi
 done
@@ -45,7 +42,7 @@ if has fzf; then
     export FZF_CTRL_T_COMMAND='fnd -no-hidden'
     export FZF_ALT_C_COMMAND='fnd -no-hidden -type d'
   }
-  export FZF_DEFAULT_OPTS='--bind="Ctrl-A:toggle-all,`:jump,Ctrl-d:half-page-down,Ctrl-u:half-page-up" --reverse --height=75% +s -e --inline-info --cycle --jump-labels="asdfhjkl"'
+  export FZF_DEFAULT_OPTS='--bind="Ctrl-A:toggle-all,`:jump" --ansi --layout=reverse +s -e --inline-info --cycle --jump-labels="asdfghjklzxcvbnmqwertyuiop"'
   export FZF_CTRL_R_OPTS='--bind="?:toggle-preview" --preview="echo {}" --preview-window="down:3:wrap:hidden"'
 fi
 

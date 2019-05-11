@@ -1,4 +1,8 @@
 init-author-name=DanielFGray
 init-author-email=DanielFGray@gmail.com
 init-license=GPL-3.0
-init-version=0.0.1
+init-version=0.1.0
+searchlimit=60
+package-lock=false
+prefix=/home/dan/.npm
+scope=username

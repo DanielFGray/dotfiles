@@ -5,10 +5,12 @@ autoload -Uz promptinit && promptinit
 autoload -Uz colors && colors
 autoload -Uz zmv
 
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
 if [[ -f $HOME/.bash_aliases ]]; then
   source $HOME/.bash_aliases
 else
-  printf '%s%s%s\n' "$(tput setaf 1)" 'Error loading bash_aliases' "$(tput sgr0)"
+  print "$fg[red]Error loading bash_aliases$reset_color\n"
 fi
 
 HISTFILE="$HOME/.zsh_history"
@@ -17,7 +19,7 @@ HISTFILESIZE=999999999
 SAVEHIST=$HISTSIZE
 REPORTTIME=1
 
-# MODE_INDICATOR="%{$fg[red]%}%{$bg[red]%}  %{$reset_color%}"
+MODE_INDICATOR="%{$fg[red]%}%{$bg[red]%}  %{$reset_color%}"
 VIRTUAL_ENV_DISABLE_PROMPT=1
 DEFAULT_USER='dan'
 plugins=(
@@ -52,8 +54,6 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1
 export YSU_HARDCORE=1
 
 source ~/.zsh/load.zsh || err 'error loading ~/.zsh/load.zsh'
-
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 [[ -f package.json ]] && loadnvm
 
@@ -91,11 +91,16 @@ alias -g V='| vim -'
 alias -g DN='&> /dev/null'
 alias -g F='| fzf -e -m'
 
-alias -s pdf=zathura
-alias -s epub=zathura
+has jq && {
+  alias -s json='jq -C "."'
+}
+
+has x-pdf && {
+  alias -s pdf=x-pdf
+  alias -s epub=x-pdf
+}
 
 setopt append_history
-setopt extended_history
 setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
@@ -150,8 +155,5 @@ zstyle ':completion::approximate*:*' prefix-needed false
 zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
 
 export DISABLE_AUTO_TITLE=true
-
-# export PATH="$HOME/.yarn/bin:$PATH"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).

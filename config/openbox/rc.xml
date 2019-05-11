@@ -249,7 +249,7 @@
       <action name="ToggleShowDesktop"/>
     </keybind>
     <!-- Keybindings for windows -->
-    <keybind key="A-F4">
+    <keybind key="W-x">
       <action name="Close"/>
     </keybind>
     <keybind key="A-Escape">
@@ -257,7 +257,7 @@
       <action name="FocusToBottom"/>
       <action name="Unfocus"/>
     </keybind>
-    <keybind key="A-space">
+    <keybind key="W-space">
       <action name="ShowMenu">
         <menu>client-menu</menu>
       </action>
@@ -328,18 +328,9 @@
       <action name="Execute">
         <startupnotify>
           <enabled>true</enabled>
-          <name>Run Program</name>
-        </startupnotify>
-        <command>gmrun</command>
-      </action>
-    </keybind>
-    <keybind key="A-F3">
-      <action name="Execute">
-        <startupnotify>
-          <enabled>true</enabled>
           <name>dmenu-bind</name>
         </startupnotify>
-        <command>dmenu_run -b -z -fn 'Fantasque Sans Mono-8' -nb '#131313'</command>
+        <command>dmenu_run -z -fn "Fantasque Sans Mono-8" -nb "#131313"</command>
       </action>
     </keybind>
     <keybind key="W-f">
@@ -375,7 +366,7 @@
           <enabled>true</enabled>
           <name>Lock screen</name>
         </startupnotify>
-        <command>cb-lock</command>
+        <command>mylock</command>
       </action>
     </keybind>
     <keybind key="W-e">
@@ -385,15 +376,6 @@
           <name>Editor</name>
         </startupnotify>
         <command>x-editor</command>
-      </action>
-    </keybind>
-    <keybind key="W-m">
-      <action name="Execute">
-        <startupnotify>
-          <enabled>true</enabled>
-          <name>Mediaplayer</name>
-        </startupnotify>
-        <command>vlc</command>
       </action>
     </keybind>
     <keybind key="W-h">
@@ -414,28 +396,9 @@
         <command>pavucontrol</command>
       </action>
     </keybind>
-    <keybind key="W-x">
-      <action name="Execute">
-        <startupnotify>
-          <enabled>true</enabled>
-          <name>Logout</name>
-        </startupnotify>
-        <command>cb-exit</command>
-      </action>
-    </keybind>
     <keybind key="W-Tab">
       <action name="ShowMenu">
         <menu>client-list-combined-menu</menu>
-      </action>
-    </keybind>
-    <keybind key="W-space">
-      <action name="ShowMenu">
-        <menu>root-menu</menu>
-      </action>
-    </keybind>
-    <keybind key="A-C-q">
-      <action name="ShowMenu">
-        <menu>root-menu</menu>
       </action>
     </keybind>
     <!-- A bit of tiling -->

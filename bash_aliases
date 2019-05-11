@@ -26,7 +26,7 @@ if h=$(select_from apt 'apt-get'); then
   alias updupg="sudo $h upgrade "
   pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
   has fuser dpkg && alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-elif h=$(select_from trizen pacaur yaourt pacman); then
+elif h=$(select_from yay aurman trizen pacaur yaourt pacman); then
   [[ $h = pacman ]] && h="sudo pacman"
   alias canhaz="$h -S "
   updupg() {
@@ -42,7 +42,6 @@ elif [[ -f /etc/redhat-release ]]; then
 elif [[ -f /etc/gentoo-release ]]; then
   alias canhaz='sudo emerge -av '
 fi
-unset h
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -66,15 +65,23 @@ grep --version | grep -q 'gnu' && alias grep='grep --exclude-dir={.bzr,CVS,.git,
 alias historygrep='history | command grep -vF "history" | grep '
 alias shuf1='shuf -n1'
 vba() {
-  $EDITOR ~/dotfiles/bash_aliases
-  source ~/dotfiles/bash_aliases
+  fc -nl | nvim - +'sp ~/.bash_aliases'
+  source ~/.bash_aliases
 }
 has cdu && alias cdu='cdu -isdhD '
 has rsync && alias rsync='rsync -v --progress --stats '
-has lein && alias lein='rlwrap lein '
+has lein rlwrap && alias lein='rlwrap lein '
 has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --reverse --preview-window=bottom:hidden" pkgsearch '
 has pip && alias pipi='pip install --user --upgrade '
-has ptpython && alias ptpy='ptpython'
+has ptpython && alias ptpy='ptpython '
+py() {
+  if has ptpython && [[ -z "$*" ]]; then
+    ptpython
+  else
+    python "$@"
+  fi
+}
+has npx && alias npx='npx --no-install '
 
 # {{{ git aliases
 if has git; then
@@ -122,6 +129,62 @@ if has git; then
   }
 fi
 # }}}
+
+rgf() {
+  rg -l "$*" | fzf --preview="rg '$*' {}"
+}
+
+multiple() {
+  local l x y p c
+  c=0 p=0 l=()
+  while :; do
+    case $1 in
+      -p)
+        [[ $2 = -* ]] && { echo '-p requires an argument'; return; }
+        p="$2"; shift ;;
+      --) shift; break ;;
+      *) l+=("$1")
+    esac
+    shift
+  done
+  echo
+  if (( p > 1 )); then
+    for y in "${l[@]}"; do
+      (( c++ >= p )) && wait -n
+      echo "$* $y"
+      ("$@" "$y" &)
+    done
+    wait
+  else
+    for y in "${l[@]}"; do
+      echo "$* $y"
+      ("$@" "$y" &)
+    done
+  fi
+}
+
+watchfile() {
+  local f x
+  f=()
+  while :; do
+    case $1 in
+      -f) f+=("$2"); shift ;;
+      --) shift; break ;;
+    esac
+    shift
+  done
+  fn() {
+    local p
+    "$@" &
+    p=$!
+    inotifywait -e modify,attrib,close_write,move,create,delete "${f[@]}"
+    if pgrep "$p"; then
+      kill "$p"
+    fi
+    fn "$@"
+  }
+  fn "$@"
+}
 
 cd() {
   local dir
@@ -185,6 +248,19 @@ decide() {
   args=( "$@" )
   (( $# < 2 )) && args=( yes no )
   printf '%s\n' "${args[@]}" | shuf -n1
+}
+
+genwords() {
+  local n=5
+  [[ -n $1 ]] && { n=$1; shift }
+  shuf /usr/share/cracklib/cracklib-small | head -n $n | tr '\n' ' ' | sed -r "s/'(\w)\b/\1/g; s/\b(.)/\u\1/g; s/ //g"
+}
+
+genchars() {
+  local n=16 r='[a-z0-9]'
+  [[ -n $1 ]] && { n=$1; shift }
+  [[ -n $1 ]] && { r=$1; shift }
+  printf '%s\n' "$(grep -a -oP "$r" < /dev/urandom | tr -d '\n' | head -c "$n")"
 }
 
 ed() { command ed -p: "$@" ;} # https://sanctum.geek.nz/arabesque/actually-using-ed/
@@ -293,18 +369,24 @@ whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
 weather() { command curl -s http://wttr.in/"${*:-galveston texas}" ;}
 
-if has synclient vipe; then
-  synclient() {
-    if command synclient -l &> /dev/null; then
-      if (( $# > 0 )); then
-        command synclient "$@"
+if has vipe; then
+  if has xclip; then
+    alias eclip='xclip -o | vipe | xclip -r'
+  fi
+
+  if has synclient; then
+    synclient() {
+      if command synclient -l &> /dev/null; then
+        if (( $# > 0 )); then
+          command synclient "$@"
+        else
+          command synclient $(command synclient | vipe | sed '1d;s/ //g')
+        fi
       else
-        command synclient $(command synclient | vipe | sed '1d;s/ //g')
+        command synclient
       fi
-    else
-      command synclient
-    fi
-  }
+    }
+  fi
 fi
 
 if has fzf; then
@@ -525,7 +607,7 @@ has fzf mpv && {
       "${findopts[@]}" |
       sort -h |
       sed "s|$d/||" |
-      fzf -e +s --height=75% --reverse \
+      fzf -e +s --height=75% --reverse --multi \
       --bind='esc:abort' \
       "${fzfopts[@]}"
   }
@@ -535,6 +617,12 @@ has fzf mpv && {
     d="$HOME/videos"
     movies=$(command find "$d" -regextype posix-extended -iregex '.*\.(mp4|avi|mkv)' -type f | sort -h | sed "s|$d/||" | fzf -e +s -m --height=75% --reverse)
     mpv --fullscreen "$d/$(shuf -n1 <<< "$movies")"
+  }
+}
+
+has ffmpeg && {
+  tomp3() {
+    ffmpeg -i "$1" -qscale:a 0 "${1/%.*/.mp3}"
   }
 }
 

@@ -478,11 +478,7 @@
 			</action>
 		</item>
 		<item label="Exit">
-			<action name="Execute">
-				<command>
-					cb-exit
-				</command>
-			</action>
+      <action name="Exit"/>
 		</item>
 	</menu>
 </openbox_menu>

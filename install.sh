@@ -112,7 +112,6 @@ has zsh && config_zsh() {
   library https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/plugins/zsh-autosuggestions &
   library https://github.com/hlissner/zsh-autopair ~/.zsh/plugins/zsh-autopair &
   library https://github.com/MichaelAquilina/zsh-you-should-use ~/.zsh/plugins/you-should-use &
-  # library https://github.com/hchbaw/opp.zsh ~/.zsh/plugins/opp
   wait
 }
 
@@ -173,14 +172,14 @@ has nvm || config_nvm() {
 
 config() {
   has "config_$1" || {
-    color red ":: FAILED $1: does not exist"
+    err ":: FAILED $1: does not exist"
     return 1
   }
   color blue ":: STARTING $1"
   if "config_$1"; then
     color green ":: FINISHED $1"
   else
-    color red ":: FAILED $1"
+    err ":: FAILED $1"
   fi
 }
 

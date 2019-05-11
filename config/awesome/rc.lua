@@ -1,4 +1,4 @@
--- Standard awesome library
+-- {{{ Standard awesome library
 gears = require('gears')
 awful = require('awful')
 require('awful.autofocus')
@@ -15,7 +15,9 @@ lain = require('lain')
 cpugraph = require('awesome-wm-widgets.cpu-widget.cpu-widget')
 ramgraph = require('awesome-wm-widgets.ram-widget.ram-widget')
 -- treetile = require('treetile')
--- collision = require("collision")()
+-- collision = require('collision')()
+modalbind = require('modalbind')
+-- }}}
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -293,7 +295,7 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock(' %r ', 1)
-lain.widget.calendar({ attach_to = { mytextclock } })
+lain.widget.cal({ followtag = true, attach_to = { mytextclock } })
 -- local month_calendar = awful.widget.calendar.month()
 -- month_calendar:attach(mytextclock, 'tr')
 
@@ -307,7 +309,7 @@ lain.widget.calendar({ attach_to = { mytextclock } })
 local memicon = wibox.widget.imagebox(beautiful.widget.mem)
 local memwidget = lain.widget.mem({
   settings = function()
-    widget:set_markup(mem_now.used .. markup('#666', 'MB '))
+    widget:set_markup(mem_now.free .. markup('#666', 'MB '))
   end
 })
 
@@ -318,18 +320,26 @@ local tempwidget = lain.widget.temp({
   end
 })
 
--- local fsicon = wibox.widget.imagebox(beautiful.widget.hdd)
--- local fswidget = lain.widget.fs({
---   settings = function()
---     widget:set_markup(fs_now.used .. markup('#666', '% '))
---   end
--- })
+local fsicon = wibox.widget.imagebox(beautiful.widget.disk)
+local fswidget = lain.widget.fs({
+  followtag = true,
+  settings  = function()
+    widget:set_markup(
+      string.format(' %s %.1f %s %.1f ',
+        markup('#666', '/: '),
+        fs_now['/'].free,
+        markup('#666', '/home: '),
+        fs_now['/home'].free
+      )
+    )
+  end
+})
 
 local netupicon = wibox.widget.imagebox(beautiful.widget.netup)
 local netupwidget = lain.widget.net({
   settings = function()
     local data = tostring(net_now.sent):gsub('^0.%d', '0')
-    data = data:gsub('.0$', "")
+    data = data:gsub('.0$', '')
     widget:set_markup(data .. 'K ')
   end
 })
@@ -338,7 +348,7 @@ local netdownicon = wibox.widget.imagebox(beautiful.widget.netdown)
 local netdownwidget = lain.widget.net({
   settings = function()
     local data = tostring(net_now.received):gsub('^0.%d', '0')
-    data = data:gsub('.0$', "")
+    data = data:gsub('.0$', '')
     widget:set_markup(data .. 'K ')
   end
 })
@@ -346,8 +356,8 @@ local netdownwidget = lain.widget.net({
 local mpdicon = wibox.widget.imagebox(beautiful.widget.music)
 local mpdwidget = lain.widget.mpd({
   settings = function()
-    artist = ""
-    title = ""
+    artist = ''
+    title = ''
     if mpd_now.state == 'play' then
       artist = mpd_now.artist .. ' - '
       title = mpd_now.title .. ' '
@@ -442,6 +452,9 @@ awful.screen.connect_for_each_screen(function(s)
   -- Create a promptbox for each screen
   s.mypromptbox = awful.widget.prompt()
 
+  s.systray = wibox.widget.systray()
+  s.systray.visible = false
+
   -- Create an imagebox widget which will contains an icon indicating which layout we're using.
   -- We need one layoutbox per screen.
   s.mylayoutbox = awful.widget.layoutbox(s)
@@ -453,10 +466,87 @@ awful.screen.connect_for_each_screen(function(s)
   ))
 
   -- Create a taglist widget
-  s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
+  -- s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
+
+  s.mytaglist = awful.widget.taglist {
+      screen  = s,
+      filter  = awful.widget.taglist.filter.all,
+      buttons = taglist_buttons,
+      style   = {
+        shape = gears.shape.powerline
+      },
+      layout   = {
+        spacing = -12,
+        spacing_widget = {
+          color  = '#dddddd',
+          shape  = gears.shape.powerline,
+          widget = wibox.widget.separator,
+        },
+        layout  = wibox.layout.fixed.horizontal
+      },
+      widget_template = {
+        {
+          {
+            {
+              id     = 'text_role',
+              widget = wibox.widget.textbox,
+            },
+            layout = wibox.layout.fixed.horizontal,
+          },
+          left  = 18,
+          right = 18,
+          widget = wibox.container.margin
+        },
+        id     = 'background_role',
+        widget = wibox.container.background,
+      },
+    }
 
   -- Create a tasklist widget
-  s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
+  -- s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
+  s.mytasklist = awful.widget.tasklist {
+    screen   = s,
+    filter   = awful.widget.tasklist.filter.currenttags,
+    buttons  = tasklist_buttons,
+      style   = {
+        shape = gears.shape.powerline
+      },
+      layout   = {
+        spacing = -12,
+        spacing_widget = {
+          color  = '#dddddd',
+          shape  = gears.shape.powerline,
+          widget = wibox.widget.separator,
+        },
+        layout  = wibox.layout.flex.horizontal
+      },
+    -- Notice that there is *NO* wibox.wibox prefix, it is a template,
+    -- not a widget instance.
+    widget_template = {
+      {
+        {
+          {
+            {
+              id     = 'icon_role',
+              widget = wibox.widget.imagebox,
+            },
+            margins = 2,
+            widget  = wibox.container.margin,
+          },
+          {
+            id     = 'text_role',
+            widget = wibox.widget.textbox,
+          },
+          layout = wibox.layout.fixed.horizontal,
+        },
+        left  = 18,
+        right = 18,
+        widget = wibox.container.margin
+      },
+      id     = 'background_role',
+      widget = wibox.container.background,
+    },
+  }
 
   -- Create the wibox
   s.mywibox = awful.wibar({ position = 'top', height = 12, screen = s })
@@ -482,15 +572,15 @@ awful.screen.connect_for_each_screen(function(s)
       netupicon, space, netupwidget,
       netdownicon, space, netdownwidget,
       lsep,
-      -- fsicon, space, fswidget,
-      -- lsep,
+      fsicon, space, fswidget,
+      lsep,
       tempicon, space, tempwidget,
       lsep,
       memicon, space, memwidget, ramgraph,
       lsep,
       cpuicon, space, cpuwidget, space, cpugraph,
       lsep,
-      wibox.widget.systray(),
+      s.systray,
       mytextclock,
     } or {
       layout = wibox.layout.fixed.horizontal,
@@ -511,10 +601,43 @@ root.buttons(awful.util.table.join(
 -- }}}
 
 -- {{{ Key bindings
+modalbind.init()
+modalbind.set_location('top')
+modalbind.set_y_offset(100)
+
+mpdmap = {
+  { 't', function() sexec('mpc toggle') end, 'Toggle' },
+  { 'n', function() sexec('mpc next') end, 'Next' },
+  { 'p', function() sexec('mpc prev') end, 'Prev' },
+  { 's', function() sexec('mpc stop') end, 'Stop' },
+  { 'f', function() sexec('x-terminal-emulator -e fzmp') end, 'fzmp' },
+  { 'N', function() sexec('x-terminal-emulator -e ncmpcpp') end, 'ncmpcpp' },
+}
+
+executemap = {
+  { 'w', function() exec('x-www-browser') end, 'x-www-browser' },
+  { 'b', function() exec('dmbuku') end, 'buku' },
+}
+
+
+modalmap = {
+	{ 'm', function() modalbind.grab{keymap = mpdmap, name = '', stay_in_mode = false} end, 'mpd (group)' },
+	{ 'x', function() modalbind.grab{keymap = executemap, name = '', stay_in_mode = false} end, 'execute (group)' },
+	-- { 'separator', 'A Message' },
+}
+
 globalkeys = awful.util.table.join(
+  awful.key({ modkey }, ';', function()
+    modalbind.grab{keymap = modalmap, name = '', stay_in_mode = false}
+  end, { description = 'modal menu', group = 'awesome' }),
+
   awful.key({ modkey }, 's', function()
     hotkeys_popup.show_help()
   end, { description = 'show help', group = 'awesome' }),
+
+  awful.key({ modkey }, '=', function ()
+    awful.screen.focused().systray.visible = not awful.screen.focused().systray.visible
+  end, {description = 'Toggle systray visibility', group = 'awesome'}),
 
   awful.key({ modkey }, 'Left', function()
     awful.tag.viewprev()
@@ -635,10 +758,6 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey }, 'p', function()
     menubar.show()
   end, { description = 'show the menubar', group = 'launcher' }),
-
-  awful.key({ modkey }, 'b', function()
-    exec('dmbuku')
-  end, { description = 'dmenu buku bookmarks', group = 'launcher' }),
 
   awful.key({ modkey }, 'r', function()
     -- awful.screen.focused().mypromptbox:run()
@@ -880,7 +999,7 @@ awful.rules.rules = {
   -- { rule = { class = 'Firefox' },
   --   properties = { screen = 1, tag = '2' } },
 }
--- }}}
+-- }}}}}}
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.

@@ -162,7 +162,7 @@ Plug 'https://github.com/honza/vim-snippets'
 " " }}}
 Plug 'https://github.com/jiangmiao/auto-pairs'
 Plug 'https://github.com/tpope/vim-endwise'
-if exists('##MenuPopupChanged') && exists('*nvim_open_win')
+if (exists('##CompleteChanged') || exists('##MenuPopupChanged')) && exists('*nvim_open_win')
   Plug 'neoclide/coc.nvim' " {{{
   \ , {'tag': '*', 'do': 'yarn install'}
 
@@ -990,6 +990,7 @@ endif
 " TODO: more organizing
 syntax on
 
+set updatetime=300
 set backupcopy=yes
 set mouse=n
 set number relativenumber
