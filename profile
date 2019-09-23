@@ -42,7 +42,7 @@ if has fzf; then
     export FZF_CTRL_T_COMMAND='fnd -no-hidden'
     export FZF_ALT_C_COMMAND='fnd -no-hidden -type d'
   }
-  export FZF_DEFAULT_OPTS='--bind="Ctrl-A:toggle-all,`:jump" --ansi --layout=reverse +s -e --inline-info --cycle --jump-labels="asdfghjklzxcvbnmqwertyuiop"'
+  export FZF_DEFAULT_OPTS='--bind="Ctrl-A:toggle-all,`:jump" --ansi +s -e --inline-info --cycle --jump-labels="asdfghjklzxcvbnmqwertyuiop"'
   export FZF_CTRL_R_OPTS='--bind="?:toggle-preview" --preview="echo {}" --preview-window="down:3:wrap:hidden"'
 fi
 

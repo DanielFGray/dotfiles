@@ -46,11 +46,13 @@ fi
 alias ..='cd ..'
 alias ...='cd ../..'
 
+alias se='sudo -sE $EDITOR '
+
 alias cp='cp -v '
 alias mv='mv -v '
 alias rm='rm -v '
 alias ln='ln -v '
-alias curl='curl -v '
+alias vidir='vidir -v '
 alias chown='chown -v '
 alias chmod='chmod -v '
 alias rename='rename -v '
@@ -65,22 +67,31 @@ grep --version | grep -q 'gnu' && alias grep='grep --exclude-dir={.bzr,CVS,.git,
 alias historygrep='history | command grep -vF "history" | grep '
 alias shuf1='shuf -n1'
 vba() {
-  fc -nl | nvim - +'sp ~/.bash_aliases'
-  source ~/.bash_aliases
+  fc -rnl | $EDITOR ~/dotfiles/bash_aliases - +'set nomod bufhidden buftype=nofile | sp | bn | wincmd _'
+  exec "${SHELL##*/}"
 }
+
 has cdu && alias cdu='cdu -isdhD '
 has rsync && alias rsync='rsync -v --progress --stats '
 has lein rlwrap && alias lein='rlwrap lein '
-has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --reverse --preview-window=bottom:hidden" pkgsearch '
-has pip && alias pipi='pip install --user --upgrade '
-has ptpython && alias ptpy='ptpython '
-py() {
-  if has ptpython && [[ -z "$*" ]]; then
-    ptpython
-  else
-    python "$@"
+has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview-window=bottom:hidden" pkgsearch '
+
+if has python || has python3; then
+  if ! has pip && has pip3; then
+  ¦ alias pip='pip3 '
   fi
-}
+  has pip && alias pipi='pip install --user --upgrade '
+  has ptpython && alias ptpy='ptpython '
+
+  py() {
+    if has ptpython && [[ -z "$*" ]]; then
+  ¦ ¦ ptpython
+  ¦ else
+  ¦ ¦ python "$@"
+    fi
+  }
+fi
+
 has npx && alias npx='npx --no-install '
 
 # {{{ git aliases
@@ -198,8 +209,8 @@ cd() {
 }
 
 delete_empty() {
-  while [[ -n $(find -empty) ]]; do
-    find -empty -delete
+  while [[ -n $(find . -empty) ]]; do
+    find . -empty -delete
   done
 }
 
@@ -252,14 +263,17 @@ decide() {
 
 genwords() {
   local n=5
-  [[ -n $1 ]] && { n=$1; shift }
-  shuf /usr/share/cracklib/cracklib-small | head -n $n | tr '\n' ' ' | sed -r "s/'(\w)\b/\1/g; s/\b(.)/\u\1/g; s/ //g"
+  [[ -n $1 ]] && { n=$1; shift; }
+  shuf /usr/share/cracklib/cracklib-small |
+    head -n "$n" |
+    tr '\n' ' ' |
+    sed -r "s/'(\w)\b/\1/g; s/\b(.)/\u\1/g; s/ //g"
 }
 
 genchars() {
   local n=16 r='[a-z0-9]'
-  [[ -n $1 ]] && { n=$1; shift }
-  [[ -n $1 ]] && { r=$1; shift }
+  [[ -n $1 ]] && { n=$1; shift; }
+  [[ -n $1 ]] && { r=$1; shift; }
   printf '%s\n' "$(grep -a -oP "$r" < /dev/urandom | tr -d '\n' | head -c "$n")"
 }
 
@@ -308,9 +322,14 @@ textImage() {
 }
 
 burnusb() {
-  sudo dd if="$1" of="$2" bs=4M conv=sync status=progress
-  sync
-  ding 'burnusb' 'done'
+  sudo dd of="$1" bs=4M conv=sync status=progress && {
+    sync &&
+    ding 'burnusb' 'done'
+  }
+}
+
+ports_running() {
+  $(select_from 'ss' 'netstat') -tulpn | $(select_from 'less -S' 'fzf')
 }
 
 changeroot() {
@@ -331,17 +350,18 @@ changeroot() {
 extract() {
   if [[ -f "$1" ]]; then
     case "$1" in
-      *.tar.bz2)   tar xvjf "$1"   ;;
-      *.tar.gz)    tar xvzf "$1"   ;;
-      *.bz2)       bunzip2 "$1"    ;;
-      *.rar)       unrar x "$1"    ;;
-      *.gz)        gunzip "$1"     ;;
-      *.tar)       tar xvf "$1"    ;;
-      *.tbz2)      tar xvjf "$1"   ;;
-      *.tgz)       tar xvzf "$1"   ;;
-      *.zip)       unzip "$1"      ;;
-      *.Z)         uncompress "$1" ;;
-      *.7z)        7z x "$1"       ;;
+      *.tar.bz2)   tar -xjf "$@"   ;;
+      *.tar.gz)    tar -xzf "$@"   ;;
+      *.tar)       tar -xf "$@"    ;;
+      *.tbz2)      tar -xjf "$@"   ;;
+      *.tgz)       tar -xzf "$@"   ;;
+      *.bz2)       bunzip2 "$@"    ;;
+      *.rar)       unrar x "$@"    ;;
+      *.gz)        gunzip "$@"     ;;
+      *.zip)       unzip "$@"      ;;
+      *.Z)         uncompress "$@" ;;
+      *.7z)        7z x "$@"       ;;
+      *.xz)        xz -d "$@"      ;;
       *)           echo "'$1' cannot be extracted via >extract<" ;;
     esac
   else
@@ -432,9 +452,7 @@ loadnvm() {
 }
 
 [[ -s ~/.perlbrew/etc/bashrc ]] && {
-  loadperlbrew() {
-    source ~/.perlbrew/etc/bashrc
-  }
+  source ~/.perlbrew/etc/bashrc
 }
 
 nodemon() {
@@ -625,5 +643,7 @@ has ffmpeg && {
     ffmpeg -i "$1" -qscale:a 0 "${1/%.*/.mp3}"
   }
 }
+
+has n && alias n='sudo n '
 
 # vim:ft=sh:

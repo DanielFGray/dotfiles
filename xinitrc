@@ -27,6 +27,8 @@ while sleep 0.1; do
     [[ -r $HOME/.Xresources ]] && xrdb -load "$HOME/.Xresources"
     xsetroot -cursor_name left_ptr
 
+    xset -b
+
     setxkbmap \
       -option 'caps:ctrl_modifier' \
       -option 'compose:paus'
