@@ -78,16 +78,16 @@ has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview-windo
 
 if has python || has python3; then
   if ! has pip && has pip3; then
-  ¦ alias pip='pip3 '
+    alias pip='pip3 '
   fi
   has pip && alias pipi='pip install --user --upgrade '
   has ptpython && alias ptpy='ptpython '
 
   py() {
     if has ptpython && [[ -z "$*" ]]; then
-  ¦ ¦ ptpython
-  ¦ else
-  ¦ ¦ python "$@"
+      ptpython
+    else
+      python "$@"
     fi
   }
 fi
