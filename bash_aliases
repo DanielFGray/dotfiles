@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-export MANPAGER="bash -c \"col -b | vim -Nu NONE -c 'runtime macros/less.vim' -c 'setf man' -\""
-export EDITOR='vim'
-export HISTFILESIZE=500000
-export HISTSIZE=100000
-unset GREP_OPTIONS
-stty -ixon
-
 for bu in "${HOME}/.bash_utils" "${HOME}/dotfiles/bash_utils"; do
   if [[ -s "$bu" ]]; then
     . "$bu"
@@ -18,6 +11,13 @@ done
   err 'cannot source bash_utils' 'probably gonna die now'
 }
 unset d
+
+export EDITOR=$(select_from 'nvim' 'vim' 'vi')
+export MANPAGER="bash -c \"col -b | vim -Nu NONE -c 'runtime macros/less.vim' -c 'setf man' -\""
+export HISTFILESIZE=500000
+export HISTSIZE=100000
+unset GREP_OPTIONS
+stty -ixon
 
 has fortune && fortune -ae
 
@@ -78,16 +78,16 @@ has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview-windo
 
 if has python || has python3; then
   if ! has pip && has pip3; then
-  ¦ alias pip='pip3 '
+    alias pip='pip3 '
   fi
   has pip && alias pipi='pip install --user --upgrade '
   has ptpython && alias ptpy='ptpython '
 
   py() {
     if has ptpython && [[ -z "$*" ]]; then
-  ¦ ¦ ptpython
-  ¦ else
-  ¦ ¦ python "$@"
+      ptpython
+    else
+      python "$@"
     fi
   }
 fi
@@ -613,10 +613,10 @@ has fzf mpv && {
     local d findopts fzfopts
     d="$HOME/videos"
     findopts=()
-    fzfopts=( --bind="enter:execute(mpv --fullscreen $d/{})")
+    fzfopts=( "--bind=enter:execute(mpv --fullscreen $d/{})")
     if [[ $1 = '-t' ]]; then
       findopts=( -printf '%T@ %P\n' )
-      fzfopts=( --bind="enter:execute(mpv --fullscreen $d/{2..})" --with-nth='2..' --tac )
+      fzfopts=( "--bind=enter:execute(mpv --fullscreen $d/{2..})" '--with-nth=2..' --tac )
     fi
     command find "$d" \
       -regextype posix-extended \
@@ -645,5 +645,42 @@ has ffmpeg && {
 }
 
 has n && alias n='sudo n '
+
+if has docker; then
+  fzds() {
+    local pkg
+    pkg=$(
+      docker search --limit=100 "$*" |
+        fzf --height=10 --header-lines=1 --reverse --preview='docker inspect {1}'
+    )
+    if [[ -n $pkg ]]; then
+      if [[ -n $ZSH_VERSION ]]; then
+        print -z "docker pull ${pkg%% *}"
+      elif ask "docker pull ${pkg%% *}?"; then
+        docker pull "${pkg%% *}"
+      fi
+    fi
+  }
+  if has docker-compose; then
+    dcp() {
+      local f c
+      [[ -z $1 ]] && { err "missing project directory"; return; }
+      f=~/build/dockerfiles/"$1"/docker-compose.yml
+      [[ ! -f $f ]] && { err ~/"build/dockerfiles/$1/docker-compose.yml does not exist"; return; }
+      shift
+      [[ -z $1 ]] && { err "missing command"; return; }
+      case "$1" in
+        up)
+          shift
+          [[ $1 = "-d" ]] && shift
+          docker-compose -f "$f" up -d "$@"
+          docker-compose -f "$f" logs -f "$@"
+          return ;;
+        *) docker-compose -f "$f" "$@"
+          return ;;
+      esac
+    }
+  fi
+fi
 
 # vim:ft=sh:

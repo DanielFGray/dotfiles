@@ -28,10 +28,12 @@ plugins=(
   vi-mode
   zsh-autosuggestions
   fast-syntax-highlighting
-  yarn
   zsh-autopair
   you-should-use
 )
+has docker docker-compose && plugins+=( docker-compose )
+has yarn && plugins+=( yarn )
+
 theme='agnoster'
 [[ "$TTY" = '/dev/tty'* ]] && theme='kardan'
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
