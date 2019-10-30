@@ -368,6 +368,7 @@ local mpdwidget = lain.widget.mpd({
     widget:set_markup(artist .. title)
   end
 })
+
 -- mpdwidget:buttons(awful.util.table.join(
 --   awful.button({ }, 3, function()
 --     sexec('mpc -q toggle')
@@ -378,7 +379,31 @@ local mpdwidget = lain.widget.mpd({
 --   end)
 -- ))
 
-local sysloadwidget = lain.widget.sysload()
+baticon = wibox.widget.imagebox(beautiful.widget.bat_high)
+batwidget = lain.widget.bat({
+    ac = "AC",
+    timeout = 5,
+    notify = "off",
+    settings = function()
+        dir = ""
+
+        if bat_now.perc == "N/A" then
+            baticon:set_image(beautiful.widget.bat_low)
+            return
+        elseif bat_now.ac_status == 1 then
+            baticon:set_image(beautiful.widget.ac)
+        elseif tonumber(bat_now.perc) <= 5 then
+            baticon:set_image(beautiful.widget.bat_low)
+        elseif tonumber(bat_now.perc) <= 20 then
+            baticon:set_image(beautiful.widget.bat_mid)
+        else
+            dir = ' (' .. bat_now.time .. ") "
+            baticon:set_image(beautiful.widget.bat_high)
+        end
+
+        widget:set_markup(" " .. bat_now.perc .. "%" .. dir .. " ")
+    end
+  })
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = awful.util.table.join(
@@ -578,13 +603,14 @@ awful.screen.connect_for_each_screen(function(s)
       lsep,
       memicon, space, memwidget, ramgraph,
       lsep,
+      baticon, batwidget,
+      lsep,
       cpuicon, space, cpuwidget, space, cpugraph,
       lsep,
       s.systray,
       mytextclock,
     } or {
       layout = wibox.layout.fixed.horizontal,
-      sysloadwidget,
       lsep,
       mytextclock,
     }
@@ -621,9 +647,9 @@ executemap = {
 
 
 modalmap = {
-	{ 'm', function() modalbind.grab{keymap = mpdmap, name = '', stay_in_mode = false} end, 'mpd (group)' },
-	{ 'x', function() modalbind.grab{keymap = executemap, name = '', stay_in_mode = false} end, 'execute (group)' },
-	-- { 'separator', 'A Message' },
+  { 'm', function() modalbind.grab{keymap = mpdmap, name = '', stay_in_mode = false} end, 'mpd (group)' },
+  { 'x', function() modalbind.grab{keymap = executemap, name = '', stay_in_mode = false} end, 'execute (group)' },
+  -- { 'separator', 'A Message' },
 }
 
 globalkeys = awful.util.table.join(
@@ -761,7 +787,7 @@ globalkeys = awful.util.table.join(
 
   awful.key({ modkey }, 'r', function()
     -- awful.screen.focused().mypromptbox:run()
-    sexec('dmenu_run -z -fn "Fira Code-7" -nb "#131313" -o .9 ')
+    sexec('dmenu_run -z -fn "Fira Sans-7" -nb "#131313" -o .9 ')
   end, { description = 'run dmenu', group = 'launcher' }),
 
   -- Tag management
@@ -812,7 +838,12 @@ globalkeys = awful.util.table.join(
   -- awful.key({ }, 'XF86AudioMute', function()
   --   sexec('amixer -q sset Master toggle')
   -- end),
-  awful.key({ modkey }, 'F12', function()
+
+  awful.key({ }, 'XF86Display', function()
+    sexec('screen-toggle --output VGA-1 --mode 1600x900 --right-of LVDS-1')
+  end, { description = 'run "screen-toggle"', group = 'launcher' }),
+
+  awful.key({ modkey }, 'F3', function()
     sexec('mylock --suspend')
   end, { description = 'suspend and lock', group = 'launcher' }),
 

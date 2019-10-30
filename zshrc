@@ -81,6 +81,18 @@ ask() {
   [[ ${ans:u} = Y* ]]
 }
 
+if has fzf; then
+  has fzrepl && fzrepl() {
+    local x
+    x=$(command fzrepl "$@")
+    if $?; then
+      print -z "$x"
+    else
+      print $x
+    fi
+  }
+fi
+
 alias zcp='noglob zmv -C '
 alias zln='noglob zmv -L '
 alias zmv='noglob zmv '

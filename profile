@@ -54,4 +54,8 @@ if has x-www-browser; then
   export BROWSER='x-www-browser'
 fi
 
+if has qt5ct; then
+  export QT_QPA_PLATFORMTHEME="qt5ct"
+fi
+
 # export PATH="$HOME/.cargo/bin:$PATH"

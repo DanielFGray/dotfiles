@@ -63,7 +63,7 @@ alias lx='l -X '
 alias la='l -A '
 alias lax='la -X '
 alias lat='la -t '
-grep --version | grep -q 'gnu' && alias grep='grep --exclude-dir={.bzr,CVS,.git,.hg,.svn,node_modules,bower_components,jspm_packages} --color=auto -P '
+grep --version | grep -q 'gnu' && alias grep='grep --exclude-from=.gitignore --color=auto -P '
 alias historygrep='history | command grep -vF "history" | grep '
 alias shuf1='shuf -n1'
 vba() {
@@ -146,12 +146,20 @@ rgf() {
 }
 
 multiple() {
-  local l x y p c
+  local l x y p c v
   c=0 p=0 l=()
+  if (( $# < 2 )); then
+    err 'missing args'
+    return
+  fi
   while :; do
     case $1 in
+      -v) v=1 ;;
       -p)
-        [[ $2 = -* ]] && { echo '-p requires an argument'; return; }
+        if [[ $2 = -* ]]; then
+          echo '-p requires an argument'
+          return
+        fi
         p="$2"; shift ;;
       --) shift; break ;;
       *) l+=("$1")
@@ -168,7 +176,7 @@ multiple() {
     wait
   else
     for y in "${l[@]}"; do
-      echo "$* $y"
+      [[ -n $v ]] && echo "$* $y"
       ("$@" "$y" &)
     done
   fi

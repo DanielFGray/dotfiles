@@ -129,29 +129,7 @@ Plug 'https://github.com/haya14busa/is.vim'
 Plug 'https://github.com/bronson/vim-visual-star-search'
 " }}}
 " {{{ completion/building
-" Plug 'https://github.com/ervandew/supertab' " {{{
-" augroup SuperTab
-"   autocmd!
-"   autocmd FileType javascript,jsx,javascript.jsx
-"   \ let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-" augroup END
-" let g:SuperTabClosePreviewOnPopupClose = 1
-" " }}}
-" Plug 'https://github.com/Shougo/neosnippet' " {{{
-"   Plug 'https://github.com/Shougo/neosnippet-snippets'
-"   let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
-"   imap <C-K> <Plug>(neosnippet_expand_or_jump)
-"   smap <C-K> <Plug>(neosnippet_expand_or_jump)
-"   xmap <C-K> <Plug>(neosnippet_expand_target)
-"   imap <expr><tab> neosnippet#expandable_or_jumpable() ?
-"   \ "\<Plug>(neosnippet_expand_or_jump)"
-"   \ : pumvisible() ? "\<C-N>" : "\<Tab>"
-"   smap <expr><tab> neosnippet#expandable_or_jumpable() ?
-"   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
-"   if has('conceal')
-"     set conceallevel=2 concealcursor=i
-"   endif
-" " }}}
+" Plug 'zxqfl/tabnine-vim'
 Plug 'https://github.com/SirVer/ultisnips' " {{{
 let g:UltiSnipsExpandTrigger="<C-j>"
 " }}}
@@ -162,9 +140,9 @@ Plug 'https://github.com/honza/vim-snippets'
 " " }}}
 Plug 'https://github.com/jiangmiao/auto-pairs'
 Plug 'https://github.com/tpope/vim-endwise'
-if (exists('##CompleteChanged') || exists('##MenuPopupChanged')) && exists('*nvim_open_win')
+if has('nvim') || v:version >= 800
   Plug 'neoclide/coc.nvim' " {{{
-  \ , {'tag': '*', 'do': 'yarn install'}
+  \ , {'tag': '*', 'branch': 'release'}
 
   let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
   let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
@@ -183,29 +161,13 @@ if (exists('##CompleteChanged') || exists('##MenuPopupChanged')) && exists('*nvi
   " Use K for show documentation in preview window
   nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-  function! s:show_documentation()
+  function! s:show_documentation() abort
     if &filetype == 'vim'
       execute 'h '.expand('<cword>')
     else
       call CocAction('doHover')
     endif
   endfunction
-
-  " Remap for rename current word
-  nmap <leader>rn <Plug>(coc-rename)
-
-  " Remap for format selected region
-  vmap <leader>f  <Plug>(coc-format-selected)
-  nmap <leader>f  <Plug>(coc-format-selected)
-
-  " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-  vmap <leader>a  <Plug>(coc-codeaction-selected)
-  nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-  " Remap for do codeAction of current line
-  nmap <leader>ac  <Plug>(coc-codeaction)
-  " Fix autofix problem of current line
-  nmap <leader>qf  <Plug>(coc-fix-current)
 
   " Use `:Format` for format current buffer
   command! -nargs=0 Format :call CocAction('format')
@@ -214,19 +176,20 @@ if (exists('##CompleteChanged') || exists('##MenuPopupChanged')) && exists('*nvi
   command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 
-  " Add diagnostic info for https://github.com/itchyny/lightline.vim
-  " let g:lightline = {
-  "       \ 'colorscheme': 'wombat',
-  "       \ 'active': {
-  "       \   'left': [ [ 'mode', 'paste' ],
-  "       \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-  "       \ },
-  "       \ 'component_function': {
-  "       \   'cocstatus': 'coc#status'
-  "       \ },
-  "       \ }
+  " Remap for rename current word
+  nmap <leader>Cr <Plug>(coc-rename)
 
+  " Remap for format selected region
+  vmap <leader>Cfo  <Plug>(coc-format-selected)
 
+  " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+  vmap <leader>Ca  <Plug>(coc-codeaction-selected)
+  nmap <leader>Ca  <Plug>(coc-codeaction-selected)
+
+  " Remap for do codeAction of current line
+  nmap <leader>Cca  <Plug>(coc-codeaction)
+  " Fix autofix problem of current line
+  nmap <leader>Cf  <Plug>(coc-fix-current)
 
   " Using CocList
   " Show all diagnostics
@@ -234,7 +197,7 @@ if (exists('##CompleteChanged') || exists('##MenuPopupChanged')) && exists('*nvi
   " Manage extensions
   nnoremap <silent> <space>Ce  :<C-u>CocList extensions<cr>
   " Show commands
-  nnoremap <silent> <space>Cc  :<C-u>CocList commands<cr>
+  nnoremap <silent> <space>Cco  :<C-u>CocList commands<cr>
   " Find symbol of current document
   nnoremap <silent> <space>Co  :<C-u>CocList outline<cr>
   " Search workspace symbols
@@ -246,12 +209,17 @@ if (exists('##CompleteChanged') || exists('##MenuPopupChanged')) && exists('*nvi
   " Resume latest coc list
   nnoremap <silent> <space>Cp  :<C-u>CocListResume<CR>
 
+  function! s:cocHover() abort
+    call CocActionAsync('doHover')
+    call CocActionAsync('highlight')
+  endfunction
+
   augroup Coc
     autocmd!
     " Highlight symbol under cursor on CursorHold
-    autocmd CursorHold * silent call CocActionAsync('doHover')
+    autocmd CursorHold * silent call s:cocHover()
     " Setup formatexpr specified filetype(s).
-    autocmd FileType javascript,javascript.jsx,typescript,json setl formatexpr=CocAction('formatSelected')
+    autocmd FileType javascript,javascript.jsx,jsx,typescript,json setl formatexpr=CocAction('formatSelected')
     " Update signature help on jump placeholder
     autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
   augroup END
@@ -261,8 +229,10 @@ elseif has('nvim') || has('lambda')
     let g:ale_lint_delay = 500
     let g:ale_open_list = 0
     let g:ale_statusline_format = [ '✘ %d', '∆ %d', '' ]
-    let g:ale_sign_error = ''
-    let g:ale_sign_warning = ''
+    " let g:ale_sign_error = ''
+    " let g:ale_sign_warning = ''
+    let g:ale_sign_error = '�'
+  let g:ale_sign_warning = '��'
     let g:ale_echo_msg_error_str = 'E'
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_echo_msg_format = '%linter% %code% [%severity%] %s'
@@ -295,79 +265,6 @@ else
     nnoremap <silent> <Leader>c :<C-u>SyntasticCheck<CR>
   " }}}
 endif
-if has('nvim')
-  " Plug 'https://github.com/autozimu/LanguageClient-neovim' " {{{
-  "   \ { 'do': [':UpdateRemotePlugins', './install.sh']
-  "   \ , 'branch': 'next',
-  "   \ }
-  "   let g:LanguageClient_autoStart = 1
-  "   let g:LanguageClient_serverCommands = {}
-  "   let g:LanguageClient_serverCommands.javascript = []
-  "   let g:LanguageClient_serverCommands.jsx = []
-  "   augroup LSP
-  "     autocmd!
-  "     if executable('flow-language-server')
-  "       let g:LanguageClient_serverCommands.javascript = ['flow-language-server', '--stdio']
-  "       let g:LanguageClient_serverCommands.jsx = ['flow-language-server', '--stdio']
-  "       let g:LanguageClient_serverCommands['javascript.jsx'] = ['flow-language-server', '--stdio']
-  "       autocmd FileType javascript
-  "       \ setlocal omnifunc+=LanguageClient#complete
-  "       autocmd FileType javascript
-  "       \ nnoremap <silent><buffer> <Leader>ld :call LanguageClient_textDocument_definition()<CR>
-  "       autocmd FileType javascript
-  "       \ nnoremap <silent><buffer> <Leader>lh :call LanguageClient_textDocument_hover()<CR>
-  "       autocmd FileType javascript
-  "       \ nnoremap <silent><buffer> <Leader>lr :call LanguageClient_textDocument_rename()<CR>
-  "     endif
-  "   augroup END
-  "   nnoremap <silent> <leader>lsp :call LanguageClient_contextMenu()<CR>
-  "   " nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-  "   " nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-  "   " nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-  " " }}}
-  " Plug 'https://github.com/Shougo/Deoplete.nvim' " {{{
-  "   \ , { 'do': ':UpdateRemotePlugins' }
-  "   let g:deoplete#enable_at_startup = 1
-  "   let g:deoplete#auto_completion_start_length = 3
-  "   let g:deoplete#omni#functions = {}
-  "   let g:deoplete#omni#functions.javascript = [
-  "     \ 'tern#Complete',
-  "     \ 'jspc#omni'
-  "     \]
-  "   set completeopt=longest,menuone,preview
-  "   let g:deoplete#sources = {}
-  "   let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
-  "   augroup Deoplete
-  "     au!
-  "     autocmd CompleteDone * silent! pclose!
-  "   augroup END
-  " " }}}
-  " Plug 'https://github.com/kassio/neoterm'
-  " Plug 'https://github.com/Shougo/neco-syntax'
-elseif has('job') && has('timers') && has('lambda')
-  Plug 'https://github.com/maralla/completor.vim'
-  let g:completor_node_binary = system('which node')
-elseif has('lua') && (v:version >= 704 || v:version == 703 && has('patch885')) " {{{
-  Plug 'https://github.com/Shougo/neocomplete.vim'
-  let g:completionEngine = 'neocomplete'
-elseif has('lua')
-  Plug 'https://github.com/Shougo/neocomplcache.vim'
-  let g:completionEngine = 'neocomplcache'
-endif
-if exists('g:completionEngine') " {{{
-  let g:acp_enableAtStartup = 0
-  let g:{g:completionEngine}#enable_at_startup = 1
-  let g:{g:completionEngine}#enable_smart_case = 1
-  let g:{g:completionEngine}#sources#syntax#min_keyword_length = 3
-  let g:{g:completionEngine}#auto_completion_start_length = 3
-  let g:{g:completionEngine}#sources#dictionary#dictionaries = { 'default' : '' }
-  let g:{g:completionEngine}#sources#omni#input_patterns = {}
-  let g:{g:completionEngine}#keyword_patterns = { 'default': '\h\w*' }
-  let g:{g:completionEngine}#data_directory = s:configdir . '/cache/neocompl'
-  inoremap <expr><C-G>     {g:completionEngine}#undo_completion()
-  inoremap <expr><C-L>     {g:completionEngine}#complete_common_string()
-  inoremap <expr><BS>      {g:completionEngine}#smart_close_popup()."\<C-H>"
-endif " }}}
   " }}}
 " }}}
 " {{{ formatting
@@ -609,8 +506,14 @@ Plug 'https://github.com/chilicuil/vim-sprunge' " {{{
   xnoremap <Leader>pa <Plug>Sprunge
   let g:sprunge_cmd = 'tekup -'
 " }}}
-Plug 'https://github.com/simnalamburt/vim-mundo'
-" Plug 'https://github.com/mbbill/undotree' " {{{
+Plug 'https://github.com/simnalamburt/vim-mundo' " {{{
+  let g:mundo_width = 60
+  let g:mundo_preview_height = 40
+  let g:mundo_right = 0
+
+  nnoremap <silent> <leader>u :<C-U>MundoToggle<CR>
+" }}}
+"Plug 'https://github.com/mbbill/undotree' " {{{
 "   let g:undotree_WindowLayout = 4
 "   let g:undotree_SetFocusWhenToggle = 1
 "   let g:undotree_SplitWidth = 60
@@ -702,13 +605,36 @@ Plug 'https://github.com/tsukkee/unite-tag'
 Plug 'https://github.com/osyo-manga/unite-filetype'
 Plug 'https://github.com/thinca/vim-unite-history'
 Plug 'https://github.com/kopischke/unite-spell-suggest'
-Plug 'https://github.com/moznion/unite-git-conflict.vim'
+" Plug 'https://github.com/moznion/unite-git-conflict.vim'
 Plug 'https://github.com/lambdalisue/vim-gista-unite'
 Plug 'https://github.com/kmnk/vim-unite-giti'
 if has('nvim')
   Plug 'https://github.com/shougo/denite.nvim' " {{{
   \ , { 'do': ':UpdateRemotePlugins' }
   " }}}
+  Plug 'https://github.com/neoclide/coc-denite'
+  function! s:denite_my_settings() abort
+    nnoremap <silent><buffer><expr> <CR>
+    \ denite#do_map('do_action')
+    nnoremap <silent><buffer><expr> d
+    \ denite#do_map('do_action', 'delete')
+    nnoremap <silent><buffer><expr> p
+    \ denite#do_map('do_action', 'preview')
+    nnoremap <silent><buffer><expr> <esc>
+    \ denite#do_map('quit')
+    nnoremap <silent><buffer><expr> q
+    \ denite#do_map('quit')
+    nnoremap <silent><buffer><expr> a
+    \ denite#do_map('open_filter_buffer')
+    nnoremap <silent><buffer><expr> i
+    \ denite#do_map('open_filter_buffer')
+    nnoremap <silent><buffer><expr> <Space>
+    \ denite#do_map('toggle_select').'j'
+  endfunction
+  augroup Denite
+    au!
+    autocmd FileType denite call s:denite_my_settings()
+  augroup END
 endif
 " }}}
 " {{{ git
@@ -822,7 +748,7 @@ Plug 'https://github.com/euclio/vim-markdown-composer' " {{{
   Plug 'https://github.com/samuelsimoes/vim-jsx-utils' " {{{
     augroup JSXutils
       au!
-      autocmd FileType javascript
+      autocmd FileType javascript,javascript.jsx
       \ nnoremap <leader>ja :call JSXEncloseReturn()<CR>
       autocmd FileType javascript
       \ nnoremap <leader>ji :call JSXEachAttributeInLine()<CR>
@@ -834,7 +760,8 @@ Plug 'https://github.com/euclio/vim-markdown-composer' " {{{
       \ xnoremap <silent> at :call JSXSelectTag()<CR>
     augroup END
   " }}}
-  Plug 'https://github.com/danielfgray/vim-react-snippets'
+  Plug 'epilande/vim-es2015-snippets'
+  Plug 'epilande/vim-react-snippets'
   Plug 'https://github.com/neoclide/vim-jsx-improve'
 " }}}
 " {{{ haskell
@@ -885,9 +812,10 @@ Plug 'https://github.com/parsonsmatt/intero-neovim'
 " Plug 'https://github.com/slashmili/alchemist.vim'
 " Plug 'https://github.com/c-brenn/phoenix.vim'
 " " }}}
-" " {{{ elm
-" Plug 'lambdatoast/elm.vim'
-" " }}}
+" {{{ elm
+" Plug 'https://github.com/lambdatoast/elm.vim'
+Plug 'https://github.com/ElmCast/elm-vim'
+" }}}
 " " {{{ clojure
 " Plug 'https://github.com/tpope/vim-fireplace'
 " Plug 'https://github.com/bhurlow/vim-parinfer'
@@ -928,10 +856,8 @@ endif
     " \   'no_split': 1,
     " \   'prompt_direction': 'top',
 
-  nnoremap <silent> <Leader><Leader> :<C-u>Unite -buffer-name=mapping  mapping command function<CR>Space
   nnoremap <silent> <Leader>r        :<C-u>Unite -buffer-name=register register<CR>
   nnoremap <silent> <Leader>y        :<C-u>Unite -buffer-name=yank     history/yank<CR>
-  nnoremap <silent> <Leader>;        :<C-u>Unite -buffer-name=command  history/command mapping command function<CR>
   nnoremap <silent> <Leader>o        :<C-u>Unite -buffer-name=outline  outline<CR>
   nnoremap <silent> <Leader>/        :<C-u>Unite -buffer-name=grep     grep<CR>
   nnoremap <silent> <Leader>ta       :<C-u>Unite -buffer-name=tag      tag tag/file<CR>
@@ -943,8 +869,11 @@ endif
   nnoremap <silent> <Leader>gg       :<C-u>Unite -buffer-name=giti     giti<CR>
 
   if exists(':Denite')
-  nnoremap <silent> <Leader><Leader> :<C-u>Denite mapping command function<CR>
-  nnoremap <silent> <Leader>;        :<C-u>Denite command_history command function<CR>
+    nnoremap <silent> <Leader><Leader> :<C-u>Denite mapping command function<CR>
+    nnoremap <silent> <Leader>;        :<C-u>Denite command_history command function<CR>
+  else
+    nnoremap <silent> <Leader><Leader> :<C-u>Unite -buffer-name=mapping  mapping command function<CR>Space
+    nnoremap <silent> <Leader>;        :<C-u>Unite -buffer-name=command  history/command mapping command function<CR>
   endif
 
   augroup Unite
