@@ -51,12 +51,6 @@ Plug 'https://github.com/tpope/vim-speeddating'
 Plug 'https://github.com/tpope/vim-abolish'
 Plug 'https://github.com/tpope/vim-repeat'
 Plug 'https://github.com/tommcdo/vim-exchange'
-" Plug 'https://github.com/kana/vim-operator-user'
-" Plug 'https://github.com/haya14busa/vim-operator-flashy' " {{{
-"   map y <Plug>(operator-flashy)
-"   map Y <Plug>(operator-flashy)$
-"   let g:operator#flashy#group = 'Search'
-" " }}}
 Plug 'https://github.com/machakann/vim-highlightedyank'
 " }}}
 " {{{ searching
@@ -78,54 +72,6 @@ Plug 'https://github.com/justinmk/vim-sneak' " {{{
 " }}}
 Plug 'https://github.com/markonm/traces.vim'
 Plug 'https://github.com/haya14busa/is.vim'
-" Plug 'https://github.com/haya14busa/incsearch.vim' " {{{
-"   let g:incsearch#consistent_n_direction = 1
-"   let g:incsearch#auto_nohlsearch = 1
-"   let g:incsearch#magic = '\v'
-"   map /  <Plug>(incsearch-forward)
-"   map ?  <Plug>(incsearch-backward)
-"   map g/ <Plug>(incsearch-stay)
-"   map n  <Plug>(incsearch-nohl-n)<C-z>
-"   map N  <Plug>(incsearch-nohl-N)<C-z>
-"   map *  <Plug>(incsearch-nohl-*)
-"   map #  <Plug>(incsearch-nohl-#)
-"   map g* <Plug>(incsearch-nohl-g*)
-"   map g# <Plug>(incsearch-nohl-g#)
-" " }}}
-" Plug 'https://github.com/haya14busa/incsearch-fuzzy.vim' " {{{
-"   map z/ <Plug>(incsearch-fuzzy-/)
-"   map z? <Plug>(incsearch-fuzzy-?)
-"   map zg/ <Plug>(incsearch-fuzzy-stay)
-" " }}}
-" Plug 'https://github.com/osyo-manga/vim-over' " {{{
-"   let g:over_command_line_prompt = ':'
-"   let g:over_enable_cmd_window = 1
-"   let g:over#command_line#search#enable_incsearch = 1
-"   let g:over#command_line#search#enable_move_cursor = 1
-"   nnoremap <silent> <Leader>s :<C-u>OverCommandLine %s///g<CR><Left><Left>
-"   xnoremap <silent> <Leader>s :<C-u>OverCommandLine '<,'>s///g<CR><Left><Left>
-"   xnoremap <silent> <Leader>n *:<C-u>OverCommandLine %s///gc<CR><Left><Left>
-"   nnoremap <silent> <C-n> *N:<C-u>OverCommandLine %s///gc<CR><Left><Left><Left>
-"   xnoremap <silent> <C-n> *N:<C-u>OverCommandLine %s///gc<CR><Left><Left><Left>
-" " }}}
-" Plug 'https://github.com/terryma/vim-multiple-cursors' " {{{
-"   function! Multiple_cursors_before() abort
-"     if exists(':NeoCompleteLock') == 2
-"       NeoCompleteLock
-"     endif
-"     if exists('*SwoopFreezeContext')
-"         call SwoopFreezeContext()
-"     endif
-"   endfunction
-"   function! Multiple_cursors_after() abort
-"     if exists(':NeoCompleteUnlock') == 2
-"       NeoCompleteUnlock
-"     endif
-"     if exists('*SwoopUnFreezeContext')
-"         call SwoopUnFreezeContext()
-"     endif
-"   endfunction
-" " }}}
 Plug 'https://github.com/bronson/vim-visual-star-search'
 " }}}
 " {{{ completion/building
@@ -134,10 +80,6 @@ Plug 'https://github.com/SirVer/ultisnips' " {{{
 let g:UltiSnipsExpandTrigger="<C-j>"
 " }}}
 Plug 'https://github.com/honza/vim-snippets'
-" Plug 'https://github.com/Raimondi/delimitMate' " {{{
-"   let g:delimitMate_expand_cr = 1
-"   let g:delimitMate_jump_expansion = 1
-" " }}}
 Plug 'https://github.com/jiangmiao/auto-pairs'
 Plug 'https://github.com/tpope/vim-endwise'
 if has('nvim') || v:version >= 800
@@ -265,7 +207,6 @@ else
     nnoremap <silent> <Leader>c :<C-u>SyntasticCheck<CR>
   " }}}
 endif
-  " }}}
 " }}}
 " {{{ formatting
 Plug 'https://github.com/christoomey/vim-titlecase' " {{{
@@ -513,7 +454,7 @@ Plug 'https://github.com/simnalamburt/vim-mundo' " {{{
 
   nnoremap <silent> <leader>u :<C-U>MundoToggle<CR>
 " }}}
-"Plug 'https://github.com/mbbill/undotree' " {{{
+" Plug 'https://github.com/mbbill/undotree' " {{{
 "   let g:undotree_WindowLayout = 4
 "   let g:undotree_SetFocusWhenToggle = 1
 "   let g:undotree_SplitWidth = 60
@@ -555,24 +496,17 @@ Plug 'https://github.com/hecal3/vim-leader-guide' " {{{
 
   function! s:leaderGuide_displayfunc() abort
     " Kill ending <cr>
-    let g:leaderGuide#displayname =
-    \ substitute(g:leaderGuide#displayname, '<CR>$', '', 'i')
+    let g:leaderGuide#displayname = substitute(g:leaderGuide#displayname, '<CR>$', '', 'i')
     " Kill beginning <esc>
-    let g:leaderGuide#displayname =
-    \ substitute(g:leaderGuide#displayname, '^<Esc>', '', 'i')
-    let g:leaderGuide#displayname =
-    \ substitute(g:leaderGuide#displayname, '<Esc>', '⇬', 'i')
-    let g:leaderGuide#displayname =
-    \ substitute(g:leaderGuide#displayname, '<CR>', '↵', 'i')
+    let g:leaderGuide#displayname = substitute(g:leaderGuide#displayname, '^<Esc>', '', 'i')
+    let g:leaderGuide#displayname = substitute(g:leaderGuide#displayname, '<Esc>', '⇬', 'i')
+    let g:leaderGuide#displayname = substitute(g:leaderGuide#displayname, '<CR>', '↵', 'i')
     " Kill beginning <plug>
-    let g:leaderGuide#displayname =
-    \ substitute(g:leaderGuide#displayname,
-    \ '^<plug>(\?\([^)]*\))\?', '\1', 'i')
+    let g:leaderGuide#displayname = substitute(g:leaderGuide#displayname, '^<plug>(\?\([^)]*\))\?', '\1', 'i')
     " Truncate to s:leaderGuide_max_desc_len chars or less
     if len(g:leaderGuide#displayname) > s:leaderGuide_max_desc_len
       let g:leaderGuide#displayname =
-      \ g:leaderGuide#displayname[:s:leaderGuide_max_desc_len-1]
-      \ ."…"
+      \ g:leaderGuide#displayname[:s:leaderGuide_max_desc_len-1] ."…"
     endif
   endfunction
   let g:leaderGuide_displayfunc = [function("s:leaderGuide_displayfunc")]
