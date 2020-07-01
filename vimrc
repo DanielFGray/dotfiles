@@ -121,9 +121,6 @@ if has('nvim') || v:version >= 800
   " Remap for rename current word
   nmap <leader>Cr <Plug>(coc-rename)
 
-  " Remap for format selected region
-  vmap <leader>Cfo  <Plug>(coc-format-selected)
-
   " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
   vmap <leader>Ca  <Plug>(coc-codeaction-selected)
   nmap <leader>Ca  <Plug>(coc-codeaction-selected)
@@ -150,6 +147,9 @@ if has('nvim') || v:version >= 800
   nnoremap <silent> <space>Ck  :<C-u>CocPrev<CR>
   " Resume latest coc list
   nnoremap <silent> <space>Cp  :<C-u>CocListResume<CR>
+
+  xmap <leader>= <Plug>(coc-format-selected)
+  nmap <leader>= <Plug>(coc-format-selected)
 
   function! s:cocHover() abort
     call CocActionAsync('doHover')
@@ -187,7 +187,7 @@ elseif has('nvim') || has('lambda')
     augroup AleLint
       autocmd!
       autocmd User ALELint lwindow
-      autocmd FileType javascript,jsx,javascript.jsx
+      autocmd FileType typescriptreact,javascript,jsx,javascript.jsx
             \ nnoremap <silent><buffer> <Leader>af :<C-u>ALEFix eslint<CR>
     augroup END
   " }}}
@@ -320,48 +320,47 @@ Plug 'https://github.com/mhinz/vim-startify' " {{{
   if has('nvim')
     " let g:startify_custom_header = s:filter_header('NeoVim')
     let g:startify_custom_header =
-    \ [ '        ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓'
-    \ , '        ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃'
-    \ , '        ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹'
-    \ , ''
+    \ [ '   ┏┓╻┏━╸┏━┓╻ ╻╻┏┳┓'
+    \ , '   ┃┗┫┣╸ ┃ ┃┃┏┛┃┃┃┃'
+    \ , '   ╹ ╹┗━╸┗━┛┗┛ ╹╹ ╹'
     \ ]
   else
     " let g:startify_custom_header = s:filter_header('Vim')
     let g:startify_custom_header =
-    \ [ '        ╻ ╻╻┏┳┓'
-    \ , '        ┃┏┛┃┃┃┃'
-    \ , '        ┗┛ ╹╹ ╹'
-    \ , ''
+    \ [ '   ╻ ╻╻┏┳┓'
+    \ , '   ┃┏┛┃┃┃┃'
+    \ , '   ┗┛ ╹╹ ╹'
     \ ]
   endif
 " }}}
-Plug 'https://github.com/reedes/vim-thematic' " {{{
-  let g:thematic#defaults = { 'background': 'dark' }
-  let g:thematic#themes =
-  \ { 'gui':
-  \   { 'colorscheme': 'atom-dark-256'
-  \   , 'airline': 'noctu'
-  \   , 'typeface': 'Fantasque Sans Mono'
-  \   , 'font-size': 10
-  \   }
-  \ , 'term':
-  \   { 'colorscheme': 'noctu'
-  \   , 'airline': 'hybridline'
-  \   }
-  \ }
-  if has('gui_running')
-    let g:thematic#theme_name = 'gui'
-    set guioptions-=l
-    set guioptions-=L
-    set guioptions-=r
-    set guioptions-=T
-    set guioptions-=m
-    set guioptions+=c
-  else
-    let g:thematic#theme_name = 'term'
-  endif
-" }}}
+" Plug 'https://github.com/reedes/vim-thematic' " {{{
+"   let g:thematic#defaults = { 'background': 'dark' }
+"   let g:thematic#themes =
+"   \ { 'gui':
+"   \   { 'colorscheme': 'atom-dark-256'
+"   \   , 'airline': 'noctu'
+"   \   , 'typeface': 'Fantasque Sans Mono'
+"   \   , 'font-size': 10
+"   \   }
+"   \ , 'term':
+"   \   { 'colorscheme': 'noctu'
+"   \   , 'airline': 'hybridline'
+"   \   }
+"   \ }
+"   if has('gui_running')
+"     let g:thematic#theme_name = 'gui'
+"     set guioptions-=l
+"     set guioptions-=L
+"     set guioptions-=r
+"     set guioptions-=T
+"     set guioptions-=m
+"     set guioptions+=c
+"   else
+"     let g:thematic#theme_name = 'term'
+"   endif
+" " }}}
 Plug 'https://github.com/noahfrederick/vim-noctu'
+Plug 'chriskempson/base16-vim'
 Plug 'https://github.com/gosukiwi/vim-atom-dark'
 Plug 'https://github.com/Yggdroot/indentLine' " {{{
 let g:indentLine_fileTypeExclude = [
@@ -523,8 +522,9 @@ Plug 'https://github.com/hecal3/vim-leader-guide' " {{{
     endfor
   endfunction
 
-  call s:map_leaderGuides('n', [ 'co' ])
-  call s:map_leaderGuides('nv', [ '<leader>', '[', ']' ])
+  " call s:map_leaderGuides('n', [ 'g' ])
+  call s:map_leaderGuides('n', [ 'yo' ])
+  call s:map_leaderGuides('nx', [ '<leader>', '[', ']' ])
   " }}}
 " }}}
 " {{{ unite.vim
@@ -545,8 +545,6 @@ Plug 'https://github.com/kmnk/vim-unite-giti'
 if has('nvim')
   Plug 'https://github.com/shougo/denite.nvim' " {{{
   \ , { 'do': ':UpdateRemotePlugins' }
-  " }}}
-  Plug 'https://github.com/neoclide/coc-denite'
   function! s:denite_my_settings() abort
     nnoremap <silent><buffer><expr> <CR>
     \ denite#do_map('do_action')
@@ -569,7 +567,9 @@ if has('nvim')
     au!
     autocmd FileType denite call s:denite_my_settings()
   augroup END
+  Plug 'https://github.com/neoclide/coc-denite'
 endif
+" }}}
 " }}}
 " {{{ git
 Plug 'https://github.com/tpope/vim-fugitive' " {{{
@@ -615,7 +615,7 @@ Plug 'https://github.com/LaTeX-Box-Team/LaTeX-Box'
 " }}}
 " {{{ html/css
 Plug 'https://github.com/mattn/emmet-vim' " {{{
-  \, { 'for': [ 'html', 'javascript.jsx' ] }
+  \, { 'for': [ 'html', 'javascript.jsx', 'typescriptreact' ] }
   let g:user_emmet_settings = {
   \   'javascript.jsx' : {
   \       'extends' : 'jsx',
@@ -647,50 +647,18 @@ Plug 'https://github.com/euclio/vim-markdown-composer' " {{{
 " }}}
 " }}}
 " {{{ javascript
-  " Plug 'https://github.com/moll/vim-node'
-  " Plug 'https://github.com/elzr/vim-json' " {{{
-    let g:vim_json_syntax_conceal = 0
-  " }}}
-  " Plug 'https://github.com/othree/yajs.vim'
-  " Plug 'https://github.com/othree/javascript-libraries-syntax.vim'
-  " Plug 'https://github.com/othree/jspc.vim'
-  " Plug 'https://github.com/marijnh/tern_for_vim' " {{{
-  " \,{ 'do': 'npm install'
-  " \ , 'for': ['javascript', 'javascript.jsx']
-  " \ }
-  "   let g:tern#command = ['tern']
-  "   let g:tern#arguments = ['--persistent']
-  "   let g:tern_show_signature_in_pum = 1
-  "   let g:tern#filetypes = [
-  "   \ 'jsx',
-  "   \ 'javascript.jsx',
-  "   \ ]
-  " " }}}
-  if has ('nvim')
-    " Plug 'https://github.com/steelsojka/deoplete-flow'
-    " Plug 'https://github.com/carlitux/deoplete-ternjs'
-  endif
-  " Plug 'https://github.com/wokalski/autocomplete-flow'
-  " Plug 'https://github.com/heavenshell/vim-jsdoc' " {{{
-  "   let g:jsdoc_enable_es6 = 1
-  "   augroup JsDoc
-  "     autocmd!
-  "     autocmd FileType javascript
-  "     \ nnoremap <buffer> <Leader>jd <Plug>(jsdoc)
-  "   augroup END
-  " " }}}
   Plug 'https://github.com/samuelsimoes/vim-jsx-utils' " {{{
     augroup JSXutils
       au!
-      autocmd FileType javascript,javascript.jsx
+      autocmd FileType typescriptreact,javascript.jsx
       \ nnoremap <leader>ja :call JSXEncloseReturn()<CR>
-      autocmd FileType javascript
+      autocmd FileType typescriptreact,javascript.jsx
       \ nnoremap <leader>ji :call JSXEachAttributeInLine()<CR>
-      autocmd FileType javascript
+      autocmd FileType typescriptreact,javascript.jsx
       \ nnoremap <leader>je :call JSXExtractPartialPrompt()<CR>
-      autocmd FileType javascript
+      autocmd FileType typescriptreact,javascript.jsx
       \ nnoremap <leader>jc :call JSXChangeTagPrompt()<CR>
-      autocmd FileType javascript
+      autocmd FileType typescriptreact,javascript.jsx
       \ xnoremap <silent> at :call JSXSelectTag()<CR>
     augroup END
   " }}}
@@ -698,62 +666,6 @@ Plug 'https://github.com/euclio/vim-markdown-composer' " {{{
   Plug 'epilande/vim-react-snippets'
   Plug 'https://github.com/neoclide/vim-jsx-improve'
 " }}}
-" {{{ haskell
-Plug 'https://github.com/raichoo/purescript-vim'
-Plug 'https://github.com/parsonsmatt/intero-neovim'
-" Plug 'https://github.com/eagletmt/ghcmod-vim' " {{{
-" augroup GhcMod
-"   au!
-"   autocmd FileType haskell
-"   \ nnoremap <buffer><silent> <leader>hw :GhcModTypeInsert<CR>
-"   autocmd FileType haskell
-"   \ nnoremap <buffer><silent> <leader>hs :GhcModSplitFunCase<CR>
-"   autocmd FileType haskell
-"   \ nnoremap <buffer><silent> <leader>hq :GhcModType<buffer><CR>
-"   autocmd FileType haskell
-"   \ nnoremap <buffer><silent> <leader>he :GhcModTypeClear<CR>
-" augroup END
-" " }}}
-" Plug 'https://github.com/eagletmt/neco-ghc'
-" Plug 'https://github.com/Twinside/vim-hoogle' " {{{
-"   augroup Hoogle
-"     au!
-"     autocmd FileType haskell
-"     \ nnoremap <buffer> <leader>hh :Hoogle<Space>
-"     autocmd FileType haskell
-"     \ nnoremap <buffer> <Leader>hC :HoogleClose<CR>
-"     autocmd FileType haskell
-"     \ nnoremap <buffer> <Lewader>hl :HoogleLine<CR>
-"   augroup END
-" " }}}
-" Plug 'https://github.com/enomsg/vim-haskellConcealPlus'
-" Plug 'https://github.com/mpickering/hlint-refactor-vim' " {{{
-"   let g:hlintRefactor#disableDefaultKeybindings = 1
-" " }}}
-" }}}
-" " {{{ rust
-" Plug 'https://github.com/rust-lang/rust.vim'
-" Plug 'https://github.com/racer-rust/vim-racer'
-" " }}}
-" " {{{ python
-" if has('nvim')
-"   Plug 'zchee/deoplete-jedi'
-" " else
-" " Plug 'https://github.com/davidhalter/jedi-vim'
-" endif
-" " }}}
-" " {{{ elixir
-" Plug 'https://github.com/slashmili/alchemist.vim'
-" Plug 'https://github.com/c-brenn/phoenix.vim'
-" " }}}
-" {{{ elm
-" Plug 'https://github.com/lambdatoast/elm.vim'
-Plug 'https://github.com/ElmCast/elm-vim'
-" }}}
-" " {{{ clojure
-" Plug 'https://github.com/tpope/vim-fireplace'
-" Plug 'https://github.com/bhurlow/vim-parinfer'
-" " }}}
 call plug#end()
 endif
 " {{{ unite settings
@@ -792,7 +704,6 @@ endif
 
   nnoremap <silent> <Leader>r        :<C-u>Unite -buffer-name=register register<CR>
   nnoremap <silent> <Leader>y        :<C-u>Unite -buffer-name=yank     history/yank<CR>
-  nnoremap <silent> <Leader>o        :<C-u>Unite -buffer-name=outline  outline<CR>
   nnoremap <silent> <Leader>/        :<C-u>Unite -buffer-name=grep     grep<CR>
   nnoremap <silent> <Leader>ta       :<C-u>Unite -buffer-name=tag      tag tag/file<CR>
   nnoremap <silent> <Leader>b        :<C-u>Unite -buffer-name=buffer   buffer neomru/file file<CR>
@@ -805,9 +716,11 @@ endif
   if exists(':Denite')
     nnoremap <silent> <Leader><Leader> :<C-u>Denite mapping command function<CR>
     nnoremap <silent> <Leader>;        :<C-u>Denite command_history command function<CR>
+    nnoremap <silent> <Leader>o        :<C-u>Denite outline<CR>
   else
     nnoremap <silent> <Leader><Leader> :<C-u>Unite -buffer-name=mapping  mapping command function<CR>Space
     nnoremap <silent> <Leader>;        :<C-u>Unite -buffer-name=command  history/command mapping command function<CR>
+    nnoremap <silent> <Leader>o        :<C-u>Unite -buffer-name=outline  outline<CR>
   endif
 
   augroup Unite
@@ -816,21 +729,21 @@ endif
   augroup END
 
   function! s:unite_my_settings()
-    imap <buffer>               <Esc> <Plug>(unite_exit)
-    nmap <buffer>               <Esc> <Plug>(unite_exit)
+    imap <buffer><Esc> <Plug>(unite_exit)
+    nmap <buffer><Esc> <Plug>(unite_exit)
     nnoremap <silent><buffer><expr> l unite#smart_map('l', unite#do_action('default'))
-    imap <buffer><expr> j   unite#smart_map('j', '')
-    imap <buffer><expr> x   unite#smart_map('x', "\<Plug>(unite_quick_match_jump)")
-    imap <buffer> <TAB>     <Plug>(unite_select_next_line)
-    imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
-    imap <buffer> '         <Plug>(unite_quick_match_default_action)
-    nmap <buffer> '         <Plug>(unite_quick_match_default_action)
-    nmap <buffer> x         <Plug>(unite_quick_match_jump)
-    nmap <buffer> <C-z>     <Plug>(unite_toggle_transpose_window)
-    imap <buffer> <C-z>     <Plug>(unite_toggle_transpose_window)
-    nmap <buffer> <C-j>     <Plug>(unite_toggle_auto_preview)
-    nmap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
-    imap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
+    imap <buffer><expr>j   unite#smart_map('j', '')
+    imap <buffer><expr>x   unite#smart_map('x', "\<Plug>(unite_quick_match_jump)")
+    imap <buffer><TAB>     <Plug>(unite_select_next_line)
+    imap <buffer><C-w>     <Plug>(unite_delete_backward_path)
+    imap <buffer>'         <Plug>(unite_quick_match_default_action)
+    nmap <buffer>'         <Plug>(unite_quick_match_default_action)
+    nmap <buffer>x         <Plug>(unite_quick_match_jump)
+    nmap <buffer><C-z>     <Plug>(unite_toggle_transpose_window)
+    imap <buffer><C-z>     <Plug>(unite_toggle_transpose_window)
+    nmap <buffer><C-j>     <Plug>(unite_toggle_auto_preview)
+    nmap <buffer><C-r>     <Plug>(unite_narrowing_input_history)
+    imap <buffer><C-r>     <Plug>(unite_narrowing_input_history)
 
     let l:unite = unite#get_current_unite()
     if l:unite.profile_name ==# 'search'
@@ -852,7 +765,6 @@ endif
 " {{{ general settings
 " TODO: more organizing
 syntax on
-
 set updatetime=300
 set backupcopy=yes
 set mouse=n
@@ -908,6 +820,18 @@ endif
 if has('gui_running')
   set guioptions-=LrbTm
 endif
+
+augroup colors
+  au!
+  autocmd ColorScheme *
+  \ hi CocWarningVirtualText cterm=bold ctermfg=3 ctermbg=0 |
+  \ hi CocErrorVirtualText cterm=bold ctermfg=1 ctermbg=0 |
+  \ hi Whitespace ctermfg=0 |
+  \ hi CocHoverRange ctermbg=0 |
+  \ hi NonText ctermfg=0
+augroup END
+colorscheme noctu
+
 " }}}
 " {{{ functions
 
@@ -961,7 +885,7 @@ function! DiffWrite() abort " {{{
   redraw!
 endfunction
 command! -bar -nargs=0 W call DiffWrite()
-" nnoremap <silent> <Leader>w :<C-u>W<CR>
+nnoremap <silent> <Leader>w :<C-u>W<CR>
 " }}}
 
 function! s:ReadUrl(url) abort " {{{
@@ -1100,10 +1024,11 @@ function! LessInitFunc() abort " {{{
 endfunction
 " }}}
 
-function! s:check_back_space() abort
+function! s:check_back_space() abort " {{{
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+" }}}
 " }}}
 " {{{ autocmds
 augroup VIM
@@ -1187,7 +1112,7 @@ augroup VIM
 
   if exists('*termopen')
     autocmd TermOpen *
-    \ setlocal nolist nocursorline nocursorcolumn
+    \ setlocal nolist nocursorline nocursorcolumn | IndentLinesDisable
 
     autocmd BufEnter *
     \ if &buftype ==? 'terminal' |
@@ -1196,19 +1121,17 @@ augroup VIM
   endif
 
   autocmd FileType json syntax match Comment +\/\/.\+$+
-
 augroup END
 " }}}
 " {{{ misc commands and maps
-" inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<TAB>"
-" inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<TAB>"
-
 inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
+  \ pumvisible() ? coc#_select_confirm() :
+  \ coc#expandableOrJumpable() ?
+  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
   \ <SID>check_back_space() ? "\<TAB>" :
   \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+let g:coc_snippet_next = '<tab>'
 
 nnoremap <Leader>evim :<C-u>vs ~/dotfiles/vimrc<CR>
 
@@ -1237,8 +1160,7 @@ nnoremap <leader>t4 :<C-u>set ts=4 sw=4<CR>
 nnoremap <leader>t8 :<C-u>set ts=8 sw=8<CR>
 nnoremap yoe :<C-u>set expandtab!<CR>
 nnoremap <leader>s :<C-u>%s///gc<left><left><left><left>
-xnoremap <leader>s *:s///gc<left><left><left>
-nnoremap <silent> # #n<esc>:redraw<cr>:s////gc<left><left><left>
+xnoremap <leader>s *:s///gc<left><left><left><left>
 " nnoremap <Leader> <Nop>
 
 nnoremap <silent><expr> K (&keywordprg == 'man' && exists('$TMUX')) ? printf(':!tmux split-window -h "man %s"<CR>:redraw<CR>', expand('<cword>')) : 'K'
@@ -1273,5 +1195,9 @@ let &t_EI = "\<Esc>[1 q"
 " extract markdown links into footnotes
 " appends footnotes to the bottom, assuming `[1]: ` is the last line
 " di)mmG$pyyplWD^klyi]'mPcs)]n
+
+iabbrev functino function
+iabbrev teh the
+iabbrev seperate separate
 
 " }}}
