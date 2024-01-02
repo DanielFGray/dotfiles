@@ -1,23 +1,47 @@
 [github]
 	user = DanielFGray
 	email = DanielFGray@gmail.com
+
 [user]
 	name = DanielFGray
-	email = DanielFGray@gmail.com
+	email = danielfgray@gmail.com
+
 [push]
 	default = simple
+	autoSetupRemote = true
+
 [alias]
 	gud = commit -a -m \"my hands are typing words\"
-	stashpop = pull --rebase --autostash
+
+[diff]
+	compactionHeuristic = true
+
+[stash]
+  showStat = false
+  showPatch = true
+
 [core]
-	pager = diff-so-fancy | less --tabs=2 -RFX
+	pager = bash -c 'delta --side-by-side -w ${FZF_PREVIEW_COLUMNS:-$COLUMNS}'
+
+; [interactive]
+;   diffFilter = delta --side-by-side --color-only
+
+[delta]
+	features = decorations
+	side-by-side = true
+	line-numbers-left-format = ""
+	line-numbers-right-format = "│"
+	syntax-theme = Monokai Extended
+
 [color]
 	ui = true
+
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52
 	newNormal = green bold
 	newHighlight = green bold 22
+
 [color "diff"]
 	meta = yellow
 	frag = magenta bold
@@ -25,3 +49,11 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+
+[init]
+	defaultBranch = develop
+
+[gitflow "branch"]
+	master = main
+[diff-so-fancy]
+	first-run = false

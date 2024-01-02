@@ -13,27 +13,31 @@ done
 unset d
 
 export EDITOR=$(select_from 'nvim' 'vim' 'vi')
-export MANPAGER="bash -c \"col -b | vim -Nu NONE -c 'runtime macros/less.vim' -c 'setf man' -\""
+if has nvim; then
+    export MANPAGER='nvim +Man!'
+else
+  export MANPAGER="bash -c \"col -b | vim -Nu NONE -c 'runtime macros/less.vim' -c 'setf man' -\""
+fi
+
 export HISTFILESIZE=500000
 export HISTSIZE=100000
 unset GREP_OPTIONS
-stty -ixon
-
-has fortune && fortune -ae
+# stty -ixon
 
 if h=$(select_from apt 'apt-get'); then
   alias canhaz="sudo $h install "
   alias updupg="sudo $h upgrade "
   pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
   has fuser dpkg && alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
-elif h=$(select_from yay aurman trizen pacaur yaourt pacman); then
-  [[ $h = pacman ]] && h="sudo pacman"
-  alias canhaz="$h -S "
+  unset h
+elif AURHELPER=$(select_from yay aurman trizen pacaur yaourt pacman); then
+  [[ $AURHELPER = pacman ]] && AURHELPER="sudo pacman"
+  alias canhaz='$AURHELPER -S '
   updupg() {
-    $h -Sy && if has pkgup; then
+    $AURHELPER -Sy && if has pkgup; then
        pkgup
     else
-      $h -Syu
+      $AURHELPER -Syu
     fi
   }
   has pkgrm || alias pkgrm='sudo pacman -Rsu '
@@ -43,38 +47,125 @@ elif [[ -f /etc/gentoo-release ]]; then
   alias canhaz='sudo emerge -av '
 fi
 
-alias ..='cd ..'
-alias ...='cd ../..'
+# alias ..='builtin cd ..'
+# alias ...='builtin cd ../..'
+# alias ....='builtin cd ../../..'
 
 alias se='sudo -sE $EDITOR '
 
 alias cp='cp -v '
 alias mv='mv -v '
-alias rm='rm -v '
+alias rm='rm -vI '
 alias ln='ln -v '
 alias vidir='vidir -v '
 alias chown='chown -v '
 alias chmod='chmod -v '
 alias rename='rename -v '
-alias ls='ls -Fh --color --group-directories-first '
-alias l='ls -lgo '
-alias lt='l -t '
-alias lx='l -X '
+
+if has lsd; then
+  alias ls='lsd -Fh --color=always --date=relative '
+  alias l='lsd --group-dirs first --date=relative '
+  alias lx='l -X '
+else
+  alias ls='ls -Fh --color'
+  alias l='ls --group-directories-first '
+  alias lx='l -x '
+fi
+alias lt='ls -tr '
+alias ll='l -l '
+alias llx='lx -l '
+alias llt='lt -l '
 alias la='l -A '
-alias lax='la -X '
-alias lat='la -t '
-grep --version | grep -q 'gnu' && alias grep='grep --exclude-from=.gitignore --color=auto -P '
-alias historygrep='history | command grep -vF "history" | grep '
+alias lxa='lx -A '
+alias lta='lt -A '
+alias lla='ll -A '
+alias llxa='llx -A '
+alias llta='llt -A '
+
+if grep --version | grep -q 'gnu'; then
+  grep() {
+    local exclude_file has_engine opts
+    opts=()
+    for a; do
+      case $a in
+        -G) has_engine=-G ;;
+        -F) has_engine=-F ;;
+        -E) has_engine=-E ;;
+        *) opts+=("$a")
+      esac
+    done
+    if [[ -r .gitignore ]]; then
+      exclude_file=.gitignore
+    fi
+    command grep --color=auto ${exclude_file:+--exclude-from=$exclude_file} ${has_engine:+$has_engine} "${opts[@]}"
+  }
+fi
 alias shuf1='shuf -n1'
 vba() {
-  fc -rnl | $EDITOR ~/dotfiles/bash_aliases - +'set nomod bufhidden buftype=nofile | sp | bn | wincmd _'
+  fc -rnl | $EDITOR - ~/dotfiles/bash_aliases +'set nomod nobuflisted bufhidden bufhidden=wipe buftype=nofile | sp | bn | wincmd _'
   exec "${SHELL##*/}"
+}
+
+alias historygrep='history | command grep -vF "history" | grep '
+historystats() {
+  fc -l 1 | awk '{ CMD[$2]++; count++ } END { for (a in CMD) print CMD[a] " " CMD[a]/count*100 "% " a }' | column -c3 -s ' ' -t | sort -nr | nl -w2 | head -n25
 }
 
 has cdu && alias cdu='cdu -isdhD '
 has rsync && alias rsync='rsync -v --progress --stats '
 has lein rlwrap && alias lein='rlwrap lein '
 has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview-window=bottom:hidden" pkgsearch '
+
+if has ni; then
+  alias nid='ni -d '
+  alias nst='na run start'
+  alias nd='na run dev'
+  alias nb='na run build'
+  alias nt='na run test'
+fi
+
+# if has pnpm; then
+#   has pr && alias paginate='command pr'
+#   alias pr='pnpm run --stream --loglevel=warn'
+#   alias pe='pnpm exec'
+#   alias pd='pnpm dlx'
+#   alias p='pnpm'
+#   alias pa='pnpm add'
+#   alias pad='pnpm add -D'
+#   alias pi='pnpm install'
+#   alias pst='pr -s start'
+#   alias pb='pr -s build'
+#   alias pui='pnpm update -i'
+#   alias puil='pnpm update -i --latest'
+
+#   y() {
+#     if [[ ! -f package.json ]]; then
+#       echo 'no package.json'
+#       return 1
+#     elif [[ -f pnpm-lock.yaml ]]; then
+#       echo 'use pnpm alias: pi="pnpm install"'
+#       return 1
+#     elif has yarn; then
+#       yarn start
+#     else
+#       echo fail
+#     fi
+#   }
+
+#   yst() {
+#     if [[ ! -f package.json ]]; then
+#       echo 'no package.json'
+#       return 1
+#     elif [[ -f pnpm-lock.yaml ]]; then
+#       echo 'use pnpm alias: pst="pnpm run start"'
+#       return 1
+#     elif has yarn; then
+#       yarn start
+#     else
+#       echo fail
+#     fi
+#   }
+# fi
 
 if has python || has python3; then
   if ! has pip && has pip3; then
@@ -91,8 +182,6 @@ if has python || has python3; then
     fi
   }
 fi
-
-has npx && alias npx='npx --no-install '
 
 # {{{ git aliases
 if has git; then
@@ -129,6 +218,7 @@ if has git; then
     fi
     git clone "$repo" "$@"
     [[ -d "$dir" ]] && cd "$dir"
+    [[ -e package.json ]] && yarn
   }
   gsb() {
     if [[ -z "$1" ]]; then
@@ -182,7 +272,7 @@ multiple() {
   fi
 }
 
-watchfile() {
+has inotifywait && watchfile() {
   local f x
   f=()
   while :; do
@@ -206,13 +296,10 @@ watchfile() {
 }
 
 cd() {
-  local dir
-  if [[ -z "$*" ]]; then
-    builtin cd ~ && ls
+  if (( $# > 0 )); then
+    builtin cd "$1" && \ls -trF --color
   else
-    dir="$1"
-    shift
-    builtin cd "$dir" && ls "$@"
+    builtin cd ~ && \ls -trF --color
   fi
 }
 
@@ -255,6 +342,16 @@ restart() {
   bground "$@"
 }
 
+cmd_stats() {
+  fc -l 1 |
+    awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' |
+    grep -v "./" |
+    column -c3 -s " " -t |
+    sort -nr |
+    nl |
+    head -n25
+}
+
 function in {
   local t
   t=( "$1" "$2" )
@@ -269,14 +366,7 @@ decide() {
   printf '%s\n' "${args[@]}" | shuf -n1
 }
 
-genwords() {
-  local n=5
-  [[ -n $1 ]] && { n=$1; shift; }
-  shuf /usr/share/cracklib/cracklib-small |
-    head -n "$n" |
-    tr '\n' ' ' |
-    sed -r "s/'(\w)\b/\1/g; s/\b(.)/\u\1/g; s/ //g"
-}
+alias genwords='passgen -w '
 
 genchars() {
   local n=16 r='[a-z0-9]'
@@ -285,9 +375,12 @@ genchars() {
   printf '%s\n' "$(grep -a -oP "$r" < /dev/urandom | tr -d '\n' | head -c "$n")"
 }
 
-ed() { command ed -p: "$@" ;} # https://sanctum.geek.nz/arabesque/actually-using-ed/
+ed() { # https://sanctum.geek.nz/arabesque/actually-using-ed/
+  command ed -p'> ' "$@"
+}
 
 if has tmux; then
+  alias tmuxa='tmux attach'
   txs() {
     local nested opts
     opts=( -d )
@@ -311,9 +404,7 @@ fi
 
 sprunge() { more -- "$@" | command curl -sF 'sprunge=<-' http://sprunge.us ;}
 
-pgrep() { ps aux | command grep -iP "$*" | command grep -ivF grep ;}
-
-has tar ssh && {
+if has tar ssh; then
   if has pv; then
     tarpipe() { tar czf - "$2" | pv | ssh "$1" "tar xzvf - $3" ;}
     rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
@@ -321,7 +412,7 @@ has tar ssh && {
     tarpipe() { tar czf - "$2" | ssh "$1" "tar xzvf - $3" ;}
     rtarpipe() { ssh $1 "tar czf - $2" | tar xzvf - ;}
   fi
-}
+fi
 
 textImage() {
   convert -background white -fill black -size 500x500 -gravity Center -font Droid-Sans-Regular caption:"$1" "$2" &&
@@ -330,7 +421,7 @@ textImage() {
 }
 
 burnusb() {
-  sudo dd of="$1" bs=4M conv=sync status=progress && {
+  sudo dd if="$1" of="$2" bs=4M conv=sync status=progress && {
     sync &&
     ding 'burnusb' 'done'
   }
@@ -379,8 +470,8 @@ extract() {
 
 curltar() {
   local d
-  d="${1%%*/}"
-  mkdir -v "$d" || return 1
+  d="${1##*/}"
+  mkdir -vp "$d" || return 1
   cd "$d" || return 1
   case "$1" in
     *.tar.bz2)   command curl -L "$1" | tar xvjf - ;;
@@ -395,7 +486,22 @@ curltar() {
 
 whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
 
-weather() { command curl -s http://wttr.in/"${*:-galveston texas}" ;}
+weather() {
+  command curl https://wttr.in/"${*:-galveston%20texas}"
+}
+
+has asciinema && asciinema() {
+  YSU_HARDCORE= command asciinema "$@"
+}
+
+has yarn jq fzf && run-p() {
+  [[ -e package.json ]] || { err 'no package.json!'; return 1; }
+  if [[ ! -x ./node_modules/.bin/run-p ]]; then
+    err 'no run-p?'
+    return 1
+  fi
+  y run-p $(jq -r '.scripts | keys[]' package.json F -m)
+}
 
 if has vipe; then
   if has xclip; then
@@ -463,44 +569,15 @@ loadnvm() {
   source ~/.perlbrew/etc/bashrc
 }
 
-nodemon() {
-  if ! has node; then
-    err 'node not found'
-    return
-  fi
-  if [[ ! -x ./node_modules/.bin/nodemon ]]; then
-    err 'nodemon not in ./node_modules'
-    return
-  fi
-  if [[ $1 = '-'* ]]; then
-    node ./node_modules/.bin/nodemon "$@"
-  else
-    file="$1"
-    [[ $file = *'.js'  ]] || file="${file}.js"
-    node ./node_modules/.bin/nodemon -w "$file" -x "node $file"
-  fi
-}
-
 if has rlwrap; then
   node() {
     local args magicFile
     magicFile='./custom_repl.js'
-    if (( $# > 0 )); then
-      command node "$@"
-    else
-      if ! type -p node &> /dev/null; then
-        if has loadnvm; then
-          loadnvm
-        else
-          err 'node or nvm not installed?'
-          return
-        fi
-      fi
-      args=("$@")
-      [[ -r "$magicFile" ]] && args+=( -r "$magicFile" )
-      NODE_NO_READLINE=1 rlwrap -m -H ~/.node_repl_history -pblue node "${args[@]}"
-    fi
+    args=("$@")
+    [[ $# = 0 && -r "$magicFile" ]] && args+=( -r "$magicFile" )
+    command node "${args[@]}"
   }
+
   has guile && {
     guile() {
       if (( $# > 0 )); then
@@ -612,7 +689,7 @@ has fv && books() {
     esac
   done
   cd ~/books &> /dev/null
-  fv -sado -c "$cmd"
+  fd . ~/books -t f --color always | fzf --preview='pdftotext {} -' --bind="enter:execute:$cmd {}"
   cd - &> /dev/null
 }
 
@@ -655,7 +732,13 @@ has ffmpeg && {
 has n && alias n='sudo n '
 
 if has docker; then
-  fzds() {
+  alias pgcli='docker run -it --rm --name pgcli -v ~/.config/pgcli:/root/.config/pgcli -v /var/run/postgresql:/var/run/postgresql kubetools/pgcli'
+  dtbr() {
+    local name="${PWD##*/}"
+    docker build -t "$name:latest" . && docker run --rm -it --name "$name" "$name:latest"
+  }
+
+  has fzf && fzds() {
     local pkg
     pkg=$(
       docker search --limit=100 "$*" |
@@ -669,6 +752,7 @@ if has docker; then
       fi
     fi
   }
+
   if has docker-compose; then
     dcp() {
       local f c
@@ -690,5 +774,33 @@ if has docker; then
     }
   fi
 fi
+
+img() {
+  local file url=$1
+  local overwrite=0
+  if [[ $1 = '-F' ]]; then
+    overwrite=1
+    shift
+  fi
+  cd /tmp > /dev/null
+  file="${url##*/}"
+  if [[ -e $file && $overwrite = 0 ]]; then
+    printf '%s exists, overwrite? [N/y] ' "$file"
+    read -k1
+    [[ $REPLY = 'y' ]] && overwrite=1
+  fi
+  if [[ ! -e $file || $overwrite = 1 ]]; then
+    curl -L "$url" > "$file"
+  fi
+  if [[ ! -e "$file" ]]; then
+    echo 'failed to download'
+    return
+  fi
+  file "$file"
+  mpv --loop=inf "$file"
+  cd - > /dev/null
+}
+
+alias pgrep='fztop'
 
 # vim:ft=sh:

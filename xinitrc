@@ -29,20 +29,10 @@ while sleep 0.1; do
 
     xset -b
 
-    setxkbmap \
-      -option 'caps:ctrl_modifier' \
-      -option 'compose:paus'
-      # -option 'grp:shifts_toggle,grp_led:scroll' -layout 'us,us(dvorak)'
-    xcape -e 'Caps_Lock=Escape'
+    setxkbmap -option 'compose:paus'
 
-    xinput --set-prop 12 'libinput Tapping Enabled' 1
-    xinput --set-prop 12 'libinput Tapping Enabled Default' 1
-    xinput --set-prop 12 'libinput Accel Speed' 0.75
-    # syndaemon -tkKd -i 2
-    # synclient TapButton1=1 \
-    #           VertTwoFingerScroll=1 \
-    #           HorizTwoFingerScroll=1 \
-    #           PalmDetect=1
+    xinput set-prop 'pointer:Polo-Leader MANO-603 Touchpad' 'libinput Accel Speed' 0.65
+    xinput set-prop 'pointer:Polo-Leader MANO-603 Touchpad' 'libinput Tapping Enabled' 1
 
     if [[ ! -v MPD_HOST ]] && has 'mpd'; then
       run_once mpd
@@ -70,6 +60,6 @@ fi
 export DMENU_FONT="Fira Mono-7"
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 export XDG_CURRENT_DESKTOP=KDE
-export QT_STYLE_OVERRIDE=breeze
+# export QT_STYLE_OVERRIDE=breeze
 
 exec "$wm"

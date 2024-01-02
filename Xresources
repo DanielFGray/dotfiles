@@ -1,38 +1,5 @@
-*Rxvt*scrollBar:       false
-*Rxvt*imLocale:        en_US.UTF-8
-*Rxvt*loginShell:      true
-*Rxvt*saveLines:       512
-*Rxvt*geometry:        90x25
-*Rxvt*boldMode:        false
-*Rxvt*inheritPixmap:   false
-*Rxvt*jumpScroll:      false
-*Rxvt*tintColor:       white
-*Rxvt*internalBorder:  0
-*Rxvt*borderless:      true
-*Rxvt.perl-ext-common: default,matcher,font-size
-*Rxvt.url-launcher:    /home/dan/.local/bin/x-www-browser
-*Rxvt.matcher.button:  1
-*Rxvt.urgentOnBell:    True
-*Rxvt*letterSpace:     -2
-URxvt.font-size.step:  2
-
-*Rxvt.keysym.C-Up:     perl:font-size:increase
-*Rxvt.keysym.C-Down:   perl:font-size:decrease
-*Rxvt.keysym.C-S-Up:   perl:font-size:incglobal
-*Rxvt.keysym.C-S-Down: perl:font-size:decglobal
-
-Emacs*font:            Fantasque\ Sans\ Mono\ 9
-Emacs*FontBackend:     xft
-*Rxvt*font:            xft:Fantasque\ Sans\ Mono:pixelsize=12
-*Rxvt*boldFont:        xft:Fantasque\ Sans\ Mono:pixelsize=12
-*XTerm*faceName:       xft:Fantasque\ Sans\ Mono:pixelsize=14
-UXTerm*faceName:       xft:Fantasque\ Sans\ Mono:pixelsize=14
-XTerm*metaSendsEscape: true
-XTerm*lineDrawingCharacters: true
-*XTerm*scaleHeight:    1.01
-*XTerm*colorBDMode:    true
-*XTerm*utf8:           1
-*xterm*termName:       xterm-256color
+st.fallback:          Fira Code Nerd Font Mono:style=Regular:pixelsize=13:antialias=true
+st.borderpx:          0
 
 *background:           #131313
 *foreground:           #dedede

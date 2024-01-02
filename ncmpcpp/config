@@ -340,7 +340,7 @@ enable_window_title = yes
 # search_engine_default_search_mode = MODE_NUMBER
 # Number of default mode used in search engine.
 
-external_editor = /usr/sbin/vim
+external_editor = /usr/bin/nvim
 # external_editor = PATH
 # Path to external editor used to edit lyrics.
 

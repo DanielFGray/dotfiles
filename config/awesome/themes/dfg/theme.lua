@@ -113,7 +113,7 @@ theme.widget.netup                              = beautifultheme .. "icons/up.pn
 theme.widget.netdown                            = beautifultheme .. "icons/down.png"
 theme.widget.pacman                             = beautifultheme .. "icons/pacman.png"
 
-theme.useless_gap                               = 5
+theme.useless_gap                               = 4
 theme.gap_single_client                         = false
 
 theme.menu_disable_icon                         = false

@@ -85,11 +85,9 @@ config_scripts() {
   library bin ~/.local/bin
   library api-helper ~/build/api-helper
   library fzf-scripts ~/build/fzf-scripts
-  library tekup ~/build/tekup
   library yaxg ~/build/yaxg
-  library boiler ~/build/boiler
   mkd ~/.local/bin
-  find ~/build/{yaxg,boiler,tekup,fzf-scripts,api-helper} -maxdepth 1 -executable -type f -exec ln ${verbose:+-v} -s -t "$HOME/.local/bin" {} \;
+  find ~/build/{yaxg,fzf-scripts,api-helper} -maxdepth 1 -executable -type f -exec ln ${verbose:+-v} -s -t "$HOME/.local/bin" {} \;
 }
 
 has vim && config_vim() {
@@ -108,11 +106,6 @@ has nvim && config_neovim() {
 
 has zsh && config_zsh() {
   install_dots zsh zshrc zshenv zlogin
-  library https://github.com/zdharma/fast-syntax-highlighting ~/.zsh/plugins/fast-syntax-highlighting &
-  library https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/plugins/zsh-autosuggestions &
-  library https://github.com/hlissner/zsh-autopair ~/.zsh/plugins/zsh-autopair &
-  library https://github.com/MichaelAquilina/zsh-you-should-use ~/.zsh/plugins/you-should-use &
-  wait
 }
 
 has fzf || config_fzf() {
@@ -139,34 +132,34 @@ has X && config_x11() {
   has -v startx && install_dots xinitrc
   has -v xmodmap && install_dots xmodmap
   has -v xrdb && install_dots Xresources
-  if has -v fc-cache; then
-    [[ -f ~/.local/share/fonts/FantasqueSansMono-Regular.ttf ]] && return 0
-    mkdir -p ~/.local/share/fonts
-    if [[ ! -f ~/downloads/fantasque-sans-mono.zip ]]; then
-      echo_cmd curl -L --create-dirs -o ~/downloads/fantasque-sans-mono.zip \
-        'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip'
-    fi
-    if ! has -v unzip; then
-      err 'downloaded Fantasque Sans Mono but unzip is unavailable'
-      return 1
-    fi
-    if [[ -f ~/downloads/fantasque-sans-mono.zip ]]; then
-      echo_cmd unzip ~/downloads/fantasque-sans-mono.zip '*.ttf' -d ~/.local/share/fonts
-    else
-      err 'failed to download font Fantasque Sans Mono'
-    fi
-  fi
+  # if has -v fc-cache; then
+  #   [[ -f ~/.local/share/fonts/FantasqueSansMono-Regular.ttf ]] && return 0
+  #   mkdir -p ~/.local/share/fonts
+  #   if [[ ! -f ~/downloads/fantasque-sans-mono.zip ]]; then
+  #     echo_cmd curl -L --create-dirs -o ~/downloads/fantasque-sans-mono.zip \
+  #       'https://fontlibrary.org/assets/downloads/fantasque-sans-mono/db52617ba875d08cbd8e080ca3d9f756/fantasque-sans-mono.zip'
+  #   fi
+  #   if ! has -v unzip; then
+  #     err 'downloaded Fantasque Sans Mono but unzip is unavailable'
+  #     return 1
+  #   fi
+  #   if [[ -f ~/downloads/fantasque-sans-mono.zip ]]; then
+  #     echo_cmd unzip ~/downloads/fantasque-sans-mono.zip '*.ttf' -d ~/.local/share/fonts
+  #   else
+  #     err 'failed to download font Fantasque Sans Mono'
+  #   fi
+  # fi
 }
 
 has yarn || config_yarn() {
-  echo_cmd curl -L https://yarnpkg.com/install.sh | sh
+  echo_cmd curl -L https://yarnpkg.com/install.sh | bash
   ~/.yarn/bin/yarn config set init-version 0.0.1
   ~/.yarn/bin/yarn config set init-author-email DanielFGray@gmail.com
   ~/.yarn/bin/yarn config set init-author-name DanielFGray
   ~/.yarn/bin/yarn config set init-license GPL-3.0
 }
 
-has nvm || config_nvm() {
+has n || config_n() {
   echo_cmd curl -L https://raw.githubusercontent.com/creationix/nvm/master/install.sh | sh
 }
 

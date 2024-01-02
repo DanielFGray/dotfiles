@@ -30,7 +30,7 @@ hsetroot -solid "#2E3436" &
 ## 4. tint2 panel
 (\
 nitrogen --restore &
-compton --config ~/.compton.conf &
+picom &
 sleep 2s && (xfce4-panel || tint2) &
 ) &
 

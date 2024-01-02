@@ -81,3 +81,32 @@ unset segment_separator
 
 [[ -f ~/.fzf/shell/key-bindings.bash ]] && source ~/.fzf/shell/key-bindings.bash
 [[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
+source "$HOME/.cargo/env"
+alias wally-cli='$HOME/go/bin/linux_arm64/wally-cli'
+export GOPATH=$HOME/go
+export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin
+export CC=aarch64-linux-gnu-gcc
+export GOARCH=arm64
+export GOOS=linux
+export CGO_ENABLED=1
+alias wally-cli='$HOME/go/bin/linux_arm64/wally-cli'
+export GOPATH=$HOME/go
+export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin
+export CC=aarch64-linux-gnu-gcc
+export GOARCH=arm64
+export GOOS=linux
+export CGO_ENABLED=1
+alias wally-cli='$HOME/go/bin/linux_arm64/wally-cli'
+export GOPATH=$HOME/go
+export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin
+export CC=aarch64-linux-gnu-gcc
+export GOARCH=arm64
+export GOOS=linux
+export CGO_ENABLED=1
+alias wally-cli='$HOME/go/bin/linux_arm64/wally-cli'
+export GOPATH=$HOME/go
+export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin
+export CC=aarch64-linux-gnu-gcc
+export GOARCH=arm64
+export GOOS=linux
+export CGO_ENABLED=1

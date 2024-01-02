@@ -1,0 +1,556 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+%	less.vim	/^noremap <script> % %<SID>L$/;"	m
+%s returned %s to uri %s", tostring	config/luakit/plugins/adblock.lua	/^            info("adblock: filter function %s returned %s to uri %s", tostring(func), tostring(ret), uri)$/;"	f
+) awesome.quit	config/awesome/rc.lua	/^   { "quit", function() awesome.quit() end}$/;"	f
+) awful.layout.inc	config/awesome/rc.lua	/^    awful.button({ }, 1, function() awful.layout.inc(1) end),$/;"	f
+) awful.layout.inc	config/awesome/rc.lua	/^    awful.button({ }, 3, function() awful.layout.inc(-1) end),$/;"	f
+) awful.layout.inc	config/awesome/rc.lua	/^    awful.button({ }, 4, function() awful.layout.inc(1) end),$/;"	f
+) awful.layout.inc	config/awesome/rc.lua	/^    awful.button({ }, 5, function() awful.layout.inc(-1) end)$/;"	f
+) jit.on	config/awesome/rc.lua	/^pcall(function() jit.on() end)$/;"	f
+) menubar.show	config/awesome/shifty/example.rc.lua	/^    awful.key({ modkey }, "p", function() menubar.show() end)$/;"	f
+) mymainmenu:toggle	config/awesome/rc.lua	/^  awful.button({ }, 3, function() mymainmenu:toggle() end),$/;"	f
+) w:update_noscr	config/luakit/plugins/nscript_widget.lua	/^		luakit.idle_add(function() w:update_noscr(w) return false end)$/;"	f
+) w:update_policy	config/luakit/plugins/policy.lua	/^		capi.luakit.idle_add(function() w:update_policy(w) return false end)$/;"	f
+) w:update_prvt	config/luakit/plugins/private_browsing.lua	/^		luakit.idle_add(function() w:update_prvt(w) return false end)$/;"	f
+) w:update_ua_indicator	config/luakit/plugins/useragent.lua	/^        capi.luakit.idle_add(function() w:update_ua_indicator() return false end)$/;"	f
+*top-map*	stumpwm.lisp	/^(define-key *top-map* (kbd "XF86AudioLowerVolume") "exec amixer set Master,0 5%-")$/;"	f
+*top-map*	stumpwm.lisp	/^(define-key *top-map* (kbd "XF86AudioMute") "exec amixer set Master toggle")$/;"	f
+*top-map*	stumpwm.lisp	/^(define-key *top-map* (kbd "XF86AudioRaiseVolume") "exec amixer set Master,0 5%+")$/;"	f
+/	less.vim	/^noremap <script> \/ H$:call <SID>Forward()<CR>\/$/;"	m
+<	less.vim	/^map < g$/;"	m
+<C-B>	less.vim	/^map <C-B> b$/;"	m
+<C-D>	less.vim	/^map <C-D> d$/;"	m
+<C-E>	less.vim	/^map <C-E> <CR>$/;"	m
+<C-F>	less.vim	/^map <C-F> <Space>$/;"	m
+<C-J>	less.vim	/^map <C-J> <CR>$/;"	m
+<C-K>	less.vim	/^map <C-K> k$/;"	m
+<C-N>	less.vim	/^map <C-N> <CR>$/;"	m
+<C-P>	less.vim	/^map <C-P> k$/;"	m
+<C-R>	less.vim	/^noremap <script> <C-R> <C-L><SID>L$/;"	m
+<C-U>	less.vim	/^noremap <script> <C-U> <C-U><SID>L$/;"	m
+<C-V>	less.vim	/^map <C-V> <Space>$/;"	m
+<C-Y>	less.vim	/^map <C-Y> k$/;"	m
+<CR>	less.vim	/^noremap <script> <CR> <C-E><SID>L$/;"	m
+<Down>	less.vim	/^map <Down> <CR>$/;"	m
+<End>	less.vim	/^map <End> G$/;"	m
+<Esc><	less.vim	/^map <Esc>< g$/;"	m
+<Esc><Space>	less.vim	/^map <Esc><Space> <Space>$/;"	m
+<Esc>>	less.vim	/^map <Esc>> G$/;"	m
+<Esc>v	less.vim	/^map <Esc>v b$/;"	m
+<Home>	less.vim	/^map <Home> g$/;"	m
+<PageDown>	less.vim	/^map <PageDown> <Space>$/;"	m
+<PageUp>	less.vim	/^map <PageUp> b$/;"	m
+<S-Down>	less.vim	/^map <S-Down> <Space>$/;"	m
+<S-Up>	less.vim	/^map <S-Up> b$/;"	m
+<SID>L	less.vim	/^  noremap <SID>L L0:redraw<CR>:file<CR>$/;"	m
+<SID>L	less.vim	/^  noremap <SID>L Lg0:redraw<CR>:file<CR>$/;"	m
+<Space>	less.vim	/^noremap <script> <Space> :call <SID>NextPage()<CR><SID>L$/;"	m
+<Up>	less.vim	/^map <Up> k$/;"	m
+<kEnd>	less.vim	/^map <kEnd> G$/;"	m
+<kHome>	less.vim	/^map <kHome> g$/;"	m
+<kPageDown>	less.vim	/^map <kPageDown> <Space>$/;"	m
+<kPageUp>	less.vim	/^map <kPageUp> b$/;"	m
+>	less.vim	/^map > G$/;"	m
+?	less.vim	/^  noremap <script> ? H0:call <SID>Backward()<CR>?$/;"	m
+?	less.vim	/^  noremap <script> ? Hg0:call <SID>Backward()<CR>?$/;"	m
+Backward	less.vim	/^fun! s:Backward()$/;"	f
+DOC_DIR	zsh/plugins/zsh-syntax-highlighting/Makefile	/^DOC_DIR?=$(DESTDIR)$(PREFIX)\/share\/doc\/$(NAME)$/;"	m
+End	less.vim	/^fun! s:End()$/;"	f
+F	less.vim	/^map F :e<CR>G<SID>L:sleep 1<CR>F$/;"	m
+Forward	less.vim	/^fun! s:Forward()$/;"	f
+G	less.vim	/^noremap <script> G G<SID>L$/;"	m
+H	less.vim	/^map H h$/;"	m
+HEADER_FILES	zsh/plugins/zsh-autosuggestions/Makefile	/^HEADER_FILES := \\$/;"	m
+Help	less.vim	/^fun! s:Help()$/;"	f
+INSTALL	zsh/plugins/zsh-syntax-highlighting/Makefile	/^INSTALL?=install -c$/;"	m
+NAME	zsh/plugins/zsh-syntax-highlighting/Makefile	/^NAME=zsh-syntax-highlighting$/;"	m
+NextPage	less.vim	/^fun! s:NextPage()$/;"	f
+PLUGIN_TARGET	zsh/plugins/zsh-autosuggestions/Makefile	/^PLUGIN_TARGET := zsh-autosuggestions.zsh$/;"	m
+PREFIX	zsh/plugins/zsh-syntax-highlighting/Makefile	/^PREFIX?=\/usr\/local$/;"	m
+R	less.vim	/^noremap <script> R <C-L><SID>L$/;"	m
+SHARE_DIR	zsh/plugins/zsh-syntax-highlighting/Makefile	/^SHARE_DIR?=$(DESTDIR)$(PREFIX)\/share\/$(NAME)$/;"	m
+SHUNIT2	zsh/plugins/zsh-autosuggestions/Makefile	/^SHUNIT2 := $(VENDOR_DIR)\/shunit2\/2.1.6$/;"	m
+SRC_DIR	zsh/plugins/zsh-autosuggestions/Makefile	/^SRC_DIR    := .\/src$/;"	m
+SRC_FILES	zsh/plugins/zsh-autosuggestions/Makefile	/^SRC_FILES := \\$/;"	m
+STUB_SH	zsh/plugins/zsh-autosuggestions/Makefile	/^STUB_SH := $(VENDOR_DIR)\/stub.sh\/stub.sh$/;"	m
+TEST_PREREQS	zsh/plugins/zsh-autosuggestions/Makefile	/^TEST_PREREQS := \\$/;"	m
+TRAPWINCH	zsh/plugins/vi-mode/vi-mode.plugin.zsh	/^TRAPWINCH() {$/;"	f
+VENDOR_DIR	zsh/plugins/zsh-autosuggestions/Makefile	/^VENDOR_DIR := .\/vendor$/;"	m
+ZSH	zsh/plugins/zsh-syntax-highlighting/Makefile	/^ZSH?=zsh # zsh binary to run tests with$/;"	m
+__gitex_author_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_author_names() {$/;"	f
+__gitex_branch_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_branch_names() {$/;"	f
+__gitex_bug_branch_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_bug_branch_names() {$/;"	f
+__gitex_command_successful	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_command_successful () {$/;"	f
+__gitex_commits	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_commits() {$/;"	f
+__gitex_feature_branch_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_feature_branch_names() {$/;"	f
+__gitex_refactor_branch_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_refactor_branch_names() {$/;"	f
+__gitex_specific_branch_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_specific_branch_names() {$/;"	f
+__gitex_submodule_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_submodule_names() {$/;"	f
+__gitex_tag_names	zsh/plugins/git-extras/git-extras.plugin.zsh	/^__gitex_tag_names() {$/;"	f
+__index 	config/luakit/window.lua	/^        __index = function (_, k)$/;"	f
+_init_all_icon_paths	config/awesome/freedesktop/utils.lua	/^local function _init_all_icon_paths()$/;"	f
+_zsh_autosuggest_accept	zsh/plugins/zsh-autosuggestions/src/widgets.zsh	/^_zsh_autosuggest_accept() {$/;"	f
+_zsh_autosuggest_accept	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_accept() {$/;"	f
+_zsh_autosuggest_bind_widget	zsh/plugins/zsh-autosuggestions/src/bind.zsh	/^_zsh_autosuggest_bind_widget() {$/;"	f
+_zsh_autosuggest_bind_widget	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_bind_widget() {$/;"	f
+_zsh_autosuggest_bind_widgets	zsh/plugins/zsh-autosuggestions/src/bind.zsh	/^_zsh_autosuggest_bind_widgets() {$/;"	f
+_zsh_autosuggest_bind_widgets	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_bind_widgets() {$/;"	f
+_zsh_autosuggest_check_deprecated_config	zsh/plugins/zsh-autosuggestions/src/deprecated.zsh	/^_zsh_autosuggest_check_deprecated_config() {$/;"	f
+_zsh_autosuggest_check_deprecated_config	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_check_deprecated_config() {$/;"	f
+_zsh_autosuggest_clear	zsh/plugins/zsh-autosuggestions/src/widgets.zsh	/^_zsh_autosuggest_clear() {$/;"	f
+_zsh_autosuggest_clear	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_clear() {$/;"	f
+_zsh_autosuggest_deprecated_start_widget	zsh/plugins/zsh-autosuggestions/src/deprecated.zsh	/^_zsh_autosuggest_deprecated_start_widget() {$/;"	f
+_zsh_autosuggest_deprecated_start_widget	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_deprecated_start_widget() {$/;"	f
+_zsh_autosuggest_deprecated_warning	zsh/plugins/zsh-autosuggestions/src/deprecated.zsh	/^_zsh_autosuggest_deprecated_warning() {$/;"	f
+_zsh_autosuggest_deprecated_warning	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_deprecated_warning() {$/;"	f
+_zsh_autosuggest_escape_command	zsh/plugins/zsh-autosuggestions/src/suggestion.zsh	/^_zsh_autosuggest_escape_command() {$/;"	f
+_zsh_autosuggest_escape_command	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_escape_command() {$/;"	f
+_zsh_autosuggest_execute	zsh/plugins/zsh-autosuggestions/src/widgets.zsh	/^_zsh_autosuggest_execute() {$/;"	f
+_zsh_autosuggest_execute	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_execute() {$/;"	f
+_zsh_autosuggest_highlight_apply	zsh/plugins/zsh-autosuggestions/src/highlight.zsh	/^_zsh_autosuggest_highlight_apply() {$/;"	f
+_zsh_autosuggest_highlight_apply	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_highlight_apply() {$/;"	f
+_zsh_autosuggest_highlight_reset	zsh/plugins/zsh-autosuggestions/src/highlight.zsh	/^_zsh_autosuggest_highlight_reset() {$/;"	f
+_zsh_autosuggest_highlight_reset	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_highlight_reset() {$/;"	f
+_zsh_autosuggest_invoke_original_widget	zsh/plugins/zsh-autosuggestions/src/bind.zsh	/^_zsh_autosuggest_invoke_original_widget() {$/;"	f
+_zsh_autosuggest_invoke_original_widget	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_invoke_original_widget() {$/;"	f
+_zsh_autosuggest_modify	zsh/plugins/zsh-autosuggestions/src/widgets.zsh	/^_zsh_autosuggest_modify() {$/;"	f
+_zsh_autosuggest_modify	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_modify() {$/;"	f
+_zsh_autosuggest_partial_accept	zsh/plugins/zsh-autosuggestions/src/widgets.zsh	/^_zsh_autosuggest_partial_accept() {$/;"	f
+_zsh_autosuggest_partial_accept	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_partial_accept() {$/;"	f
+_zsh_autosuggest_start	zsh/plugins/zsh-autosuggestions/src/start.zsh	/^_zsh_autosuggest_start() {$/;"	f
+_zsh_autosuggest_start	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_start() {$/;"	f
+_zsh_autosuggest_strategy_default	zsh/plugins/zsh-autosuggestions/src/strategies/default.zsh	/^_zsh_autosuggest_strategy_default() {$/;"	f
+_zsh_autosuggest_strategy_default	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_strategy_default() {$/;"	f
+_zsh_autosuggest_strategy_match_prev_cmd	zsh/plugins/zsh-autosuggestions/src/strategies/match_prev_cmd.zsh	/^_zsh_autosuggest_strategy_match_prev_cmd() {$/;"	f
+_zsh_autosuggest_strategy_match_prev_cmd	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_strategy_match_prev_cmd() {$/;"	f
+_zsh_autosuggest_suggestion	zsh/plugins/zsh-autosuggestions/src/suggestion.zsh	/^_zsh_autosuggest_suggestion() {$/;"	f
+_zsh_autosuggest_suggestion	zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh	/^_zsh_autosuggest_suggestion() {$/;"	f
+_zsh_highlight	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight()$/;"	f
+_zsh_highlight_add_highlight	zsh/plugins/zsh-syntax-highlighting/highlighters/main/test-data/inheritance.zsh	/^_zsh_highlight_add_highlight()$/;"	f
+_zsh_highlight_add_highlight	zsh/plugins/zsh-syntax-highlighting/tests/generate.zsh	/^_zsh_highlight_add_highlight()$/;"	f
+_zsh_highlight_add_highlight	zsh/plugins/zsh-syntax-highlighting/tests/test-highlighting.zsh	/^_zsh_highlight_add_highlight()$/;"	f
+_zsh_highlight_add_highlight	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_add_highlight()$/;"	f
+_zsh_highlight_apply_zle_highlight	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_apply_zle_highlight() {$/;"	f
+_zsh_highlight_bind_widgets	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_bind_widgets()$/;"	f
+_zsh_highlight_brackets_match	zsh/plugins/zsh-syntax-highlighting/highlighters/brackets/brackets-highlighter.zsh	/^_zsh_highlight_brackets_match()$/;"	f
+_zsh_highlight_buffer_modified	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_buffer_modified()$/;"	f
+_zsh_highlight_call_widget	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_call_widget()$/;"	f
+_zsh_highlight_cursor_moved	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_cursor_moved()$/;"	f
+_zsh_highlight_highlighter_brackets_paint	zsh/plugins/zsh-syntax-highlighting/highlighters/brackets/brackets-highlighter.zsh	/^_zsh_highlight_highlighter_brackets_paint()$/;"	f
+_zsh_highlight_highlighter_brackets_predicate	zsh/plugins/zsh-syntax-highlighting/highlighters/brackets/brackets-highlighter.zsh	/^_zsh_highlight_highlighter_brackets_predicate()$/;"	f
+_zsh_highlight_highlighter_cursor_paint	zsh/plugins/zsh-syntax-highlighting/highlighters/cursor/cursor-highlighter.zsh	/^_zsh_highlight_highlighter_cursor_paint()$/;"	f
+_zsh_highlight_highlighter_cursor_predicate	zsh/plugins/zsh-syntax-highlighting/highlighters/cursor/cursor-highlighter.zsh	/^_zsh_highlight_highlighter_cursor_predicate()$/;"	f
+_zsh_highlight_highlighter_line_paint	zsh/plugins/zsh-syntax-highlighting/highlighters/line/line-highlighter.zsh	/^_zsh_highlight_highlighter_line_paint()$/;"	f
+_zsh_highlight_highlighter_line_predicate	zsh/plugins/zsh-syntax-highlighting/highlighters/line/line-highlighter.zsh	/^_zsh_highlight_highlighter_line_predicate()$/;"	f
+_zsh_highlight_highlighter_main_paint	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_highlighter_main_paint()$/;"	f
+_zsh_highlight_highlighter_main_predicate	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_highlighter_main_predicate()$/;"	f
+_zsh_highlight_highlighter_pattern_paint	zsh/plugins/zsh-syntax-highlighting/highlighters/pattern/pattern-highlighter.zsh	/^_zsh_highlight_highlighter_pattern_paint()$/;"	f
+_zsh_highlight_highlighter_pattern_predicate	zsh/plugins/zsh-syntax-highlighting/highlighters/pattern/pattern-highlighter.zsh	/^_zsh_highlight_highlighter_pattern_predicate()$/;"	f
+_zsh_highlight_highlighter_root_paint	zsh/plugins/zsh-syntax-highlighting/highlighters/root/root-highlighter.zsh	/^_zsh_highlight_highlighter_root_paint()$/;"	f
+_zsh_highlight_highlighter_root_predicate	zsh/plugins/zsh-syntax-highlighting/highlighters/root/root-highlighter.zsh	/^_zsh_highlight_highlighter_root_predicate()$/;"	f
+_zsh_highlight_load_highlighters	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_load_highlighters()$/;"	f
+_zsh_highlight_main__is_redirection	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main__is_redirection() {$/;"	f
+_zsh_highlight_main__precmd_hook	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main__precmd_hook() {$/;"	f
+_zsh_highlight_main__resolve_alias	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main__resolve_alias() {$/;"	f
+_zsh_highlight_main__stack_pop	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main__stack_pop() {$/;"	f
+_zsh_highlight_main__type	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main__type() {$/;"	f
+_zsh_highlight_main_add_region_highlight	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main_add_region_highlight() {$/;"	f
+_zsh_highlight_main_highlighter_check_assign	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main_highlighter_check_assign()$/;"	f
+_zsh_highlight_main_highlighter_check_path	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main_highlighter_check_path()$/;"	f
+_zsh_highlight_main_highlighter_expand_path	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main_highlighter_expand_path()$/;"	f
+_zsh_highlight_main_highlighter_highlight_dollar_string	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main_highlighter_highlight_dollar_string()$/;"	f
+_zsh_highlight_main_highlighter_highlight_path_separators	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main_highlighter_highlight_path_separators()$/;"	f
+_zsh_highlight_main_highlighter_highlight_string	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^_zsh_highlight_main_highlighter_highlight_string()$/;"	f
+_zsh_highlight_pattern_highlighter_loop	zsh/plugins/zsh-syntax-highlighting/highlighters/pattern/pattern-highlighter.zsh	/^_zsh_highlight_pattern_highlighter_loop()$/;"	f
+_zsh_highlight_preexec_hook	zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh	/^_zsh_highlight_preexec_hook()$/;"	f
+a, b) return a[1]:lower	config/awesome/freedesktop/menu.lua	/^        table.sort(v, function(a, b) return a[1]:lower() < b[1]:lower() end)$/;"	f
+abp_to_pattern 	config/luakit/plugins/adblock.lua	/^abp_to_pattern = function (s)$/;"	f
+activate 	config/luakit/modes.lua	/^    activate = function (w, text)$/;"	f
+activate 	config/luakit/window.lua	/^    activate = function (w)$/;"	f
+add_applications_icons	config/awesome/freedesktop/desktop.lua	/^function add_applications_icons(arg)$/;"	f
+add_binds	config/luakit/binds.lua	/^function add_binds(mode, binds, before)$/;"	f
+add_binds	config/luakit/binds_extra.lua	/^function add_binds(mode, binds, before)$/;"	f
+add_cmds	config/luakit/binds.lua	/^function add_cmds(cmds, before)$/;"	f
+add_cmds	config/luakit/binds_extra.lua	/^function add_cmds(cmds, before)$/;"	f
+add_desktop_icons	config/awesome/freedesktop/desktop.lua	/^function add_desktop_icons(args)$/;"	f
+add_dirs_and_files_icons	config/awesome/freedesktop/desktop.lua	/^function add_dirs_and_files_icons(arg)$/;"	f
+add_icon	config/awesome/freedesktop/desktop.lua	/^function add_icon(settings)$/;"	f
+add_list	config/luakit/plugins/adblock.lua	/^function add_list(uri, title, opts, replace, save_lists)$/;"	f
+add_unique_cached 	config/luakit/plugins/adblock.lua	/^add_unique_cached = function (pattern, tab, cache_tab)$/;"	f
+alias1	zsh/plugins/zsh-syntax-highlighting/highlighters/main/test-data/alias.zsh	/^alias1() {} # to check that it's highlighted as an alias, not as a function$/;"	f
+apply_window_theme 	config/luakit/window.lua	/^    apply_window_theme = function (w)$/;"	f
+arg0	zsh/plugins/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh	/^        function arg0$/;"	f
+assertBackslashSuggestion	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^assertBackslashSuggestion() {$/;"	f
+assertDoubleBackslashSuggestion	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^assertDoubleBackslashSuggestion() {$/;"	f
+assertHashSuggestion	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^assertHashSuggestion() {$/;"	f
+assertParenthesesSuggestion	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^assertParenthesesSuggestion() {$/;"	f
+assertSquareBracketsSuggestion	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^assertSquareBracketsSuggestion() {$/;"	f
+assertSuggestion	zsh/plugins/zsh-autosuggestions/test/test_helper.zsh	/^assertSuggestion() {$/;"	f
+assertTildeSuggestion	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^assertTildeSuggestion() {$/;"	f
+assertTildeSuggestionWithExtendedGlob	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^assertTildeSuggestionWithExtendedGlob() {$/;"	f
+awful.button({ }, 1, function(c) client.focus 	config/awesome/rc.lua	/^  awful.button({ }, 1, function(c) client.focus = c; c:raise() end),$/;"	f
+awful.button({}, 1, function (c) client.focus 	config/awesome/shifty/example.rc.lua	/^            awful.button({}, 1, function (c) client.focus = c; c:raise() end),$/;"	f
+awful.key({ modkey,           }, "f",      function (c) c.fullscreen 	config/awesome/shifty/example.rc.lua	/^    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),$/;"	f
+awful.key({ modkey,           }, "t",      function (c) c.ontop 	config/awesome/shifty/example.rc.lua	/^    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),$/;"	f
+awful.key({ modkey, "Shift"   }, "t",      function (c) shifty.create_titlebar(c) awful.titlebar(c) c.border_width 	config/awesome/shifty/example.rc.lua	/^    awful.key({ modkey, "Shift"   }, "t",      function (c) shifty.create_titlebar(c) awful.titlebar(c) c.border_width = 1 end),$/;"	f
+awful.key({ modkey, "Shift" }, "	config/awesome/rc.lua	/^  awful.key({ modkey, "Shift" }, "=", function()$/;"	f
+b	less.vim	/^noremap <script> b <C-B><SID>L$/;"	m
+back 	config/luakit/webview.lua	/^    back = function (view, w, n)$/;"	f
+backup_then_symlink	install.sh	/^backup_then_symlink() {$/;"	f
+backward_char 	config/luakit/window.lua	/^    backward_char = function (w)$/;"	f
+backward_word 	config/luakit/window.lua	/^    backward_word = function (w)$/;"	f
+beg_line 	config/luakit/window.lua	/^    beg_line = function (w)$/;"	f
+button_bind_match 	config/luakit/webview.lua	/^    button_bind_match = function (view, w)$/;"	f
+cd	zsh/plugins/zsh-syntax-highlighting/highlighters/main/test-data/function.zsh	/^cd() {$/;"	f
+changed 	config/luakit/modes.lua	/^    changed = function (w, text)$/;"	f
+checking_ssl 	config/luakit/webview.lua	/^    checking_ssl = function (view, w)$/;"	f
+clear_urgency_hint 	config/luakit/window.lua	/^    clear_urgency_hint = function (w)$/;"	f
+click 	config/awesome/freedesktop/desktop.lua	/^                click = function () awful.util.spawn(arg.open_with .. ' ' .. file.path) end$/;"	f
+click 	config/awesome/freedesktop/desktop.lua	/^                click = function () awful.util.spawn(program.cmdline) end$/;"	f
+client.connect_signal("focus", function(c) c.border_color 	config/awesome/shifty/example.rc.lua	/^client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)$/;"	f
+client.connect_signal("unfocus", function(c) c.border_color 	config/awesome/shifty/example.rc.lua	/^client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)$/;"	f
+client_menu_toggle_fn	config/awesome/rc.lua	/^local function client_menu_toggle_fn()$/;"	f
+close_tab 	config/luakit/window.lua	/^    close_tab = function (w, view, blank_last)$/;"	f
+close_win 	config/luakit/window.lua	/^    close_win = function (w, force)$/;"	f
+completion	config/awesome/shifty/init.lua	/^function completion(cmd, cur_pos, ncomp, sources, matchers)$/;"	f
+config	install.sh	/^config() {$/;"	f
+config_apps 	config/awesome/shifty/init.lua	/^        config_apps = function()$/;"	f
+config_base	install.sh	/^config_base() {$/;"	f
+config_font	install.sh	/^config_font() {$/;"	f
+config_fzf	install.sh	/^config_fzf() {$/;"	f
+config_gem	install.sh	/^config_gem() {$/;"	f
+config_tags 	config/awesome/shifty/init.lua	/^        config_tags = function()$/;"	f
+config_tmux	install.sh	/^config_tmux() {$/;"	f
+config_vim	install.sh	/^config_vim() {$/;"	f
+config_x11	install.sh	/^config_x11() {$/;"	f
+config_zsh	install.sh	/^config_zsh() {$/;"	f
+count	config/awesome/shifty/init.lua	/^function count(table, element)$/;"	f
+create_webview 	config/luakit/webview.lua	/^    create_webview = function (view, w)$/;"	f
+d	less.vim	/^noremap <script> d <C-D><SID>L$/;"	m
+del	config/luakit/plugins/useragent.lua	/^function del(name, w)$/;"	f
+del_backward_char 	config/luakit/window.lua	/^    del_backward_char = function (w)$/;"	f
+del_forward_char 	config/luakit/window.lua	/^    del_forward_char = function (w)$/;"	f
+del_line 	config/luakit/window.lua	/^    del_line = function (w)$/;"	f
+del_word 	config/luakit/window.lua	/^    del_word = function (w)$/;"	f
+detect_files	config/luakit/plugins/adblock.lua	/^function detect_files()$/;"	f
+directory_exists	config/awesome/freedesktop/utils.lua	/^function directory_exists(filename)$/;"	f
+disable 	config/luakit/plugins/adblock.lua	/^disable = function ()$/;"	f
+domain_properties 	config/luakit/webview.lua	/^    domain_properties = function (view, w)$/;"	f
+e	less.vim	/^map e <CR>$/;"	m
+each_tab 	config/luakit/window.lua	/^    each_tab = function (w, fn)$/;"	f
+echo_cmd	install.sh	/^echo_cmd() {$/;"	f
+editor_callback	config/luakit/binds_extra.lua	/^        local function editor_callback(exit_reason, exit_status)$/;"	f
+emit_form_root_active_signal 	config/luakit/window.lua	/^    emit_form_root_active_signal = function (w, s)$/;"	f
+enable 	config/luakit/plugins/adblock.lua	/^enable = function ()$/;"	f
+end_line 	config/luakit/window.lua	/^    end_line = function (w)$/;"	f
+enter 	config/luakit/modes.lua	/^    enter = function (w)$/;"	f
+enter 	config/luakit/plugins/multisession.lua	/^    enter = function (w)$/;"	f
+enter 	config/luakit/plugins/policy.lua	/^    enter = function (w)$/;"	f
+enter 	config/luakit/plugins/tabmenu.lua	/^    enter = function (w)$/;"	f
+enter 	config/luakit/plugins/useragent.lua	/^    enter = function (w)$/;"	f
+enter_cmd 	config/luakit/window.lua	/^    enter_cmd = function (w, cmd, opts)$/;"	f
+err	install.sh	/^err() {$/;"	f
+error 	config/luakit/window.lua	/^    error = function (w, msg, set_mode)$/;"	f
+existing 	config/awesome/shifty/init.lua	/^        existing = function()$/;"	f
+f	less.vim	/^map f <Space>$/;"	m
+f	zsh/plugins/zsh-syntax-highlighting/highlighters/main/test-data/off-by-one.zsh	/^f() {}$/;"	f
+f 	config/awesome/shifty/init.lua	/^            f = function() shifty.rename(t); tmr:stop() end$/;"	f
+f 	config/awesome/shifty/init.lua	/^            f = function() shifty.rename(t, args.rename, true); tmr:stop() end$/;"	f
+file_exists	config/awesome/freedesktop/utils.lua	/^function file_exists(filename)$/;"	f
+finish	install.sh	/^finish() {$/;"	f
+form_insert_mode 	config/luakit/webview.lua	/^    form_insert_mode = function (view, w)$/;"	f
+forward 	config/luakit/webview.lua	/^    forward = function (view, w, n)$/;"	f
+forward_char 	config/luakit/window.lua	/^    forward_char = function (w)$/;"	f
+forward_word 	config/luakit/window.lua	/^    forward_word = function (w)$/;"	f
+function (name) if name:len() > 0 then t.name 	config/awesome/shifty/init.lua	/^        function (name) if name:len() > 0 then t.name = name; end end,$/;"	f
+function (w) w.win.fullscreen 	config/luakit/binds.lua	/^        function (w) w.win.fullscreen = not w.win.fullscreen end),$/;"	f
+function (w) w:scroll{ x 	config/luakit/binds.lua	/^        function (w) w:scroll{ x =  0 } end),$/;"	f
+function (w) w:scroll{ x 	config/luakit/binds.lua	/^        function (w) w:scroll{ x = -1 } end),$/;"	f
+function (w) w:scroll{ xrel 	config/luakit/binds.lua	/^        function (w) w:scroll{ xrel =  scroll_step } end),$/;"	f
+function (w) w:scroll{ xrel 	config/luakit/binds.lua	/^        function (w) w:scroll{ xrel = -scroll_step } end),$/;"	f
+function (w) w:scroll{ y 	config/luakit/binds.lua	/^        function (w) w:scroll{ y =  0 } end),$/;"	f
+function (w) w:scroll{ y 	config/luakit/binds.lua	/^        function (w) w:scroll{ y = -1 } end),$/;"	f
+function (w) w:scroll{ ypagerel 	config/luakit/binds.lua	/^        function (w) w:scroll{ ypagerel =  0.5 } end),$/;"	f
+function (w) w:scroll{ ypagerel 	config/luakit/binds.lua	/^        function (w) w:scroll{ ypagerel =  1.0 } end),$/;"	f
+function (w) w:scroll{ ypagerel 	config/luakit/binds.lua	/^        function (w) w:scroll{ ypagerel = -0.5 } end),$/;"	f
+function (w) w:scroll{ ypagerel 	config/luakit/binds.lua	/^        function (w) w:scroll{ ypagerel = -1.0 } end),$/;"	f
+function (w) w:scroll{ yrel 	config/luakit/binds.lua	/^        function (w) w:scroll{ yrel =  scroll_step } end),$/;"	f
+function (w) w:scroll{ yrel 	config/luakit/binds.lua	/^        function (w) w:scroll{ yrel = -scroll_step } end),$/;"	f
+function (w, b, m) w:scroll{ ypct 	config/luakit/binds.lua	/^        function (w, b, m) w:scroll{ ypct = m.count } end),$/;"	f
+function (w, b, m) w:scroll{ ypct 	config/luakit/binds.lua	/^        function (w, b, m) w:scroll{ ypct = m.count } end, {count=0}),$/;"	f
+function (w, b, m) w:scroll{ ypct 	config/luakit/binds.lua	/^        function (w, b, m) w:scroll{ ypct = m.count } end, {count=100}),$/;"	f
+function (w, b, m) w:scroll{ ypct 	config/luakit/binds_extra.lua	/^	    function (w, b, m) w:scroll{ ypct = m.count } w:reload()     end, {count = 0}),$/;"	f
+function (w, b, m) w:scroll{ ypct 	config/luakit/binds_extra.lua	/^	    function (w, b, m) w:scroll{ ypct = m.count } w:reload(true) end, {count = 0}),$/;"	f
+function (w, m) for i	config/luakit/binds.lua	/^        function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),$/;"	f
+function (w, m) w:scroll{ xrel 	config/luakit/binds.lua	/^        function (w, m) w:scroll{ xrel =  scroll_step } end),$/;"	f
+function (w, m) w:scroll{ xrel 	config/luakit/binds.lua	/^        function (w, m) w:scroll{ xrel = -scroll_step } end),$/;"	f
+function (w, m) w:zoom_in(zoom_step * m.count) end, {count	config/luakit/binds.lua	/^        function (w, m) w:zoom_in(zoom_step * m.count) end, {count=1}),$/;"	f
+function (w, m) w:zoom_out(zoom_step * m.count) end, {count	config/luakit/binds.lua	/^        function (w, m) w:zoom_out(zoom_step * m.count) end, {count=1}),$/;"	f
+function shift_next() set(awful.tag.selected(), {rel_index 	config/awesome/shifty/init.lua	/^function shift_next() set(awful.tag.selected(), {rel_index = 1}) end$/;"	f
+function shift_prev() set(awful.tag.selected(), {rel_index 	config/awesome/shifty/init.lua	/^function shift_prev() set(awful.tag.selected(), {rel_index = -1}) end$/;"	f
+g	less.vim	/^noremap <script> g gg<SID>L$/;"	m
+get	config/luakit/plugins/useragent.lua	/^function get(name)$/;"	f
+get_domain	config/luakit/plugins/autozoom.lua	/^local function get_domain(uri)$/;"	f
+get_lines	config/awesome/freedesktop/utils.lua	/^function get_lines(...)$/;"	f
+get_mode	config/luakit/modes.lua	/^function get_mode(name) return modes[name] end$/;"	f
+get_modes	config/luakit/modes.lua	/^function get_modes() return lousy.util.table.clone(modes) end$/;"	f
+get_names	config/luakit/plugins/useragent.lua	/^function get_names()$/;"	f
+getdomain 	config/luakit/tld.lua	/^getdomain = function (host)$/;"	f
+getlayout	config/awesome/shifty/init.lua	/^function getlayout(name)$/;"	f
+gettld 	config/luakit/tld.lua	/^gettld = function (host)$/;"	f
+goto_tab 	config/luakit/window.lua	/^    goto_tab = function (w, n)$/;"	f
+h	less.vim	/^noremap h :call <SID>Help()<CR>$/;"	m
+has	xinitrc	/^has() {$/;"	f
+header	zsh/plugins/zsh-autosuggestions/script/test_runner.zsh	/^header() {$/;"	f
+hist_update 	config/luakit/webview.lua	/^    hist_update = function (view, w)$/;"	f
+history 	config/awesome/shifty/init.lua	/^        history = function()$/;"	f
+hit 	config/luakit/window.lua	/^    hit = function (w, mods, key, opts)$/;"	f
+if type(wallpaper) 	config/awesome/rc.lua	/^    if type(wallpaper) == "function" then$/;"	f
+inc_uri 	config/luakit/window.lua	/^    inc_uri = function (w, arg)$/;"	f
+info	config/luakit/rc.lua	/^function info(...) if luakit.verbose then io.stdout:write(string.format(...) .. "\\n") end end$/;"	f
+initalize_rpdb 	config/luakit/plugins/policy.lua	/^initalize_rpdb = function()$/;"	f
+insert_cmd 	config/luakit/window.lua	/^    insert_cmd = function (w, str)$/;"	f
+is_client_tagged	config/awesome/shifty/init.lua	/^function is_client_tagged(tag, client)$/;"	f
+is_running	xinitrc	/^is_running() {$/;"	f
+j	less.vim	/^map j <CR>$/;"	m
+k	less.vim	/^noremap <script> k <C-Y><SID>L$/;"	m
+key_press_match 	config/luakit/window.lua	/^    key_press_match = function (w)$/;"	f
+last_win_check 	config/luakit/window.lua	/^    last_win_check = function (w)$/;"	f
+leave 	config/luakit/plugins/multisession.lua	/^    leave = function (w)$/;"	f
+leave 	config/luakit/plugins/policy.lua	/^    leave = function (w)$/;"	f
+leave 	config/luakit/plugins/tabmenu.lua	/^    leave = function (w)$/;"	f
+leave 	config/luakit/plugins/useragent.lua	/^    leave = function (w)$/;"	f
+library	install.sh	/^library() {$/;"	f
+link_hover_display 	config/luakit/webview.lua	/^    link_hover_display = function (view, w)$/;"	f
+list_opts_modify	config/luakit/plugins/adblock.lua	/^function list_opts_modify(list_index, opt_ex, opt_inc)$/;"	f
+load	config/luakit/plugins/useragent.lua	/^function load(fd_name)$/;"	f
+load 	config/luakit/plugins/adblock.lua	/^load = function (reload, single_list)$/;"	f
+load 	config/luakit/plugins/policy.lua	/^load = function ()$/;"	f
+load_mime_types	config/awesome/freedesktop/utils.lua	/^function load_mime_types()$/;"	f
+loaded_less	less.vim	/^let loaded_less = 1$/;"	v
+local checkList 	config/luakit/plugins/policy.lua	/^local checkList = function (typ, hosts)$/;"	f
+local checkpolicy 	config/luakit/plugins/policy.lua	/^local checkpolicy = function (host, requested, nav, firstnav)$/;"	f
+local clear_exlist 	config/luakit/plugins/policy.lua	/^local clear_exlist = function ()$/;"	f
+local concat_res 	config/luakit/plugins/policy.lua	/^local concat_res = function (l, uri, r)$/;"	f
+local domainmatch 	config/luakit/plugins/policy.lua	/^local domainmatch = function (a, b)$/;"	f
+local f 	config/awesome/shifty/init.lua	/^                            local f = function()$/;"	f
+local function entry()    return widget{type	config/luakit/window.lua	/^local function entry()    return widget{type="entry"}    end$/;"	f
+local function eventbox() return widget{type	config/luakit/window.lua	/^local function eventbox() return widget{type="eventbox"} end$/;"	f
+local function hbox()     return widget{type	config/luakit/window.lua	/^local function hbox()     return widget{type="hbox"}     end$/;"	f
+local function label()    return widget{type	config/luakit/window.lua	/^local function label()    return widget{type="label"}    end$/;"	f
+local function notebook() return widget{type	config/luakit/window.lua	/^local function notebook() return widget{type="notebook"} end$/;"	f
+local function vbox()     return widget{type	config/luakit/window.lua	/^local function vbox()     return widget{type="vbox"}     end$/;"	f
+local genLine 	config/luakit/plugins/policy.lua	/^local genLine = function ( fmt, cFmt, cm, h, rh, ifg, ibg)$/;"	f
+local go_mark 	config/luakit/plugins/marks.lua	/^local go_mark = function (w, mode, token, count)$/;"	f
+local islisted 	config/luakit/plugins/policy.lua	/^local islisted = function (host, rhost, typ, party)$/;"	f
+local load 	config/luakit/plugins/multisession.lua	/^local load = function ()$/;"	f
+local modList 	config/luakit/plugins/policy.lua	/^local modList = function (cmd, typ, hosts, w)$/;"	f
+local pattern_match 	config/luakit/plugins/policy.lua	/^local pattern_match = function (req)$/;"	f
+local ret 	config/luakit/modes.lua	/^        local ret = assert(loadstring("return function(w) return "..text.." end"))()(w)$/;"	f
+local rm 	config/luakit/plugins/multisession.lua	/^local rm = function (file)$/;"	f
+local rp_command 	config/luakit/plugins/policy.lua	/^local rp_command = function(command, w, a)$/;"	f
+local rp_setting 	config/luakit/plugins/policy.lua	/^local rp_setting = function (field, value, w)$/;"	f
+local session_append 	config/luakit/plugins/multisession.lua	/^local session_append = function (w, name)$/;"	f
+local session_del 	config/luakit/plugins/multisession.lua	/^local session_del = function (name)$/;"	f
+local session_load 	config/luakit/plugins/multisession.lua	/^local session_load = function (name)$/;"	f
+local session_restore 	config/luakit/plugins/multisession.lua	/^local session_restore = function (name)$/;"	f
+local session_save 	config/luakit/plugins/multisession.lua	/^local session_save = function (w, name)$/;"	f
+local set_mark 	config/luakit/plugins/marks.lua	/^local set_mark = function (w, token)$/;"	f
+local subdomainmatch 	config/luakit/plugins/policy.lua	/^local subdomainmatch = function(host, query)$/;"	f
+local ua_set 	config/luakit/plugins/useragent.lua	/^local ua_set = function(mode, ua, w)$/;"	f
+local uri 	config/luakit/window.lua	/^        local uri = string.gsub(w.view.uri, "(%d+)([^0-9]*)$", function (num, rest)$/;"	f
+lookup_file_icon	config/awesome/freedesktop/utils.lua	/^function lookup_file_icon(arg)$/;"	f
+lookup_icon	config/awesome/freedesktop/utils.lua	/^function lookup_icon(arg)$/;"	f
+ls	zsh/plugins/zsh-syntax-highlighting/highlighters/main/test-data/function.zsh	/^ls() {$/;"	f
+match	config/awesome/shifty/init.lua	/^function match(c, startup)$/;"	f
+match 	config/luakit/plugins/adblock.lua	/^match = function (uri, signame)$/;"	f
+match_cmd 	config/luakit/window.lua	/^    match_cmd = function (w, buffer)$/;"	f
+mime_decision 	config/luakit/webview.lua	/^    mime_decision = function (view, w)$/;"	f
+mode 	config/luakit/plugins/adblock.lua	/^mode = function()$/;"	f
+mode_key_filter 	config/luakit/webview.lua	/^    mode_key_filter = function (view, w)$/;"	f
+mode_reset_on_nav 	config/luakit/webview.lua	/^    mode_reset_on_nav = function (view, w)$/;"	f
+name2tag	config/awesome/shifty/init.lua	/^function name2tag(name, scr, idx)$/;"	f
+name2tags	config/awesome/shifty/init.lua	/^function name2tags(name, scr)$/;"	f
+navigate 	config/luakit/window.lua	/^    navigate = function (w, uri, view)$/;"	f
+new	config/awesome/freedesktop/menu.lua	/^function new(arg)$/;"	f
+new_mode	config/luakit/modes.lua	/^function new_mode(name, desc, mode, replace)$/;"	f
+new_tab 	config/luakit/window.lua	/^    new_tab = function (w, arg, switch, order)$/;"	f
+next_tab 	config/luakit/window.lua	/^    next_tab = function (w, n)$/;"	f
+notebook_signals 	config/luakit/window.lua	/^    notebook_signals = function (w)$/;"	f
+notify 	config/luakit/window.lua	/^    notify = function (w, msg, set_mode)$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/bind_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/highlight_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/strategies/default_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/strategies/match_prev_cmd_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/suggestion_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/widgets/clear_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/widgets/execute_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/widgets/modify_test.zsh	/^oneTimeSetUp() {$/;"	f
+oneTimeSetUp	zsh/plugins/zsh-autosuggestions/test/widgets/partial_accept_test.zsh	/^oneTimeSetUp() {$/;"	f
+open_file	config/openbox/pipemenus/dash_places_menu.sh	/^open_file() {$/;"	f
+p	less.vim	/^map p %$/;"	m
+parse_abpfilterlist 	config/luakit/plugins/adblock.lua	/^parse_abpfilterlist = function (filename, cache)$/;"	f
+parse_desktop_file	config/awesome/freedesktop/utils.lua	/^function parse_desktop_file(arg)$/;"	f
+parse_desktop_files	config/awesome/freedesktop/utils.lua	/^function parse_desktop_files(arg)$/;"	f
+parse_dirs_and_files	config/awesome/freedesktop/utils.lua	/^function parse_dirs_and_files(arg)$/;"	f
+pdebug 	config/luakit/plugins/policy.lua	/^pdebug = function (...) io.stdout:write(string.format(...) .. "\\n") end$/;"	f
+pos2idx	config/awesome/shifty/init.lua	/^function pos2idx(pos, scr)$/;"	f
+prev_tab 	config/luakit/window.lua	/^    prev_tab = function (w, n)$/;"	f
+progress_update 	config/luakit/webview.lua	/^    progress_update = function (view, w)$/;"	f
+q	less.vim	/^noremap q :q<CR>$/;"	m
+r	less.vim	/^noremap <script> r <C-L><SID>L$/;"	m
+read_subscriptions	config/luakit/plugins/adblock.lua	/^function read_subscriptions(file, clear_first)$/;"	f
+refresh_views	config/luakit/plugins/adblock_chrome.lua	/^function refresh_views()$/;"	f
+refresh_views 	config/luakit/plugins/adblock.lua	/^refresh_views = function()$/;"	f
+reload 	config/luakit/webview.lua	/^    reload = function (view, w, bypass_cache)$/;"	f
+remove_dup	config/awesome/shifty/init.lua	/^function remove_dup(table)$/;"	f
+resource_request_decision 	config/luakit/webview.lua	/^    resource_request_decision = function (view, w)$/;"	f
+restart 	config/luakit/window.lua	/^    restart = function (w)$/;"	f
+round	config/luakit/plugins/autozoom.lua	/^local function round(num, idp)$/;"	f
+run_cmd 	config/luakit/window.lua	/^    run_cmd = function (w, cmd, opts)$/;"	f
+run_once	config/awesome/rc.lua	/^function run_once(cmd)$/;"	f
+run_test	zsh/plugins/zsh-syntax-highlighting/tests/test-highlighting.zsh	/^run_test() {$/;"	f
+run_test	zsh/plugins/zsh-syntax-highlighting/tests/test-perfs.zsh	/^run_test() {$/;"	f
+run_test_internal	zsh/plugins/zsh-syntax-highlighting/tests/test-highlighting.zsh	/^run_test_internal() {$/;"	f
+run_test_internal	zsh/plugins/zsh-syntax-highlighting/tests/test-perfs.zsh	/^run_test_internal() {$/;"	f
+run_tests	zsh/plugins/zsh-autosuggestions/test/test_helper.zsh	/^run_tests() {$/;"	f
+s:i	less.vim	/^    let s:i = s:i + 1$/;"	v
+s:i	less.vim	/^  let s:i = 0$/;"	v
+s:lz	less.vim	/^let s:lz = &lz$/;"	v
+save	config/luakit/plugins/useragent.lua	/^function save(fd_name)$/;"	f
+scroll_update 	config/luakit/webview.lua	/^    scroll_update = function (view, w)$/;"	f
+search_open 	config/luakit/window.lua	/^    search_open = function (w, arg)$/;"	f
+select	config/awesome/shifty/init.lua	/^local function select(args)$/;"	f
+send	config/awesome/shifty/init.lua	/^function send(idx)$/;"	f
+set	config/awesome/shifty/init.lua	/^function set(t, args)$/;"	f
+set	config/luakit/plugins/autozoom.lua	/^function set(domain, level, full_content)$/;"	f
+set	config/luakit/plugins/useragent.lua	/^function set(name, uastring, save_file)$/;"	f
+setUp	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^setUp() {$/;"	f
+setUp	zsh/plugins/zsh-autosuggestions/test/widgets/clear_test.zsh	/^setUp() {$/;"	f
+setUp	zsh/plugins/zsh-autosuggestions/test/widgets/modify_test.zsh	/^setUp() {$/;"	f
+setUp	zsh/plugins/zsh-autosuggestions/test/widgets/partial_accept_test.zsh	/^setUp() {$/;"	f
+set_active	config/luakit/plugins/useragent.lua	/^function set_active(name)$/;"	f
+set_default_size 	config/luakit/window.lua	/^    set_default_size = function (w)$/;"	f
+set_history	zsh/plugins/zsh-autosuggestions/test/test_helper.zsh	/^set_history() {$/;"	f
+set_input 	config/luakit/window.lua	/^    set_input = function (w, text, opts)$/;"	f
+set_prompt 	config/luakit/window.lua	/^    set_prompt = function (w, text, opts)$/;"	f
+set_useragent 	config/luakit/webview.lua	/^    set_useragent = function (view, w)$/;"	f
+set_wallpaper	config/awesome/rc.lua	/^local function set_wallpaper(s)$/;"	f
+set_window_icon 	config/luakit/window.lua	/^    set_window_icon = function (w)$/;"	f
+settings 	config/awesome/rc.lua	/^  settings = function()$/;"	f
+shifty.add	config/awesome/shifty/init.lua	/^function shifty.add(args)$/;"	f
+shifty.create_titlebar	config/awesome/shifty/init.lua	/^function shifty.create_titlebar(c)$/;"	f
+shifty.del	config/awesome/shifty/init.lua	/^function shifty.del(tag)$/;"	f
+shifty.getpos	config/awesome/shifty/init.lua	/^function shifty.getpos(pos, scr_arg)$/;"	f
+shifty.init	config/awesome/shifty/init.lua	/^function shifty.init()$/;"	f
+shifty.rename	config/awesome/shifty/init.lua	/^function shifty.rename(tag, prefix, no_selectall)$/;"	f
+shifty.send_next	config/awesome/shifty/init.lua	/^function shifty.send_next() send(1) end$/;"	f
+shifty.send_prev	config/awesome/shifty/init.lua	/^function shifty.send_prev() send(-1) end$/;"	f
+shifty.tagtoscr	config/awesome/shifty/init.lua	/^function shifty.tagtoscr(scr, t)$/;"	f
+source_autosuggestions	zsh/plugins/zsh-autosuggestions/test/test_helper.zsh	/^source_autosuggestions() {$/;"	f
+squash_keys	config/awesome/shifty/init.lua	/^function squash_keys(keys)$/;"	f
+state 	config/luakit/plugins/adblock.lua	/^state = function()$/;"	f
+sweep	config/awesome/shifty/init.lua	/^function sweep()$/;"	f
+t) awful.tag.viewnext	config/awesome/shifty/example.rc.lua	/^                    awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),$/;"	f
+t) awful.tag.viewprev	config/awesome/shifty/example.rc.lua	/^                    awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)$/;"	f
+t) t:view_only	config/awesome/rc.lua	/^  awful.button({ }, 1, function(t) t:view_only() end),$/;"	f
+table.itemid	config/luakit/plugins/adblock.lua	/^function table.itemid(t, item)$/;"	f
+tablist_tab_click 	config/luakit/window.lua	/^    tablist_tab_click = function (w)$/;"	f
+tablist_update 	config/luakit/webview.lua	/^    tablist_update = function (view, w)$/;"	f
+tag2index	config/awesome/shifty/init.lua	/^function tag2index(scr, tag)$/;"	f
+tagkeys	config/awesome/shifty/init.lua	/^function tagkeys(s)$/;"	f
+tearDown	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^tearDown() {$/;"	f
+tearDown	zsh/plugins/zsh-autosuggestions/test/widgets/clear_test.zsh	/^tearDown() {$/;"	f
+tearDown	zsh/plugins/zsh-autosuggestions/test/widgets/execute_test.zsh	/^tearDown() {$/;"	f
+tearDown	zsh/plugins/zsh-autosuggestions/test/widgets/modify_test.zsh	/^tearDown() {$/;"	f
+tearDown	zsh/plugins/zsh-autosuggestions/test/widgets/partial_accept_test.zsh	/^tearDown() {$/;"	f
+testBasicMatches	zsh/plugins/zsh-autosuggestions/test/strategies/default_test.zsh	/^testBasicMatches() {$/;"	f
+testBasicMatches	zsh/plugins/zsh-autosuggestions/test/strategies/match_prev_cmd_test.zsh	/^testBasicMatches() {$/;"	f
+testClear	zsh/plugins/zsh-autosuggestions/test/widgets/clear_test.zsh	/^testClear() {$/;"	f
+testCursorAtEnd	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^testCursorAtEnd() {$/;"	f
+testCursorMovesOutOfBuffer	zsh/plugins/zsh-autosuggestions/test/widgets/partial_accept_test.zsh	/^testCursorMovesOutOfBuffer() {$/;"	f
+testCursorNotAtEnd	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^testCursorNotAtEnd() {$/;"	f
+testCursorStaysInBuffer	zsh/plugins/zsh-autosuggestions/test/widgets/partial_accept_test.zsh	/^testCursorStaysInBuffer() {$/;"	f
+testEscapeCommand	zsh/plugins/zsh-autosuggestions/test/suggestion_test.zsh	/^testEscapeCommand() {$/;"	f
+testHighlightApplyWithSuggestion	zsh/plugins/zsh-autosuggestions/test/highlight_test.zsh	/^testHighlightApplyWithSuggestion() {$/;"	f
+testHighlightApplyWithoutSuggestion	zsh/plugins/zsh-autosuggestions/test/highlight_test.zsh	/^testHighlightApplyWithoutSuggestion() {$/;"	f
+testHighlightDefaultStyle	zsh/plugins/zsh-autosuggestions/test/highlight_test.zsh	/^testHighlightDefaultStyle() {$/;"	f
+testHighlightReset	zsh/plugins/zsh-autosuggestions/test/highlight_test.zsh	/^testHighlightReset() {$/;"	f
+testInvokeOriginalWidgetDefined	zsh/plugins/zsh-autosuggestions/test/bind_test.zsh	/^testInvokeOriginalWidgetDefined() {$/;"	f
+testInvokeOriginalWidgetUndefined	zsh/plugins/zsh-autosuggestions/test/bind_test.zsh	/^testInvokeOriginalWidgetUndefined() {$/;"	f
+testMatchMostRecentAfterPreviousCmd	zsh/plugins/zsh-autosuggestions/test/strategies/match_prev_cmd_test.zsh	/^testMatchMostRecentAfterPreviousCmd() {$/;"	f
+testModify	zsh/plugins/zsh-autosuggestions/test/widgets/modify_test.zsh	/^testModify() {$/;"	f
+testModifyBufferTooLarge	zsh/plugins/zsh-autosuggestions/test/widgets/modify_test.zsh	/^testModifyBufferTooLarge() {$/;"	f
+testMostRecentMatch	zsh/plugins/zsh-autosuggestions/test/strategies/default_test.zsh	/^testMostRecentMatch() {$/;"	f
+testMostRecentMatch	zsh/plugins/zsh-autosuggestions/test/strategies/match_prev_cmd_test.zsh	/^testMostRecentMatch() {$/;"	f
+testNoMatch	zsh/plugins/zsh-autosuggestions/test/strategies/default_test.zsh	/^testNoMatch() {$/;"	f
+testNoMatch	zsh/plugins/zsh-autosuggestions/test/strategies/match_prev_cmd_test.zsh	/^testNoMatch() {$/;"	f
+testRetval	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^testRetval() {$/;"	f
+testRetval	zsh/plugins/zsh-autosuggestions/test/widgets/clear_test.zsh	/^testRetval() {$/;"	f
+testRetval	zsh/plugins/zsh-autosuggestions/test/widgets/execute_test.zsh	/^testRetval() {$/;"	f
+testRetval	zsh/plugins/zsh-autosuggestions/test/widgets/modify_test.zsh	/^testRetval() {$/;"	f
+testRetval	zsh/plugins/zsh-autosuggestions/test/widgets/partial_accept_test.zsh	/^testRetval() {$/;"	f
+testSpecialCharsForAllStrategies	zsh/plugins/zsh-autosuggestions/test/strategies_test.zsh	/^testSpecialCharsForAllStrategies() {$/;"	f
+testViCursorAtEnd	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^testViCursorAtEnd() {$/;"	f
+testViCursorNotAtEnd	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^testViCursorNotAtEnd() {$/;"	f
+testWidget	zsh/plugins/zsh-autosuggestions/test/widgets/accept_test.zsh	/^testWidget() {$/;"	f
+testWidget	zsh/plugins/zsh-autosuggestions/test/widgets/clear_test.zsh	/^testWidget() {$/;"	f
+title_update 	config/luakit/webview.lua	/^    title_update = function (view, w)$/;"	f
+toggle_source 	config/luakit/webview.lua	/^    toggle_source = function (view, w, show)$/;"	f
+u	less.vim	/^noremap <script> u <C-U><SID>L$/;"	m
+update	config/luakit/plugins/autozoom.lua	/^    local function update(view)$/;"	f
+update_binds 	config/luakit/window.lua	/^    update_binds = function (w, mode)$/;"	f
+update_buf 	config/luakit/window.lua	/^    update_buf = function (w)$/;"	f
+update_hist 	config/luakit/window.lua	/^    update_hist = function (w)$/;"	f
+update_progress 	config/luakit/window.lua	/^    update_progress = function (w)$/;"	f
+update_scroll 	config/luakit/window.lua	/^    update_scroll = function (w)$/;"	f
+update_ssl 	config/luakit/window.lua	/^    update_ssl = function (w)$/;"	f
+update_tab_count 	config/luakit/window.lua	/^    update_tab_count = function (w)$/;"	f
+update_tablist 	config/luakit/window.lua	/^    update_tablist = function (w)$/;"	f
+update_uri 	config/luakit/window.lua	/^    update_uri = function (w, link)$/;"	f
+update_win_title 	config/luakit/window.lua	/^    update_win_title = function (w)$/;"	f
+uri_update 	config/luakit/webview.lua	/^    uri_update = function (view, w)$/;"	f
+v	less.vim	/^map v :silent call <SID>End()<CR>$/;"	m
+vi_mode_prompt_info	zsh/plugins/vi-mode/vi-mode.plugin.zsh	/^function vi_mode_prompt_info() {$/;"	f
+w	less.vim	/^map w b$/;"	m
+w) return "..a.." end"))	config/luakit/binds.lua	/^                loadstring("return function(w) return "..a.." end"))()(w)$/;"	f
+w) w:set_mode	config/luakit/plugins/multisession.lua	/^        function(w) w:set_mode("sessionmenu") end),$/;"	f
+w) w:set_mode	config/luakit/plugins/tabmenu.lua	/^	buf("^gm$", "View a list of tabs", function(w) w:set_mode("tabmenu") end),$/;"	f
+warn	config/luakit/rc.lua	/^function warn(...) io.stderr:write(string.format(...) .. "\\n") end$/;"	f
+warning 	config/luakit/window.lua	/^    warning = function (w, msg, set_mode)$/;"	f
+webview.init_funcs.autozoom_setup 	config/luakit/plugins/autozoom.lua	/^webview.init_funcs.autozoom_setup = function (view)$/;"	f
+webview.init_funcs.noscr_update 	config/luakit/plugins/nscript_widget.lua	/^webview.init_funcs.noscr_update = function(view, w)$/;"	f
+webview.init_funcs.policu_signals 	config/luakit/plugins/policy.lua	/^webview.init_funcs.policu_signals = function (view, w)$/;"	f
+webview.init_funcs.policy_update 	config/luakit/plugins/policy.lua	/^webview.init_funcs.policy_update = function(view, w)$/;"	f
+webview.init_funcs.prvt_update 	config/luakit/plugins/private_browsing.lua	/^webview.init_funcs.prvt_update = function(view, w)$/;"	f
+webview.methods.browse_hist_dmenu 	config/luakit/binds_extra.lua	/^webview.methods.browse_hist_dmenu = function( view, w )$/;"	f
+webview.methods.scroll	config/luakit/webview.lua	/^function webview.methods.scroll(view, w, new)$/;"	f
+webview.new	config/luakit/webview.lua	/^function webview.new(w)$/;"	f
+window.build	config/luakit/window.lua	/^function window.build()$/;"	f
+window.init_funcs.build_ns_indicator 	config/luakit/plugins/nscript_widget.lua	/^window.init_funcs.build_ns_indicator = function(w)$/;"	f
+window.init_funcs.build_pindicator 	config/luakit/plugins/private_browsing.lua	/^window.init_funcs.build_pindicator = function(w)$/;"	f
+window.init_funcs.build_policy_indicator 	config/luakit/plugins/policy.lua	/^window.init_funcs.build_policy_indicator = function(w)$/;"	f
+window.init_funcs.build_ua_indicator 	config/luakit/plugins/useragent.lua	/^window.init_funcs.build_ua_indicator = function (w)$/;"	f
+window.init_funcs.modes_setup 	config/luakit/modes.lua	/^window.init_funcs.modes_setup = function (w)$/;"	f
+window.methods.is_mode 	config/luakit/modes.lua	/^window.methods.is_mode = function (w, name) return name == mget(w) end$/;"	f
+window.methods.update_noscr 	config/luakit/plugins/nscript_widget.lua	/^window.methods.update_noscr = function(w)$/;"	f
+window.methods.update_policy 	config/luakit/plugins/policy.lua	/^window.methods.update_policy = function(w, fin)$/;"	f
+window.methods.update_prvt 	config/luakit/plugins/private_browsing.lua	/^window.methods.update_prvt = function(w)$/;"	f
+window.methods.update_ua_indicator 	config/luakit/plugins/useragent.lua	/^window.methods.update_ua_indicator = function (w)$/;"	f
+window.new	config/luakit/window.lua	/^function window.new(uris)$/;"	f
+write_subscriptions	config/luakit/plugins/adblock.lua	/^function write_subscriptions(file)$/;"	f
+y	less.vim	/^map y k$/;"	m
+z	less.vim	/^map z <Space>$/;"	m
+zle	zsh/plugins/vi-mode/vi-mode.plugin.zsh	/^function zle-keymap-select zle-line-init {$/;"	f
+zle	zsh/plugins/vi-mode/vi-mode.plugin.zsh	/^function zle-keymap-select() {$/;"	f
+zle	zsh/plugins/vi-mode/vi-mode.plugin.zsh	/^function zle-line-finish {$/;"	f
+zoom_in 	config/luakit/webview.lua	/^    zoom_in = function (view, w, step, full_zoom)$/;"	f
+zoom_out 	config/luakit/webview.lua	/^    zoom_out = function (view, w, step, full_zoom)$/;"	f
+zoom_set 	config/luakit/webview.lua	/^    zoom_set = function (view, w, level, full_zoom)$/;"	f

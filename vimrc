@@ -14,7 +14,10 @@ call plug#begin(s:configdir . '/bundle')
 Plug 'https://github.com/tpope/vim-sensible'               " some sane defaults
 Plug 'https://github.com/tpope/vim-unimpaired'             " lots of keybinds `[e ]b yox`
 Plug 'https://github.com/liuchengxu/vim-which-key' " {{{   " visual keybind navigator
-  nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+  nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+  nnoremap <silent> g        :<c-u>WhichKey 'g'<CR>
+  nnoremap <silent> [        :<c-u>WhichKey '['<CR>
+  nnoremap <silent> ]        :<c-u>WhichKey ']'<CR>
   let g:which_key_hspace = 3
   let g:which_key_position = 'botleft'
   let g:which_key_use_floating_win = 0
@@ -25,20 +28,17 @@ Plug 'https://github.com/mbbill/undotree' " {{{            " visual undo tree
   let g:undotree_SplitWidth = 60
   nnoremap <silent> <leader>u :<C-u>UndotreeToggle<CR>
   function! g:Undotree_CustomMap() abort
-      nnoremap <buffer> k <plug>UndotreeGoNextState
-      nnoremap <buffer> j <plug>UndotreeGoPreviousState
-      nnoremap <buffer> <Esc> <plug>UndotreeClose
+    nnoremap <buffer> k <plug>UndotreeGoNextState
+    nnoremap <buffer> j <plug>UndotreeGoPreviousState
+    nnoremap <buffer> <Esc> <plug>UndotreeClose
   endfunc
-" }}}
-Plug 'https://github.com/jeetsukumaran/vim-filebeagle' " {{{ " simple file navigator
-  let g:filebeagle_suppress_keymaps = 1
-  map <silent> - <Plug>FileBeagleOpenCurrentBufferDir
 " }}}
 Plug 'https://github.com/chilicuil/vim-sprunge' " {{{      " quick paste to sprunge
   nnoremap <leader>pa <Plug>Sprunge
   xnoremap <leader>pa <Plug>Sprunge
   " let g:sprunge_cmd = 'curl -s -n -F "f:1=<-" http://ix.io'
 " }}}
+Plug 'https://github.com/kyazdani42/nvim-tree.lua'
 Plug 'https://github.com/vim-utils/vim-husk'               " readline cmaps
 Plug 'https://github.com/thinca/vim-qfreplace'             " editable quickfix window
 Plug 'https://github.com/jiangmiao/auto-pairs'             " auto-close quotes/brackets
@@ -82,10 +82,10 @@ Plug 'https://github.com/justinmk/vim-sneak' " {{{         " two char sneak `s..
   map <silent> , <Plug>SneakPrevious
 " }}}
 Plug 'https://github.com/haya14busa/vim-asterisk' " {{{    " improved * search
-  map *  <Plug>(asterisk-*)
-  map g* <Plug>(asterisk-g*)
-  map #  <Plug>(asterisk-#)
-  map g# <Plug>(asterisk-g#)
+  map *  <Plug>(asterisk-z*)
+  map #  <Plug>(asterisk-z#)
+  map g* <Plug>(asterisk-gz*)
+  map g# <Plug>(asterisk-gz#)
 " }}}
 Plug 'https://github.com/kana/vim-textobj-user' " {{{      " custom textobj engine
 " more textobj https://github.com/kana/vim-textobj-user/wiki
@@ -100,10 +100,10 @@ Plug 'https://github.com/tpope/vim-eunuch'                 " simple commands for
 Plug 'https://github.com/haya14busa/is.vim'                " linewise visual search highlight
 Plug 'https://github.com/markonm/traces.vim'               " visual substitution highlight
 Plug 'https://github.com/junegunn/fzf'                     " fzf integration `:FZF`
+Plug 'https://github.com/vijaymarupudi/nvim-fzf'
 Plug 'https://github.com/junegunn/fzf.vim' " {{{           " fzf commands `:Files :Maps`
   nnoremap <silent> <leader><leader> :<C-u>Maps<CR>
   nnoremap <silent> <leader>f :<C-u>Files<CR>
-  nnoremap <silent> <leader>b :<C-u>Buffers<CR>
   nnoremap <silent> <leader>; :<C-u>Commands<CR>
   if executable('rg')
     nnoremap <leader>gr :<C-u>Rg<Space>
@@ -113,7 +113,7 @@ Plug 'https://github.com/junegunn/fzf.vim' " {{{           " fzf commands `:File
 " }}}
 " }}}
 " {{{ appearance
-Plug 'https://github.com/kyazdani42/nvim-web-devicons' " for file icons
+Plug 'https://github.com/kyazdani42/nvim-web-devicons'     " for file icons
 Plug 'https://github.com/itchyny/lightline.vim' " {{{
   Plug 'https://github.com/josa42/vim-lightline-coc'
   Plug 'https://github.com/mengelbrecht/lightline-bufferline'
@@ -166,7 +166,7 @@ Plug 'https://github.com/itchyny/lightline.vim' " {{{
   \   "\<C-s>": 'S',
   \   't': 'T',
   \ }
-  
+
   let g:lightline.component_raw = {'buffers': 1}
   let g:lightline.component_expand = {
   \   'linter_warnings': 'lightline#coc#warnings',
@@ -232,22 +232,9 @@ Plug 'https://github.com/mhinz/vim-startify' " {{{         " fancy start screen
   endif
 " }}}
 Plug 'https://github.com/machakann/vim-highlightedyank'    " highlight yanked selection
-Plug 'https://github.com/lukas-reineke/indent-blankline.nvim' " {{{        " visual indent rules
-  let g:indent_blankline_char_list = ['│', '¦', '┆', '┊']
-  let g:indent_blankline_show_first_indent_level = 1
-  let g:indent_blankline_use_treesitter = 1
-  let g:indent_blankline_filetype_exclude = [
-  \ 'help',
-  \ 'startify',
-  \ 'terminal'
-  \ ]
-" }}}
 Plug 'https://github.com/noahfrederick/vim-noctu'          " a simple terminal based theme
 Plug 'https://github.com/flazz/vim-colorschemes'           " color scheme bundle
-Plug 'https://github.com/nvim-treesitter/nvim-treesitter'  " {{{ better syntax highlighting
-\ , {'do': ':TSUpdate'}
-" }}}
-Plug 'https://github.com/danielfgray/distractionfree.vim' "{{{
+Plug 'https://github.com/danielfgray/distractionfree.vim'  " {{{ easy toggling visual features
 function! s:distractions_off()
   set showmode showcmd
   IndentBlanklineDisable
@@ -281,134 +268,6 @@ Plug 'https://github.com/airblade/vim-gitgutter' " {{{     " line indicators for
 " }}}
 " }}}
 " {{{ language-support
-Plug 'https://github.com/neoclide/coc.nvim' " {{{          " lsp completions
-\ , {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
-
-  let g:coc_global_extensions = [
-  \ 'coc-css',
-  \ 'coc-diagnostic',
-  \ 'coc-docker',
-  \ 'coc-emmet',
-  \ 'coc-eslint',
-  \ 'coc-import-cost',
-  \ 'coc-json',
-  \ 'coc-lists',
-  \ 'coc-lua',
-  \ 'coc-marketplace',
-  \ 'coc-prettier',
-  \ 'coc-python',
-  \ 'coc-rls',
-  \ 'coc-sh',
-  \ 'coc-snippets',
-  \ 'coc-stylelintplus',
-  \ 'coc-tsserver',
-  \ 'coc-vimlsp',
-  \ 'coc-yaml'
-  \ ]
-
-  function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-      execute 'h '.expand('<cword>')
-    elseif (coc#rpc#ready())
-      call CocActionAsync('doHover')
-    elseif (&filetype == 'sh')
-      execute '!' . &keywordprg . " " . expand('<cword>')
-    endif
-  endfunction
-
-  function! s:coc_hover() abort
-    call CocActionAsync('highlight')
-    " if CocAction('hasProvider', 'hover')
-    "   call CocActionAsync('doHover')
-    " endif
-  endfunction
-
-  inoremap <silent><expr> <c-space> coc#refresh()
-  " Use `[c` and `]c` for navigate diagnostics
-  nmap <silent> [c <Plug>(coc-diagnostic-prev)
-  nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
-  " Remap keys for gotos
-  nmap <silent> gd <Plug>(coc-definition)
-  nmap <silent> gy <Plug>(coc-type-definition)
-  nmap <silent> gi <Plug>(coc-implementation)
-  nmap <silent> gr <Plug>(coc-references)
-  " Search workspace symbols
-  nmap <silent> gO :<C-u>CocList outline<CR>
-
-  " Use gK for show documentation in preview window
-  nnoremap <silent> gK :call <SID>show_documentation()<CR>
-
-  " xmap <silent> <C-n> <Plug>(coc-cursors-range)
-  " nmap <silent> <C-n> <Plug>(coc-cursors-word)
-
-  " Remap for rename current word
-  nmap <leader>rn <Plug>(coc-rename)
-
-  " Remap for do codeAction of selected region
-  nmap <leader>ac <Plug>(coc-codeaction-cursor)
-  xmap <leader>ac <Plug>(coc-codeaction-selected)
-
-  " Remap for do codeAction of current line
-  nmap <leader>cc <Plug>(coc-codeaction-line)
-  " Fix autofix problem of current line
-  nmap <leader>qf <Plug>(coc-fix-current)
-
-  " Show all diagnostics
-  nnoremap <silent> <leader>d :<C-u>CocList diagnostics<CR>
-  " Manage extensions
-  nnoremap <silent> <leader>ce :<C-u>CocList extensions<CR>
-
-  " Show commands
-  nnoremap <silent> <leader>co :<C-u>CocList commands<CR>
-  nnoremap <silent> <leader>rg :<C-u>CocList registers<CR>
-
-  xnoremap <leader>= <Plug>(coc-format-selected)
-  nnoremap <leader>= <Plug>(coc-format-selected)
-
-  " Use `:Format` for format current buffer
-  command! -nargs=0 Format :call CocAction('format')
-
-  " Use `:Fold` for fold current buffer
-  command! -nargs=? Fold :call CocAction('fold', <f-args>)
-
-  " overload tab with jump
-  inoremap <silent><expr> <TAB> pumvisible()
-    \ ? coc#_select_confirm()
-    \ : coc#expandableOrJumpable()
-    \ ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
-    \ : coc#refresh()
-  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-  " Use <c-space> to trigger completion.
-  if has('nvim')
-    inoremap <silent><expr> <c-space> coc#refresh()
-  else
-    inoremap <silent><expr> <c-@> coc#refresh()
-  endif
-
-  " Make <CR> auto-select the first completion item and notify coc.nvim to
-  " format on enter, <CR> could be remapped by other vim plugin
-  inoremap <silent><expr> <CR>pumvisible()
-  \ ? coc#_select_confirm()
-  \ : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-  nmap <expr> <silent> <C-n> <SID>select_current_word()
-  function! s:select_current_word()
-    if !get(b:, 'coc_cursors_activated', 0)
-      return "\<Plug>(coc-cursors-word)"
-    endif
-    return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
-  endfunc
-
-  augroup Coc
-    autocmd!
-    autocmd FileType rust,javascript,typescript,typescriptreact,javascriptreact,json,css,html
-    \ setl formatexpr=CocAction('formatSelected')
-    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-    autocmd CursorHold * silent call s:coc_hover()
-  augroup END
-" }}}
 Plug 'https://github.com/mattn/emmet-vim' " {{{            " shorthand for html expansions
   \, { 'for': [ 'html', 'javascript.jsx', 'typescriptreact' ] }
   let g:user_emmet_settings = {
@@ -418,24 +277,8 @@ Plug 'https://github.com/mattn/emmet-vim' " {{{            " shorthand for html 
   \ }
   " }}}
 Plug 'https://github.com/sheerun/vim-polyglot'             " language highlighting/indent bundle
-Plug 'https://github.com/martingms/vipsql'                 " dispatch sql commands
-Plug 'https://github.com/benjie/pgsql.vim' " {{{           " better postgres highlighting
+Plug 'https://github.com/lifepillar/pgsql.vim' " {{{       " better postgres highlighting
 let g:sql_type_default = 'pgsql'
-" }}}
-Plug 'https://github.com/samuelsimoes/vim-jsx-utils' " {{{ " jsx helper utils
-  augroup JSXutils
-    au!
-    autocmd FileType typescriptreact,javascript.jsx
-    \ nnoremap <leader>ja :call JSXEncloseReturn()<CR>
-    autocmd FileType typescriptreact,javascript.jsx
-    \ nnoremap <leader>ji :call JSXEachAttributeInLine()<CR>
-    autocmd FileType typescriptreact,javascript.jsx
-    \ nnoremap <leader>je :call JSXExtractPartialPrompt()<CR>
-    autocmd FileType typescriptreact,javascript.jsx
-    \ nnoremap <leader>jc :call JSXChangeTagPrompt()<CR>
-    autocmd FileType typescriptreact,javascript.jsx
-    \ xnoremap <silent> at :call JSXSelectTag()<CR>
-  augroup END
 " }}}
 Plug 'https://github.com/mhinz/vim-tmuxify' " {{{          " tmux integration
   let g:tmuxify_map_prefix = '<leader>tm'
@@ -450,60 +293,7 @@ Plug 'https://github.com/mhinz/vim-tmuxify' " {{{          " tmux integration
   \ }
 " }}}
 Plug 'https://github.com/editorconfig/editorconfig-vim'
-Plug 'https://github.com/github/copilot.vim'
-" }}}
-" {{{ graveyard
-" Plug 'https://github.com/vim-airline/vim-airline' " {{{
-"   Plug 'https://github.com/vim-airline/vim-airline-themes'
-"   let g:airline_theme = 'hybridline'
-"   let g:airline_powerline_fonts = 1
-"   let g:airline#extensions#branch#enabled = 1
-"   let g:airline#extensions#tabline#enabled = 1
-"   let g:airline#extensions#tabline#fnamemod = ':t'
-"   let g:airline#extensions#whitespace#enabled = 0
-"   let g:airline#extensions#wordcount#enabled = 0
-"   let g:airline_skip_empty_sections = 1
-"   let g:airline_mode_map =
-"   \ { '__' : '-'
-"   \ , 'n'  : 'N'
-"   \ , 'i'  : 'I'
-"   \ , 'R'  : 'R'
-"   \ , 'c'  : 'C'
-"   \ , 'v'  : 'V'
-"   \ , 'V'  : 'V'
-"   \ , '' : 'V'
-"   \ , 's'  : 'S'
-"   \ , 'S'  : 'S'
-"   \ , '' : 'S'
-"   \ }
-"   let g:airline#extensions#default#layout =
-"   \ [ [ 'a', 'b', 'c' ]
-"   \ , [ 'x', 'y', 'error', 'warning' ]
-"   \ ]
-"   " let g:airline_extensions = [ 'branch', 'tabline', 'hunks', 'coc' ]
-"   " function! AirlineInit() abort
-"   "   let g:airline_section_z = g:airline_section_y
-"   "   let g:airline_section_y = g:airline_section_x
-"   "   " let g:airline_section_x = '%{PencilMode()} %{gutentags#statusline("[Generating ctags...]")}'
-"   "   let g:airline_section_z = '%{PencilMode()} '
-"   " endfunction
-"   " augroup Airline
-"   "   autocmd!
-"   "   autocmd User AirlinieAfterInit call AirlineInit()
-"   " augroup END
-" " }}}
-" Plug 'https://github.com/liuchengxu/eleline.vim' " {{{
-"   let g:eleline_slim = 0
-" " }}}
-" Plug 'https://github.com/ap/vim-buftabline' " {{{          " buffer listing in tabline
-"   let g:buftabline_separators = 1
-" " }}}
-" Plug 'https://github.com/akinsho/nvim-bufferline.lua'
-" Plug 'https://github.com/glepnir/galaxyline.nvim'
-" Plug 'https://github.com/glepnir/spaceline.vim' " {{{
-"   let g:spaceline_seperate_style = 'arrow'
-"   let g:spaceline_seperate_style = 'slant'
-" " }}}
+
 " }}}
 call plug#end()
 " }}}
@@ -511,7 +301,8 @@ call plug#end()
 set mouse=nv                                               " mouse on for normal,visual mode (but not insert while typing)
 set hidden                                                 " switch buffers without saving
 set backspace=indent,eol,start                             " backspace over everything
-set foldmethod=marker foldopen-=block                      " fold by markers
+set foldmethod=expr " foldopen-=block
+set foldlevelstart=999                                     " open all folds by default
 set foldtext=MyFoldText()                                  " custom fold marker
 set hlsearch incsearch                                     " visual searching
 set equalalways splitright                                 " split defaults
@@ -525,6 +316,7 @@ set colorcolumn=80                                         " highlight 80th colu
 set noshowmode                                             " hide mode indicator
 set confirm                                                " y/n save prompt on quit
 set ttimeoutlen=10                                         " short esc wait duration
+set modeline
 set list listchars=tab:\|\ ,trail:★                        " visible tab chars and trailing spaces
 set listchars+=extends:»,precedes:«                        " custom line wrap chars
 " set listchars+=eol:¬,space:🞄                               " visible space and eol chars (very noisy)
@@ -534,6 +326,7 @@ set backupdir=~/.vim/backups//                             " backups too
 set directory=~/.vim/swaps//                               " the trailing slashes are important
 set updatetime=300                                         " debounce swap file writing for 1000ms
 set showtabline=2                                          " always show tabline
+set timeoutlen=500                                         " duration of ..
 
 if executable("rg") " {{{                                  " use rg ag or ack as grepprg if available
   set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
@@ -562,54 +355,22 @@ set viminfo=h,'500,<10000,s1000,/1000,:1000
 " let g:netrw_banner = 0                                   " noisy but helpful text
 
 " }}}
-" {{{ custom commands and maps
-" insert timestamp with ctrl-t
-inoremap <C-t> <C-R>=strftime('%c')<Left><Left>
-cnoremap <C-t> <C-R>=strftime('%c')<Left><Left>
-
-" make Y behave like C and D
-nnoremap Y y$
-
-" swap ` and ' since they are similar, but ' is closer to home-row and ignores mark column
-nnoremap ' `
-nnoremap ` '
-
-" " open netrw split with -
-" nnoremap <silent> - :<C-u>Lex<CR>
-
-" an attempt at exclusive folds
-nnoremap zj zjzMzvzz
-nnoremap zk zkzMzvzz
-nnoremap za zazMzvzz
-
-" expand %% in the command prompt to the current dir
-cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
-
-" sudo write with :w!! " FIXME this doesn't work in nvim
-cabbrev w!! w !sudo tee >/dev/null "%"
-
-" quicker :s mappings with \very magic regex
-" see also :h c_CTRL-R_CTRL-W
-nnoremap <leader>s :<C-u>s/\v//gc<left><left><left><left>
-nnoremap <leader>S :<C-u>%s/\v//gc<left><left><left><left>
-xnoremap <leader>s :<C-u>'<'>s/\v//gc<left><left><left>
-
-nnoremap <leader>r :<C-u>s/<C-r><C-w>//gc<left><left><left>
-nnoremap <leader>R :<C-u>s/<C-r><C-A>//gc<left><left><left>
-
-" common command typos
-command! -bang Qa qa<bang>
-command! -bang Wa wa<bang>
-command! -bang Wqa wqa<bang>
-
-" common typing mistakes
-iabbrev functino function
-iabbrev teh the
-iabbrev seperate separate
-iabbrev frmo from
-" }}}
 " {{{ functions
-function! s:DiffU() abort " {{{
+function! s:adjust_window_height(minheight, maxheight) abort " {{{
+  exe max([ min([ line('$'), a:maxheight ]), a:minheight ]) . 'wincmd _'
+endfunction
+" }}}
+function! s:push_below_or_left() abort " {{{
+  if winheight(0) / 2 < line('$')
+    wincmd H
+    vert resize 80
+  else
+    wincmd J
+    call s:adjust_window_height(1, winheight(0) / 2)
+  endif
+endfunction
+" }}}
+function! s:diff_u() abort " {{{
   " shows a split with a diff of the current buffer
   let l:original = expand('%:p')
   if strlen(l:original) < 1
@@ -627,20 +388,17 @@ function! s:DiffU() abort " {{{
   if empty(getline('$'))
     execute 'normal! Gddgg'
   endif
-  call PushBelowOrLeft()
+  call s:push_below_or_left()
   nnoremap <silent><buffer> q :<C-u>q<CR>
   nnoremap <silent><buffer> <Esc> :<C-u>q<CR>
   setlocal buftype=nofile bufhidden=wipe nomodified nobuflisted noswapfile readonly foldmethod=diff filetype=diff
   return 1
 endfunction
-command! -bar -nargs=0 DiffU call s:DiffU()
-" nnoremap <silent> <Leader>d :<C-u>DiffU<CR>
 " }}}
-
-function! DiffWrite() abort " {{{
+function! s:diff_write() abort " {{{
   " show split from DiffU() and prompt to save
   " TODO: suck less
-  if s:DiffU() < 1
+  if s:diff_u() < 1
     return
   endif
   redraw!
@@ -653,11 +411,8 @@ function! DiffWrite() abort " {{{
   endif
   redraw!
 endfunction
-command! -bar -nargs=0 W call DiffWrite()
-nnoremap <silent> <Leader>w :<C-u>W<CR>
 " }}}
-
-function! s:ReadUrl(url) abort " {{{
+function! s:read_url(url) abort " {{{
   " opens a url in a new buffer, prompts for filetype
   if ! executable('curl')
     echo 'curl not found'
@@ -674,10 +429,9 @@ function! s:ReadUrl(url) abort " {{{
   endif
   redraw!
 endfunction
-command! -bar -nargs=1 R call s:ReadUrl("<args>")
+command! -bar -nargs=1 R call s:read_url("<args>")
 " }}}
-
-function! s:DiffUrl(url) abort " {{{
+function! s:diff_url(url) abort " {{{
   " starts diffmode with the current buffer and a url
   " TODO: could be it beee any file
   if ! executable('curl')
@@ -695,10 +449,9 @@ function! s:DiffUrl(url) abort " {{{
   diffthis | diffupdate
   redraw
 endfunction
-command! -bar -nargs=1 Rdiff call s:DiffUrl("<args>")
+command! -bar -nargs=1 Rdiff call s:diff_url("<args>")
 " }}}
-
-function! Togglegjgk() abort " {{{
+function! s:toggle_gj_gk() abort " {{{
   if ! exists('g:togglegjgk') || g:togglegjgk == 0
     let g:togglegjgk = 1
     nnoremap j gj
@@ -715,9 +468,7 @@ function! Togglegjgk() abort " {{{
     echo 'normal j/k'
   endif
 endfunction
-nnoremap <silent> <Leader>tgj :<C-u>call Togglegjgk()<CR>
 " }}}
-
 function! MyFoldText() abort " {{{
   " courtesy Steve Losch
   let l:line = getline(v:foldstart)
@@ -731,13 +482,80 @@ function! MyFoldText() abort " {{{
   return l:line . ' ' . repeat(' ', l:fillcharcount)  . ' '. l:foldedlinecount
 endfunction
 " }}}
-
-function! ExecuteMacroOverVisualRange() abort " {{{
+function! s:execute_macro_over_visual_range() abort " {{{
   echo '@'.getcmdline()
   execute ":'<,'>normal @".nr2char(getchar())
 endfunction
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 " }}}
+function! s:check_back_space() abort " {{{
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" }}}
+" }}}
+" {{{ custom commands and maps
+
+" open file explorer with -
+nnoremap <silent> - :<C-u>NvimTreeFocus<CR>
+
+" make Y behave like C and D
+nnoremap Y y$
+
+" swap ` and ' since they are similar, but ' is closer to home-row and ignores mark column
+nnoremap ' `
+nnoremap ` '
+
+" an attempt at exclusive folds
+nnoremap zj zjzMzv
+nnoremap zk zkzMzv
+nnoremap za zazMzv
+
+" easy tab size changing
+nnoremap <leader>t2 :<C-u>setlocal ts=2 sw=2<CR>
+nnoremap <leader>t4 :<C-u>setlocal ts=4 sw=4<CR>
+nnoremap <leader>t8 :<C-u>setlocal ts=8 sw=8<CR>
+
+" unimpaired-like expandtab toggle
+nnoremap yoe :<C-u>set expandtab!<CR>
+
+" expand %% in the command prompt to the current dir
+cabbrev %% <C-R>=fnameescape(expand('%:h'))<CR>
+
+" sudo write with :w!! " FIXME this doesn't work in nvim
+cabbrev w!! w !sudo tee >/dev/null "%"
+
+" quicker :s mappings with \very magic regex
+" see also :h c_CTRL-R_CTRL-W
+nnoremap <leader>s :<C-u>s///gc<left><left><left>
+nnoremap <leader>S :<C-u>%s///gc<left><left><left>
+xnoremap <leader>s :<C-u>'<'>s///gc<left><left>
+
+nnoremap <leader>r :<C-u>s/<C-r><C-w>//gc<left><left><left>
+nnoremap <leader>R :<C-u>s/<C-r><C-A>//gc<left><left><left>
+
+xnoremap @ :<C-u>call s:execute_macro_over_visual_range()<CR>
+
+" swap j/k with gj/gk
+nnoremap <silent> <leader>tgj :<C-u>call s:toggle_gj_gk()<CR>
+
+" insert timestamp with ctrl-t
+inoremap <C-t> <C-R>=strftime('%c')<Left><Left>
+cnoremap <C-t> <C-R>=strftime('%c')<Left><Left>
+
+" common command typos
+command! -bang Qa qa<bang>
+command! -bang Wa bufdo W<bang>
+command! -bang Wqa wqa<bang>
+
+command! -bar -nargs=0 Write call s:diff_write()
+command! -bar -nargs=0 DiffU call s:diff_u()
+" nnoremap <silent> <Leader>d :<C-u>DiffU<CR>
+
+" common typing mistakes
+iabbrev functino function
+iabbrev frmo from
+iabbrev teh the
+iabbrev seperate separate
 " }}}
 " {{{ autocmds
 augroup Vim
@@ -747,8 +565,8 @@ augroup Vim
 
   " reload vimrc on save (and refresh airline)
   autocmd BufWritePost ~/.vimrc
-  \ source ~/.vimrc |
-  \ if exists('*lightline#enable()') |
+  \ source ~/.vimrc
+  \ | if exists('*lightline#enable()') |
   \   call lightline#enable() |
   \ endif
 
@@ -769,43 +587,25 @@ augroup Vim
   \   nnoremap <silent><buffer> q :<C-u>bw<CR> |
   \ endif
 
-  " " use Q to close netrw
-  " autocmd FileType netrw
-  " \ setl bufhidden=delete |
-  " \ wincmd H | vert resize 40 |
-  " \ nnoremap <silent><buffer> Q :<C-u>bw<CR><esc>
-
-  " " close netrw when loses focus
-  " autocmd WinLeave *
-  " \ if getbufvar(winbufnr(winnr()), "&filetype") == "netrw" |
-  " \   bw |
-  " \ endif
-
   " open :help to the right at 80 columns
   autocmd FileType help
   \ wincmd L |
   \ vert resize 81
 
   " expand help when focused
-  autocmd BufEnter *
-  \ if &filetype ==? 'help' |
-  \   execute 'normal 0' |
-  \   vert resize 81 |
-  \ endif
+  autocmd FileType help
+  \ execute 'normal 0' |
+  \ vert resize 81 |
 
   " make help small when unfocus
   autocmd BufLeave *
   \ if &filetype ==? 'help' |
-  \   execute 'normal 0' |
   \   vert resize 10 |
   \ endif
 
   " make help small when vim resized
   autocmd VimResized help
   \ vert resize 10
-
-  autocmd TermOpen *
-  \ setlocal nonu nornu signcolumn=no
 
   " theme overrides
   autocmd ColorScheme *
@@ -820,3 +620,5 @@ augroup END
 " }}}
 
 colorscheme noctu
+
+" vim: foldmethod=marker foldlevel=0:

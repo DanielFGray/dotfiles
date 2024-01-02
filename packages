@@ -3,6 +3,7 @@ alsa-{base,tools,utils}
 apt-file
 apvlv
 arandr
+aria2
 at
 autoconf
 automake

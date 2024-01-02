@@ -1,22 +1,24 @@
--- {{{ Standard awesome library
-gears = require('gears')
-awful = require('awful')
-require('awful.autofocus')
+-- {{{ libraries
+local gears = require('gears')
+local awful = require('awful')
+awful.autofocus = require('awful.autofocus')
 -- Widget and layout library
-wibox = require('wibox')
+local wibox = require('wibox')
 -- Theme handling library
-beautiful = require('beautiful')
+local beautiful = require('beautiful')
 -- Notification library
-naughty = require('naughty')
-menubar = require('menubar')
-hotkeys_popup = require('awful.hotkeys_popup').widget
-tyrannical = require('tyrannical')
-lain = require('lain')
-cpugraph = require('awesome-wm-widgets.cpu-widget.cpu-widget')
-ramgraph = require('awesome-wm-widgets.ram-widget.ram-widget')
--- treetile = require('treetile')
+local naughty = require('naughty')
+local menubar = require('menubar')
+local hotkeys_popup = require('awful.hotkeys_popup').widget
+local tyrannical = require('tyrannical')
+local lain = require('lain')
+local bling = require('bling')
+-- local treetile = require('treetile')
+local cpugraph = require('awesome-wm-widgets.cpu-widget.cpu-widget')
+local ramgraph = require('awesome-wm-widgets.ram-widget.ram-widget')
+local fs_widget = require('awesome-wm-widgets.fs-widget.fs-widget')
 -- collision = require('collision')()
-modalbind = require('modalbind')
+local modalbind = require('modalbind')
 -- }}}
 
 -- {{{ Error handling
@@ -73,7 +75,6 @@ modkey = 'Mod4'
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
   awful.layout.suit.floating,
-  -- treetile,
   awful.layout.suit.tile,
   awful.layout.suit.tile.left,
   awful.layout.suit.tile.bottom,
@@ -158,6 +159,7 @@ tyrannical.properties.intrusive = {
   'emelfm',
   'ksnapshot',
   'pinentry',
+  'pinentry*',
   'gtksu',
   'kcalc',
   'xcalc',
@@ -171,6 +173,7 @@ tyrannical.properties.intrusive = {
   'Xephyr',
   'kruler',
   'plasmaengineexplorer',
+  'Zenity',
   'zenity',
   'dialog',
   'sonata',
@@ -200,7 +203,7 @@ tyrannical.properties.floating = {
   'kcharselect',
   'mythfrontend',
   'plasmoidviewer',
-  'zenity',
+  'Zenity',
   'dialog',
   'sonata',
   'krunner',
@@ -211,7 +214,7 @@ tyrannical.properties.ontop = {
   'Xephyr',
   'ksnapshot',
   'kruler',
-  'zenity',
+  'Zenity',
   'dialog',
   'sonata',
 }
@@ -250,18 +253,20 @@ function run_once(cmd)
 end
 
 exec('nitrogen --restore')
-run_once('compton')
+run_once('picom --experimental-backends --daemon')
+run_once('xautolock -secure -locker mylock')
 run_once('kdeconnect-indicator')
 run_once('parcellite')
 run_once('nm-applet')
 run_once('pnmixer')
+-- run_once('lxsession -e awesomewm')
 run_once('xfce4-power-manager')
-run_once('redshift-gtk')
+run_once('redshift')
 -- }}}
 
 -- {{{ Menu
 -- Create a launcher widget and a main menu
-myawesomemenu = {
+local myawesomemenu = {
    { 'hotkeys', function() return false, hotkeys_popup.show_help end},
    { 'manual', terminal .. ' -e man awesome' },
    { 'edit config', editor_cmd .. ' ' .. awesome.conffile },
@@ -269,14 +274,14 @@ myawesomemenu = {
    { 'quit', function() awesome.quit() end}
 }
 
-mymainmenu = awful.menu({
+local mymainmenu = awful.menu({
   items = {
     { 'awesome', myawesomemenu, beautiful.awesome_icon },
     { 'open terminal', terminal }
   }
 })
 
-mylauncher = awful.widget.launcher({
+local mylauncher = awful.widget.launcher({
   image = beautiful.awesome_icon,
   menu = mymainmenu
 })
@@ -317,21 +322,6 @@ local tempicon = wibox.widget.imagebox(beautiful.widget.temp)
 local tempwidget = lain.widget.temp({
   settings = function()
     widget:set_markup(coretemp_now .. markup('#666', '°C '))
-  end
-})
-
-local fsicon = wibox.widget.imagebox(beautiful.widget.disk)
-local fswidget = lain.widget.fs({
-  followtag = true,
-  settings  = function()
-    widget:set_markup(
-      string.format(' %s %.1f %s %.1f ',
-        markup('#666', '/: '),
-        fs_now['/'].free,
-        markup('#666', '/home: '),
-        fs_now['/home'].free
-      )
-    )
   end
 })
 
@@ -379,15 +369,15 @@ local mpdwidget = lain.widget.mpd({
 --   end)
 -- ))
 
-baticon = wibox.widget.imagebox(beautiful.widget.bat_high)
-batwidget = lain.widget.bat({
-    ac = "AC",
+local baticon = wibox.widget.imagebox(beautiful.widget.bat_high)
+local batwidget = lain.widget.bat({
+    ac = 'AC',
     timeout = 5,
-    notify = "off",
+    notify = 'off',
     settings = function()
         dir = ""
 
-        if bat_now.perc == "N/A" then
+        if bat_now.perc == 'N/A' then
             baticon:set_image(beautiful.widget.bat_low)
             return
         elseif bat_now.ac_status == 1 then
@@ -397,11 +387,11 @@ batwidget = lain.widget.bat({
         elseif tonumber(bat_now.perc) <= 20 then
             baticon:set_image(beautiful.widget.bat_mid)
         else
-            dir = ' (' .. bat_now.time .. ") "
+            dir = ' (' .. bat_now.time .. ') '
             baticon:set_image(beautiful.widget.bat_high)
         end
 
-        widget:set_markup(" " .. bat_now.perc .. "%" .. dir .. " ")
+        widget:set_markup(' ' .. bat_now.perc .. '%' .. dir .. ' ')
     end
   })
 
@@ -494,38 +484,68 @@ awful.screen.connect_for_each_screen(function(s)
   -- s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
 
   s.mytaglist = awful.widget.taglist {
-      screen  = s,
-      filter  = awful.widget.taglist.filter.all,
-      buttons = taglist_buttons,
-      style   = {
-        shape = gears.shape.powerline
+    screen  = s,
+    filter  = awful.widget.taglist.filter.all,
+    buttons = taglist_buttons,
+    style   = {
+      shape = gears.shape.powerline
+    },
+    layout   = {
+      spacing = -7,
+      spacing_widget = {
+        color  = '#dddddd',
+        shape  = gears.shape.powerline,
+        widget = wibox.widget.separator,
       },
-      layout   = {
-        spacing = -12,
-        spacing_widget = {
-          color  = '#dddddd',
-          shape  = gears.shape.powerline,
-          widget = wibox.widget.separator,
-        },
-        layout  = wibox.layout.fixed.horizontal
-      },
-      widget_template = {
+      layout  = wibox.layout.fixed.horizontal
+    },
+    widget_template = {
+      {
         {
           {
-            {
-              id     = 'text_role',
-              widget = wibox.widget.textbox,
-            },
-            layout = wibox.layout.fixed.horizontal,
+            id     = 'text_role',
+            widget = wibox.widget.textbox,
           },
-          left  = 18,
-          right = 18,
-          widget = wibox.container.margin
+          layout = wibox.layout.fixed.horizontal,
         },
-        id     = 'background_role',
-        widget = wibox.container.background,
+        left  = 18,
+        right = 18,
+        widget = wibox.container.margin
       },
-    }
+      id     = 'background_role',
+      widget = wibox.container.background,
+    },
+    -- Add support for hover colors and an index label
+    create_callback = function(self, c3, index, objects) --luacheck: no unused args
+      self:get_children_by_id('index_role')[1].markup = '<b> '..index..' </b>'
+      self:connect_signal('mouse::enter', function()
+
+        -- BLING: Only show widget when there are clients in the tag
+        if #c3:clients() > 0 then
+          -- BLING: Update the widget with the new tag
+          awesome.emit_signal('bling::tag_preview::update', c3)
+          -- BLING: Show the widget
+          awesome.emit_signal('bling::tag_preview::visibility', s, true)
+        end
+
+        if self.bg ~= '#ff0000' then
+          self.backup     = self.bg
+          self.has_backup = true
+        end
+        self.bg = '#ff0000'
+      end)
+      self:connect_signal('mouse::leave', function()
+
+        -- BLING: Turn the widget off
+        awesome.emit_signal('bling::tag_preview::visibility', s, false)
+
+        if self.has_backup then self.bg = self.backup end
+      end)
+    end,
+    update_callback = function(self, c3, index, objects) --luacheck: no unused args
+      self:get_children_by_id('index_role')[1].markup = '<b> '..index..' </b>'
+    end,
+  }
 
   -- Create a tasklist widget
   -- s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
@@ -533,18 +553,18 @@ awful.screen.connect_for_each_screen(function(s)
     screen   = s,
     filter   = awful.widget.tasklist.filter.currenttags,
     buttons  = tasklist_buttons,
-      style   = {
-        shape = gears.shape.powerline
+    style   = {
+      shape = gears.shape.powerline
+    },
+    layout   = {
+      spacing = -7,
+      spacing_widget = {
+        color  = '#dddddd',
+        shape  = gears.shape.line,
+        widget = wibox.widget.separator,
       },
-      layout   = {
-        spacing = -12,
-        spacing_widget = {
-          color  = '#dddddd',
-          shape  = gears.shape.powerline,
-          widget = wibox.widget.separator,
-        },
-        layout  = wibox.layout.flex.horizontal
-      },
+      layout  = wibox.layout.flex.horizontal
+    },
     -- Notice that there is *NO* wibox.wibox prefix, it is a template,
     -- not a widget instance.
     widget_template = {
@@ -571,6 +591,18 @@ awful.screen.connect_for_each_screen(function(s)
       id     = 'background_role',
       widget = wibox.container.background,
     },
+    nil,
+    create_callback = function(self, c, index, objects) --luacheck: no unused args
+      self:get_children_by_id('clienticon')[1].client = c
+
+      -- BLING: Toggle the popup on hover and disable it off hover
+      self:connect_signal('mouse::enter', function()
+        awesome.emit_signal('bling::task_preview::visibility', s, true, c)
+      end)
+      self:connect_signal('mouse::leave', function()
+        awesome.emit_signal('bling::task_preview::visibility', s, false, c)
+      end)
+    end,
   }
 
   -- Create the wibox
@@ -597,15 +629,16 @@ awful.screen.connect_for_each_screen(function(s)
       netupicon, space, netupwidget,
       netdownicon, space, netdownwidget,
       lsep,
-      fsicon, space, fswidget,
+      -- fs_widget(),
+      fs_widget({ mounts = { '/', '/home' } }),
       lsep,
       tempicon, space, tempwidget,
       lsep,
-      memicon, space, memwidget, ramgraph,
+      memicon, space, memwidget, ramgraph(),
       lsep,
       baticon, batwidget,
       lsep,
-      cpuicon, space, cpuwidget, space, cpugraph,
+      cpuicon, space, cpuwidget, space, cpugraph(),
       lsep,
       s.systray,
       mytextclock,
@@ -616,6 +649,44 @@ awful.screen.connect_for_each_screen(function(s)
     }
   }
 end)
+
+bling.widget.task_preview.enable {
+  x = 20,                    -- The x-coord of the popup
+  y = 20,                    -- The y-coord of the popup
+  height = 200,              -- The height of the popup
+  width = 200,               -- The width of the popup
+  placement_fn = function(c) -- Place the widget using awful.placement (this overrides x & y)
+    awful.placement.bottom(c, {
+      margins = {
+        bottom = 30
+      }
+    })
+  end
+}
+
+bling.widget.tag_preview.enable {
+  show_client_content = false,  -- Whether or not to show the client content
+  x = 10,                       -- The x-coord of the popup
+  y = 10,                       -- The y-coord of the popup
+  scale = 0.25,                 -- The scale of the previews compared to the screen
+  honor_padding = false,        -- Honor padding when creating widget size
+  honor_workarea = false,       -- Honor work area when creating widget size
+  placement_fn = function(c)    -- Place the widget using awful.placement (this overrides x & y)
+    awful.placement.top_left(c, {
+      margins = {
+        top = 30,
+        left = 30
+      }
+    })
+  end,
+  -- background_widget = wibox.widget {    -- Set a background image (like a wallpaper) for the widget 
+  --   image = beautiful.wallpaper,
+  --   horizontal_fit_policy = 'fit',
+  --   vertical_fit_policy   = 'fit',
+  --   widget = wibox.widget.imagebox
+  -- }
+}
+
 -- }}}
 
 -- {{{ Mouse bindings
@@ -631,7 +702,7 @@ modalbind.init()
 modalbind.set_location('top')
 modalbind.set_y_offset(100)
 
-mpdmap = {
+local mpdmap = {
   { 't', function() sexec('mpc toggle') end, 'Toggle' },
   { 'n', function() sexec('mpc next') end, 'Next' },
   { 'p', function() sexec('mpc prev') end, 'Prev' },
@@ -640,19 +711,19 @@ mpdmap = {
   { 'N', function() sexec('x-terminal-emulator -e ncmpcpp') end, 'ncmpcpp' },
 }
 
-executemap = {
+local executemap = {
   { 'w', function() exec('x-www-browser') end, 'x-www-browser' },
   { 'b', function() exec('dmbuku') end, 'buku' },
 }
 
 
-modalmap = {
+local modalmap = {
   { 'm', function() modalbind.grab{keymap = mpdmap, name = '', stay_in_mode = false} end, 'mpd (group)' },
   { 'x', function() modalbind.grab{keymap = executemap, name = '', stay_in_mode = false} end, 'execute (group)' },
   -- { 'separator', 'A Message' },
 }
 
-globalkeys = awful.util.table.join(
+local globalkeys = awful.util.table.join(
   awful.key({ modkey }, ';', function()
     modalbind.grab{keymap = modalmap, name = '', stay_in_mode = false}
   end, { description = 'modal menu', group = 'awesome' }),
@@ -847,9 +918,6 @@ globalkeys = awful.util.table.join(
     sexec('mylock --suspend')
   end, { description = 'suspend and lock', group = 'launcher' }),
 
-  -- awful.key({ modkey, 'Shift' }, '-', treetile.vertical, { description = 'treetile split vertical', group = 'layout' }),
-  -- awful.key({ modkey, 'Shift' }, '\\', treetile.horizontal, { description = 'treetile split horizontal', group = 'layout' }),
-
   awful.key({ modkey }, 'o', function(c)
     awful.client.cycle(true, s)
     awful.client.jumpto(awful.client.getmaster())
@@ -871,7 +939,7 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey }, 'Tab', awful.menu.clients)
 )
 
-clientkeys = awful.util.table.join(
+local clientkeys = awful.util.table.join(
   awful.key({ modkey }, 'f', function(c)
     c.fullscreen = not c.fullscreen
     c:raise()
@@ -889,9 +957,18 @@ clientkeys = awful.util.table.join(
     c:swap(awful.client.getmaster())
   end, { description = 'move to master', group = 'client' }),
 
-  awful.key({ modkey, 'Control', 'Shift'}, 'o', function(c)
-   c:move_to_screen()
+  awful.key({ modkey, 'Shift'}, 's', function(c)
+    local current = awful.screen.focused()
+    current:swap(screen[2])
   end, { description = 'move to screen', group = 'client' }),
+
+  awful.key({ modkey, 'Control', 'Shift'}, 'o', function(c)
+    c:move_to_screen()
+  end, { description = 'move to screen', group = 'client' }),
+
+  -- awful.key({ modkey }, 's', function(c)
+  --   c.sticky = not c.sticky
+  -- end, { description = 'toggle sticky', group = 'client' }),
 
   awful.key({ modkey }, 't', function(c)
     c.ontop = not c.ontop
@@ -954,7 +1031,7 @@ for i = 1, 9 do
   )
 end
 
-clientbuttons = awful.util.table.join(
+local clientbuttons = awful.util.table.join(
   awful.button({ }, 1, function(c) client.focus = c; c:raise() end),
   awful.button({ modkey }, 1, awful.mouse.client.move),
   awful.button({ modkey }, 3, awful.mouse.client.resize)
@@ -982,41 +1059,48 @@ awful.rules.rules = {
     }
   },
 
-  -- Floating clients.
-  { rule_any = {
-      instance = {
-        'DTA',  -- Firefox addon DownThemAll.
-        'copyq',  -- Includes session name in class.
-      },
-      class = {
-        'Arandr',
-        'Gpick',
-        'Kruler',
-        'MessageWin',  -- kalarm.
-        'Sxiv',
-        'Wpa_gui',
-        'pinentry',
-        'veromix',
-        'xtightvncviewer',
-        'alarm',
-        'dialog',
-        'Sonata',
-      },
-      name = {
-        'Event Tester',  -- xev.
-      },
-      role = {
-        'AlarmWindow',  -- Thunderbird's calendar.
-        'pop-up',       -- e.g. Google Chrome's (detached) Developer Tools.
-      }
-    }, properties = { floating = true }},
+  -- -- Floating clients.
+  -- { rule_any = {
+  --     instance = {
+  --       'DTA',  -- Firefox addon DownThemAll.
+  --       'copyq',  -- Includes session name in class.
+  --     },
+  --     class = {
+  --       'Arandr',
+  --       'Gpick',
+  --       'Kruler',
+  --       'MessageWin',  -- kalarm.
+  --       'Sxiv',
+  --       'Wpa_gui',
+  --       'pinentry',
+  --       'veromix',
+  --       'xtightvncviewer',
+  --       'alarm',
+  --       'dialog',
+  --       'Sonata',
+  --     },
+  --     name = {
+  --       'Event Tester',  -- xev.
+  --     },
+  --     role = {
+  --       'AlarmWindow',  -- Thunderbird's calendar.
+  --       'pop-up',       -- e.g. Google Chrome's (detached) Developer Tools.
+  --     }
+  --   }, properties = { floating = true }},
 
   -- Add titlebars to normal clients and dialogs
-  { rule_any = { type = { 'dialog' }
-    }, properties = { titlebars_enabled = true },
+  { rule_any = { name = { 'dialog' }
+    }, properties = {
+      floating = true,
+      intrusize = true,
+      no_autofocus = true,
+      skip_taskbar = true,
+      sticky = true,
+      titlebars_enabled = true
+    },
   },
 
-  { rule_any = { class = { 'plasmashell', 'krunner' }
+  { rule_any = { class = { 'plasmashell', 'krunner', 'zenity' }
     }, properties = {
       floating = true,
       skip_taskbar = true,
@@ -1027,8 +1111,8 @@ awful.rules.rules = {
   },
 
   -- Set Firefox to always map on the tag named '2' on screen 1.
-  -- { rule = { class = 'Firefox' },
-  --   properties = { screen = 1, tag = '2' } },
+  { rule = { class = 'Firefox' },
+    properties = { screen = 2, tag = 'web' } },
 }
 -- }}}}}}
 
@@ -1092,6 +1176,7 @@ end)
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal('mouse::enter', function(c)
   if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+    and client.focus.class ~= 'Gpick'
     and awful.client.focus.filter(c) then
     client.focus = c
   end
