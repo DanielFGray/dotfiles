@@ -1,0 +1,9 @@
+[keyboard]
+bindings = [
+  { key = "space", mods = "Control|Shift", action = "ReceiveChar" },
+  { key = "f",     mods = "Control|Shift", action = "ReceiveChar" },
+]
+
+[colors]
+background = "#000000"
+foreground = "#ffffff"
