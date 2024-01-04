@@ -140,10 +140,12 @@ bindkey -v
 
 bindkey '^ ' autosuggest-accept
 
-bindkey '\e[1~' beginning-of-line
-bindkey '\e[4~' end-of-line
-bindkey '\e[A' up-line-or-history
-bindkey '\e[B' down-line-or-history
+bindkey -M vicmd "^[[1~"  beginning-of-line
+bindkey -M vicmd "^[[4~"  end-of-line
+bindkey "^[[1~" beginning-of-line
+bindkey "^[[4~" end-of-line
+bindkey "^[[A" up-line-or-history
+bindkey "^[[B" down-line-or-history
 bindkey ' ' magic-space
 
 autoload -Uz surround
