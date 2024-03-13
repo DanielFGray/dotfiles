@@ -124,48 +124,14 @@ if has ni; then
   alias nt='na run test'
 fi
 
-# if has pnpm; then
-#   has pr && alias paginate='command pr'
-#   alias pr='pnpm run --stream --loglevel=warn'
-#   alias pe='pnpm exec'
-#   alias pd='pnpm dlx'
-#   alias p='pnpm'
-#   alias pa='pnpm add'
-#   alias pad='pnpm add -D'
-#   alias pi='pnpm install'
-#   alias pst='pr -s start'
-#   alias pb='pr -s build'
-#   alias pui='pnpm update -i'
-#   alias puil='pnpm update -i --latest'
-
-#   y() {
-#     if [[ ! -f package.json ]]; then
-#       echo 'no package.json'
-#       return 1
-#     elif [[ -f pnpm-lock.yaml ]]; then
-#       echo 'use pnpm alias: pi="pnpm install"'
-#       return 1
-#     elif has yarn; then
-#       yarn start
-#     else
-#       echo fail
-#     fi
-#   }
-
-#   yst() {
-#     if [[ ! -f package.json ]]; then
-#       echo 'no package.json'
-#       return 1
-#     elif [[ -f pnpm-lock.yaml ]]; then
-#       echo 'use pnpm alias: pst="pnpm run start"'
-#       return 1
-#     elif has yarn; then
-#       yarn start
-#     else
-#       echo fail
-#     fi
-#   }
-# fi
+if has ni && [[ $(ni --version) = '@antfu'* ]]; then
+  alias nid='ni -d '
+  alias nst='nr start'
+  alias nd='nr dev'
+  alias nb='nr build'
+  alias nt='nr test'
+  # alias nun='nun' # uninstall
+fi
 
 if has python || has python3; then
   if ! has pip && has pip3; then
