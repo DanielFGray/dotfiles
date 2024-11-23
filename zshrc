@@ -85,6 +85,22 @@ ask() {
   [[ ${ans:u} = Y* ]]
 }
 
+function v {
+  local server='/tmp/nvimsocket'
+  if [[ ! -S "$server" ]]; then
+    nvim --listen "$server" "$@"
+    return
+  fi
+  if (( $# > 0 )); then
+    nvim --server "$server" --remote "$@"
+  elif has fzf; then
+    read -A files <<< $(fd | fzf --preview='bat --color=always --style=plain {}')
+    if (( $# > 0 )); then
+      nvim --server "$server" --remote "${files[@]}"
+    fi
+  fi
+}
+
 alias zcp='noglob zmv -C '
 alias zln='noglob zmv -L '
 alias zmv='noglob zmv '
