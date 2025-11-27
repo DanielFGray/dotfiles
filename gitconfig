@@ -22,9 +22,10 @@
 
 [core]
 	pager = bash -c 'delta --side-by-side -w ${FZF_PREVIEW_COLUMNS:-$COLUMNS}'
+	excludesfile = /home/dan/.gitignore
 
-; [interactive]
-;   diffFilter = delta --side-by-side --color-only
+[interactive]
+  diffFilter = delta --side-by-side --color-only
 
 [delta]
 	features = decorations
@@ -35,6 +36,7 @@
 
 [color]
 	ui = true
+	status = true
 
 [color "diff-highlight"]
 	oldNormal = red bold

@@ -1,0 +1,15 @@
+FROM archlinux:latest
+
+RUN pacman -Sy --noconfirm \
+    bash \
+    ca-certificates \
+    curl \
+    git \
+    # openssh \
+    # procps-ng \
+    # findutils \
+    # coreutils \
+    # ncurses \
+    && pacman -Scc --noconfirm
+
+WORKDIR /work/dotfiles

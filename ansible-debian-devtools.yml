@@ -1,0 +1,104 @@
+# setup.yml
+---
+- name: Setup Debian VM
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Remove old Docker repo config
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/sources.list.d/docker.list
+        - /etc/apt/sources.list.d/docker.sources
+        - /etc/apt/keyrings/docker.gpg
+
+    - name: Install prerequisites
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - zsh
+          - tmux
+          - build-essential
+        state: present
+        update_cache: true
+
+    - name: Create keyrings directory
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker GPG key
+      get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Remove existing Docker sources file
+      file:
+        path: /etc/apt/sources.list.d/docker.sources
+        state: absent
+
+    - name: Add Docker repository
+      copy:
+        dest: /etc/apt/sources.list.d/docker.sources
+        content: |
+          Types: deb
+          URIs: https://download.docker.com/linux/debian
+          Suites: {{ ansible_facts["distribution_release"] }}
+          Components: stable
+          Signed-By: /etc/apt/keyrings/docker.asc
+
+    - name: Install Docker packages
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+      when: ansible_user is defined
+
+    - name: Set zsh as default shell for user
+      user:
+        name: "{{ ansible_user }}"
+        shell: /bin/zsh
+      when: ansible_user is defined
+
+    - name: Clone dotfiles repository
+      git:
+        repo: https://github.com/danielfgray/dotfiles
+        dest: "~{{ ansible_user }}/dotfiles"
+        clone: yes
+        update: yes
+      become_user: "{{ ansible_user }}"
+      when: ansible_user is defined
+
+    - name: Run install.sh script
+      command: ./install.sh
+      become_user: "{{ ansible_user }}"
+      become: true
+      args:
+        chdir: "~{{ ansible_user }}/dotfiles"
+        creates:
+          - "~{{ ansible_user }}/.zshrc"
+          - "~{{ ansible_user }}/.profile"
+          - "~{{ ansible_user }}/.tmux.conf"
+          - "~{{ ansible_user }}/.config/nvim/init.lua"

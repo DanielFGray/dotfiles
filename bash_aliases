@@ -7,14 +7,18 @@ for bu in "${HOME}/.bash_utils" "${HOME}/dotfiles/bash_utils"; do
   fi
 done
 [[ -s "$bu" ]] || {
-  err() { tput setaf 1; printf '%s\n' "$@"; tput sgr0; }
+  err() {
+    tput setaf 1
+    printf '%s\n' "$@"
+    tput sgr0
+  }
   err 'cannot source bash_utils' 'probably gonna die now'
 }
 unset d
 
 export EDITOR=$(select_from 'nvim' 'vim' 'vi')
 if has nvim; then
-    export MANPAGER='nvim +Man!'
+  export MANPAGER='nvim +Man!'
 else
   export MANPAGER="bash -c \"col -b | vim -Nu NONE -c 'runtime macros/less.vim' -c 'setf man' -\""
 fi
@@ -27,7 +31,7 @@ unset GREP_OPTIONS
 if h=$(select_from apt 'apt-get'); then
   alias canhaz="sudo $h install "
   alias updupg="sudo $h upgrade "
-  pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove ;}
+  pkgrm() { sudo apt-get purge "$@" && sudo apt-get autoremove; }
   has fuser dpkg && alias unlock-dpkg="sudo fuser -vki /var/lib/dpkg/lock; sudo dpkg --configure -a"
   unset h
 elif AURHELPER=$(select_from yay aurman trizen pacaur yaourt pacman); then
@@ -35,7 +39,7 @@ elif AURHELPER=$(select_from yay aurman trizen pacaur yaourt pacman); then
   alias canhaz='$AURHELPER -S '
   updupg() {
     $AURHELPER -Sy && if has pkgup; then
-       pkgup
+      pkgup
     else
       $AURHELPER -Syu
     fi
@@ -88,10 +92,10 @@ if grep --version | grep -q 'gnu'; then
     opts=()
     for a; do
       case $a in
-        -G) has_engine=-G ;;
-        -F) has_engine=-F ;;
-        -E) has_engine=-E ;;
-        *) opts+=("$a")
+      -G) has_engine=-G ;;
+      -F) has_engine=-F ;;
+      -E) has_engine=-E ;;
+      *) opts+=("$a") ;;
       esac
     done
     if [[ -r .gitignore ]]; then
@@ -102,7 +106,7 @@ if grep --version | grep -q 'gnu'; then
 fi
 alias shuf1='shuf -n1'
 vba() {
-  fc -rnl | $EDITOR - ~/dotfiles/bash_aliases +'set nomod nobuflisted bufhidden bufhidden=wipe buftype=nofile | sp | bn | wincmd _'
+  fc -rnl | $EDITOR - ~/dotfiles/bash_aliases ~/dotfiles/zshrc +'set nomod nobuflisted bufhidden bufhidden=wipe buftype=nofile | sp | bn | wincmd _'
   exec "${SHELL##*/}"
 }
 
@@ -116,12 +120,9 @@ has rsync && alias rsync='rsync -v --progress --stats '
 has lein rlwrap && alias lein='rlwrap lein '
 has pkgsearch && alias pkgs='FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview-window=bottom:hidden" pkgsearch '
 
-if has ni; then
-  alias nid='ni -d '
-  alias nst='na run start'
-  alias nd='na run dev'
-  alias nb='na run build'
-  alias nt='na run test'
+if has bun; then
+  alias b='bun '
+  alias bx='bunx '
 fi
 
 if has ni && [[ $(ni --version) = '@antfu'* ]]; then
@@ -149,21 +150,28 @@ if has python || has python3; then
   }
 fi
 
+opencode() {
+  bun -g --silent i opencode-ai@latest
+  command opencode "$@"
+}
+
 # {{{ git aliases
 if has git; then
   alias g='git '
-  alias ga='git add '
-  alias gap='git add -p '
-  alias gb='git branch '
-  alias gc='git commit -v '
-  alias gcm='git commit -m '
-  alias gco='git checkout '
-  alias gd='git diff '
-  alias gl='git pull '
-  alias gm='git merge --no-ff '
-  alias gp='git push '
-  alias gst='git status --untracked-files=no '
-  alias gstu='git status -u '
+  alias ga='fzgit add '
+  alias gap='g add -p '
+  alias gb='g branch '
+  alias gc='g commit -v '
+  alias gcm='g commit -m '
+  alias gco='fzgit checkout '
+  alias gd='fzgit diff '
+  alias gl='g pull '
+  alias gr='g rebase '
+  alias gri='fzgit rebase '
+  alias gp='g push '
+  alias gst='fzgit status '
+  alias glo='fzgit log '
+
   gcl() {
     local dir repo
     if [[ -z "$1" ]]; then
@@ -171,8 +179,8 @@ if has git; then
       return 1
     fi
     case "$1" in
-      http*|https*|git*|ssh*) repo="$1" ;;
-      *) repo="https://github.com/$1" ;;
+    http* | https* | git* | ssh*) repo="$1" ;;
+    *) repo="https://github.com/$1" ;;
     esac
     shift
     if [[ -n "$1" && "$1" != -* ]]; then
@@ -180,7 +188,7 @@ if has git; then
       shift
     else
       dir="${repo##*/}"
-      dir="${dir/%.git}"
+      dir="${dir/%.git/}"
     fi
     git clone "$repo" "$@"
     [[ -d "$dir" ]] && cd "$dir"
@@ -204,28 +212,33 @@ rgf() {
 multiple() {
   local l x y p c v
   c=0 p=0 l=()
-  if (( $# < 2 )); then
+  if (($# < 2)); then
     err 'missing args'
     return
   fi
   while :; do
     case $1 in
-      -v) v=1 ;;
-      -p)
-        if [[ $2 = -* ]]; then
-          echo '-p requires an argument'
-          return
-        fi
-        p="$2"; shift ;;
-      --) shift; break ;;
-      *) l+=("$1")
+    -v) v=1 ;;
+    -p)
+      if [[ $2 = -* ]]; then
+        echo '-p requires an argument'
+        return
+      fi
+      p="$2"
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *) l+=("$1") ;;
     esac
     shift
   done
   echo
-  if (( p > 1 )); then
+  if ((p > 1)); then
     for y in "${l[@]}"; do
-      (( c++ >= p )) && wait -n
+      ((c++ >= p)) && wait -n
       echo "$* $y"
       ("$@" "$y" &)
     done
@@ -243,8 +256,14 @@ has inotifywait && watchfile() {
   f=()
   while :; do
     case $1 in
-      -f) f+=("$2"); shift ;;
-      --) shift; break ;;
+    -f)
+      f+=("$2")
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
     esac
     shift
   done
@@ -262,7 +281,7 @@ has inotifywait && watchfile() {
 }
 
 cd() {
-  if (( $# > 0 )); then
+  if (($# > 0)); then
     builtin cd "$1" && \ls -trF --color
   else
     builtin cd ~ && \ls -trF --color
@@ -300,7 +319,7 @@ help() {
 }
 
 bground() {
-  ("$@" &> /dev/null &)
+  ("$@" &>/dev/null &)
 }
 
 restart() {
@@ -320,15 +339,15 @@ cmd_stats() {
 
 function in {
   local t
-  t=( "$1" "$2" )
+  t=("$1" "$2")
   shift 2
-  at now + "${t[@]}" <<< "$*"
+  at now + "${t[@]}" <<<"$*"
 }
 
 decide() {
   local args
-  args=( "$@" )
-  (( $# < 2 )) && args=( yes no )
+  args=("$@")
+  (($# < 2)) && args=(yes no)
   printf '%s\n' "${args[@]}" | shuf -n1
 }
 
@@ -336,9 +355,15 @@ alias genwords='passgen -w '
 
 genchars() {
   local n=16 r='[a-z0-9]'
-  [[ -n $1 ]] && { n=$1; shift; }
-  [[ -n $1 ]] && { r=$1; shift; }
-  printf '%s\n' "$(grep -a -oP "$r" < /dev/urandom | tr -d '\n' | head -c "$n")"
+  [[ -n $1 ]] && {
+    n=$1
+    shift
+  }
+  [[ -n $1 ]] && {
+    r=$1
+    shift
+  }
+  printf '%s\n' "$(grep -a -oP "$r" </dev/urandom | tr -d '\n' | head -c "$n")"
 }
 
 ed() { # https://sanctum.geek.nz/arabesque/actually-using-ed/
@@ -349,11 +374,17 @@ if has tmux; then
   alias tmuxa='tmux attach'
   txs() {
     local nested opts
-    opts=( -d )
+    opts=(-d)
     for a in "$@"; do
       case $a in
-        -N) nested=1 ; shift ;;
-        -*)  opts+=( "$1" ) ; shift ;;
+      -N)
+        nested=1
+        shift
+        ;;
+      -*)
+        opts+=("$1")
+        shift
+        ;;
       esac
     done
     cmd="$*"
@@ -368,33 +399,36 @@ if has tmux; then
   }
 fi
 
-sprunge() { more -- "$@" | command curl -sF 'sprunge=<-' http://sprunge.us ;}
+sprunge() { more -- "$@" | command curl -sF 'sprunge=<-' http://sprunge.us; }
 
 if has tar ssh; then
   if has pv; then
-    tarpipe() { tar czf - "$2" | pv | ssh "$1" "tar xzvf - $3" ;}
-    rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf - ;}
+    tarpipe() { tar czf - "$2" | pv | ssh "$1" "tar xzvf - $3"; }
+    rtarpipe() { ssh $1 "tar czf - $2" | pv | tar xzvf -; }
   else
-    tarpipe() { tar czf - "$2" | ssh "$1" "tar xzvf - $3" ;}
-    rtarpipe() { ssh $1 "tar czf - $2" | tar xzvf - ;}
+    tarpipe() { tar czf - "$2" | ssh "$1" "tar xzvf - $3"; }
+    rtarpipe() { ssh $1 "tar czf - $2" | tar xzvf -; }
   fi
 fi
 
-textImage() {
-  convert -background white -fill black -size 500x500 -gravity Center -font Droid-Sans-Regular caption:"$1" "$2" &&
-  optipng "$2" &&
-  qiv "$2"
+text_image() {
+  local file="$2"
+  if [[ -z "$file" ]]; then file="$(date +%FTZ%TZ).png"; fi
+  magick -background white -fill black -size 500x500 -gravity Center -font Droid-Sans-Regular caption:"$1" "$file"
+  [[ -f "$file" ]] || return 1
+  has optipng && optipng "$file"
+  $(select_from gwenview mirage sxiv qiv) "$file"
 }
 
 burnusb() {
   sudo dd if="$1" of="$2" bs=4M conv=sync status=progress && {
     sync &&
-    ding 'burnusb' 'done'
+      ding 'burnusb' 'done'
   }
 }
 
 ports_running() {
-  $(select_from 'ss' 'netstat') -tulpn | $(select_from 'less -S' 'fzf')
+  $(select_from 'ss' 'netstat') -tulpn | $(select_from 'fzf' 'less -S')
 }
 
 changeroot() {
@@ -415,19 +449,19 @@ changeroot() {
 extract() {
   if [[ -f "$1" ]]; then
     case "$1" in
-      *.tar.bz2)   tar -xjf "$@"   ;;
-      *.tar.gz)    tar -xzf "$@"   ;;
-      *.tar)       tar -xf "$@"    ;;
-      *.tbz2)      tar -xjf "$@"   ;;
-      *.tgz)       tar -xzf "$@"   ;;
-      *.bz2)       bunzip2 "$@"    ;;
-      *.rar)       unrar x "$@"    ;;
-      *.gz)        gunzip "$@"     ;;
-      *.zip)       unzip "$@"      ;;
-      *.Z)         uncompress "$@" ;;
-      *.7z)        7z x "$@"       ;;
-      *.xz)        xz -d "$@"      ;;
-      *)           echo "'$1' cannot be extracted via >extract<" ;;
+    *.tar.bz2) tar -xjf "$@" ;;
+    *.tar.gz) tar -xzf "$@" ;;
+    *.tar) tar -xf "$@" ;;
+    *.tbz2) tar -xjf "$@" ;;
+    *.tgz) tar -xzf "$@" ;;
+    *.bz2) bunzip2 "$@" ;;
+    *.rar) unrar x "$@" ;;
+    *.gz) gunzip "$@" ;;
+    *.zip) unzip "$@" ;;
+    *.Z) uncompress "$@" ;;
+    *.7z) 7z x "$@" ;;
+    *.xz) xz -d "$@" ;;
+    *) echo "'$1' cannot be extracted via >extract<" ;;
     esac
   else
     echo "'$1' is not a valid file"
@@ -440,17 +474,17 @@ curltar() {
   mkdir -vp "$d" || return 1
   cd "$d" || return 1
   case "$1" in
-    *.tar.bz2)   command curl -L "$1" | tar xvjf - ;;
-    *.tar.gz)    command curl -L "$1" | tar xvzf - ;;
-    *.bz2)       command curl -L "$1" | bunzip2  - ;;
-    *.tar)       command curl -L "$1" | tar xvf  - ;;
-    *.tbz2)      command curl -L "$1" | tar xvjf - ;;
-    *.tgz)       command curl -L "$1" | tar xvzf - ;;
-    *)           command curl -LO "$1"
+  *.tar.bz2) command curl -L "$1" | tar xvjf - ;;
+  *.tar.gz) command curl -L "$1" | tar xvzf - ;;
+  *.bz2) command curl -L "$1" | bunzip2 - ;;
+  *.tar) command curl -L "$1" | tar xvf - ;;
+  *.tbz2) command curl -L "$1" | tar xvjf - ;;
+  *.tgz) command curl -L "$1" | tar xvzf - ;;
+  *) command curl -LO "$1" ;;
   esac
 }
 
-whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom ;}
+whitenoise() { aplay -c 2 -f S16_LE -r 44100 /dev/urandom; }
 
 weather() {
   command curl https://wttr.in/"${*:-galveston%20texas}"
@@ -460,13 +494,16 @@ has asciinema && asciinema() {
   YSU_HARDCORE= command asciinema "$@"
 }
 
-has yarn jq fzf && run-p() {
-  [[ -e package.json ]] || { err 'no package.json!'; return 1; }
+has nr jq fzf && run-p() {
+  [[ -e package.json ]] || {
+    err 'no package.json!'
+    return 1
+  }
   if [[ ! -x ./node_modules/.bin/run-p ]]; then
     err 'no run-p?'
     return 1
   fi
-  y run-p $(jq -r '.scripts | keys[]' package.json F -m)
+  nr run-p $(jq -r '.scripts | keys[]' package.json F -m)
 }
 
 if has vipe; then
@@ -476,8 +513,8 @@ if has vipe; then
 
   if has synclient; then
     synclient() {
-      if command synclient -l &> /dev/null; then
-        if (( $# > 0 )); then
+      if command synclient -l &>/dev/null; then
+        if (($# > 0)); then
           command synclient "$@"
         else
           command synclient $(command synclient | vipe | sed '1d;s/ //g')
@@ -513,19 +550,28 @@ loadnvm() {
     [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh" --no-use
     nvmuse() {
       local version
-      version=$(unalias curl; nvm ls | fzf --inline-info --ansi --height=10 --reverse | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
+      version=$(
+        unalias curl
+        nvm ls | fzf --inline-info --ansi --height=10 --reverse | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)'
+      )
       [[ -n $version ]] && nvm use "$version"
     }
 
     nvminstall() {
       local version
-      version=$(unalias curl; nvm ls-remote | fzf --inline-info --ansi --tac | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
+      version=$(
+        unalias curl
+        nvm ls-remote | fzf --inline-info --ansi --tac | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)'
+      )
       [[ -n $version ]] && nvm install "$version"
     }
 
     nvmuninstall() {
       local version
-      version=$(unalias curl; nvm ls | fzf --inline-info --ansi | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)')
+      version=$(
+        unalias curl
+        nvm ls | fzf --inline-info --ansi | grep -oP '(system|(iojs-)?v\d+\.\d+\.\d+)'
+      )
       [[ -n $version ]] && nvm uninstall "$version"
     }
   fi
@@ -540,13 +586,13 @@ if has rlwrap; then
     local args magicFile
     magicFile='./custom_repl.js'
     args=("$@")
-    [[ $# = 0 && -r "$magicFile" ]] && args+=( -r "$magicFile" )
+    [[ $# = 0 && -r "$magicFile" ]] && args+=(-r "$magicFile")
     command node "${args[@]}"
   }
 
   has guile && {
     guile() {
-      if (( $# > 0 )); then
+      if (($# > 0)); then
         command guile "$@"
       else
         rlwrap guile
@@ -555,8 +601,8 @@ if has rlwrap; then
   }
 
   has clojure && {
-     clojure() {
-      if (( $# > 0 )); then
+    clojure() {
+      if (($# > 0)); then
         command clojure "$@"
       else
         rlwrap clojure
@@ -582,7 +628,7 @@ has api && {
   api() {
     local output
     res=$(command api "$@")
-    if output=$(jq -C '.' <<< "$res"); then
+    if output=$(jq -C '.' <<<"$res"); then
       echo "$output"
     else
       echo "$res"
@@ -603,7 +649,7 @@ has api && {
     local repoid
     repo="${1/\//%2F}"
     res=$(command api gitlab get "projects/$repo/jobs")
-    jq '.[] | select(.status == "running")' <<< "$res"
+    jq '.[] | select(.status == "running")' <<<"$res"
   }
 }
 
@@ -611,7 +657,7 @@ has boil && boil() {
   loadperlbrew
   command boil "$@" && while getopts 'n:' x; do
     case "$x" in
-      n) cd ~/build/"$OPTARG"
+    n) cd ~/build/"$OPTARG" ;;
     esac
   done
 }
@@ -619,7 +665,7 @@ has boil && boil() {
 make() {
   if [[ "$*" == 'me a sandwich'* ]]; then
     shift 3
-    ./configure "$@" && command make -j $(( $(nproc) - 1))
+    ./configure "$@" && command make -j $(($(nproc) - 1))
   else
     command make "$@"
   fi
@@ -627,7 +673,7 @@ make() {
 
 diffplugins() {
   local file
-  if (( $# < 1 )); then
+  if (($# < 1)); then
     err 'need a file or url'
     return 1
   fi
@@ -635,13 +681,13 @@ diffplugins() {
     has -v curl || return
     file=$(command curl -s "$1")
   elif [[ -r $1 ]]; then
-    file=$(< "$1")
+    file=$(<"$1")
   else
     err "$1 is not a readable file or url"
     return 1
   fi
   diff -u <(command grep -Po "Plug '[^']+'" ~/.vimrc | sort) \
-    <(command grep -Po "Plug '[^']+'" <<< "$file" | sort) |
+    <(command grep -Po "Plug '[^']+'" <<<"$file" | sort) |
     awk -F \' '/^\+/{printf "%s/%s\n", "https://github.com", $2}'
 }
 
@@ -651,12 +697,12 @@ has fv && books() {
   cmd=$(select_from okular evince zathura)
   for a; do
     case "$a" in
-      -c) if has -v "$a"; then cmd="$a"; else return 1; fi
+    -c) if has -v "$a"; then cmd="$a"; else return 1; fi ;;
     esac
   done
-  cd ~/books &> /dev/null
+  cd ~/books &>/dev/null
   fd . ~/books -t f --color always | fzf --preview='pdftotext {} -' --bind="enter:execute:$cmd {}"
-  cd - &> /dev/null
+  cd - &>/dev/null
 }
 
 has fzf mpv && {
@@ -664,10 +710,10 @@ has fzf mpv && {
     local d findopts fzfopts
     d="$HOME/videos"
     findopts=()
-    fzfopts=( "--bind=enter:execute(mpv --fullscreen $d/{})")
+    fzfopts=("--bind=enter:execute(mpv --fullscreen $d/{})")
     if [[ $1 = '-t' ]]; then
-      findopts=( -printf '%T@ %P\n' )
-      fzfopts=( "--bind=enter:execute(mpv --fullscreen $d/{2..})" '--with-nth=2..' --tac )
+      findopts=(-printf '%T@ %P\n')
+      fzfopts=("--bind=enter:execute(mpv --fullscreen $d/{2..})" '--with-nth=2..' --tac)
     fi
     command find "$d" \
       -regextype posix-extended \
@@ -677,15 +723,15 @@ has fzf mpv && {
       sort -h |
       sed "s|$d/||" |
       fzf -e +s --height=75% --reverse --multi \
-      --bind='esc:abort' \
-      "${fzfopts[@]}"
+        --bind='esc:abort' \
+        "${fzfopts[@]}"
   }
 
   videos_random() {
     local d movies
     d="$HOME/videos"
     movies=$(command find "$d" -regextype posix-extended -iregex '.*\.(mp4|avi|mkv)' -type f | sort -h | sed "s|$d/||" | fzf -e +s -m --height=75% --reverse)
-    mpv --fullscreen "$d/$(shuf -n1 <<< "$movies")"
+    mpv --fullscreen "$d/$(shuf -n1 <<<"$movies")"
   }
 }
 
@@ -722,20 +768,32 @@ if has docker; then
   if has docker-compose; then
     dcp() {
       local f c
-      [[ -z $1 ]] && { err "missing project directory"; return; }
+      [[ -z $1 ]] && {
+        err "missing project directory"
+        return
+      }
       f=~/build/dockerfiles/"$1"/docker-compose.yml
-      [[ ! -f $f ]] && { err ~/"build/dockerfiles/$1/docker-compose.yml does not exist"; return; }
+      [[ ! -f $f ]] && {
+        err ~/"build/dockerfiles/$1/docker-compose.yml does not exist"
+        return
+      }
       shift
-      [[ -z $1 ]] && { err "missing command"; return; }
+      [[ -z $1 ]] && {
+        err "missing command"
+        return
+      }
       case "$1" in
-        up)
-          shift
-          [[ $1 = "-d" ]] && shift
-          docker-compose -f "$f" up -d "$@"
-          docker-compose -f "$f" logs -f "$@"
-          return ;;
-        *) docker-compose -f "$f" "$@"
-          return ;;
+      up)
+        shift
+        [[ $1 = "-d" ]] && shift
+        docker-compose -f "$f" up -d "$@"
+        docker-compose -f "$f" logs -f "$@"
+        return
+        ;;
+      *)
+        docker-compose -f "$f" "$@"
+        return
+        ;;
       esac
     }
   fi
@@ -748,7 +806,7 @@ img() {
     overwrite=1
     shift
   fi
-  cd /tmp > /dev/null
+  cd /tmp >/dev/null
   file="${url##*/}"
   if [[ -e $file && $overwrite = 0 ]]; then
     printf '%s exists, overwrite? [N/y] ' "$file"
@@ -756,7 +814,7 @@ img() {
     [[ $REPLY = 'y' ]] && overwrite=1
   fi
   if [[ ! -e $file || $overwrite = 1 ]]; then
-    curl -L "$url" > "$file"
+    curl -L "$url" >"$file"
   fi
   if [[ ! -e "$file" ]]; then
     echo 'failed to download'
@@ -764,7 +822,7 @@ img() {
   fi
   file "$file"
   mpv --loop=inf "$file"
-  cd - > /dev/null
+  cd - >/dev/null
 }
 
 alias pgrep='fztop'

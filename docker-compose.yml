@@ -1,0 +1,17 @@
+services:
+  dotfiles:
+    build:
+      context: .
+      dockerfile: Dockerfile.dotfiles
+    working_dir: /work/dotfiles
+    volumes:
+      - ./:/work/dotfiles:ro
+      - dotfiles-home:/root
+      - ${HOME}/.ssh:/root/.ssh:ro
+    environment:
+      - GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+      - TERM=xterm
+    # Force non-interactive mode by removing TTY
+    command: bash -c "./install.sh"
+volumes:
+  dotfiles-home: {}

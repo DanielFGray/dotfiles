@@ -37,7 +37,7 @@ color() {
 }
 
 in_term() {
-  [[ -t 0 || -p /dev/stdin ]]
+  [[ -t 0 && -t 1 ]]
 }
 
 is_running() {
@@ -127,33 +127,4 @@ prompt() {
     fi
   fi
   printf '%s\n' "$ans"
-}
-
-parse_config_file() {
-  local line key val nr space line
-  nr=0
-  config_err=()
-  while IFS= read -r line; do
-    (( ++nr ))
-    [[ -z "$line" || "$line" = '#'* ]] && continue
-    space=${line%%[![:space:]]*}
-    line=${line#"$space"}
-    key=${line%% *}
-    line=${line#"$key"}
-    space=${line%%[![:space:]]*}
-    val=${line#"$space"}
-    [[ $key = '"'*'"' ]] && key=${key/#\"} key=${key/%\"}
-    [[ $key = *: ]] && key="${key%:/}"
-    [[ $val = '= '* ]] && val="${val#* }"
-    if [[ -z "$val" ]]; then
-      config_err+=( "  missing value for \"$key\" in config file on line $nr" )
-      continue
-    fi
-    case "$key" in
-      *) config_error+=("unknown config entry $key on line $nr") ;;
-    esac
-  done
-  if (( ${#config_err[@]} > 0 )); then
-    err 'there were errors parsing config file:' "${config_err[@]}"
-  fi
 }

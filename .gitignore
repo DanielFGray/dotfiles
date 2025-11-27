@@ -3,3 +3,4 @@
 .vim/undo/*
 .vim/backups/*
 .git*
+zsh

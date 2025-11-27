@@ -13,12 +13,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-if [[ -f $HOME/.bash_aliases ]]; then
-  source $HOME/.bash_aliases
-else
-  print "${fg[red]}Error loading bash_aliases${reset_color}\n"
-fi
-
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=999999999
 HISTFILESIZE=999999999
@@ -31,39 +25,82 @@ ZPROMPT_DEFAULT_USER='dan'
 
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 ZSH_AUTOSUGGEST_USE_ASYNC=1
-YSU_HARDCORE=1
+# YSU_HARDCORE=1
 
 declare -A ZINIT
 ZINIT[BIN_DIR]=~/.zsh/zinit
-ZINIT[HOME_DIR]=~/.zsh
+ZINIT[HOME_DIR]=~/.zsh/zinit
 ZINIT[PLUGINS_DIR]=~/.zsh/plugins
 ZINIT[SNIPPETS_DIR]=~/.zsh/snippets
 ZINIT[COMPLETIONS_DIR]=~/.zsh/completions
 ZINIT[ZCOMPDUMP_PATH]=~/.zsh/zcomp
-source ~/.zsh/zinit/zinit.zsh
+[[ ! -d ${ZINIT[HOME_DIR]}/.git ]] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT[HOME_DIR]"
+source "${ZINIT[HOME_DIR]}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+
+zinit light-mode for \
+  zdharma-continuum/zinit-annex-bin-gem-node \
+  zdharma-continuum/zinit-annex-patch-dl
+
+if has starship; then
+  source <(starship init zsh)
+else
+  zinit ice depth"1"
+  zinit light romkatv/powerlevel10k
+fi
+
 zinit wait'!' lucid for \
-  OMZP::yarn \
   OMZP::docker-compose
   # OMZP::vi-mode
 
-zinit ice depth=1
-zinit light romkatv/powerlevel10k
-
-zinit ice depth=1
-zinit light zsh-users/zsh-autosuggestions
-
-zinit wait lucid for \
+zinit for \
+    atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
   zdharma-continuum/fast-syntax-highlighting \
+    blockf \
+  zsh-users/zsh-completions \
+    light-mode \
+  zsh-users/zsh-autosuggestions \
+    light-mode \
   hlissner/zsh-autopair \
+    light-mode \
   MichaelAquilina/zsh-you-should-use \
-  wfxr/forgit \
-  Aloxaf/fzf-tab \
-  agkozak/zsh-z
+    light-mode \
+  Aloxaf/fzf-tab
   # marlonrichert/zsh-autocomplete \
   # softmoth/zsh-vim-mode \
+
+if [[ -f /etc/debian_version ]]; then
+  zinit wait"1" lucid from"gh-r" as"null" for \
+    sbin"**/fd"        sharkdp/fd \
+    sbin"**/bat"       sharkdp/bat \
+    sbin"**/rg"        BurntSushi/ripgrep \
+    sbin"**/delta"     dandavison/delta \
+    sbin"**/lsd"       lsd-rs/lsd \
+    sbin"**/jq"        jqlang/jq \
+    sbin"**/yq"        mikefarah/yq \
+    sbin"**/zoxide"    ajeetdsouza/zoxide
+
+  # fzf - fuzzy finder with full installation
+  zinit ice lucid \
+    atclone"./install --all" \
+    atpull"%atclone" \
+    pick"shell/completion.zsh" \
+    src"shell/key-bindings.zsh"
+  zinit light junegunn/fzf
+
+  zinit ice as"null" lucid if'[[ ! $(command -v nvim) ]]' \
+    atclone"make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$HOME/.local install" \
+    atpull"%atclone"
+  zinit light neovim/neovim
+fi
+
+if [[ -f $HOME/.bash_aliases ]]; then
+  source $HOME/.bash_aliases
+else
+  print "${fg[red]}Error loading bash_aliases${reset_color}\n"
+fi
 
 if command -v fzf &> /dev/null; then
   [[ $(type historygrep) = *'alias'* ]] && unalias historygrep
@@ -78,27 +115,24 @@ chpwd() {
   lt
 }
 
+if has zoxide; then
+  unalias zi
+  eval "$(zoxide init zsh)"
+  function z {
+    if (( $# == 0 )); then
+      __zoxide_zi
+    else
+      __zoxide_z "$@"
+    fi
+  }
+  alias cd='z'
+fi
+
 ask() {
   echo -n "$* "
   read -r -k 1 ans
   echo
   [[ ${ans:u} = Y* ]]
-}
-
-function v {
-  local server='/tmp/nvimsocket'
-  if [[ ! -S "$server" ]]; then
-    nvim --listen "$server" "$@"
-    return
-  fi
-  if (( $# > 0 )); then
-    nvim --server "$server" --remote "$@"
-  elif has fzf; then
-    read -A files <<< $(fd | fzf --preview='bat --color=always --style=plain {}')
-    if (( $# > 0 )); then
-      nvim --server "$server" --remote "${files[@]}"
-    fi
-  fi
 }
 
 alias zcp='noglob zmv -C '
@@ -195,14 +229,16 @@ export DISABLE_AUTO_TITLE=true
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# Bun
+export BUN_INSTALL="/home/dan/.bun"
+[[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Bun
-export BUN_INSTALL="/home/dan/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
 # bun completions
 [ -s "/home/dan/.bun/_bun" ] && source "/home/dan/.bun/_bun"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
